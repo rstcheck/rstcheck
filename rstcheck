@@ -20,6 +20,10 @@ from docutils.parsers.rst import directives, Directive
 __version__ = '0.1'
 
 
+# FIXME: Ugly hack.
+EXIT_STATUS = [0]
+
+
 def node_has_class(node, classes):
     """Return True if node has the specified class."""
     if not (issubclass(type(classes), list)):
@@ -28,14 +32,6 @@ def node_has_class(node, classes):
         if cname in node['classes']:
             return True
     return False
-
-
-def node_lang_class(node):
-    """Return language specification from a node class names."""
-    for cname in node['classes']:
-        if cname.startswith('lang-'):
-            return cname[5:]
-    return None
 
 
 class CodeBlockDirective(Directive):
@@ -75,24 +71,33 @@ class CheckTranslator(LaTeXTranslator):
         if not node_has_class(node, 'code-block'):
             return
 
-        lang = node.get('language', None)
-        if lang is None:
-            lang = node_lang_class(node)
-        if lang is None:
-            lang = self.cb_default_lang
+        language = node.get('language', None)
+
+        extension = {
+            'cpp': '.cpp',
+            'python': '.py'
+        }.get(language)
 
         # TODO: Support other languages. Assume C++ for now.
-        output_file = tempfile.NamedTemporaryFile(suffix='.cc', mode='w')
+        output_file = tempfile.NamedTemporaryFile(mode='w', suffix=extension)
         output_file.write(node.rawsource)
         output_file.flush()
 
         print(node.rawsource, file=sys.stderr)
         status = '\x1b[32mOkay\x1b[0m'
         try:
-            subprocess.check_call(['g++', '-std=c++0x', '-fsyntax-only',
-                                   '-Wall', '-Wextra', output_file.name])
+            if language == 'cpp':
+                subprocess.check_call(['g++', '-std=c++0x', '-fsyntax-only',
+                                       '-O3', '-Wall', '-Wextra',
+                                       output_file.name])
+            elif language == 'python':
+                subprocess.check_call(['python', '-m', 'compileall',
+                                       output_file.name])
+            else:
+                print('Unknown language: {}'.format(language), file=sys.stderr)
         except subprocess.CalledProcessError:
             status = '\x1b[31mError\x1b[0m'
+            EXIT_STATUS[0] = 1
 
         print(status)
 
@@ -115,7 +120,8 @@ def main():
         default_description)
     publish_cmdline(writer=CheckWriter(), description=description,
                     argv=sys.argv[1:] + [os.devnull])
+    return EXIT_STATUS[0]
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
