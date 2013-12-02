@@ -17,6 +17,9 @@ from docutils import nodes
 from docutils.parsers.rst import directives, Directive
 
 
+__version__ = '0.1'
+
+
 def node_has_class(node, classes):
     """Return True if node has the specified class."""
     if not (issubclass(type(classes), list)):
