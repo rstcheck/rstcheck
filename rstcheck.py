@@ -84,8 +84,14 @@ class CheckTranslator(LaTeXTranslator):
         output_file.flush()
 
         print(node.rawsource, file=sys.stderr)
-        subprocess.call(['g++', '-std=c++0x', '-fsyntax-only', '-Wall',
-                         '-Wextra', output_file.name])
+        status = '\x1b[32mOkay\x1b[0m'
+        try:
+            subprocess.check_call(['g++', '-std=c++0x', '-fsyntax-only',
+                                   '-Wall', '-Wextra', output_file.name])
+        except subprocess.CalledProcessError:
+            status = '\x1b[31mError\x1b[0m'
+
+        print(status)
 
         raise nodes.SkipNode
 
