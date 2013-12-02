@@ -1,0 +1,13 @@
+.*.swp
+.travis-solo
+dist
+build
+*.pyc
+*~
+*.egg-info
+*.aux
+*.toc
+*.log
+*.nav
+*.out
+*.snm
