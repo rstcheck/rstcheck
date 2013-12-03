@@ -11,11 +11,10 @@ import subprocess
 import sys
 import tempfile
 
-from docutils.core import publish_string
-from docutils.writers.latex2e import Writer as Latex2eWriter
-from docutils.writers.latex2e import LaTeXTranslator
+from docutils import core
+from docutils.writers import latex2e
 from docutils import nodes
-from docutils.parsers.rst import directives, Directive
+from docutils.parsers import rst
 
 
 __version__ = '0.1'
@@ -35,19 +34,17 @@ def node_has_class(node, classes):
     return False
 
 
-class CodeBlockDirective(Directive):
+class CodeBlockDirective(rst.Directive):
 
     has_content = True
     required_arguments = 0
     optional_arguments = 1
     final_argument_whitespace = False
     option_spec = {
-        'linenos': directives.flag,
+        'linenos': rst.directives.flag,
     }
 
     def run(self):
-        # extract langauge from block or commandline
-        # we allow the langauge specification to be optional
         try:
             language = self.arguments[0]
         except IndexError:
@@ -60,14 +57,14 @@ class CodeBlockDirective(Directive):
         return [literal]
 
 for _name in ['code-block', 'sourcecode']:
-    directives.register_directive(_name, CodeBlockDirective)
+    rst.directives.register_directive(_name, CodeBlockDirective)
 
 
 # TODO: Use plain Translator.
-class CheckTranslator(LaTeXTranslator):
+class CheckTranslator(latex2e.LaTeXTranslator):
 
     def __init__(self, document):
-        LaTeXTranslator.__init__(self, document)
+        latex2e.LaTeXTranslator.__init__(self, document)
 
     def visit_literal_block(self, node):
         if not node_has_class(node, 'code-block'):
@@ -110,10 +107,10 @@ class CheckTranslator(LaTeXTranslator):
 
 
 # TODO: Use plain Writer.
-class CheckWriter(Latex2eWriter):
+class CheckWriter(latex2e.Writer):
 
     def __init__(self):
-        Latex2eWriter.__init__(self)
+        latex2e.Writer.__init__(self)
         self.translator_class = CheckTranslator
 
 
@@ -122,7 +119,7 @@ def check(filename):
         contents = input_file.read()
 
     writer = CheckWriter()
-    publish_string(contents, writer=writer,
+    core.publish_string(contents, writer=writer,
                    source_path=filename)
     return SUCCESS[0]
 
