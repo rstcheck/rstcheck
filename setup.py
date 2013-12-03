@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import ast
-from distutils import core
+import setuptools
 
 
 def version():
@@ -13,7 +13,7 @@ def version():
 
 
 with open('README.rst') as readme:
-    core.setup(
+    setuptools.setup(
         name='rstcheck',
         version=version(),
         url='http://github.com/myint/rstcheck',
@@ -27,5 +27,6 @@ with open('README.rst') as readme:
             'Programming Language :: Python :: 2.6',
             'Programming Language :: Python :: 3.2',
             'Programming Language :: Python :: 3.3'
-        ]
+        ],
+        install_requires=['docutils']
     )

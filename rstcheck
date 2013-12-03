@@ -7,7 +7,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
-import os
 import subprocess
 import sys
 import tempfile
@@ -23,7 +22,7 @@ __version__ = '0.1'
 
 
 # FIXME: Ugly hack.
-EXIT_STATUS = [0]
+SUCCESS = [True]
 
 
 def node_has_class(node, classes):
@@ -64,6 +63,7 @@ for _name in ['code-block', 'sourcecode']:
     directives.register_directive(_name, CodeBlockDirective)
 
 
+# TODO: Use plain Translator.
 class CheckTranslator(LaTeXTranslator):
 
     def __init__(self, document):
@@ -80,13 +80,13 @@ class CheckTranslator(LaTeXTranslator):
             'python': '.py'
         }.get(language)
 
-        # TODO: Support other languages. Assume C++ for now.
         output_file = tempfile.NamedTemporaryFile(mode='w', suffix=extension)
         output_file.write(node.rawsource)
         output_file.flush()
 
         print(node.rawsource, file=sys.stderr)
         status = '\x1b[32mOkay\x1b[0m'
+        SUCCESS[0] = True
         try:
             if language == 'cpp':
                 subprocess.check_call(['g++', '-std=c++0x', '-fsyntax-only',
@@ -99,7 +99,7 @@ class CheckTranslator(LaTeXTranslator):
                 print('Unknown language: {}'.format(language), file=sys.stderr)
         except subprocess.CalledProcessError:
             status = '\x1b[31mError\x1b[0m'
-            EXIT_STATUS[0] = 1
+            SUCCESS[0] = False
 
         print(status)
 
@@ -109,6 +109,7 @@ class CheckTranslator(LaTeXTranslator):
         pass
 
 
+# TODO: Use plain Writer.
 class CheckWriter(Latex2eWriter):
 
     def __init__(self):
@@ -123,7 +124,7 @@ def check(filename):
     writer = CheckWriter()
     publish_string(contents, writer=writer,
                    source_path=filename)
-    return EXIT_STATUS[0]
+    return SUCCESS[0]
 
 
 def main():
