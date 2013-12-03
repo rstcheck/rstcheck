@@ -1,5 +1,5 @@
 #!/bin/bash -ex
 
-./rstcheck.py good.rst
-./rstcheck.py bad_cpp.rst | grep Error
-./rstcheck.py bad_python.rst | grep Error
+./rstcheck.py --strict good.rst
+./rstcheck.py --strict bad_cpp.rst | grep Error
+./rstcheck.py --strict bad_python.rst | grep Error

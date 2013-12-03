@@ -9,7 +9,6 @@ Installation
 ============
 
 From pip::
-
     $ pip install --upgrade rstcheck
 
 Example

@@ -11,9 +11,8 @@ import subprocess
 import sys
 import tempfile
 
-from docutils import core
+from docutils import core, nodes, utils
 from docutils.writers import latex2e
-from docutils import nodes
 from docutils.parsers import rst
 
 
@@ -118,13 +117,22 @@ class CheckWriter(latex2e.Writer):
         self.success &= visitor.success
 
 
-def check(filename):
+def check(filename, strict):
+    settings_overrides = {}
+    if strict:
+        settings_overrides['halt_level'] = 1
+
     with open(filename) as input_file:
         contents = input_file.read()
 
     writer = CheckWriter()
-    core.publish_string(contents, writer=writer,
-                   source_path=filename)
+    try:
+        core.publish_string(contents, writer=writer,
+                            source_path=filename,
+                            settings_overrides=settings_overrides)
+    except utils.SystemMessage:
+        return False
+
     return writer.success
 
 
@@ -132,11 +140,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
     parser.add_argument('files', nargs='+',
                         help='files to check')
+    parser.add_argument('--strict', action='store_true',
+                        help='halt at the slightest problem')
     args = parser.parse_args()
 
     status = 0
     for filename in args.files:
-        if not check(filename):
+        if not check(filename, strict=args.strict):
             status = 1
 
     return status
