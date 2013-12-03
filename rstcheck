@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Check code blocks in ReStructuredText."""
+"""Checks code blocks in ReStructuredText."""
 
 from __future__ import division
 from __future__ import print_function
