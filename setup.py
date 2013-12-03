@@ -6,7 +6,7 @@ import setuptools
 
 def version():
     """Return version string."""
-    with open('rstcheck') as input_file:
+    with open('rstcheck.py') as input_file:
         for line in input_file:
             if line.startswith('__version__'):
                 return ast.parse(line).body[0].value.s
@@ -19,7 +19,6 @@ with open('README.rst') as readme:
         url='http://github.com/myint/rstcheck',
         description='Check code blocks in ReStructuredText.',
         long_description=readme.read(),
-        scripts=['rstcheck'],
         classifiers=[
             'License :: OSI Approved :: BSD License',
             'Programming Language :: Python',
@@ -28,5 +27,6 @@ with open('README.rst') as readme:
             'Programming Language :: Python :: 3.2',
             'Programming Language :: Python :: 3.3'
         ],
+        entry_points={'console_scripts': ['rstcheck = rstcheck:main']},
         install_requires=['docutils']
     )
