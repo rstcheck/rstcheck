@@ -9,6 +9,7 @@ Installation
 ============
 
 From pip::
+
     $ pip install --upgrade rstcheck
 
 Example
@@ -45,3 +46,10 @@ With bad Python syntax::
     print(
     SyntaxError: unexpected EOF while parsing
     Error
+
+Strict mode
+===========
+
+To check ReStructuredText syntax itself more thoroughly::
+
+    $ rstcheck --strict input.rst
