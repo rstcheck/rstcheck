@@ -20,10 +20,6 @@ from docutils.parsers import rst
 __version__ = '0.1'
 
 
-# FIXME: Ugly hack.
-SUCCESS = [True]
-
-
 def node_has_class(node, classes):
     """Return True if node has the specified class."""
     if not (issubclass(type(classes), list)):
@@ -65,6 +61,7 @@ class CheckTranslator(latex2e.LaTeXTranslator):
 
     def __init__(self, document):
         latex2e.LaTeXTranslator.__init__(self, document)
+        self.success = True
 
     def visit_literal_block(self, node):
         if not node_has_class(node, 'code-block'):
@@ -83,7 +80,6 @@ class CheckTranslator(latex2e.LaTeXTranslator):
 
         print(node.rawsource, file=sys.stderr)
         status = '\x1b[32mOkay\x1b[0m'
-        SUCCESS[0] = True
         try:
             if language == 'cpp':
                 subprocess.check_call(['g++', '-std=c++0x', '-fsyntax-only',
@@ -96,7 +92,7 @@ class CheckTranslator(latex2e.LaTeXTranslator):
                 print('Unknown language: {}'.format(language), file=sys.stderr)
         except subprocess.CalledProcessError:
             status = '\x1b[31mError\x1b[0m'
-            SUCCESS[0] = False
+            self.success = False
 
         print(status)
 
@@ -111,7 +107,15 @@ class CheckWriter(latex2e.Writer):
 
     def __init__(self):
         latex2e.Writer.__init__(self)
-        self.translator_class = CheckTranslator
+        self.success = True
+
+    def translate(self):
+        visitor = CheckTranslator(self.document)
+        self.document.walkabout(visitor)
+        # copy parts
+        for part in self.visitor_attributes:
+            setattr(self, part, getattr(visitor, part))
+        self.success &= visitor.success
 
 
 def check(filename):
@@ -121,7 +125,7 @@ def check(filename):
     writer = CheckWriter()
     core.publish_string(contents, writer=writer,
                    source_path=filename)
-    return SUCCESS[0]
+    return writer.success
 
 
 def main():
