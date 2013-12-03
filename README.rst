@@ -25,19 +25,17 @@ With good input::
     }
     Okay
     print(1)
-    Compiling '/var/folders/eD/eDkaCQuWHJG9f-G6kmkpgk+++TI/-Tmp-/tmpn874va.py'...
     Okay
 
 With bad C++ syntax::
 
     $ rstcheck bad_cpp.rst
-    + grep Error
     #include <iostream>
 
     int main()
     {
-    /var/folders/eD/eDkaCQuWHJG9f-G6kmkpgk+++TI/-Tmp-/tmpeg1c35.cpp: In function 'int main()':
-    /var/folders/eD/eDkaCQuWHJG9f-G6kmkpgk+++TI/-Tmp-/tmpeg1c35.cpp:4:1: error: expected '}' at end of input
+    tmpeg1c35.cpp: In function 'int main()':
+    tmpeg1c35.cpp:4:1: error: expected '}' at end of input
      {
      ^
     Error
