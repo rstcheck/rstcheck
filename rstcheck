@@ -6,12 +6,13 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import argparse
 import os
 import subprocess
 import sys
 import tempfile
 
-from docutils.core import publish_cmdline, default_description
+from docutils.core import publish_string
 from docutils.writers.latex2e import Writer as Latex2eWriter
 from docutils.writers.latex2e import LaTeXTranslator
 from docutils import nodes
@@ -115,13 +116,28 @@ class CheckWriter(Latex2eWriter):
         self.translator_class = CheckTranslator
 
 
-def main():
-    description = (
-        'Checks code blocks. ' +
-        default_description)
-    publish_cmdline(writer=CheckWriter(), description=description,
-                    argv=sys.argv[1:] + [os.devnull])
+def check(filename):
+    with open(filename) as input_file:
+        contents = input_file.read()
+
+    writer = CheckWriter()
+    publish_string(contents, writer=writer,
+                   source_path=filename)
     return EXIT_STATUS[0]
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
+    parser.add_argument('files', nargs='+',
+                        help='files to check')
+    args = parser.parse_args()
+
+    status = 0
+    for filename in args.files:
+        if not check(filename):
+            status = 1
+
+    return status
 
 
 if __name__ == '__main__':
