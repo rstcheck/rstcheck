@@ -15,7 +15,7 @@ from docutils import core, nodes, utils, writers
 from docutils.parsers import rst
 
 
-__version__ = '0.1'
+__version__ = '0.1.1'
 
 
 def node_has_class(node, classes):
