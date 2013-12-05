@@ -30,6 +30,8 @@ def node_has_class(node, classes):
 
 class CodeBlockDirective(rst.Directive):
 
+    """Code block directive."""
+
     has_content = True
     required_arguments = 0
     optional_arguments = 1
@@ -39,6 +41,7 @@ class CodeBlockDirective(rst.Directive):
     }
 
     def run(self):
+        """Run directive."""
         try:
             language = self.arguments[0]
         except IndexError:
@@ -56,11 +59,14 @@ for _name in ['code-block', 'sourcecode']:
 
 class CheckTranslator(nodes.NodeVisitor):
 
+    """Visits code blocks and checks for syntax errors in code."""
+
     def __init__(self, document):
         nodes.NodeVisitor.__init__(self, document)
         self.success = True
 
     def visit_literal_block(self, node):
+        """Check syntax of code block."""
         if not node_has_class(node, 'code-block'):
             return
 
@@ -95,29 +101,30 @@ class CheckTranslator(nodes.NodeVisitor):
 
         raise nodes.SkipNode
 
-    def depart_literal_block(self, node):
-        pass
-
     def unknown_visit(self, node):
-        pass
+        """Ignore."""
 
     def unknown_departure(self, node):
-        pass
+        """Ignore."""
 
 
 class CheckWriter(writers.Writer):
+
+    """Runs CheckTranslator on code blocks."""
 
     def __init__(self):
         writers.Writer.__init__(self)
         self.success = True
 
     def translate(self):
+        """Run CheckTranslator."""
         visitor = CheckTranslator(self.document)
         self.document.walkabout(visitor)
         self.success &= visitor.success
 
 
 def check(filename, strict):
+    """Return True if no errors are found."""
     settings_overrides = {}
     if strict:
         settings_overrides['halt_level'] = 1
@@ -137,11 +144,12 @@ def check(filename, strict):
 
 
 def main():
+    """Return 0 on success."""
     parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
     parser.add_argument('files', nargs='+',
                         help='files to check')
     parser.add_argument('--strict', action='store_true',
-                        help='halt at the slightest problem')
+                        help='parse ReStructuredText more strictly')
     args = parser.parse_args()
 
     status = 0
