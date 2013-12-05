@@ -56,10 +56,10 @@ for _name in ['code-block', 'sourcecode']:
 
 
 # TODO: Use plain Translator.
-class CheckTranslator(latex2e.LaTeXTranslator):
+class CheckTranslator(nodes.NodeVisitor):
 
     def __init__(self, document):
-        latex2e.LaTeXTranslator.__init__(self, document)
+        nodes.NodeVisitor.__init__(self, document)
         self.success = True
 
     def visit_literal_block(self, node):
@@ -100,6 +100,12 @@ class CheckTranslator(latex2e.LaTeXTranslator):
     def depart_literal_block(self, node):
         pass
 
+    def unknown_visit(self, node):
+        pass
+
+    def unknown_departure(self, node):
+        pass
+
 
 # TODO: Use plain Writer.
 class CheckWriter(latex2e.Writer):
@@ -111,10 +117,10 @@ class CheckWriter(latex2e.Writer):
     def translate(self):
         visitor = CheckTranslator(self.document)
         self.document.walkabout(visitor)
-        # copy parts
-        for part in self.visitor_attributes:
-            setattr(self, part, getattr(visitor, part))
         self.success &= visitor.success
+
+    def assemble_parts(self):
+        pass
 
 
 def check(filename, strict):
