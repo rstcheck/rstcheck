@@ -11,8 +11,7 @@ import subprocess
 import sys
 import tempfile
 
-from docutils import core, nodes, utils
-from docutils.writers import latex2e
+from docutils import core, nodes, utils, writers
 from docutils.parsers import rst
 
 
@@ -55,7 +54,6 @@ for _name in ['code-block', 'sourcecode']:
     rst.directives.register_directive(_name, CodeBlockDirective)
 
 
-# TODO: Use plain Translator.
 class CheckTranslator(nodes.NodeVisitor):
 
     def __init__(self, document):
@@ -107,20 +105,16 @@ class CheckTranslator(nodes.NodeVisitor):
         pass
 
 
-# TODO: Use plain Writer.
-class CheckWriter(latex2e.Writer):
+class CheckWriter(writers.Writer):
 
     def __init__(self):
-        latex2e.Writer.__init__(self)
+        writers.Writer.__init__(self)
         self.success = True
 
     def translate(self):
         visitor = CheckTranslator(self.document)
         self.document.walkabout(visitor)
         self.success &= visitor.success
-
-    def assemble_parts(self):
-        pass
 
 
 def check(filename, strict):
