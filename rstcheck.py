@@ -73,6 +73,7 @@ class CheckTranslator(nodes.NodeVisitor):
         language = node.get('language', None)
 
         result = {
+            'bash': ('.bash', ['bash', '-n']),
             'c': ('.c', ['gcc', '-fsyntax-only', '-O3', '-std=c99',
                          '-pedantic', '-Wall', '-Wextra']),
             'cpp': ('.cpp', ['g++', '-std=c++0x', '-pedantic', '-fsyntax-only',

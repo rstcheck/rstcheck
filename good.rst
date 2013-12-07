@@ -2,6 +2,13 @@
 Test
 ====
 
+.. code-block:: bash
+
+    if [ "$x" == 'y' ]
+    then
+        exit 1
+    fi
+
 .. code-block:: c
 
     float foo(int n)
