@@ -12,6 +12,14 @@ From pip::
 
     $ pip install --upgrade rstcheck
 
+Supported languages in code blocks
+==================================
+
+- C (C99)
+- C++ (C++11)
+- Python
+
+
 Example
 =======
 
