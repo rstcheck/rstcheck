@@ -72,32 +72,33 @@ class CheckTranslator(nodes.NodeVisitor):
 
         language = node.get('language', None)
 
-        extension = {
-            'cpp': '.cpp',
-            'python': '.py'
+        result = {
+            'c': ('.c', ['gcc', '-fsyntax-only', '-O3', '-std=c99',
+                         '-pedantic', '-Wall', '-Wextra']),
+            'cpp': ('.cpp', ['g++', '-std=c++0x', '-pedantic', '-fsyntax-only',
+                             '-O3', '-Wall', '-Wextra']),
+            'python': ('.py', ['python', '-m', 'compileall'])
         }.get(language)
 
-        output_file = tempfile.NamedTemporaryFile(mode='w', suffix=extension)
-        output_file.write(node.rawsource)
-        output_file.flush()
+        if result:
+            (extension, arguments) = result
 
-        print(node.rawsource, file=sys.stderr)
-        status = '\x1b[32mOkay\x1b[0m'
-        try:
-            if language == 'cpp':
-                subprocess.check_call(['g++', '-std=c++0x', '-fsyntax-only',
-                                       '-O3', '-Wall', '-Wextra',
-                                       output_file.name])
-            elif language == 'python':
-                subprocess.check_call(['python', '-m', 'compileall',
-                                       output_file.name])
-            else:
-                print('Unknown language: {}'.format(language), file=sys.stderr)
-        except subprocess.CalledProcessError:
-            status = '\x1b[31mError\x1b[0m'
-            self.success = False
+            output_file = tempfile.NamedTemporaryFile(mode='w',
+                                                      suffix=extension)
+            output_file.write(node.rawsource)
+            output_file.flush()
 
-        print(status)
+            print(node.rawsource, file=sys.stderr)
+            status = '\x1b[32mOkay\x1b[0m'
+            try:
+                subprocess.check_call(arguments + [output_file.name])
+            except subprocess.CalledProcessError:
+                status = '\x1b[31mError\x1b[0m'
+                self.success = False
+
+            print(status)
+        else:
+            print('Unknown language: {}'.format(language), file=sys.stderr)
 
         raise nodes.SkipNode
 
