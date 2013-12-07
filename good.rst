@@ -25,12 +25,8 @@ Test
 
     int main()
     {
-    }
-    float foo(int n)
-    {
-        float x[n];
-        x[0] = 1;
-        return x[0];
+        auto x = 1;
+        return x;
     }
 
 .. code-block:: python

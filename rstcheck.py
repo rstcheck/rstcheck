@@ -61,8 +61,9 @@ class CheckTranslator(nodes.NodeVisitor):
 
     """Visits code blocks and checks for syntax errors in code."""
 
-    def __init__(self, document):
+    def __init__(self, document, strict_warnings):
         nodes.NodeVisitor.__init__(self, document)
+        self.strict_warnings = strict_warnings
         self.success = True
 
     def visit_literal_block(self, node):
@@ -72,14 +73,20 @@ class CheckTranslator(nodes.NodeVisitor):
 
         language = node.get('language', None)
 
+        error_flag = (['-Werror'] if self.strict_warnings else [])
+
         result = {
             'bash': ('.bash', ['bash', '-n']),
             'c': ('.c', ['gcc', '-fsyntax-only', '-O3', '-std=c99',
-                         '-pedantic', '-Wall', '-Wextra']),
+                         '-pedantic', '-Wall', '-Wextra'] + error_flag),
             'cpp': ('.cpp', ['g++', '-std=c++0x', '-pedantic', '-fsyntax-only',
-                             '-O3', '-Wall', '-Wextra']),
+                             '-O3', '-Wall', '-Wextra'] + error_flag),
             'python': ('.py', ['python', '-m', 'compileall'])
         }.get(language)
+
+        green = '\x1b[32m'
+        red = '\x1b[31m'
+        end = '\x1b[0m'
 
         if result:
             (extension, arguments) = result
@@ -90,16 +97,19 @@ class CheckTranslator(nodes.NodeVisitor):
             output_file.flush()
 
             print(node.rawsource, file=sys.stderr)
-            status = '\x1b[32mOkay\x1b[0m'
+            status = green + 'Okay' + end
             try:
                 subprocess.check_call(arguments + [output_file.name])
             except subprocess.CalledProcessError:
-                status = '\x1b[31mError\x1b[0m'
+                status = red + 'Error' + end
                 self.success = False
 
-            print(status)
+            print(status, file=sys.stderr)
         else:
-            print('Unknown language: {}'.format(language), file=sys.stderr)
+            print(red + 'Unknown language: {}'.format(language) + end,
+                  file=sys.stderr)
+            if self.strict_warnings:
+                self.success = False
 
         raise nodes.SkipNode
 
@@ -114,27 +124,29 @@ class CheckWriter(writers.Writer):
 
     """Runs CheckTranslator on code blocks."""
 
-    def __init__(self):
+    def __init__(self, strict_warnings):
         writers.Writer.__init__(self)
+        self.strict_warnings = strict_warnings
         self.success = True
 
     def translate(self):
         """Run CheckTranslator."""
-        visitor = CheckTranslator(self.document)
+        visitor = CheckTranslator(self.document,
+                                  strict_warnings=self.strict_warnings)
         self.document.walkabout(visitor)
         self.success &= visitor.success
 
 
-def check(filename, strict):
+def check(filename, strict_rst, strict_warnings):
     """Return True if no errors are found."""
     settings_overrides = {}
-    if strict:
+    if strict_rst:
         settings_overrides['halt_level'] = 1
 
     with open(filename) as input_file:
         contents = input_file.read()
 
-    writer = CheckWriter()
+    writer = CheckWriter(strict_warnings)
     try:
         core.publish_string(contents, writer=writer,
                             source_path=filename,
@@ -150,13 +162,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
     parser.add_argument('files', nargs='+',
                         help='files to check')
-    parser.add_argument('--strict', action='store_true',
+    parser.add_argument('--strict-rst', action='store_true',
                         help='parse ReStructuredText more strictly')
+    parser.add_argument('--strict-warnings', action='store_true',
+                        help='treat warnings as errors')
     args = parser.parse_args()
 
     status = 0
     for filename in args.files:
-        if not check(filename, strict=args.strict):
+        if not check(filename,
+                     strict_rst=args.strict_rst,
+                     strict_warnings=args.strict_warnings):
             status = 1
 
     return status

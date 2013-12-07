@@ -59,6 +59,10 @@ With bad Python syntax::
 Strict mode
 ===========
 
+To treat warnings as errors::
+
+    $ rstcheck --strict-warnings input.rst
+
 To check ReStructuredText syntax itself more thoroughly::
 
-    $ rstcheck --strict input.rst
+    $ rstcheck --strict-rst input.rst
