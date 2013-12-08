@@ -48,8 +48,8 @@ class CodeBlockDirective(rst.Directive):
         literal['language'] = language
         return [literal]
 
-for _name in ['code-block', 'sourcecode']:
-    rst.directives.register_directive(_name, CodeBlockDirective)
+rst.directives.register_directive('code-block', CodeBlockDirective)
+rst.directives.register_directive('sourcecode', CodeBlockDirective)
 
 
 class CheckTranslator(nodes.NodeVisitor):

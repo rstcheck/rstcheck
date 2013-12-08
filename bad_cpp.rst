@@ -2,7 +2,7 @@
 Test
 ====
 
-.. code-block:: cpp
+.. sourcecode:: cpp
 
     #include <iostream>
 
