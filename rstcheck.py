@@ -2,6 +2,7 @@
 
 """Checks code blocks in ReStructuredText."""
 
+from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
@@ -33,12 +34,7 @@ class CodeBlockDirective(rst.Directive):
     """Code block directive."""
 
     has_content = True
-    required_arguments = 0
     optional_arguments = 1
-    final_argument_whitespace = False
-    option_spec = {
-        'linenos': rst.directives.flag,
-    }
 
     def run(self):
         """Run directive."""
@@ -50,7 +46,6 @@ class CodeBlockDirective(rst.Directive):
         literal = nodes.literal_block(code, code)
         literal['classes'].append('code-block')
         literal['language'] = language
-        literal['linenos'] = 'linenos' in self.options
         return [literal]
 
 for _name in ['code-block', 'sourcecode']:
