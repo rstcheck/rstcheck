@@ -41,7 +41,7 @@ class CodeBlockDirective(rst.Directive):
         try:
             language = self.arguments[0]
         except IndexError:
-            language = 'guess'
+            language = ''
         code = '\n'.join(self.content)
         literal = nodes.literal_block(code, code)
         literal['classes'].append('code-block')

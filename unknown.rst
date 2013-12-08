@@ -2,6 +2,6 @@
 Test
 ====
 
-.. code-block:: h
+.. code-block::
 
     foo
