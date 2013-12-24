@@ -16,7 +16,7 @@ from docutils import core, nodes, utils, writers
 from docutils.parsers import rst
 
 
-__version__ = '0.1.1'
+__version__ = '0.2'
 
 
 GREEN = '\x1b[32m'
