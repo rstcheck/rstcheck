@@ -19,6 +19,16 @@ from docutils.parsers import rst
 __version__ = '0.1.1'
 
 
+GREEN = '\x1b[32m'
+RED = '\x1b[31m'
+
+
+def colorize(text, color):
+    """Return text colored with ANSI escapes."""
+    end = '\x1b[0m'
+    return color + text + end
+
+
 def node_has_class(node, classes):
     """Return True if node has the specified class."""
     if not (issubclass(type(classes), list)):
@@ -59,7 +69,7 @@ class CheckTranslator(nodes.NodeVisitor):
     def __init__(self, document, strict_warnings):
         nodes.NodeVisitor.__init__(self, document)
         self.strict_warnings = strict_warnings
-        self.success = True
+        self.summary = []
 
     def visit_literal_block(self, node):
         """Check syntax of code block."""
@@ -79,10 +89,6 @@ class CheckTranslator(nodes.NodeVisitor):
             'python': ('.py', ['python', '-m', 'compileall'])
         }.get(language)
 
-        green = '\x1b[32m'
-        red = '\x1b[31m'
-        end = '\x1b[0m'
-
         if result:
             (extension, arguments) = result
 
@@ -92,19 +98,20 @@ class CheckTranslator(nodes.NodeVisitor):
             output_file.flush()
 
             print(node.rawsource, file=sys.stderr)
-            status = green + 'Okay' + end
+            status = colorize('Okay', GREEN)
             try:
                 subprocess.check_call(arguments + [output_file.name])
+                self.summary.append(True)
             except subprocess.CalledProcessError:
-                status = red + 'Error' + end
-                self.success = False
+                status = colorize('Error', RED)
+                self.summary.append(False)
 
             print(status, file=sys.stderr)
         else:
-            print(red + 'Unknown language: {}'.format(language) + end,
+            print(colorize('Unknown language: {}'.format(language), RED),
                   file=sys.stderr)
             if self.strict_warnings:
-                self.success = False
+                self.summary.append(False)
 
         raise nodes.SkipNode
 
@@ -122,14 +129,14 @@ class CheckWriter(writers.Writer):
     def __init__(self, strict_warnings):
         writers.Writer.__init__(self)
         self.strict_warnings = strict_warnings
-        self.success = True
+        self.summary = []
 
     def translate(self):
         """Run CheckTranslator."""
         visitor = CheckTranslator(self.document,
                                   strict_warnings=self.strict_warnings)
         self.document.walkabout(visitor)
-        self.success &= visitor.success
+        self.summary += visitor.summary
 
 
 def check(filename, strict_rst, strict_warnings):
@@ -149,7 +156,7 @@ def check(filename, strict_rst, strict_warnings):
     except utils.SystemMessage:
         return False
 
-    return writer.success
+    return writer.summary
 
 
 def main():
@@ -163,14 +170,18 @@ def main():
                         help='treat warnings as errors')
     args = parser.parse_args()
 
-    status = 0
+    summary = []
     for filename in args.files:
-        if not check(filename,
-                     strict_rst=args.strict_rst,
-                     strict_warnings=args.strict_warnings):
-            status = 1
+        summary += check(filename,
+                         strict_rst=args.strict_rst,
+                         strict_warnings=args.strict_warnings)
 
-    return status
+    failures = len([1 for value in summary if not value])
+    print(colorize('{} failure(s)'.format(failures),
+                   RED if failures else GREEN),
+          file=sys.stderr)
+
+    return 1 if failures else 0
 
 
 if __name__ == '__main__':
