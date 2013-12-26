@@ -90,24 +90,31 @@ class CheckTranslator(nodes.NodeVisitor):
                          '-pedantic', '-Wall', '-Wextra'] + error_flag),
             'cpp': ('.cpp', ['g++', '-std=c++0x', '-pedantic', '-fsyntax-only',
                              '-O3', '-Wall', '-Wextra'] + error_flag),
-            'python': ('.py', ['python', '-m', 'compileall'])
+            'python': ('.py', ['python', '-m', 'compileall', '-q'])
         }.get(language)
 
         if result:
             (extension, arguments) = result
 
-            output_file = tempfile.NamedTemporaryFile(mode='w',
+            temporary_file = tempfile.NamedTemporaryFile(mode='w',
                                                       suffix=extension)
-            output_file.write(node.rawsource)
-            output_file.flush()
+            temporary_file.write(node.rawsource)
+            temporary_file.flush()
 
             print(node.rawsource, file=sys.stderr)
             inform('Okay', GREEN)
-            try:
-                subprocess.check_call(arguments + [output_file.name])
+            process = subprocess.Popen(arguments + [temporary_file.name],
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
+            output = '\n'.join(message.decode('utf-8')
+                               for message in process.communicate()).strip()
+
+            if process.returncode == 0:
                 self.summary.append(True)
-            except subprocess.CalledProcessError:
-                inform('{}:{}: Error'.format(self.filename, node.line),
+            else:
+                inform('{}:{}: {}'.format(self.filename,
+                                          node.line,
+                                          output),
                        RED)
                 self.summary.append(False)
         else:
