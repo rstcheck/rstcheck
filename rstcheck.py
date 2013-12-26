@@ -23,10 +23,13 @@ GREEN = '\x1b[32m'
 RED = '\x1b[31m'
 
 
-def colorize(text, color):
+def inform(text, color):
     """Return text colored with ANSI escapes."""
-    end = '\x1b[0m'
-    return color + text + end
+    if sys.stderr.isatty():
+        end = '\x1b[0m'
+        text = color + text + end
+
+    print(text, file=sys.stderr)
 
 
 def node_has_class(node, classes):
@@ -66,10 +69,11 @@ class CheckTranslator(nodes.NodeVisitor):
 
     """Visits code blocks and checks for syntax errors in code."""
 
-    def __init__(self, document, strict_warnings):
+    def __init__(self, document, strict_warnings, filename):
         nodes.NodeVisitor.__init__(self, document)
         self.strict_warnings = strict_warnings
         self.summary = []
+        self.filename = filename
 
     def visit_literal_block(self, node):
         """Check syntax of code block."""
@@ -98,18 +102,16 @@ class CheckTranslator(nodes.NodeVisitor):
             output_file.flush()
 
             print(node.rawsource, file=sys.stderr)
-            status = colorize('Okay', GREEN)
+            inform('Okay', GREEN)
             try:
                 subprocess.check_call(arguments + [output_file.name])
                 self.summary.append(True)
             except subprocess.CalledProcessError:
-                status = colorize('Error', RED)
+                inform('{}:{}: Error'.format(self.filename, node.line),
+                       RED)
                 self.summary.append(False)
-
-            print(status, file=sys.stderr)
         else:
-            print(colorize('Unknown language: {}'.format(language), RED),
-                  file=sys.stderr)
+            inform('Unknown language: {}'.format(language), RED)
             if self.strict_warnings:
                 self.summary.append(False)
 
@@ -126,15 +128,17 @@ class CheckWriter(writers.Writer):
 
     """Runs CheckTranslator on code blocks."""
 
-    def __init__(self, strict_warnings):
+    def __init__(self, strict_warnings, filename):
         writers.Writer.__init__(self)
         self.strict_warnings = strict_warnings
         self.summary = []
+        self.filename = filename
 
     def translate(self):
         """Run CheckTranslator."""
         visitor = CheckTranslator(self.document,
-                                  strict_warnings=self.strict_warnings)
+                                  strict_warnings=self.strict_warnings,
+                                  filename=self.filename)
         self.document.walkabout(visitor)
         self.summary += visitor.summary
 
@@ -148,7 +152,7 @@ def check(filename, strict_rst, strict_warnings):
     with open(filename) as input_file:
         contents = input_file.read()
 
-    writer = CheckWriter(strict_warnings)
+    writer = CheckWriter(strict_warnings, filename)
     try:
         core.publish_string(contents, writer=writer,
                             source_path=filename,
@@ -177,9 +181,8 @@ def main():
                          strict_warnings=args.strict_warnings)
 
     failures = len([1 for value in summary if not value])
-    print(colorize('{} failure(s)'.format(failures),
-                   RED if failures else GREEN),
-          file=sys.stderr)
+    inform('{} failure(s)'.format(failures),
+           RED if failures else GREEN)
 
     return 1 if failures else 0
 
