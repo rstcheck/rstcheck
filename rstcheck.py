@@ -175,7 +175,6 @@ class CheckTranslator(nodes.NodeVisitor):
 
     def __init__(self, document, contents, filename):
         nodes.NodeVisitor.__init__(self, document)
-        self.success = True
         self.errors = []
         self.contents = contents
         self.filename = filename
