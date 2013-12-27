@@ -35,8 +35,8 @@ def node_has_class(node, classes):
     """Return True if node has the specified class."""
     if not (issubclass(type(classes), list)):
         classes = [classes]
-    for cname in classes:
-        if cname in node['classes']:
+    for name in classes:
+        if name in node['classes']:
             return True
     return False
 
