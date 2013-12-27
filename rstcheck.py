@@ -73,8 +73,9 @@ def check_bash(code):
         assert output
         message = output[len(filename + ': line '):]
         split_message = message.split(':', 1)
-        return (int(split_message[0]) - 2,
-                split_message[1])
+        return [
+            (int(split_message[0]) - 2, split_message[1])
+        ]
 
 
 def check_c(code):
@@ -105,7 +106,9 @@ def check_gcc(code, filename_suffix, arguments):
         output = '\n'.join(output.splitlines()[1:])
         message = output[len(filename + ':'):]
         split_message = message.split(':', 2)
-        return (int(split_message[0]), split_message[2])
+        return [
+            (int(split_message[0]), split_message[2])
+        ]
 
 
 def check_python(code):
@@ -113,7 +116,9 @@ def check_python(code):
     try:
         compile(code, '<string>', 'exec')
     except SyntaxError as exception:
-        return (int(exception.lineno), exception.msg)
+        return [
+            (int(exception.lineno), exception.msg)
+        ]
 
 
 def run_in_subprocess(code, filename_suffix, arguments):
@@ -156,16 +161,17 @@ class CheckTranslator(nodes.NodeVisitor):
         }.get(language)
 
         if checker:
-            result = checker(node.rawsource)
-            if result:
-                inform(
-                    '{}:{}: {}'.format(
-                        self.filename,
-                        node.line + result[0] -
-                        len(node.rawsource.splitlines()),
-                        result[1]),
-                    RED)
+            all_results = checker(node.rawsource)
+            if all_results:
                 self.summary.append(False)
+                for result in all_results:
+                    inform(
+                        '{}:{}: {}'.format(
+                            self.filename,
+                            node.line + result[0] -
+                            len(node.rawsource.splitlines()),
+                            result[1]),
+                        RED)
             else:
                 self.summary.append(True)
         else:
