@@ -44,6 +44,32 @@ RED = '\x1b[31m'
 END = '\x1b[0m'
 
 
+def check(filename, report_level=2):
+    """Return list of errors.
+
+    The errors are tuples of the form:
+
+        (line_number, message)
+
+    Line numbers are indexed at 1 and are with respect to the full RST file.
+
+    """
+    settings_overrides = {'report_level': report_level}
+
+    with open(filename) as input_file:
+        contents = input_file.read()
+
+    writer = CheckWriter(contents, filename)
+    try:
+        core.publish_string(contents, writer=writer,
+                            source_path=filename,
+                            settings_overrides=settings_overrides)
+    except utils.SystemMessage:
+        return False
+
+    return writer.errors
+
+
 def print_error(text):
     """Return text colored with ANSI escapes."""
     if sys.stderr.isatty():
@@ -238,32 +264,6 @@ class CheckWriter(writers.Writer):
                                   filename=self.filename)
         self.document.walkabout(visitor)
         self.errors += visitor.errors
-
-
-def check(filename, report_level):
-    """Return list of errors.
-
-    The errors are tuples of the form:
-
-        (line_number, message)
-
-    Line numbers are indexed at 1 and are with respect to the full RST file.
-
-    """
-    settings_overrides = {'report_level': report_level}
-
-    with open(filename) as input_file:
-        contents = input_file.read()
-
-    writer = CheckWriter(contents, filename)
-    try:
-        core.publish_string(contents, writer=writer,
-                            source_path=filename,
-                            settings_overrides=settings_overrides)
-    except utils.SystemMessage:
-        return False
-
-    return writer.errors
 
 
 def main():
