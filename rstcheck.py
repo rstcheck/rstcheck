@@ -211,11 +211,9 @@ class CheckWriter(writers.Writer):
         self.summary += visitor.summary
 
 
-def check(filename, strict_rst):
+def check(filename, report_level):
     """Return True if no errors are found."""
-    settings_overrides = {}
-    if strict_rst:
-        settings_overrides['halt_level'] = 1
+    settings_overrides = {'report_level': report_level}
 
     with open(filename) as input_file:
         contents = input_file.read()
@@ -236,14 +234,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
     parser.add_argument('files', nargs='+',
                         help='files to check')
-    parser.add_argument('--strict-rst', action='store_true',
-                        help='parse ReStructuredText more strictly')
+    parser.add_argument('--report', metavar='level', default=2,
+                        help='report system messages at or higher than level; '
+                             '1 info, 2 warning, 3 error, 4 severe, 5 none '
+                             '(default: %(default)s)')
     args = parser.parse_args()
 
     summary = []
     for filename in args.files:
         summary += check(filename,
-                         strict_rst=args.strict_rst)
+                         report_level=args.report)
 
     failures = len([1 for value in summary if not value])
     return 1 if failures else 0
