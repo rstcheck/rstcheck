@@ -16,7 +16,7 @@ from docutils import core, nodes, utils, writers
 from docutils.parsers import rst
 
 
-__version__ = '0.3'
+__version__ = '0.3.1'
 
 
 RED = '\x1b[31m'
@@ -249,7 +249,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
     parser.add_argument('files', nargs='+',
                         help='files to check')
-    parser.add_argument('--report', metavar='level', default=2,
+    parser.add_argument('--report', type=int, metavar='level', default=2,
                         help='report system messages at or higher than level; '
                              '1 info, 2 warning, 3 error, 4 severe, 5 none '
                              '(default: %(default)s)')
