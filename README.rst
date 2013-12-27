@@ -39,5 +39,7 @@ With bad Python syntax::
 
         print(
 
+::
+
     $ rstcheck bad_python.rst
     bad_python.rst:5: (ERROR/3) unexpected EOF while parsing
