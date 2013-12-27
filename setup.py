@@ -22,12 +22,12 @@ with open('README.rst') as readme:
         description='Checks code blocks in ReStructuredText.',
         long_description=readme.read(),
         classifiers=[
-            'License :: OSI Approved :: BSD License',
+            'License :: OSI Approved :: MIT License',
             'Programming Language :: Python',
             'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3.2',
             'Programming Language :: Python :: 3.3'
-        ],
+            'Topic :: Software Development :: Quality Assurance'],
         py_modules=['rstcheck'],
         entry_points={'console_scripts': ['rstcheck = rstcheck:main']},
         install_requires=['docutils']
