@@ -254,8 +254,7 @@ def main():
         summary += check(filename,
                          report_level=args.report)
 
-    failures = len([1 for value in summary if not value])
-    return 1 if failures else 0
+    return 0 if all(summary) else 1
 
 
 if __name__ == '__main__':
