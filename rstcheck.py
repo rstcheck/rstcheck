@@ -65,6 +65,31 @@ rst.directives.register_directive('code-block', CodeBlockDirective)
 rst.directives.register_directive('sourcecode', CodeBlockDirective)
 
 
+def check_python(code):
+    """Return None on success."""
+    try:
+        compile(code, '<string>', 'exec')
+    except SyntaxError as exception:
+        return (exception.lineno, exception.msg)
+
+
+def check_in_subprocess(code, filename_suffix, arguments):
+    """Return None on success."""
+    temporary_file = tempfile.NamedTemporaryFile(mode='w',
+                                              suffix=filename_suffix)
+    temporary_file.write(code)
+    temporary_file.flush()
+
+    process = subprocess.Popen(arguments + [temporary_file.name],
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    raw_result = process.communicate()
+    if process.returncode != 0:
+        output = '\n'.join(message.decode('utf-8')
+                           for message in raw_result).strip()
+        return ('TODO', output)
+
+
 class CheckTranslator(nodes.NodeVisitor):
 
     """Visits code blocks and checks for syntax errors in code."""
@@ -84,39 +109,38 @@ class CheckTranslator(nodes.NodeVisitor):
 
         error_flag = (['-Werror'] if self.strict_warnings else [])
 
-        result = {
-            'bash': ('.bash', ['bash', '-n']),
-            'c': ('.c', ['gcc', '-fsyntax-only', '-O3', '-std=c99',
-                         '-pedantic', '-Wall', '-Wextra'] + error_flag),
-            'cpp': ('.cpp', ['g++', '-std=c++0x', '-pedantic', '-fsyntax-only',
-                             '-O3', '-Wall', '-Wextra'] + error_flag),
-            'python': ('.py', ['python', '-m', 'compileall', '-q'])
+        checker = {
+            'bash': (
+                lambda code: check_in_subprocess(
+                    code,
+                    '.bash',
+                    ['bash', '-n'])),
+            'c': (
+                lambda code: check_in_subprocess(
+                    code,
+                    '.c',
+                    ['gcc', '-fsyntax-only', '-O3', '-std=c99', '-pedantic',
+                     '-Wall', '-Wextra'] + error_flag)),
+            'cpp': (
+                lambda code: check_in_subprocess(
+                    code,
+                    '.cpp',
+                    ['g++', '-std=c++0x', '-pedantic', '-fsyntax-only', '-O3',
+                     '-Wall', '-Wextra'] + error_flag)),
+            'python': check_python
         }.get(language)
 
-        if result:
-            (extension, arguments) = result
-
-            temporary_file = tempfile.NamedTemporaryFile(mode='w',
-                                                      suffix=extension)
-            temporary_file.write(node.rawsource)
-            temporary_file.flush()
-
-            print(node.rawsource, file=sys.stderr)
-            inform('Okay', GREEN)
-            process = subprocess.Popen(arguments + [temporary_file.name],
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE)
-            output = '\n'.join(message.decode('utf-8')
-                               for message in process.communicate()).strip()
-
-            if process.returncode == 0:
-                self.summary.append(True)
-            else:
+        if checker:
+            result = checker(node.rawsource)
+            if result:
                 inform('{}:{}: {}'.format(self.filename,
-                                          node.line,
-                                          output),
+                                          result[0],
+                                          result[1]),
                        RED)
                 self.summary.append(False)
+            else:
+                self.summary.append(True)
+                inform('Okay', GREEN)
         else:
             inform('Unknown language: {}'.format(language), RED)
             if self.strict_warnings:
