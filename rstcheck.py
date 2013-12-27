@@ -29,6 +29,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+import os
 import subprocess
 import sys
 import tempfile
@@ -124,12 +125,12 @@ def check_bash(code):
 
 def check_c(code):
     """Return None on success."""
-    return check_gcc(code, '.c', ['gcc', '-std=c99'])
+    return check_gcc(code, '.c', [os.getenv('CC', 'gcc'), '-std=c99'])
 
 
 def check_cpp(code):
     """Return None on success."""
-    return check_gcc(code, '.cpp', ['g++', '-std=c++0x'])
+    return check_gcc(code, '.cpp', [os.getenv('CXX', 'g++'), '-std=c++0x'])
 
 
 def check_gcc(code, filename_suffix, arguments):
