@@ -82,25 +82,19 @@ def check_bash(code):
 
 def check_c(code):
     """Return None on success."""
-    return check_gcc(
-        code,
-        '.c',
-        ['gcc', '-fsyntax-only', '-O3', '-std=c99', '-pedantic',
-         '-Wall', '-Wextra'])
+    return check_gcc(code, '.c', ['gcc', '-std=c99'])
 
 
 def check_cpp(code):
     """Return None on success."""
-    return check_gcc(
-        code,
-        '.cpp',
-        ['g++', '-std=c++0x', '-pedantic', '-fsyntax-only', '-O3',
-         '-Wall', '-Wextra'])
+    return check_gcc(code, '.cpp', ['g++', '-std=c++0x'])
 
 
 def check_gcc(code, filename_suffix, arguments):
     """Return None on success."""
-    result = run_in_subprocess(code, filename_suffix, arguments)
+    result = run_in_subprocess(code,
+                               filename_suffix,
+                               arguments + ['-pedantic', '-fsyntax-only'])
     if result:
         errors = []
         (output, filename) = result
