@@ -19,15 +19,14 @@ from docutils.parsers import rst
 __version__ = '0.2'
 
 
-GREEN = '\x1b[32m'
 RED = '\x1b[31m'
+END = '\x1b[0m'
 
 
-def inform(text, color):
+def error(text):
     """Return text colored with ANSI escapes."""
     if sys.stderr.isatty():
-        end = '\x1b[0m'
-        text = color + text + end
+        text = RED + text + END
 
     print(text, file=sys.stderr)
 
@@ -175,15 +174,14 @@ class CheckTranslator(nodes.NodeVisitor):
             else:
                 self.summary.append(False)
                 for result in all_results:
-                    inform(
-                        '{}:{}: {}'.format(
+                    # FIXME: The offsets are wrong if the RST text has multiple
+                    # lines after the code block.
+                    error(
+                        '{}:{}: (ERROR/3) {}'.format(
                             self.filename,
-                            node.line + result[0] -
-                            len(node.rawsource.splitlines()),
-                            result[1]),
-                        RED)
-        else:
-            inform('Unknown language: {}'.format(language), RED)
+                            node.line - len(node.rawsource.splitlines()) +
+                            result[0] - 1,
+                            result[1]))
 
         raise nodes.SkipNode
 
