@@ -148,9 +148,10 @@ class CheckTranslator(nodes.NodeVisitor):
 
     """Visits code blocks and checks for syntax errors in code."""
 
-    def __init__(self, document, filename):
+    def __init__(self, document, contents, filename):
         nodes.NodeVisitor.__init__(self, document)
         self.summary = []
+        self.contents = contents
         self.filename = filename
 
     def visit_literal_block(self, node):
@@ -174,13 +175,13 @@ class CheckTranslator(nodes.NodeVisitor):
             else:
                 self.summary.append(False)
                 for result in all_results:
-                    # FIXME: The offsets are wrong if the RST text has multiple
-                    # lines after the code block.
+                    error_offset = result[0] - 1
+
                     error(
                         '{}:{}: (ERROR/3) {}'.format(
                             self.filename,
-                            node.line - len(node.rawsource.splitlines()) +
-                            result[0] - 1,
+                            beginning_of_code_block(node, self.contents) +
+                            error_offset,
                             result[1]))
 
         raise nodes.SkipNode
@@ -192,18 +193,34 @@ class CheckTranslator(nodes.NodeVisitor):
         """Ignore."""
 
 
+def beginning_of_code_block(node, full_contents):
+    """Return line number of beginning of code block."""
+    # The offsets are wrong if the RST text has
+    # multiple lines after the code block. This is a
+    # workaround.
+    lines = full_contents.splitlines()
+    line_number = node.line
+    for line_number in range(node.line, 1, -1):
+        if lines[line_number - 2].strip():
+            break
+
+    return line_number - len(node.rawsource.splitlines())
+
+
 class CheckWriter(writers.Writer):
 
     """Runs CheckTranslator on code blocks."""
 
-    def __init__(self, filename):
+    def __init__(self, contents, filename):
         writers.Writer.__init__(self)
         self.summary = []
+        self.contents = contents
         self.filename = filename
 
     def translate(self):
         """Run CheckTranslator."""
         visitor = CheckTranslator(self.document,
+                                  contents=self.contents,
                                   filename=self.filename)
         self.document.walkabout(visitor)
         self.summary += visitor.summary
@@ -216,7 +233,7 @@ def check(filename, report_level):
     with open(filename) as input_file:
         contents = input_file.read()
 
-    writer = CheckWriter(filename)
+    writer = CheckWriter(contents, filename)
     try:
         core.publish_string(contents, writer=writer,
                             source_path=filename,
