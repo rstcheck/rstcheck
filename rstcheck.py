@@ -41,10 +41,6 @@ from docutils.parsers import rst
 __version__ = '0.3.2'
 
 
-RED = '\x1b[31m'
-END = '\x1b[0m'
-
-
 def check(filename, report_level=2):
     """Return list of errors.
 
@@ -64,14 +60,6 @@ def check(filename, report_level=2):
                         settings_overrides={'report_level': report_level})
 
     return writer.errors
-
-
-def print_error(text):
-    """Return text colored with ANSI escapes."""
-    if sys.stderr.isatty():
-        text = RED + text + END
-
-    print(text, file=sys.stderr)
 
 
 def node_has_class(node, classes):
@@ -277,8 +265,10 @@ def main():
     for filename in args.files:
         try:
             for error in check(filename, report_level=args.report):
-                print_error(
-                    '{}:{}: (ERROR/3) {}'.format(filename, error[0], error[1]))
+                print('{}:{}: (ERROR/3) {}'.format(filename,
+                                                   error[0],
+                                                   error[1]),
+                      file=sys.stderr)
                 status = 1
         except utils.SystemMessage:
             # docutils already prints a message to standard error.
