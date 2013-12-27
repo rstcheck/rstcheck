@@ -159,7 +159,6 @@ class CheckTranslator(nodes.NodeVisitor):
         if checker:
             result = checker(node.rawsource)
             if result:
-                print('node.line:', node.line)
                 inform(
                     '{}:{}: {}'.format(
                         self.filename,
@@ -170,7 +169,6 @@ class CheckTranslator(nodes.NodeVisitor):
                 self.summary.append(False)
             else:
                 self.summary.append(True)
-                inform('Okay', GREEN)
         else:
             inform('Unknown language: {}'.format(language), RED)
 
@@ -235,9 +233,6 @@ def main():
                          strict_rst=args.strict_rst)
 
     failures = len([1 for value in summary if not value])
-    inform('{} failure(s)'.format(failures),
-           RED if failures else GREEN)
-
     return 1 if failures else 0
 
 
