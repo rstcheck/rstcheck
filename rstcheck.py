@@ -128,8 +128,7 @@ def run_in_subprocess(code, filename_suffix, arguments):
                                stderr=subprocess.PIPE)
     raw_result = process.communicate()
     if process.returncode != 0:
-        return ('\n'.join(message.decode('utf-8')
-                          for message in raw_result).strip(),
+        return (raw_result[1].decode('utf-8'),
                 temporary_file.name)
 
 
