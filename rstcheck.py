@@ -65,15 +65,58 @@ rst.directives.register_directive('code-block', CodeBlockDirective)
 rst.directives.register_directive('sourcecode', CodeBlockDirective)
 
 
+def check_bash(code):
+    """Return None on success."""
+    result = run_in_subprocess(code, '.bash', ['bash', '-n'])
+    if result:
+        (output, filename) = result
+        assert output
+        message = output[len(filename + ': line '):]
+        split_message = message.split(':', 1)
+        return (int(split_message[0]) - 2,
+                split_message[1])
+
+
+def check_c(code):
+    """Return None on success."""
+    return check_gcc(
+        code,
+        '.c',
+        ['gcc', '-fsyntax-only', '-O3', '-std=c99', '-pedantic',
+         '-Wall', '-Wextra'])
+
+
+def check_cpp(code):
+    """Return None on success."""
+    return check_gcc(
+        code,
+        '.cpp',
+        ['g++', '-std=c++0x', '-pedantic', '-fsyntax-only', '-O3',
+         '-Wall', '-Wextra'])
+
+
+def check_gcc(code, filename_suffix, arguments):
+    """Return None on success."""
+    result = run_in_subprocess(code, filename_suffix, arguments)
+    if result:
+        (output, filename) = result
+        assert output
+        # TODO: Do this better.
+        output = '\n'.join(output.splitlines()[1:])
+        message = output[len(filename + ':'):]
+        split_message = message.split(':', 2)
+        return (int(split_message[0]), split_message[2])
+
+
 def check_python(code):
     """Return None on success."""
     try:
         compile(code, '<string>', 'exec')
     except SyntaxError as exception:
-        return (exception.lineno, exception.msg)
+        return (int(exception.lineno), exception.msg)
 
 
-def check_in_subprocess(code, filename_suffix, arguments):
+def run_in_subprocess(code, filename_suffix, arguments):
     """Return None on success."""
     temporary_file = tempfile.NamedTemporaryFile(mode='w',
                                               suffix=filename_suffix)
@@ -85,18 +128,17 @@ def check_in_subprocess(code, filename_suffix, arguments):
                                stderr=subprocess.PIPE)
     raw_result = process.communicate()
     if process.returncode != 0:
-        output = '\n'.join(message.decode('utf-8')
-                           for message in raw_result).strip()
-        return ('TODO', output)
+        return ('\n'.join(message.decode('utf-8')
+                          for message in raw_result).strip(),
+                temporary_file.name)
 
 
 class CheckTranslator(nodes.NodeVisitor):
 
     """Visits code blocks and checks for syntax errors in code."""
 
-    def __init__(self, document, strict_warnings, filename):
+    def __init__(self, document, filename):
         nodes.NodeVisitor.__init__(self, document)
-        self.strict_warnings = strict_warnings
         self.summary = []
         self.filename = filename
 
@@ -107,44 +149,30 @@ class CheckTranslator(nodes.NodeVisitor):
 
         language = node.get('language', None)
 
-        error_flag = (['-Werror'] if self.strict_warnings else [])
-
         checker = {
-            'bash': (
-                lambda code: check_in_subprocess(
-                    code,
-                    '.bash',
-                    ['bash', '-n'])),
-            'c': (
-                lambda code: check_in_subprocess(
-                    code,
-                    '.c',
-                    ['gcc', '-fsyntax-only', '-O3', '-std=c99', '-pedantic',
-                     '-Wall', '-Wextra'] + error_flag)),
-            'cpp': (
-                lambda code: check_in_subprocess(
-                    code,
-                    '.cpp',
-                    ['g++', '-std=c++0x', '-pedantic', '-fsyntax-only', '-O3',
-                     '-Wall', '-Wextra'] + error_flag)),
+            'bash': check_bash,
+            'c': check_c,
+            'cpp': check_cpp,
             'python': check_python
         }.get(language)
 
         if checker:
             result = checker(node.rawsource)
             if result:
-                inform('{}:{}: {}'.format(self.filename,
-                                          result[0],
-                                          result[1]),
-                       RED)
+                print('node.line:', node.line)
+                inform(
+                    '{}:{}: {}'.format(
+                        self.filename,
+                        node.line + result[0] -
+                        len(node.rawsource.splitlines()),
+                        result[1]),
+                    RED)
                 self.summary.append(False)
             else:
                 self.summary.append(True)
                 inform('Okay', GREEN)
         else:
             inform('Unknown language: {}'.format(language), RED)
-            if self.strict_warnings:
-                self.summary.append(False)
 
         raise nodes.SkipNode
 
@@ -159,22 +187,20 @@ class CheckWriter(writers.Writer):
 
     """Runs CheckTranslator on code blocks."""
 
-    def __init__(self, strict_warnings, filename):
+    def __init__(self, filename):
         writers.Writer.__init__(self)
-        self.strict_warnings = strict_warnings
         self.summary = []
         self.filename = filename
 
     def translate(self):
         """Run CheckTranslator."""
         visitor = CheckTranslator(self.document,
-                                  strict_warnings=self.strict_warnings,
                                   filename=self.filename)
         self.document.walkabout(visitor)
         self.summary += visitor.summary
 
 
-def check(filename, strict_rst, strict_warnings):
+def check(filename, strict_rst):
     """Return True if no errors are found."""
     settings_overrides = {}
     if strict_rst:
@@ -183,7 +209,7 @@ def check(filename, strict_rst, strict_warnings):
     with open(filename) as input_file:
         contents = input_file.read()
 
-    writer = CheckWriter(strict_warnings, filename)
+    writer = CheckWriter(filename)
     try:
         core.publish_string(contents, writer=writer,
                             source_path=filename,
@@ -201,15 +227,12 @@ def main():
                         help='files to check')
     parser.add_argument('--strict-rst', action='store_true',
                         help='parse ReStructuredText more strictly')
-    parser.add_argument('--strict-warnings', action='store_true',
-                        help='treat warnings as errors')
     args = parser.parse_args()
 
     summary = []
     for filename in args.files:
         summary += check(filename,
-                         strict_rst=args.strict_rst,
-                         strict_warnings=args.strict_warnings)
+                         strict_rst=args.strict_rst)
 
     failures = len([1 for value in summary if not value])
     inform('{} failure(s)'.format(failures),
