@@ -54,18 +54,13 @@ def check(filename, report_level=2):
     Line numbers are indexed at 1 and are with respect to the full RST file.
 
     """
-    settings_overrides = {'report_level': report_level}
-
     with open(filename) as input_file:
         contents = input_file.read()
 
     writer = CheckWriter(contents, filename)
-    try:
-        core.publish_string(contents, writer=writer,
-                            source_path=filename,
-                            settings_overrides=settings_overrides)
-    except utils.SystemMessage:
-        return False
+    core.publish_string(contents, writer=writer,
+                        source_path=filename,
+                        settings_overrides={'report_level': report_level})
 
     return writer.errors
 
@@ -279,9 +274,13 @@ def main():
 
     status = 0
     for filename in args.files:
-        for error in check(filename, report_level=args.report):
-            print_error(
-                '{}:{}: (ERROR/3) {}'.format(filename, error[0], error[1]))
+        try:
+            for error in check(filename, report_level=args.report):
+                print_error(
+                    '{}:{}: (ERROR/3) {}'.format(filename, error[0], error[1]))
+                status = 1
+        except utils.SystemMessage:
+            # docutils already prints a message to standard error.
             status = 1
 
     return status
