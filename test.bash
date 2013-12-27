@@ -1,8 +1,7 @@
 #!/bin/bash -ex
 
 ./rstcheck.py good.rst
-./rstcheck.py unknown.rst 2>&1 \
-    | grep 'Unknown' > /dev/null
+./rstcheck.py unknown.rst
 ! ./rstcheck.py bad_cpp.rst
 ! ./rstcheck.py bad_python.rst
 
