@@ -76,7 +76,7 @@ def check_bash(code):
                 continue
             message = line[len(prefix):]
             split_message = message.split(':', 1)
-            errors.append((int(split_message[0]) - 2, split_message[1]))
+            errors.append((int(split_message[0]) - 1, split_message[1]))
         return errors
 
 
