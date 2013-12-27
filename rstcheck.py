@@ -131,7 +131,7 @@ def check_python(code):
 def run_in_subprocess(code, filename_suffix, arguments):
     """Return None on success."""
     temporary_file = tempfile.NamedTemporaryFile(mode='w',
-                                              suffix=filename_suffix)
+                                                 suffix=filename_suffix)
     temporary_file.write(code)
     temporary_file.flush()
 
