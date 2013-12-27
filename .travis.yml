@@ -10,3 +10,4 @@ install:
 
 script:
     - ./test.bash
+    - rstcheck good.rst
