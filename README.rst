@@ -2,6 +2,10 @@
 rstcheck
 ========
 
+.. image:: https://travis-ci.org/myint/rstcheck.png?branch=master
+   :target: https://travis-ci.org/myint/rstcheck
+   :alt: Build status
+
 Checks code blocks in reStructuredText.
 
 
