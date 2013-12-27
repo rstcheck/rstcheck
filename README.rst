@@ -30,5 +30,14 @@ Example
 
 With bad Python syntax::
 
+    $ cat bad_python.rst
+    ====
+    Test
+    ====
+
+    .. code-block:: python
+
+        print(
+
     $ rstcheck bad_python.rst
     bad_python.rst:5: (ERROR/3) unexpected EOF while parsing
