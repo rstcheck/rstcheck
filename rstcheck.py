@@ -23,7 +23,7 @@ RED = '\x1b[31m'
 END = '\x1b[0m'
 
 
-def error(text):
+def print_error(text):
     """Return text colored with ANSI escapes."""
     if sys.stderr.isatty():
         text = RED + text + END
@@ -144,7 +144,8 @@ class CheckTranslator(nodes.NodeVisitor):
 
     def __init__(self, document, contents, filename):
         nodes.NodeVisitor.__init__(self, document)
-        self.summary = []
+        self.success = True
+        self.errors = []
         self.contents = contents
         self.filename = filename
 
@@ -164,19 +165,17 @@ class CheckTranslator(nodes.NodeVisitor):
 
         if checker:
             all_results = checker(node.rawsource)
-            if all_results is None:
-                self.summary.append(True)
-            else:
-                self.summary.append(False)
-                for result in all_results:
-                    error_offset = result[0] - 1
+            if all_results is not None:
+                if all_results:
+                    for result in all_results:
+                        error_offset = result[0] - 1
 
-                    error(
-                        '{}:{}: (ERROR/3) {}'.format(
-                            self.filename,
+                        self.errors.append((
                             beginning_of_code_block(node, self.contents) +
                             error_offset,
                             result[1]))
+                else:
+                    self.errors.append((self.filename, 0, 'unknown error'))
 
         raise nodes.SkipNode
 
@@ -207,7 +206,7 @@ class CheckWriter(writers.Writer):
 
     def __init__(self, contents, filename):
         writers.Writer.__init__(self)
-        self.summary = []
+        self.errors = []
         self.contents = contents
         self.filename = filename
 
@@ -217,11 +216,19 @@ class CheckWriter(writers.Writer):
                                   contents=self.contents,
                                   filename=self.filename)
         self.document.walkabout(visitor)
-        self.summary += visitor.summary
+        self.errors += visitor.errors
 
 
 def check(filename, report_level):
-    """Return True if no errors are found."""
+    """Return list of errors.
+
+    The errors are tuples of the form:
+
+        (line_number, message)
+
+    Line numbers are indexed at 1 and are with respect to the full RST file.
+
+    """
     settings_overrides = {'report_level': report_level}
 
     with open(filename) as input_file:
@@ -235,7 +242,7 @@ def check(filename, report_level):
     except utils.SystemMessage:
         return False
 
-    return writer.summary
+    return writer.errors
 
 
 def main():
@@ -249,12 +256,14 @@ def main():
                              '(default: %(default)s)')
     args = parser.parse_args()
 
-    summary = []
+    status = 0
     for filename in args.files:
-        summary += check(filename,
-                         report_level=args.report)
+        for error in check(filename, report_level=args.report):
+            print_error(
+                '{}:{}: (ERROR/3) {}'.format(filename, error[0], error[1]))
+            status = 1
 
-    return 0 if all(summary) else 1
+    return status
 
 
 if __name__ == '__main__':
