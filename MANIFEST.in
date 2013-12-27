@@ -1,0 +1,10 @@
+include README.rst
+
+exclude .travis.yml
+exclude Makefile
+exclude bad_bash.rst
+exclude bad_cpp.rst
+exclude bad_python.rst
+exclude good.rst
+exclude test.bash
+exclude unknown.rst
