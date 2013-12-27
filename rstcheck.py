@@ -69,13 +69,16 @@ def check_bash(code):
     """Return None on success."""
     result = run_in_subprocess(code, '.bash', ['bash', '-n'])
     if result:
+        errors = []
         (output, filename) = result
-        assert output
-        message = output[len(filename + ': line '):]
-        split_message = message.split(':', 1)
-        return [
-            (int(split_message[0]) - 2, split_message[1])
-        ]
+        prefix = filename + ': line '
+        for line in output.splitlines():
+            if not line.startswith(prefix):
+                continue
+            message = line[len(prefix):]
+            split_message = message.split(':', 1)
+            errors.append((int(split_message[0]) - 2, split_message[1]))
+        return errors
 
 
 def check_c(code):
@@ -100,15 +103,20 @@ def check_gcc(code, filename_suffix, arguments):
     """Return None on success."""
     result = run_in_subprocess(code, filename_suffix, arguments)
     if result:
+        errors = []
         (output, filename) = result
-        assert output
-        # TODO: Do this better.
-        output = '\n'.join(output.splitlines()[1:])
-        message = output[len(filename + ':'):]
-        split_message = message.split(':', 2)
-        return [
-            (int(split_message[0]), split_message[2])
-        ]
+        prefix = filename + ':'
+        for line in output.splitlines():
+            if not line.startswith(prefix):
+                continue
+            message = line[len(prefix):]
+            split_message = message.split(':', 2)
+            try:
+                line_number = int(split_message[0])
+            except ValueError:
+                continue
+            errors.append((line_number, split_message[2]))
+        return errors
 
 
 def check_python(code):
