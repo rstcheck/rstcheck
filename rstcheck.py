@@ -16,7 +16,7 @@ from docutils import core, nodes, utils, writers
 from docutils.parsers import rst
 
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 
 RED = '\x1b[31m'
