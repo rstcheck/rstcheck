@@ -43,3 +43,22 @@ With bad Python syntax::
 
     $ rstcheck bad_python.rst
     bad_python.rst:5: (ERROR/3) unexpected EOF while parsing
+
+With bad C++ syntax::
+
+    $ cat bad_cpp.rst
+    ====
+    Test
+    ====
+
+    .. code-block:: cpp
+
+        #include <iostream>
+
+        int main()
+        {
+
+::
+
+    $ rstcheck bad_cpp.rst
+    bad_cpp.rst:9: (ERROR/3)  error: expected '}' at end of input
