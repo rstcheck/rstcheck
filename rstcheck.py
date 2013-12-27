@@ -170,7 +170,9 @@ class CheckTranslator(nodes.NodeVisitor):
 
         if checker:
             all_results = checker(node.rawsource)
-            if all_results:
+            if all_results is None:
+                self.summary.append(True)
+            else:
                 self.summary.append(False)
                 for result in all_results:
                     inform(
@@ -180,8 +182,6 @@ class CheckTranslator(nodes.NodeVisitor):
                             len(node.rawsource.splitlines()),
                             result[1]),
                         RED)
-            else:
-                self.summary.append(True)
         else:
             inform('Unknown language: {}'.format(language), RED)
 
