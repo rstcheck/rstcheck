@@ -56,8 +56,6 @@ With bad C++ syntax:
 
     .. code-block:: cpp
 
-        #include <iostream>
-
         int main()
         {
             return x;
