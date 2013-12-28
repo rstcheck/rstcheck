@@ -243,9 +243,8 @@ class CheckTranslator(nodes.NodeVisitor):
 
 def beginning_of_code_block(node, full_contents):
     """Return line number of beginning of code block."""
-    # The offsets are wrong if the RST text has
-    # multiple lines after the code block. This is a
-    # workaround.
+    # The offsets are wrong if the RST text has multiple blank lines after the
+    # code block. This is a workaround.
     lines = full_contents.splitlines()
     line_number = node.line
     for line_number in range(node.line, 1, -1):
