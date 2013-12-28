@@ -29,9 +29,10 @@ Supported languages in code blocks
 Example
 =======
 
-With bad Python syntax::
+With bad Python syntax:
 
-    $ cat bad_python.rst
+.. code-block:: rst
+
     ====
     Test
     ====
@@ -45,9 +46,10 @@ With bad Python syntax::
     $ rstcheck bad_python.rst
     bad_python.rst:5: (ERROR/3) unexpected EOF while parsing
 
-With bad C++ syntax::
+With bad C++ syntax:
 
-    $ cat bad_cpp.rst
+.. code-block:: rst
+
     ====
     Test
     ====
