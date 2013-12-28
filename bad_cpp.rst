@@ -8,3 +8,5 @@ Test
 
     int main()
     {
+        return x;
+    }

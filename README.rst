@@ -60,8 +60,10 @@ With bad C++ syntax:
 
         int main()
         {
+            return x;
+        }
 
 ::
 
     $ rstcheck bad_cpp.rst
-    bad_cpp.rst:9: (ERROR/3)  error: expected '}' at end of input
+    bad_cpp.rst:10: (ERROR/3)  error: 'x' was not declared in this scope
