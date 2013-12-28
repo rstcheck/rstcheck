@@ -42,13 +42,15 @@ __version__ = '0.3.3'
 
 
 def check(filename, report_level=2):
-    """Return list of errors.
+    """Yield errors.
 
     The errors are tuples of the form:
 
         (line_number, message)
 
     Line numbers are indexed at 1 and are with respect to the full RST file.
+
+    Each code block is checked asynchronously in subprocesses.
 
     """
     with open(filename) as input_file:
@@ -59,7 +61,9 @@ def check(filename, report_level=2):
                         source_path=filename,
                         settings_overrides={'report_level': report_level})
 
-    return writer.errors
+    for checker in writer.checkers:
+        for error in checker():
+            yield error
 
 
 def node_has_class(node, classes):
@@ -95,62 +99,71 @@ rst.directives.register_directive('code-block', CodeBlockDirective)
 rst.directives.register_directive('sourcecode', CodeBlockDirective)
 
 
-def check_bash(code):
-    """Return None on success."""
-    result = run_in_subprocess(code, '.bash', ['bash', '-n'])
-    if result:
-        errors = []
-        (output, filename) = result
-        prefix = filename + ': line '
-        for line in output.splitlines():
-            if not line.startswith(prefix):
-                continue
-            message = line[len(prefix):]
-            split_message = message.split(':', 1)
-            errors.append((int(split_message[0]) - 1, split_message[1]))
-        return errors
+def bash_checker(code):
+    """Return checker."""
+    run = run_in_subprocess(code, '.bash', ['bash', '-n'])
+
+    def run_check():
+        """Yield errors."""
+        result = run()
+        if result:
+            (output, filename) = result
+            prefix = filename + ': line '
+            for line in output.splitlines():
+                if not line.startswith(prefix):
+                    continue
+                message = line[len(prefix):]
+                split_message = message.split(':', 1)
+                yield (int(split_message[0]) - 1, split_message[1])
+    return run_check
 
 
-def check_c(code):
-    """Return None on success."""
-    return check_gcc(code, '.c', [os.getenv('CC', 'gcc'), '-std=c99'])
+def c_checker(code):
+    """Return checker."""
+    return gcc_checker(code, '.c', [os.getenv('CC', 'gcc'), '-std=c99'])
 
 
-def check_cpp(code):
-    """Return None on success."""
-    return check_gcc(code, '.cpp', [os.getenv('CXX', 'g++'), '-std=c++0x'])
+def cpp_checker(code):
+    """Return checker."""
+    return gcc_checker(code, '.cpp', [os.getenv('CXX', 'g++'), '-std=c++0x'])
 
 
-def check_gcc(code, filename_suffix, arguments):
-    """Return None on success."""
-    result = run_in_subprocess(code,
-                               filename_suffix,
-                               arguments + ['-pedantic', '-fsyntax-only'])
-    if result:
-        errors = []
-        (output, filename) = result
-        prefix = filename + ':'
-        for line in output.splitlines():
-            if not line.startswith(prefix):
-                continue
-            message = line[len(prefix):]
-            split_message = message.split(':', 2)
-            try:
-                line_number = int(split_message[0])
-            except ValueError:
-                continue
-            errors.append((line_number, split_message[2]))
-        return errors
+def gcc_checker(code, filename_suffix, arguments):
+    """Return checker."""
+    run = run_in_subprocess(code,
+                            filename_suffix,
+                            arguments + ['-pedantic', '-fsyntax-only'])
+
+    def run_check():
+        """Yield errors."""
+        result = run()
+        if result:
+            (output, filename) = result
+            prefix = filename + ':'
+            for line in output.splitlines():
+                if not line.startswith(prefix):
+                    continue
+                message = line[len(prefix):]
+                split_message = message.split(':', 2)
+                try:
+                    line_number = int(split_message[0])
+                except ValueError:
+                    continue
+                yield (line_number, split_message[2])
+
+    return run_check
 
 
-def check_python(code):
-    """Return None on success."""
-    try:
-        compile(code, '<string>', 'exec')
-    except SyntaxError as exception:
-        return [
-            (int(exception.lineno), exception.msg)
-        ]
+def python_checker(code):
+    """Return checker."""
+    def run_check():
+        """Yield errors."""
+        try:
+            compile(code, '<string>', 'exec')
+        except SyntaxError as exception:
+            yield (int(exception.lineno), exception.msg)
+
+    return run_check
 
 
 def run_in_subprocess(code, filename_suffix, arguments):
@@ -163,10 +176,15 @@ def run_in_subprocess(code, filename_suffix, arguments):
     process = subprocess.Popen(arguments + [temporary_file.name],
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
-    raw_result = process.communicate()
-    if process.returncode != 0:
-        return (raw_result[1].decode('utf-8'),
-                temporary_file.name)
+
+    def run():
+        """Yield errors."""
+        raw_result = process.communicate()
+        if process.returncode != 0:
+            return (raw_result[1].decode('utf-8'),
+                    temporary_file.name)
+
+    return run
 
 
 class CheckTranslator(nodes.NodeVisitor):
@@ -175,7 +193,7 @@ class CheckTranslator(nodes.NodeVisitor):
 
     def __init__(self, document, contents, filename):
         nodes.NodeVisitor.__init__(self, document)
-        self.errors = []
+        self.checkers = []
         self.contents = contents
         self.filename = filename
 
@@ -187,25 +205,30 @@ class CheckTranslator(nodes.NodeVisitor):
         language = node.get('language', None)
 
         checker = {
-            'bash': check_bash,
-            'c': check_c,
-            'cpp': check_cpp,
-            'python': check_python
+            'bash': bash_checker,
+            'c': c_checker,
+            'cpp': cpp_checker,
+            'python': python_checker
         }.get(language)
 
         if checker:
-            all_results = checker(node.rawsource)
-            if all_results is not None:
-                if all_results:
-                    for result in all_results:
-                        error_offset = result[0] - 1
+            run = checker(node.rawsource)
 
-                        self.errors.append((
-                            beginning_of_code_block(node, self.contents) +
-                            error_offset,
-                            result[1]))
-                else:
-                    self.errors.append((self.filename, 0, 'unknown error'))
+            def run_check():
+                """Yield errors."""
+                all_results = run()
+                if all_results is not None:
+                    if all_results:
+                        for result in all_results:
+                            error_offset = result[0] - 1
+
+                            yield (
+                                beginning_of_code_block(node, self.contents) +
+                                error_offset,
+                                result[1])
+                    else:
+                        yield (self.filename, 0, 'unknown error')
+            self.checkers.append(run_check)
 
         raise nodes.SkipNode
 
@@ -236,7 +259,7 @@ class CheckWriter(writers.Writer):
 
     def __init__(self, contents, filename):
         writers.Writer.__init__(self)
-        self.errors = []
+        self.checkers = []
         self.contents = contents
         self.filename = filename
 
@@ -246,7 +269,7 @@ class CheckWriter(writers.Writer):
                                   contents=self.contents,
                                   filename=self.filename)
         self.document.walkabout(visitor)
-        self.errors += visitor.errors
+        self.checkers += visitor.checkers
 
 
 def main():
