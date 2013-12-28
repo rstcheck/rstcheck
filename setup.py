@@ -19,7 +19,7 @@ with open('README.rst') as readme:
         name='rstcheck',
         version=version(),
         url='http://github.com/myint/rstcheck',
-        description='Checks code blocks in ReStructuredText.',
+        description='Checks code blocks in reStructuredText.',
         long_description=readme.read(),
         classifiers=[
             'License :: OSI Approved :: MIT License',
