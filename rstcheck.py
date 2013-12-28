@@ -44,13 +44,15 @@ __version__ = '0.3.3'
 def check(filename, report_level=2):
     """Yield errors.
 
-    The errors are tuples of the form:
+    Use lower report_level for noiser error output.
+
+    Each yielded error is a tuple of the form:
 
         (line_number, message)
 
     Line numbers are indexed at 1 and are with respect to the full RST file.
 
-    Each code block is checked asynchronously in subprocesses.
+    Each code block is checked asynchronously in a subprocess.
 
     """
     with open(filename) as input_file:
