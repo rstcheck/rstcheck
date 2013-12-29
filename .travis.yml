@@ -9,5 +9,6 @@ install:
     - python setup.py --quiet install
 
 script:
+    - ./test_rstcheck.py
     - ./test.bash
     - rstcheck good.rst

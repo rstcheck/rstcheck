@@ -5,4 +5,5 @@ exclude Makefile
 exclude bad_*.rst
 exclude good.rst
 exclude test.bash
+exclude test_rstcheck.py
 exclude unknown.rst
