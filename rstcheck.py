@@ -76,16 +76,6 @@ def check_file(filename, report_level=2):
         yield error
 
 
-def node_has_class(node, classes):
-    """Return True if node has the specified class."""
-    if not (issubclass(type(classes), list)):
-        classes = [classes]
-    for name in classes:
-        if name in node['classes']:
-            return True
-    return False
-
-
 class CodeBlockDirective(rst.Directive):
 
     """Code block directive."""
@@ -209,7 +199,7 @@ class CheckTranslator(nodes.NodeVisitor):
 
     def visit_literal_block(self, node):
         """Check syntax of code block."""
-        if not node_has_class(node, 'code-block'):
+        if 'code-block' not in node['classes']:
             return
 
         language = node.get('language', None)
