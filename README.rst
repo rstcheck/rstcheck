@@ -64,4 +64,4 @@ With bad C++ syntax:
 ::
 
     $ rstcheck bad_cpp.rst
-    bad_cpp.rst:10: (ERROR/3)  error: 'x' was not declared in this scope
+    bad_cpp.rst:8: (ERROR/3)  error: 'x' was not declared in this scope
