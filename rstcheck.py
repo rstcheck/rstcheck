@@ -44,7 +44,7 @@ __version__ = '0.3.4'
 def check(filename, report_level=2):
     """Yield errors.
 
-    Use lower report_level for noiser error output.
+    Use lower report_level for noisier error output.
 
     Each yielded error is a tuple of the form:
 
