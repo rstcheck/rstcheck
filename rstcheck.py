@@ -38,7 +38,7 @@ from docutils import core, nodes, utils, writers
 from docutils.parsers import rst
 
 
-__version__ = '0.3.3'
+__version__ = '0.3.4'
 
 
 def check(filename, report_level=2):
