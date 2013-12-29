@@ -202,7 +202,7 @@ class CheckTranslator(nodes.NodeVisitor):
         if 'code-block' not in node['classes']:
             return
 
-        language = node.get('language', None)
+        language = node.get('language')
 
         checker = {
             'bash': bash_checker,
