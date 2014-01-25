@@ -40,6 +40,45 @@ Test
 
 """))[0][0])
 
+    def test_check_nested_rst(self):
+        self.assertEqual(
+            32,
+            list(rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: rst
+
+    Test
+    ====
+
+    .. code-block:: rst
+
+
+        Test
+        ====
+
+        .. code-block:: rst
+
+            Test
+            ====
+
+            .. code-block:: rst
+
+                Test
+                ====
+
+                .. code-block:: rst
+
+                    Test
+                    ====
+
+                    .. code-block:: python
+
+                        print(
+"""))[0][0])
+
 
 if __name__ == '__main__':
     unittest.main()

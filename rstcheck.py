@@ -208,7 +208,8 @@ class CheckTranslator(nodes.NodeVisitor):
             'bash': bash_checker,
             'c': c_checker,
             'cpp': cpp_checker,
-            'python': python_checker
+            'python': python_checker,
+            'rst': lambda source: lambda: check(source)
         }.get(language)
 
         if checker:
