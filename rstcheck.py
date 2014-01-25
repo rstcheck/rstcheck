@@ -41,7 +41,7 @@ from docutils.parsers import rst
 __version__ = '0.3.4'
 
 
-def check(source, filename='<string>', report_level=2):
+def check(source, filename='<string>', report_level=2, ignore=None):
     """Yield errors.
 
     Use lower report_level for noisier error output.
@@ -55,7 +55,7 @@ def check(source, filename='<string>', report_level=2):
     Each code block is checked asynchronously in a subprocess.
 
     """
-    writer = CheckWriter(source, filename)
+    writer = CheckWriter(source, filename, ignore=ignore)
     core.publish_string(source, writer=writer,
                         source_path=filename,
                         settings_overrides={'report_level': report_level})
@@ -65,14 +65,15 @@ def check(source, filename='<string>', report_level=2):
             yield error
 
 
-def check_file(filename, report_level=2):
+def check_file(filename, report_level=2, ignore=None):
     """Yield errors."""
     with open(filename) as input_file:
         contents = input_file.read()
 
     for error in check(contents,
                        filename=filename,
-                       report_level=report_level):
+                       report_level=report_level,
+                       ignore=ignore):
         yield error
 
 
@@ -191,11 +192,12 @@ class CheckTranslator(nodes.NodeVisitor):
 
     """Visits code blocks and checks for syntax errors in code."""
 
-    def __init__(self, document, contents, filename):
+    def __init__(self, document, contents, filename, ignore):
         nodes.NodeVisitor.__init__(self, document)
         self.checkers = []
         self.contents = contents
         self.filename = filename
+        self.ignore = ignore or []
 
     def visit_literal_block(self, node):
         """Check syntax of code block."""
@@ -203,13 +205,15 @@ class CheckTranslator(nodes.NodeVisitor):
             return
 
         language = node.get('language')
+        if language in self.ignore:
+            return
 
         checker = {
             'bash': bash_checker,
             'c': c_checker,
             'cpp': cpp_checker,
             'python': python_checker,
-            'rst': lambda source: lambda: check(source)
+            'rst': lambda source: lambda: check(source, ignore=self.ignore)
         }.get(language)
 
         if checker:
@@ -266,17 +270,19 @@ class CheckWriter(writers.Writer):
 
     """Runs CheckTranslator on code blocks."""
 
-    def __init__(self, contents, filename):
+    def __init__(self, contents, filename, ignore):
         writers.Writer.__init__(self)
         self.checkers = []
         self.contents = contents
         self.filename = filename
+        self.ignore = ignore
 
     def translate(self):
         """Run CheckTranslator."""
         visitor = CheckTranslator(self.document,
                                   contents=self.contents,
-                                  filename=self.filename)
+                                  filename=self.filename,
+                                  ignore=self.ignore)
         self.document.walkabout(visitor)
         self.checkers += visitor.checkers
 
@@ -290,12 +296,16 @@ def main():
                         help='report system messages at or higher than level; '
                              '1 info, 2 warning, 3 error, 4 severe, 5 none '
                              '(default: %(default)s)')
+    parser.add_argument('--ignore', metavar='language', default='',
+                        help='comma-separated list of languages to ignore')
     args = parser.parse_args()
 
     status = 0
     for filename in args.files:
         try:
-            for error in check_file(filename, report_level=args.report):
+            for error in check_file(filename,
+                                    report_level=args.report,
+                                    ignore=args.ignore.split(',')):
                 print('{}:{}: (ERROR/3) {}'.format(filename,
                                                    error[0],
                                                    error[1]),

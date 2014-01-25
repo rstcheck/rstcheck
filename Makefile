@@ -9,6 +9,7 @@ check:
 	check-manifest
 	python setup.py --long-description | rst2html --strict > /dev/null
 	scspell rstcheck.py setup.py README.rst
+	./rstcheck.py --ignore=cpp,python README.rst
 
 readme:
 	@restview --long-description --strict
