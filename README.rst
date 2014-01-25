@@ -26,6 +26,7 @@ Supported languages in code blocks
 - C (C99)
 - C++ (C++11)
 - Python
+- reStructuredText
 
 
 Example
