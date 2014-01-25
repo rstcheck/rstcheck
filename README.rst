@@ -47,7 +47,7 @@ With bad Python syntax:
 ::
 
     $ rstcheck bad_python.rst
-    bad_python.rst:5: (ERROR/3) unexpected EOF while parsing
+    bad_python.rst:7: (ERROR/3) (python) unexpected EOF while parsing
 
 With bad C++ syntax:
 
@@ -67,4 +67,4 @@ With bad C++ syntax:
 ::
 
     $ rstcheck bad_cpp.rst
-    bad_cpp.rst:8: (ERROR/3)  error: 'x' was not declared in this scope
+    bad_cpp.rst:9: (ERROR/3) (cpp) error: 'x' was not declared in this scope
