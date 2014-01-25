@@ -115,7 +115,8 @@ def bash_checker(code):
                     continue
                 message = line[len(prefix):]
                 split_message = message.split(':', 1)
-                yield (int(split_message[0]) - 1, split_message[1])
+                yield (int(split_message[0]) - 1,
+                       split_message[1].strip())
     return run_check
 
 
@@ -150,7 +151,8 @@ def gcc_checker(code, filename_suffix, arguments):
                     line_number = int(split_message[0])
                 except ValueError:
                     continue
-                yield (line_number, split_message[2])
+                yield (line_number,
+                       split_message[2].strip())
 
     return run_check
 
@@ -230,7 +232,7 @@ class CheckTranslator(nodes.NodeVisitor):
                             yield (
                                 beginning_of_code_block(node, self.contents) +
                                 error_offset,
-                                result[1])
+                                '({}) {}'.format(language, result[1]))
                     else:
                         yield (self.filename, 0, 'unknown error')
             self.checkers.append(run_check)
