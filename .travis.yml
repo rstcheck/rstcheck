@@ -11,5 +11,5 @@ install:
 script:
     - ./test_rstcheck.py
     - ./test.bash
-    - rstcheck good.rst
+    - rstcheck examples/good.rst
     - rstcheck --ignore=cpp,python README.rst

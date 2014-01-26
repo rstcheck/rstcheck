@@ -1,19 +1,19 @@
 #!/bin/bash -eux
 
-./rstcheck.py good.rst
-./rstcheck.py unknown.rst
+./rstcheck.py examples/good.rst
+./rstcheck.py examples/unknown.rst
 
-if ./rstcheck.py bad_cpp.rst
+if ./rstcheck.py examples/bad_cpp.rst
 then
     exit 1
 fi
 
-if ./rstcheck.py bad_python.rst
+if ./rstcheck.py examples/bad_python.rst
 then
     exit 1
 fi
 
-if ./rstcheck.py bad_rst.rst
+if ./rstcheck.py examples/bad_rst.rst
 then
     exit 1
 fi
