@@ -11,10 +11,14 @@ import rstcheck
 
 class Tests(unittest.TestCase):
 
+    def assert_lines_equal(self, line_numbers, results):
+        self.assertEqual(line_numbers,
+                         list(dict(results).keys()))
+
     def test_check(self):
-        self.assertEqual(
-            6,
-            list(rstcheck.check(
+        self.assert_lines_equal(
+            [6],
+            rstcheck.check(
                 """\
 Test
 ====
@@ -22,12 +26,12 @@ Test
 .. code-block:: python
 
     print(
-"""))[0][0])
+"""))
 
     def test_check_with_extra_blank_lines(self):
-        self.assertEqual(
-            6,
-            list(rstcheck.check(
+        self.assert_lines_equal(
+            [6],
+            rstcheck.check(
                 """\
 Test
 ====
@@ -38,12 +42,12 @@ Test
 
 
 
-"""))[0][0])
+"""))
 
     def test_check_nested_rst(self):
-        self.assertEqual(
-            32,
-            list(rstcheck.check(
+        self.assert_lines_equal(
+            [32],
+            rstcheck.check(
                 """\
 Test
 ====
@@ -77,7 +81,7 @@ Test
                     .. code-block:: python
 
                         print(
-"""))[0][0])
+"""))
 
 
 if __name__ == '__main__':
