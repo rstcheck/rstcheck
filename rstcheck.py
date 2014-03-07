@@ -184,7 +184,7 @@ def run_in_subprocess(code, filename_suffix, arguments):
         """Yield errors."""
         raw_result = process.communicate()
         if process.returncode != 0:
-            return (raw_result[1].decode('utf-8'),
+            return (raw_result[1].decode(),
                     temporary_file.name)
 
     return run
