@@ -2,7 +2,7 @@
 rstcheck
 ========
 
-.. image:: https://travis-ci.org/myint/rstcheck.png?branch=master
+.. image:: https://travis-ci.org/myint/rstcheck.svg?branch=master
     :target: https://travis-ci.org/myint/rstcheck
     :alt: Build status
 
