@@ -67,8 +67,11 @@ def check(source, filename='<string>', report_level=2, ignore=None):
 
 def check_file(filename, report_level=2, ignore=None):
     """Yield errors."""
-    with open(filename) as input_file:
-        contents = input_file.read()
+    if filename == '-':
+        contents = sys.stdin.read()
+    else:
+        with open(filename) as input_file:
+            contents = input_file.read()
 
     for error in check(contents,
                        filename=filename,

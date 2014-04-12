@@ -2,8 +2,14 @@
 
 ./rstcheck.py examples/good.rst
 ./rstcheck.py examples/unknown.rst
+./rstcheck.py - < examples/good.rst
 
 if ./rstcheck.py examples/bad_cpp.rst
+then
+    exit 1
+fi
+
+if ./rstcheck.py - < examples/bad_cpp.rst
 then
     exit 1
 fi
