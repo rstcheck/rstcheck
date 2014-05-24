@@ -28,6 +28,21 @@ Test
     print(
 """))
 
+    def test_check_json(self):
+        self.assert_lines_equal(
+            [7],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: json
+
+    {
+        'abc': 123
+    }
+"""))
+
     def test_check_with_extra_blank_lines(self):
         self.assert_lines_equal(
             [6],

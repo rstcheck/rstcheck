@@ -29,7 +29,9 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -172,6 +174,25 @@ def python_checker(code):
     return run_check
 
 
+def json_checker(code):
+    """Return checker."""
+    def run_check():
+        """Yield errors."""
+        try:
+            json.loads(code)
+        except ValueError as exception:
+            message = str(exception)
+            line_number = 0
+
+            found = re.search(r'\bline\s+([0-9]+)', message)
+            if found:
+                line_number = int(found.group(1))
+
+            yield (int(line_number), message)
+
+    return run_check
+
+
 def run_in_subprocess(code, filename_suffix, arguments):
     """Return None on success."""
     temporary_file = tempfile.NamedTemporaryFile(mode='w',
@@ -217,6 +238,7 @@ class CheckTranslator(nodes.NodeVisitor):
             'bash': bash_checker,
             'c': c_checker,
             'cpp': cpp_checker,
+            'json': json_checker,
             'python': python_checker,
             'rst': lambda source: lambda: check(source, ignore=self.ignore)
         }.get(language)
