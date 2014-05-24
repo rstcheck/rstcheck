@@ -25,6 +25,7 @@ Supported languages in code blocks
 - Bash
 - C (C99)
 - C++ (C++11)
+- JSON
 - Python
 - reStructuredText
 
