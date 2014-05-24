@@ -2,6 +2,7 @@ check:
 	pep8 rstcheck.py setup.py
 	pylint \
 		--reports=no \
+		--disable=bad-continuation \
 		--disable=no-member \
 		--rcfile=/dev/null \
 		rstcheck.py setup.py
