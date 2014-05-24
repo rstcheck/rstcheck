@@ -184,7 +184,7 @@ def json_checker(code):
             message = str(exception)
             line_number = 0
 
-            found = re.search(r'\bline\s+([0-9]+)', message)
+            found = re.search(r': line\s+([0-9]+)[^:]*$', message)
             if found:
                 line_number = int(found.group(1))
 
