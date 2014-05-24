@@ -40,7 +40,7 @@ from docutils import core, nodes, utils, writers
 from docutils.parsers import rst
 
 
-__version__ = '0.3.6'
+__version__ = '0.4'
 
 
 def check(source, filename='<string>', report_level=2, ignore=None):
