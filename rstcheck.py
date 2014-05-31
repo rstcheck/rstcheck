@@ -29,6 +29,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+import io
 import json
 import os
 import re
@@ -43,7 +44,8 @@ from docutils.parsers import rst
 __version__ = '0.4.1'
 
 
-def check(source, filename='<string>', report_level=2, ignore=None):
+def check(source, filename='<string>', report_level=0, ignore=None,
+          warning_stream=sys.stderr):
     """Yield errors.
 
     Use lower report_level for noisier error output.
@@ -58,16 +60,18 @@ def check(source, filename='<string>', report_level=2, ignore=None):
 
     """
     writer = CheckWriter(source, filename, ignore=ignore)
+
     core.publish_string(source, writer=writer,
                         source_path=filename,
-                        settings_overrides={'report_level': report_level})
+                        settings_overrides={'report_level': report_level,
+                                            'warning_stream': warning_stream})
 
     for checker in writer.checkers:
         for error in checker():
             yield error
 
 
-def check_file(filename, report_level=2, ignore=None):
+def check_file(filename, report_level=0, ignore=None):
     """Yield errors."""
     if filename == '-':
         contents = sys.stdin.read()
@@ -146,20 +150,32 @@ def gcc_checker(code, filename_suffix, arguments):
         result = run()
         if result:
             (output, filename) = result
-            prefix = filename + ':'
             for line in output.splitlines():
-                if not line.startswith(prefix):
-                    continue
-                message = line[len(prefix):]
-                split_message = message.split(':', 2)
                 try:
-                    line_number = int(split_message[0])
+                    yield parse_gcc_style_error_message(line,
+                                                        filename=filename)
                 except ValueError:
                     continue
-                yield (line_number,
-                       split_message[2].strip())
 
     return run_check
+
+
+def parse_gcc_style_error_message(message, filename, has_column=True):
+    """Parse GCC-style error message.
+
+    Return (line_number, message). Raise ValueError if message cannot be
+    parsed.
+
+    """
+    colons = 2 if has_column else 1
+    prefix = filename + ':'
+    if not message.startswith(prefix):
+        raise ValueError()
+    message = message[len(prefix):]
+    split_message = message.split(':', colons)
+    line_number = int(split_message[0])
+    return (line_number,
+            split_message[colons].strip())
 
 
 def python_checker(code):
@@ -319,7 +335,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
     parser.add_argument('files', nargs='+',
                         help='files to check')
-    parser.add_argument('--report', type=int, metavar='level', default=2,
+    parser.add_argument('--report', type=int, metavar='level', default=0,
                         help='report system messages at or higher than level; '
                              '1 info, 2 warning, 3 error, 4 severe, 5 none '
                              '(default: %(default)s)')
