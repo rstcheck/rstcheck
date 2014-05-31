@@ -13,4 +13,4 @@ script:
     - ./test_rstcheck.py
     - ./test.bash
     - rstcheck examples/good.rst
-    - rstcheck --ignore=cpp,python README.rst
+    - rstcheck --ignore=cpp,python,rst README.rst
