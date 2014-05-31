@@ -30,6 +30,7 @@ with open('README.rst') as readme:
             'Programming Language :: Python :: 3.4',
             'Topic :: Software Development :: Quality Assurance',
         ],
+        keywords='restructuredtext,lint,check,pypi,readme,rst,analyze',
         py_modules=['rstcheck'],
         entry_points={'console_scripts': ['rstcheck = rstcheck:main']},
         install_requires=['docutils']
