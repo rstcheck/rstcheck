@@ -69,3 +69,15 @@ With bad C++ syntax:
 
     $ rstcheck bad_cpp.rst
     bad_cpp.rst:9: (ERROR/3) (cpp) error: 'x' was not declared in this scope
+
+With bad syntax in the reStructuredText document itself:
+
+.. code-block:: rst
+
+    Testing
+    ===
+
+::
+
+    $ ./rstcheck.py example.rst
+    example.rst:2: (INFO/1) Possible title underline, too short for the title.

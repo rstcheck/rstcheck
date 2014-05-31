@@ -24,4 +24,9 @@ then
     exit 1
 fi
 
+if ./rstcheck.py examples/bad_rst_in_rst.rst
+then
+    exit 1
+fi
+
 echo -e '\x1b[01;32mOkay\x1b[0m'

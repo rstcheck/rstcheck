@@ -86,6 +86,28 @@ def check_file(filename, report_level=0, ignore=None):
         yield error
 
 
+def check_rst(source, ignore):
+    """Yield errors in nested RST code."""
+    string_io = io.StringIO()
+    filename = '<string>'
+
+    for result in check(source,
+                        filename=filename,
+                        ignore=ignore,
+                        warning_stream=string_io):
+        yield result
+
+    rst_errors = string_io.getvalue().strip()
+    if rst_errors:
+        for message in rst_errors.splitlines():
+            try:
+                yield parse_gcc_style_error_message(message,
+                                                    filename=filename,
+                                                    has_column=False)
+            except ValueError:
+                continue
+
+
 class CodeBlockDirective(rst.Directive):
 
     """Code block directive."""
@@ -256,7 +278,7 @@ class CheckTranslator(nodes.NodeVisitor):
             'cpp': cpp_checker,
             'json': json_checker,
             'python': python_checker,
-            'rst': lambda source: lambda: check(source, ignore=self.ignore)
+            'rst': lambda source: lambda: check_rst(source, ignore=self.ignore)
         }.get(language)
 
         if checker:

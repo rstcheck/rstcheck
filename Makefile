@@ -8,9 +8,9 @@ check:
 		rstcheck.py setup.py
 	check-manifest
 	python setup.py --long-description | \
-		rstcheck --report=1 --ignore=cpp,python -
+		rstcheck --ignore=cpp,python,rst -
 	scspell rstcheck.py setup.py README.rst
-	./rstcheck.py --ignore=cpp,python README.rst
+	./rstcheck.py --ignore=cpp,python,rst README.rst
 
 readme:
 	@restview --long-description --strict
