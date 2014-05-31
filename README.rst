@@ -74,10 +74,11 @@ With bad syntax in the reStructuredText document itself:
 
 .. code-block:: rst
 
-    Testing
+    ====
+    Test
     ===
 
 ::
 
-    $ ./rstcheck.py example.rst
-    example.rst:2: (INFO/1) Possible title underline, too short for the title.
+    $ rstcheck bad_rst.rst
+    bad_rst.rst:1: (SEVERE/4) Title overline & underline mismatch.
