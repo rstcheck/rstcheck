@@ -41,7 +41,7 @@ from docutils import core, nodes, utils, writers
 from docutils.parsers import rst
 
 
-__version__ = '0.5a0'
+__version__ = '0.5'
 
 
 def check(source, filename='<string>', report_level=1, ignore=None,
