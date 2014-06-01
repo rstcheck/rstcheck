@@ -44,7 +44,7 @@ from docutils.parsers import rst
 __version__ = '0.5a0'
 
 
-def check(source, filename='<string>', report_level=0, ignore=None,
+def check(source, filename='<string>', report_level=1, ignore=None,
           warning_stream=sys.stderr):
     """Yield errors.
 
@@ -71,7 +71,7 @@ def check(source, filename='<string>', report_level=0, ignore=None,
             yield error
 
 
-def check_file(filename, report_level=0, ignore=None):
+def check_file(filename, report_level=1, ignore=None):
     """Yield errors."""
     if filename == '-':
         contents = sys.stdin.read()
@@ -357,7 +357,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
     parser.add_argument('files', nargs='+',
                         help='files to check')
-    parser.add_argument('--report', type=int, metavar='level', default=0,
+    parser.add_argument('--report', type=int, metavar='level', default=1,
                         help='report system messages at or higher than level; '
                              '1 info, 2 warning, 3 error, 4 severe, 5 none '
                              '(default: %(default)s)')

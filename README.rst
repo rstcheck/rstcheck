@@ -30,8 +30,8 @@ Supported languages in code blocks
 - reStructuredText
 
 
-Example
-=======
+Examples
+========
 
 With bad Python syntax:
 
@@ -82,3 +82,22 @@ With bad syntax in the reStructuredText document itself:
 
     $ rstcheck bad_rst.rst
     bad_rst.rst:1: (SEVERE/4) Title overline & underline mismatch.
+
+
+Options
+=======
+
+::
+
+    usage: rstcheck [-h] [--report level] [--ignore language] files [files ...]
+
+    Checks code blocks in reStructuredText.
+
+    positional arguments:
+      files              files to check
+
+    optional arguments:
+      -h, --help         show this help message and exit
+      --report level     report system messages at or higher than level; 1 info, 2
+                         warning, 3 error, 4 severe, 5 none (default: 1)
+      --ignore language  comma-separated list of languages to ignore
