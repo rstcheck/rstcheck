@@ -364,6 +364,8 @@ def main():
                              '(default: %(default)s)')
     parser.add_argument('--ignore', metavar='language', default='',
                         help='comma-separated list of languages to ignore')
+    parser.add_argument('--version', action='version',
+                        version='%(prog)s ' + __version__)
     args = parser.parse_args()
 
     status = 0
