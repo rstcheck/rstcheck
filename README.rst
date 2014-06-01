@@ -101,3 +101,15 @@ Options
       --report level     report system messages at or higher than level; 1 info, 2
                          warning, 3 error, 4 severe, 5 none (default: 1)
       --ignore language  comma-separated list of languages to ignore
+
+
+Usage in Vim
+============
+
+To check reStructuredText in Vim using Syntastic_:
+
+.. code-block:: vim
+
+    let g:syntastic_rst_checkers = ['rstcheck']
+
+.. _Syntastic: https://github.com/scrooloose/syntastic
