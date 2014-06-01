@@ -31,6 +31,7 @@ from __future__ import unicode_literals
 import argparse
 import io
 import json
+import locale
 import os
 import re
 import subprocess
@@ -246,7 +247,7 @@ def run_in_subprocess(code, filename_suffix, arguments):
         """Yield errors."""
         raw_result = process.communicate()
         if process.returncode != 0:
-            return (raw_result[1].decode(),
+            return (raw_result[1].decode(locale.getpreferredencoding()),
                     temporary_file.name)
 
     return run
