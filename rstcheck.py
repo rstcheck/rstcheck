@@ -87,12 +87,35 @@ def check_file(filename, report_level=1, ignore=None):
         yield error
 
 
-def check_rst(source, ignore):
+def check_python(code):
+    """Yield errors."""
+    try:
+        compile(code, '<string>', 'exec')
+    except SyntaxError as exception:
+        yield (int(exception.lineno), exception.msg)
+
+
+def check_json(code):
+    """Yield errors."""
+    try:
+        json.loads(code)
+    except ValueError as exception:
+        message = str(exception)
+        line_number = 0
+
+        found = re.search(r': line\s+([0-9]+)[^:]*$', message)
+        if found:
+            line_number = int(found.group(1))
+
+        yield (int(line_number), message)
+
+
+def check_rst(code, ignore):
     """Yield errors in nested RST code."""
     string_io = io.StringIO()
     filename = '<string>'
 
-    for result in check(source,
+    for result in check(code,
                         filename=filename,
                         ignore=ignore,
                         warning_stream=string_io):
@@ -201,37 +224,6 @@ def parse_gcc_style_error_message(message, filename, has_column=True):
             split_message[colons].strip())
 
 
-def python_checker(code):
-    """Return checker."""
-    def run_check():
-        """Yield errors."""
-        try:
-            compile(code, '<string>', 'exec')
-        except SyntaxError as exception:
-            yield (int(exception.lineno), exception.msg)
-
-    return run_check
-
-
-def json_checker(code):
-    """Return checker."""
-    def run_check():
-        """Yield errors."""
-        try:
-            json.loads(code)
-        except ValueError as exception:
-            message = str(exception)
-            line_number = 0
-
-            found = re.search(r': line\s+([0-9]+)[^:]*$', message)
-            if found:
-                line_number = int(found.group(1))
-
-            yield (int(line_number), message)
-
-    return run_check
-
-
 def run_in_subprocess(code, filename_suffix, arguments):
     """Return None on success."""
     temporary_file = tempfile.NamedTemporaryFile(mode='w',
@@ -277,8 +269,8 @@ class CheckTranslator(nodes.NodeVisitor):
             'bash': bash_checker,
             'c': c_checker,
             'cpp': cpp_checker,
-            'json': json_checker,
-            'python': python_checker,
+            'json': lambda source: lambda: check_json(source),
+            'python': lambda source: lambda: check_python(source),
             'rst': lambda source: lambda: check_rst(source, ignore=self.ignore)
         }.get(language)
 
