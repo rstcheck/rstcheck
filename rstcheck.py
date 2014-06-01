@@ -38,8 +38,11 @@ import subprocess
 import sys
 import tempfile
 
-from docutils import core, nodes, utils, writers
-from docutils.parsers import rst
+import docutils.core
+import docutils.nodes
+import docutils.utils
+import docutils.writers
+import docutils.parsers.rst
 
 
 __version__ = '0.5'
@@ -62,10 +65,11 @@ def check(source, filename='<string>', report_level=1, ignore=None,
     """
     writer = CheckWriter(source, filename, ignore=ignore)
 
-    core.publish_string(source, writer=writer,
-                        source_path=filename,
-                        settings_overrides={'report_level': report_level,
-                                            'warning_stream': warning_stream})
+    docutils.core.publish_string(
+        source, writer=writer,
+        source_path=filename,
+        settings_overrides={'report_level': report_level,
+                            'warning_stream': warning_stream})
 
     for checker in writer.checkers:
         for error in checker():
@@ -132,7 +136,7 @@ def check_rst(code, ignore):
                 continue
 
 
-class CodeBlockDirective(rst.Directive):
+class CodeBlockDirective(docutils.parsers.rst.Directive):
 
     """Code block directive."""
 
@@ -146,13 +150,15 @@ class CodeBlockDirective(rst.Directive):
         except IndexError:
             language = ''
         code = '\n'.join(self.content)
-        literal = nodes.literal_block(code, code)
+        literal = docutils.nodes.literal_block(code, code)
         literal['classes'].append('code-block')
         literal['language'] = language
         return [literal]
 
-rst.directives.register_directive('code-block', CodeBlockDirective)
-rst.directives.register_directive('sourcecode', CodeBlockDirective)
+docutils.parsers.rst.directives.register_directive('code-block',
+                                                   CodeBlockDirective)
+docutils.parsers.rst.directives.register_directive('sourcecode',
+                                                   CodeBlockDirective)
 
 
 def bash_checker(code):
@@ -245,12 +251,12 @@ def run_in_subprocess(code, filename_suffix, arguments):
     return run
 
 
-class CheckTranslator(nodes.NodeVisitor):
+class CheckTranslator(docutils.nodes.NodeVisitor):
 
     """Visits code blocks and checks for syntax errors in code."""
 
     def __init__(self, document, contents, filename, ignore):
-        nodes.NodeVisitor.__init__(self, document)
+        docutils.nodes.NodeVisitor.__init__(self, document)
         self.checkers = []
         self.contents = contents
         self.filename = filename
@@ -293,7 +299,7 @@ class CheckTranslator(nodes.NodeVisitor):
                         yield (self.filename, 0, 'unknown error')
             self.checkers.append(run_check)
 
-        raise nodes.SkipNode
+        raise docutils.nodes.SkipNode
 
     def unknown_visit(self, node):
         """Ignore."""
@@ -324,12 +330,12 @@ def beginning_of_code_block(node, full_contents):
     return line_number - code_block_length
 
 
-class CheckWriter(writers.Writer):
+class CheckWriter(docutils.writers.Writer):
 
     """Runs CheckTranslator on code blocks."""
 
     def __init__(self, contents, filename, ignore):
-        writers.Writer.__init__(self)
+        docutils.writers.Writer.__init__(self)
         self.checkers = []
         self.contents = contents
         self.filename = filename
@@ -371,7 +377,7 @@ def main():
                                                    error[1]),
                       file=sys.stderr)
                 status = 1
-        except utils.SystemMessage:
+        except docutils.utils.SystemMessage:
             # docutils already prints a message to standard error.
             status = 1
 
