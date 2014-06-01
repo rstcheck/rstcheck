@@ -15,6 +15,33 @@ class Tests(unittest.TestCase):
         self.assertEqual(line_numbers,
                          list(dict(results).keys()))
 
+    def test_parse_gcc_style_error_message(self):
+        self.assertEqual(
+            (32, 'error message'),
+            rstcheck.parse_gcc_style_error_message(
+                'filename:32:7: error message',
+                filename='filename'))
+
+    def test_parse_gcc_style_error_message_with_no_column(self):
+        self.assertEqual(
+            (32, 'error message'),
+            rstcheck.parse_gcc_style_error_message(
+                'filename:32: error message',
+                filename='filename',
+                has_column=False))
+
+    def test_parse_gcc_style_error_message_with_parsing_error(self):
+        with self.assertRaises(ValueError):
+            rstcheck.parse_gcc_style_error_message(
+                ':32:3 error message',
+                filename='filename')
+
+        with self.assertRaises(IndexError):
+            rstcheck.parse_gcc_style_error_message(
+                'filename:32: error message',
+                filename='filename',
+                has_column=True)
+
     def test_check(self):
         self.assert_lines_equal(
             [6],
