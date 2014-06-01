@@ -6,9 +6,7 @@ rstcheck
     :target: https://travis-ci.org/myint/rstcheck
     :alt: Build status
 
-Checks code blocks in reStructuredText.
-
-This is in addition to the usual docutils reStructuredText syntax check itself.
+Checks syntax of reStructuredText and code blocks nested within it.
 
 
 Installation
