@@ -40,9 +40,9 @@ import tempfile
 
 import docutils.core
 import docutils.nodes
+import docutils.parsers.rst
 import docutils.utils
 import docutils.writers
-import docutils.parsers.rst
 
 
 __version__ = '0.5'
