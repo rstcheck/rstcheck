@@ -76,7 +76,7 @@ def check(source, filename='<string>', report_level=1, ignore=None,
             yield error
 
 
-def check_file(filename, report_level=1, ignore=None):
+def _check_file(filename, report_level=1, ignore=None):
     """Yield errors."""
     if filename == '-':
         contents = sys.stdin.read()
@@ -369,9 +369,9 @@ def main():
     status = 0
     for filename in args.files:
         try:
-            for error in check_file(filename,
-                                    report_level=args.report,
-                                    ignore=args.ignore.split(',')):
+            for error in _check_file(filename,
+                                     report_level=args.report,
+                                     ignore=args.ignore.split(',')):
                 print('{}:{}: (ERROR/3) {}'.format(filename,
                                                    error[0],
                                                    error[1]),
