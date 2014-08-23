@@ -125,6 +125,21 @@ Test
                         print(
 """))
 
+    def test_ignore_sphinx_directives(self):
+        self.assert_lines_equal(
+            [],
+            rstcheck.check(
+                """\
+.. toctree::
+    :maxdepth: 2
+
+    intro
+    strings
+    datatypes
+    numeric
+    (many more documents listed here)
+"""))
+
 
 if __name__ == '__main__':
     unittest.main()

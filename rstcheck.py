@@ -161,6 +161,20 @@ docutils.parsers.rst.directives.register_directive('sourcecode',
                                                    CodeBlockDirective)
 
 
+class IgnoredDirective(docutils.parsers.rst.Directive):
+
+    """Stub for unknown directives."""
+
+    has_content = True
+
+    def run(self):
+        """Do nothing."""
+        return []
+
+# Ignore Sphinx directives.
+docutils.parsers.rst.directives.register_directive('toctree', IgnoredDirective)
+
+
 def bash_checker(code):
     """Return checker."""
     run = run_in_subprocess(code, '.bash', ['bash', '-n'])
