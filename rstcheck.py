@@ -45,7 +45,7 @@ import docutils.utils
 import docutils.writers
 
 
-__version__ = '0.5'
+__version__ = '0.5.1'
 
 
 def check(source, filename='<string>', report_level=1, ignore=None,
