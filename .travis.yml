@@ -8,9 +8,12 @@ python:
 
 install:
     - python setup.py --quiet install
+    - pip install pep8 pyflakes
 
 script:
     - ./test_rstcheck.py
     - ./test.bash
     - rstcheck examples/good.rst
     - rstcheck --ignore=cpp,python,rst README.rst
+    - pep8 ./*.py
+    - pyflakes ./*.py
