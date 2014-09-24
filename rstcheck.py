@@ -172,19 +172,17 @@ class IgnoredDirective(docutils.parsers.rst.Directive):
         return []
 
 # Ignore Sphinx directives.
-IGNORED_DIRECTIVES = frozenset([
-    'toctree',
-    'todo',
-    'versionadded',
-    'versionchanged',
-    'deprecated',
-    'seealso',
-    'centered',
-    'hlist',
-    'glossary',
-    'productionlist'])
-
-for _directive in IGNORED_DIRECTIVES:
+for _directive in [
+        'toctree',
+        'todo',
+        'versionadded',
+        'versionchanged',
+        'deprecated',
+        'seealso',
+        'centered',
+        'hlist',
+        'glossary',
+        'productionlist']:
     docutils.parsers.rst.directives.register_directive(_directive,
                                                        IgnoredDirective)
 
