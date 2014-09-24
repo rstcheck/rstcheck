@@ -187,6 +187,40 @@ for _directive in [
                                                        IgnoredDirective)
 
 
+def ignore_role(name, rawtext, text, lineno, inliner, options={},
+                content=[]):
+    """Stub for unknown roles."""
+    return ([], [])
+
+
+# Ignore Sphinx roles.
+for _role in [
+        'ref',
+        'doc',
+        'download',
+        'envvar',
+        'token',
+        'keyword',
+        'option',
+        'term',
+        'abbr',
+        'command',
+        'dfn',
+        'file',
+        'guilabel',
+        'kbd',
+        'mailheader',
+        'makevar',
+        'manpage',
+        'menuselection',
+        'mimetype',
+        'newsgroup',
+        'program',
+        'regexp',
+        'samp']:
+    docutils.parsers.rst.roles.register_local_role(_role, ignore_role)
+
+
 def bash_checker(code):
     """Return checker."""
     run = run_in_subprocess(code, '.bash', ['bash', '-n'])
