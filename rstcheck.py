@@ -172,13 +172,21 @@ class IgnoredDirective(docutils.parsers.rst.Directive):
         return []
 
 # Ignore Sphinx directives.
-# Use a tuple to store Sphinx driectives that need to be ignored
-ignored_directives = ('toctree', 'todo', 
-                      'versionadded', 'versionchanged', 
-                      'deprecated', 'seealso', 'centered', 
-                      'hlist', 'glossary', 'productionlist')
-for directive in ignored_directives:
-    docutils.parsers.rst.directives.register_directive(directive, IgnoredDirective)
+IGNORED_DIRECTIVES = frozenset([
+    'toctree',
+    'todo',
+    'versionadded',
+    'versionchanged',
+    'deprecated',
+    'seealso',
+    'centered',
+    'hlist',
+    'glossary',
+    'productionlist'])
+
+for _directive in IGNORED_DIRECTIVES:
+    docutils.parsers.rst.directives.register_directive(_directive,
+                                                       IgnoredDirective)
 
 
 def bash_checker(code):
