@@ -173,19 +173,19 @@ class IgnoredDirective(docutils.parsers.rst.Directive):
 
 # Ignore Sphinx directives.
 for _directive in [
+        'centered',
+        'deprecated',
+        'envvar',
+        'glossary',
+        'hlist',
+        'option',
+        'productionlist',
+        'py:function',
+        'seealso',
         'toctree',
         'todo',
         'versionadded',
-        'versionchanged',
-        'deprecated',
-        'seealso',
-        'centered',
-        'hlist',
-        'glossary',
-        'productionlist',
-        'option',
-        'py:function',
-        'envvar']:
+        'versionchanged']:
     docutils.parsers.rst.directives.register_directive(_directive,
                                                        IgnoredDirective)
 
@@ -197,30 +197,30 @@ def ignore_role(name, rawtext, text, lineno, inliner, options={},
 
 # Ignore Sphinx roles.
 for _role in [
-        'ref',
-        'doc',
-        'download',
-        'envvar',
-        'token',
-        'keyword',
-        'option',
-        'term',
         'abbr',
         'command',
         'dfn',
+        'doc',
+        'download',
+        'envvar',
         'file',
         'guilabel',
         'kbd',
+        'keyword',
         'mailheader',
         'makevar',
         'manpage',
         'menuselection',
         'mimetype',
         'newsgroup',
+        'option',
         'program',
         'py:func',
+        'ref',
         'regexp',
-        'samp']:
+        'samp',
+        'term',
+        'token']:
     docutils.parsers.rst.roles.register_local_role(_role, ignore_role)
 
 
