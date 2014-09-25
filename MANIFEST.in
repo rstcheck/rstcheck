@@ -1,3 +1,4 @@
+include AUTHORS.rst
 include README.rst
 
 exclude .travis.yml
