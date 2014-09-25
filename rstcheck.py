@@ -182,7 +182,10 @@ for _directive in [
         'centered',
         'hlist',
         'glossary',
-        'productionlist']:
+        'productionlist',
+        'option',
+        'py:function',
+        'envvar']:
     docutils.parsers.rst.directives.register_directive(_directive,
                                                        IgnoredDirective)
 
@@ -191,7 +194,6 @@ def ignore_role(name, rawtext, text, lineno, inliner, options={},
                 content=[]):
     """Stub for unknown roles."""
     return ([], [])
-
 
 # Ignore Sphinx roles.
 for _role in [
@@ -216,6 +218,7 @@ for _role in [
         'mimetype',
         'newsgroup',
         'program',
+        'py:func',
         'regexp',
         'samp']:
     docutils.parsers.rst.roles.register_local_role(_role, ignore_role)
