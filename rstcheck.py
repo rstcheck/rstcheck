@@ -440,6 +440,9 @@ def main():
         except docutils.utils.SystemMessage:
             # docutils already prints a message to standard error.
             status = 1
+        except IOError as exception:
+            print(exception, file=sys.stderr)
+            status = 1
 
     return status
 
