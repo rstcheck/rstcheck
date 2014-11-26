@@ -190,9 +190,10 @@ for _directive in [
                                                        IgnoredDirective)
 
 
-def ignore_role(name, rawtext, text, lineno, inliner, options={},
-                content=[]):
+def ignore_role(name, rawtext, text, lineno, inliner,
+                options=None, content=None):
     """Stub for unknown roles."""
+    # pylint: disable=unused-argument
     return ([], [])
 
 # Ignore Sphinx roles.

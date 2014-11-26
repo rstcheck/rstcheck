@@ -3,7 +3,10 @@ check:
 	pylint \
 		--reports=no \
 		--disable=bad-continuation \
+		--disable=locally-disabled \
 		--disable=no-member \
+		--disable=too-few-public-methods \
+		--disable=too-many-arguments \
 		--rcfile=/dev/null \
 		rstcheck.py setup.py
 	check-manifest
