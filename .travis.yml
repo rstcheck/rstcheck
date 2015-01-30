@@ -6,6 +6,10 @@ python:
     - "3.3"
     - "3.4"
 
+env:
+    -
+    - LANG=
+
 install:
     - python setup.py --quiet install
     - pip install pep8 pyflakes

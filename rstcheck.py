@@ -294,6 +294,11 @@ def parse_gcc_style_error_message(message, filename, has_column=True):
             split_message[colons].strip())
 
 
+def get_encoding():
+    """Return preferred encoding."""
+    return locale.getpreferredencoding() or sys.getdefaultencoding()
+
+
 def run_in_subprocess(code, filename_suffix, arguments):
     """Return None on success."""
     temporary_file = tempfile.NamedTemporaryFile(mode='w',
@@ -309,7 +314,7 @@ def run_in_subprocess(code, filename_suffix, arguments):
         """Yield errors."""
         raw_result = process.communicate()
         if process.returncode != 0:
-            return (raw_result[1].decode(locale.getpreferredencoding()),
+            return (raw_result[1].decode(get_encoding()),
                     temporary_file.name)
 
     return run
