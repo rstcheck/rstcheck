@@ -45,8 +45,8 @@ import docutils.utils
 import docutils.writers
 
 try:
-    from sphinx.roles import *
-    from sphinx.directives import *
+    from sphinx.roles import *  # NOQA
+    from sphinx.directives import *  # NOQA
 except ImportError:
     pass
 

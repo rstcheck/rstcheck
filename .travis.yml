@@ -12,7 +12,7 @@ env:
 
 install:
     - python setup.py --quiet install
-    - pip install pep8 pyflakes
+    - pip install pep8 flake8
 
 script:
     - ./test_rstcheck.py
@@ -20,4 +20,4 @@ script:
     - rstcheck examples/good.rst
     - rstcheck --ignore=cpp,python,rst README.rst
     - pep8 ./*.py
-    - pyflakes ./*.py
+    - flake8 ./*.py
