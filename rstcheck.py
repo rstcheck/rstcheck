@@ -47,8 +47,9 @@ import docutils.writers
 try:
     from sphinx.roles import *  # NOQA
     from sphinx.directives import *  # NOQA
+    from sphinx.directives.code import CodeBlock
 except ImportError:
-    pass
+    CodeBlock = docutils.parsers.rst.Directive
 
 __version__ = '0.6'
 
@@ -141,7 +142,7 @@ def check_rst(code, ignore):
                 continue
 
 
-class CodeBlockDirective(docutils.parsers.rst.Directive):
+class CodeBlockDirective(CodeBlock):
 
     """Code block directive."""
 
