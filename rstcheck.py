@@ -44,6 +44,11 @@ import docutils.parsers.rst
 import docutils.utils
 import docutils.writers
 
+try:
+    from sphinx.roles import *
+    from sphinx.directives import *
+except ImportError:
+    pass
 
 __version__ = '0.6'
 
