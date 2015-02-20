@@ -84,6 +84,7 @@ Test
 .. code-block:: python
 
     print(
+
 """))
 
     def test_check_nested_rst(self):
