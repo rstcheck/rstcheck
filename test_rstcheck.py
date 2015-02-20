@@ -138,6 +138,33 @@ Test
     datatypes
     numeric
     (many more documents listed here)
+
+.. highlight:: python
+   :linenothreshold: 5
+
+::
+
+   print('Hello')
+
+.. code-block:: ruby
+   :linenos:
+
+   puts "Hello!"
+
+.. code-block:: python
+   :linenos:
+   :emphasize-lines: 3,5
+
+   def some_function():
+       interesting = False
+       print('This line is highlighted.')
+       print('This one is not...')
+       print('...but this one is.')
+
+.. literalinclude:: rstcheck.py
+   :language: python
+   :linenos:
+
 """))
 
 

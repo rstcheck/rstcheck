@@ -183,6 +183,7 @@ for _directive in [
         'deprecated',
         'envvar',
         'glossary',
+        'literalinclude',
         'hlist',
         'option',
         'productionlist',
@@ -204,28 +205,11 @@ def ignore_role(name, rawtext, text, lineno, inliner,
 
 # Ignore Sphinx roles.
 for _role in [
-        'abbr',
-        'command',
-        'dfn',
-        'doc',
-        'download',
         'envvar',
-        'file',
-        'guilabel',
-        'kbd',
         'keyword',
-        'mailheader',
-        'makevar',
-        'manpage',
-        'menuselection',
-        'mimetype',
-        'newsgroup',
         'option',
-        'program',
         'py:func',
         'ref',
-        'regexp',
-        'samp',
         'term',
         'token']:
     docutils.parsers.rst.roles.register_local_role(_role, ignore_role)
@@ -309,7 +293,7 @@ def run_in_subprocess(code, filename_suffix, arguments):
     """Return None on success."""
     temporary_file = tempfile.NamedTemporaryFile(mode='w',
                                                  suffix=filename_suffix)
-    temporary_file.write(code)
+    temporary_file.write(code.encode('utf-8'))
     temporary_file.flush()
 
     process = subprocess.Popen(arguments + [temporary_file.name],
