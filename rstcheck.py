@@ -47,9 +47,8 @@ import docutils.writers
 try:
     from sphinx.roles import *  # NOQA
     from sphinx.directives import *  # NOQA
-    from sphinx.directives.code import CodeBlock
 except ImportError:
-    CodeBlock = docutils.parsers.rst.Directive
+    pass
 
 __version__ = '0.6'
 
@@ -142,31 +141,6 @@ def check_rst(code, ignore):
                 continue
 
 
-class CodeBlockDirective(CodeBlock):
-
-    """Code block directive."""
-
-    has_content = True
-    optional_arguments = 1
-
-    def run(self):
-        """Run directive."""
-        try:
-            language = self.arguments[0]
-        except IndexError:
-            language = ''
-        code = '\n'.join(self.content)
-        literal = docutils.nodes.literal_block(code, code)
-        literal['classes'].append('code-block')
-        literal['language'] = language
-        return [literal]
-
-docutils.parsers.rst.directives.register_directive('code-block',
-                                                   CodeBlockDirective)
-docutils.parsers.rst.directives.register_directive('sourcecode',
-                                                   CodeBlockDirective)
-
-
 class IgnoredDirective(docutils.parsers.rst.Directive):
 
     """Stub for unknown directives."""
@@ -183,6 +157,7 @@ for _directive in [
         'deprecated',
         'envvar',
         'glossary',
+        'no-code-block',
         'literalinclude',
         'hlist',
         'option',
@@ -320,13 +295,10 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         self.contents = contents
         self.filename = filename
         self.ignore = ignore or []
+        self.ignore.append(None)
 
     def visit_literal_block(self, node):
-        """Check syntax of code block."""
-        if 'code-block' not in node['classes']:
-            return
-
-        language = node.get('language')
+        language = node.get('language', None)
         if language in self.ignore:
             return
 
