@@ -88,7 +88,7 @@ Test
 
     def test_check_nested_rst(self):
         self.assert_lines_equal(
-            [32],
+            [31],
             rstcheck.check(
                 """\
 Test
@@ -100,7 +100,6 @@ Test
     ====
 
     .. code-block:: rst
-
 
         Test
         ====
