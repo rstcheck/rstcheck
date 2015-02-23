@@ -73,7 +73,22 @@ Test
     }
 """))
 
-    def test_check_with_extra_blank_lines(self):
+    def test_check_with_extra_blank_lines_before(self):
+        self.assert_lines_equal(
+            [8],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: python
+
+
+
+    print(
+"""))
+
+    def test_check_with_extra_blank_lines_after(self):
         self.assert_lines_equal(
             [6],
             rstcheck.check(
@@ -84,6 +99,24 @@ Test
 .. code-block:: python
 
     print(
+
+"""))
+
+    def test_check_with_extra_blank_lines_before_and_after(self):
+        self.assert_lines_equal(
+            [8],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: python
+
+
+
+    print(
+
+
 
 """))
 
