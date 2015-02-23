@@ -301,6 +301,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         self.ignore.append(None)
 
     def visit_literal_block(self, node):
+        """Check syntax of code block."""
         language = node.get('language', None)
         if language in self.ignore:
             return
@@ -346,7 +347,10 @@ def beginning_of_code_block(node, full_contents):
     """Return line number of beginning of code block."""
     line_number = node.line
     delta = len(node.non_default_attributes().keys())
-    return line_number + delta - 1
+    current_line_contents = full_contents.splitlines()[line_number:]
+    blank_lines = next((i for i, x in enumerate(current_line_contents) if x),
+                       None)
+    return line_number + delta - 1 + blank_lines - 1
 
 
 class CheckWriter(docutils.writers.Writer):
