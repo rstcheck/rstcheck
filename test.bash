@@ -3,7 +3,7 @@
 trap "echo -e '\x1b[01;31mFailed\x1b[0m'" ERR
 
 ./rstcheck.py examples/good.rst
-./rstcheck.py examples/ascii.rst
+./rstcheck.py examples/unicode.rst
 ./rstcheck.py examples/unknown.rst
 ./rstcheck.py - < examples/good.rst
 
