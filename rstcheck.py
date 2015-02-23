@@ -44,6 +44,11 @@ import docutils.parsers.rst
 import docutils.utils
 import docutils.writers
 
+try:
+    from sphinx.roles import *  # NOQA
+    from sphinx.directives import *  # NOQA
+except ImportError:
+    pass
 
 __version__ = '0.6'
 
@@ -136,31 +141,6 @@ def check_rst(code, ignore):
                 continue
 
 
-class CodeBlockDirective(docutils.parsers.rst.Directive):
-
-    """Code block directive."""
-
-    has_content = True
-    optional_arguments = 1
-
-    def run(self):
-        """Run directive."""
-        try:
-            language = self.arguments[0]
-        except IndexError:
-            language = ''
-        code = '\n'.join(self.content)
-        literal = docutils.nodes.literal_block(code, code)
-        literal['classes'].append('code-block')
-        literal['language'] = language
-        return [literal]
-
-docutils.parsers.rst.directives.register_directive('code-block',
-                                                   CodeBlockDirective)
-docutils.parsers.rst.directives.register_directive('sourcecode',
-                                                   CodeBlockDirective)
-
-
 class IgnoredDirective(docutils.parsers.rst.Directive):
 
     """Stub for unknown directives."""
@@ -177,6 +157,8 @@ for _directive in [
         'deprecated',
         'envvar',
         'glossary',
+        'no-code-block',
+        'literalinclude',
         'hlist',
         'option',
         'productionlist',
@@ -198,28 +180,11 @@ def ignore_role(name, rawtext, text, lineno, inliner,
 
 # Ignore Sphinx roles.
 for _role in [
-        'abbr',
-        'command',
-        'dfn',
-        'doc',
-        'download',
         'envvar',
-        'file',
-        'guilabel',
-        'kbd',
         'keyword',
-        'mailheader',
-        'makevar',
-        'manpage',
-        'menuselection',
-        'mimetype',
-        'newsgroup',
         'option',
-        'program',
         'py:func',
         'ref',
-        'regexp',
-        'samp',
         'term',
         'token']:
     docutils.parsers.rst.roles.register_local_role(_role, ignore_role)
@@ -303,7 +268,10 @@ def run_in_subprocess(code, filename_suffix, arguments):
     """Return None on success."""
     temporary_file = tempfile.NamedTemporaryFile(mode='w',
                                                  suffix=filename_suffix)
-    temporary_file.write(code)
+    try:
+        temporary_file.write(code)
+    except UnicodeEncodeError:
+        temporary_file.write(code.encode('utf-8'))
     temporary_file.flush()
 
     process = subprocess.Popen(arguments + [temporary_file.name],
@@ -330,13 +298,11 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         self.contents = contents
         self.filename = filename
         self.ignore = ignore or []
+        self.ignore.append(None)
 
     def visit_literal_block(self, node):
         """Check syntax of code block."""
-        if 'code-block' not in node['classes']:
-            return
-
-        language = node.get('language')
+        language = node.get('language', None)
         if language in self.ignore:
             return
 
@@ -379,24 +345,12 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 
 def beginning_of_code_block(node, full_contents):
     """Return line number of beginning of code block."""
-    lines = full_contents.splitlines()
     line_number = node.line
-    code_block_length = len(node.rawsource.splitlines())
-
-    try:
-        # Case where there are no extra spaces.
-        if lines[line_number - 1].strip():
-            return line_number - code_block_length + 1
-    except IndexError:
-        pass
-
-    # The offsets are wrong if the RST text has multiple blank lines after the
-    # code block. This is a workaround.
-    for line_number in range(node.line, 1, -1):
-        if lines[line_number - 2].strip():
-            break
-
-    return line_number - code_block_length
+    delta = len(node.non_default_attributes().keys())
+    current_line_contents = full_contents.splitlines()[line_number:]
+    blank_lines = next((i for i, x in enumerate(current_line_contents) if x),
+                       None)
+    return line_number + delta - 1 + blank_lines - 1
 
 
 class CheckWriter(docutils.writers.Writer):
