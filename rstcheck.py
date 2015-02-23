@@ -157,13 +157,15 @@ class IgnoredDirective(docutils.parsers.rst.Directive):
 
 # Ignore Sphinx directives.
 for _directive in [
+        'attribute',
         'centered',
         'deprecated',
         'envvar',
         'glossary',
-        'no-code-block',
         'literalinclude',
         'hlist',
+        'method',
+        'no-code-block',
         'option',
         'productionlist',
         'py:function',
@@ -184,7 +186,10 @@ def ignore_role(name, rawtext, text, lineno, inliner,
 
 # Ignore Sphinx roles.
 for _role in [
+        'class',
+        'ctype',
         'envvar',
+        'exc',
         'keyword',
         'option',
         'py:func',
