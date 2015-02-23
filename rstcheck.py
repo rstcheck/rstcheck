@@ -44,13 +44,17 @@ import docutils.parsers.rst
 import docutils.utils
 import docutils.writers
 
-try:
-    from sphinx.roles import *  # NOQA
-    from sphinx.directives import *  # NOQA
-except ImportError:
-    pass
+import sphinx.directives
+import sphinx.roles
+
 
 __version__ = '0.6'
+
+
+# These are imported for side effect only. They register the directives and
+# roles so that we understand Sphinx-specific syntax.
+assert sphinx.directives
+assert sphinx.roles
 
 
 def check(source, filename='<string>', report_level=1, ignore=None,
