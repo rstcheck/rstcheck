@@ -34,5 +34,5 @@ with open('README.rst') as readme:
         keywords='restructuredtext,lint,check,pypi,readme,rst,analyze',
         py_modules=['rstcheck'],
         entry_points={'console_scripts': ['rstcheck = rstcheck:main']},
-        install_requires=['docutils']
+        install_requires=['docutils', 'sphinx']
     )
