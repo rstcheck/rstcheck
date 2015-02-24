@@ -45,10 +45,12 @@ import docutils.utils
 import docutils.writers
 
 try:
+    import sphinx
     from sphinx.roles import *  # NOQA
     from sphinx.directives import *  # NOQA
+    sphinx_version = sphinx.version_info[0] + sphinx.version_info[1]/10.0
 except ImportError:
-    pass
+    sphinx_version = 0
 
 __version__ = '0.6'
 
@@ -359,7 +361,10 @@ def beginning_of_code_block(node, full_contents):
     current_line_contents = full_contents.splitlines()[line_number:]
     blank_lines = next((i for i, x in enumerate(current_line_contents) if x),
                        None)
-    return line_number + delta - 1 + blank_lines - 1
+    sphinx_delta = 0
+    if sphinx_version > 1.2:
+        sphinx_delta = 1
+    return line_number + delta - 1 + blank_lines - 1 - sphinx_delta
 
 
 class CheckWriter(docutils.writers.Writer):
