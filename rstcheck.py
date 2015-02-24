@@ -156,24 +156,30 @@ class IgnoredDirective(docutils.parsers.rst.Directive):
         return []
 
 # Ignore Sphinx directives.
-for _directive in [
-        'attribute',
-        'centered',
-        'deprecated',
-        'envvar',
-        'glossary',
-        'literalinclude',
-        'hlist',
-        'method',
-        'no-code-block',
-        'option',
-        'productionlist',
-        'py:function',
-        'seealso',
-        'toctree',
-        'todo',
-        'versionadded',
-        'versionchanged']:
+_sphinx_directives = [
+    'centered',
+    'include',
+    'deprecated',
+    'envvar',
+    'glossary',
+    'no-code-block',
+    'literalinclude',
+    'hlist',
+    'option',
+    'productionlist',
+    'py:function',
+    'seealso',
+    'toctree',
+    'todo',
+    'versionadded',
+    'versionchanged']
+
+_sphinx_ext_autosummary = [
+    'autosummary',
+    'currentmodule',
+]
+
+for _directive in _sphinx_directives + _sphinx_ext_autosummary:
     docutils.parsers.rst.directives.register_directive(_directive,
                                                        IgnoredDirective)
 
