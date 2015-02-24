@@ -282,12 +282,9 @@ def get_encoding():
 
 def run_in_subprocess(code, filename_suffix, arguments):
     """Return None on success."""
-    temporary_file = tempfile.NamedTemporaryFile(mode='w',
+    temporary_file = tempfile.NamedTemporaryFile(mode='wb',
                                                  suffix=filename_suffix)
-    try:
-        temporary_file.write(code)
-    except UnicodeEncodeError:
-        temporary_file.write(code.encode('utf-8'))
+    temporary_file.write(code.encode('utf-8'))
     temporary_file.flush()
 
     process = subprocess.Popen(arguments + [temporary_file.name],
