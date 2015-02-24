@@ -44,6 +44,7 @@ import docutils.parsers.rst
 import docutils.utils
 import docutils.writers
 
+import sphinx
 import sphinx.directives
 import sphinx.roles
 
@@ -365,7 +366,10 @@ def beginning_of_code_block(node, full_contents):
     current_line_contents = full_contents.splitlines()[line_number:]
     blank_lines = next((i for i, x in enumerate(current_line_contents) if x),
                        None)
-    return line_number + delta - 1 + blank_lines - 1
+    sphinx_delta = 0
+    if sphinx.version_info > (1, 2):
+        sphinx_delta = 1
+    return line_number + delta - 1 + blank_lines - 1 - sphinx_delta
 
 
 class CheckWriter(docutils.writers.Writer):
