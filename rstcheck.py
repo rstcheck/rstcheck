@@ -77,15 +77,21 @@ def check(source, filename='<string>', report_level=1, ignore=None,
     """
     writer = CheckWriter(source, filename, ignore=ignore)
 
-    docutils.core.publish_string(
-        source, writer=writer,
-        source_path=filename,
-        settings_overrides={'report_level': report_level,
-                            'warning_stream': warning_stream})
-
-    for checker in writer.checkers:
-        for error in checker():
-            yield error
+    try:
+        docutils.core.publish_string(
+            source, writer=writer,
+            source_path=filename,
+            settings_overrides={'report_level': report_level,
+                                'warning_stream': warning_stream})
+    except AttributeError:
+        # Sphinx will sometimes throw an exception trying to access
+        # "self.state.document.settings.env". Ignore this for now until we
+        # figure out a better approach.
+        pass
+    else:
+        for checker in writer.checkers:
+            for error in checker():
+                yield error
 
 
 def _check_file(filename, report_level=1, ignore=None):
