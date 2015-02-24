@@ -362,7 +362,7 @@ def beginning_of_code_block(node, full_contents):
     blank_lines = next((i for i, x in enumerate(current_line_contents) if x),
                        None)
     sphinx_delta = 0
-    if sphinx_version > 1.2:
+    if sphinx_version >= 1.3:
         sphinx_delta = 1
     return line_number + delta - 1 + blank_lines - 1 - sphinx_delta
 
