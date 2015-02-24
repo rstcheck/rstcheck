@@ -29,6 +29,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+import contextlib
 import io
 import json
 import locale
@@ -39,6 +40,7 @@ import sys
 import tempfile
 
 import docutils.core
+import docutils.io
 import docutils.nodes
 import docutils.parsers.rst
 import docutils.utils
@@ -91,7 +93,8 @@ def _check_file(filename, report_level=1, ignore=None):
     if filename == '-':
         contents = sys.stdin.read()
     else:
-        with open(filename) as input_file:
+        with contextlib.closing(
+                docutils.io.FileInput(source_path=filename)) as input_file:
             contents = input_file.read()
 
     for error in check(contents,
