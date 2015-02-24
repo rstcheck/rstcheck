@@ -163,6 +163,7 @@ _sphinx_directives = [
     'deprecated',
     'envvar',
     'glossary',
+    'index',
     'no-code-block',
     'literalinclude',
     'hlist',
