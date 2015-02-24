@@ -53,6 +53,9 @@ Test
 .. code-block:: python
 
     print(
+
+
+
 """))
 
     def test_check_json(self):
@@ -97,8 +100,6 @@ Test
 
     print(
 
-
-
 """))
 
     def test_check_with_extra_blank_lines_before_and_after(self):
@@ -121,7 +122,7 @@ Test
 
     def test_check_nested_rst(self):
         self.assert_lines_equal(
-            [32],
+            [31],
             rstcheck.check(
                 """\
 Test
@@ -133,7 +134,6 @@ Test
     ====
 
     .. code-block:: rst
-
 
         Test
         ====
@@ -171,6 +171,33 @@ Test
     datatypes
     numeric
     (many more documents listed here)
+
+.. highlight:: python
+   :linenothreshold: 5
+
+::
+
+   print('Hello')
+
+.. code-block:: ruby
+   :linenos:
+
+   puts "Hello!"
+
+.. code-block:: python
+   :linenos:
+   :emphasize-lines: 3,5
+
+   def some_function():
+       interesting = False
+       print('This line is highlighted.')
+       print('This one is not...')
+       print('...but this one is.')
+
+.. literalinclude:: rstcheck.py
+   :language: python
+   :linenos:
+
 """))
 
 
