@@ -159,6 +159,8 @@ class IgnoredDirective(docutils.parsers.rst.Directive):
 # Ignore Sphinx directives.
 _sphinx_directives = [
     'centered',
+    'c:function',
+    'c:type',
     'include',
     'deprecated',
     'envvar',
