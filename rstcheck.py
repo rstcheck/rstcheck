@@ -157,7 +157,7 @@ class IgnoredDirective(docutils.parsers.rst.Directive):
         return []
 
 # Ignore Sphinx directives.
-_sphinx_directives = [
+_SPHINX_DIRECTIVES = [
     'centered',
     'c:function',
     'c:type',
@@ -178,12 +178,12 @@ _sphinx_directives = [
     'versionadded',
     'versionchanged']
 
-_sphinx_ext_autosummary = [
+_SPHINX_EXT_AUTOSUMMARY = [
     'autosummary',
     'currentmodule',
 ]
 
-for _directive in _sphinx_directives + _sphinx_ext_autosummary:
+for _directive in _SPHINX_DIRECTIVES + _SPHINX_EXT_AUTOSUMMARY:
     docutils.parsers.rst.directives.register_directive(_directive,
                                                        IgnoredDirective)
 
