@@ -407,6 +407,8 @@ def main():
                              '(default: %(default)s)')
     parser.add_argument('--ignore', metavar='language', default='',
                         help='comma-separated list of languages to ignore')
+    parser.add_argument('--debug', action='store_true',
+                        help='show output helpful for debugging')
     parser.add_argument('--version', action='version',
                         version='%(prog)s ' + __version__)
     args = parser.parse_args()
@@ -428,11 +430,12 @@ def main():
         except IOError as exception:
             print(exception, file=sys.stderr)
             status = 1
-        except AttributeError:
+        except AttributeError as exception:
             # Sphinx will sometimes throw an exception trying to access
             # "self.state.document.settings.env". Ignore this for now until we
             # figure out a better approach.
-            pass
+            if args.debug:
+                print(exception, file=sys.stderr)
 
     return status
 
