@@ -38,6 +38,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import traceback
 
 import docutils.core
 import docutils.io
@@ -430,12 +431,12 @@ def main():
         except IOError as exception:
             print(exception, file=sys.stderr)
             status = 1
-        except AttributeError as exception:
+        except AttributeError:
             # Sphinx will sometimes throw an exception trying to access
             # "self.state.document.settings.env". Ignore this for now until we
             # figure out a better approach.
             if args.debug:
-                print(exception, file=sys.stderr)
+                traceback.print_exc(file=sys.stderr)
 
     return status
 
