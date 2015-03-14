@@ -368,11 +368,9 @@ def beginning_of_code_block(node, full_contents):
     line_number = node.line
     delta = len(node.non_default_attributes().keys())
     current_line_contents = full_contents.splitlines()[line_number:]
-    blank_lines = next((i for i, x in enumerate(current_line_contents) if x),
+    blank_lines = next((i for (i, x) in enumerate(current_line_contents) if x),
                        None)
-    sphinx_delta = 0
-    if sphinx.version_info >= (1, 3):
-        sphinx_delta = 1
+    sphinx_delta = 1 if sphinx.version_info >= (1, 3) else 0
     return line_number + delta - 1 + blank_lines - 1 - sphinx_delta
 
 
