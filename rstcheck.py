@@ -52,7 +52,7 @@ import sphinx.directives
 import sphinx.roles
 
 
-__version__ = '1.0a0'
+__version__ = '1.0'
 
 
 # These are imported for side effect only. They register the directives and
