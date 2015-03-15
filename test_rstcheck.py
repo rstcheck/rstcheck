@@ -12,8 +12,7 @@ import rstcheck
 class Tests(unittest.TestCase):
 
     def assert_lines_equal(self, line_numbers, results):
-        self.assertEqual(line_numbers,
-                         list(dict(results).keys()))
+        self.assertEqual(line_numbers, list(dict(results)))
 
     def test_parse_gcc_style_error_message(self):
         self.assertEqual(
