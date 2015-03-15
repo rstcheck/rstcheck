@@ -372,7 +372,7 @@ def beginning_of_code_block(node, full_contents):
     delta = len(node.non_default_attributes().keys())
     current_line_contents = full_contents.splitlines()[line_number:]
     blank_lines = next((i for (i, x) in enumerate(current_line_contents) if x),
-                       None)
+                       0)
     return line_number + delta - 1 + blank_lines - 1 + SPHINX_CODE_BLOCK_DELTA
 
 
