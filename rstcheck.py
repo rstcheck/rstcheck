@@ -369,7 +369,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 def beginning_of_code_block(node, full_contents):
     """Return line number of beginning of code block."""
     line_number = node.line
-    delta = len(node.non_default_attributes().keys())
+    delta = len(node.non_default_attributes())
     current_line_contents = full_contents.splitlines()[line_number:]
     blank_lines = next((i for (i, x) in enumerate(current_line_contents) if x),
                        0)
