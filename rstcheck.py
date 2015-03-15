@@ -55,6 +55,9 @@ import sphinx.roles
 __version__ = '1.0'
 
 
+SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
+
+
 # These are imported for side effect only. They register the directives and
 # roles so that we understand Sphinx-specific syntax.
 assert sphinx.directives
@@ -370,8 +373,7 @@ def beginning_of_code_block(node, full_contents):
     current_line_contents = full_contents.splitlines()[line_number:]
     blank_lines = next((i for (i, x) in enumerate(current_line_contents) if x),
                        None)
-    sphinx_delta = 1 if sphinx.version_info >= (1, 3) else 0
-    return line_number + delta - 1 + blank_lines - 1 - sphinx_delta
+    return line_number + delta - 1 + blank_lines - 1 + SPHINX_CODE_BLOCK_DELTA
 
 
 class CheckWriter(docutils.writers.Writer):
