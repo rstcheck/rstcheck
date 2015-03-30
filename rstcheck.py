@@ -186,40 +186,48 @@ class IgnoredDirective(docutils.parsers.rst.Directive):
         """Do nothing."""
         return []
 
-# Ignore Sphinx directives.
-_SPHINX_DIRECTIVES = [
-    'centered',
-    'include',
-    'deprecated',
-    'index',
-    'no-code-block',
-    'literalinclude',
-    'hlist',
-    'seealso',
-    'toctree',
-    'todo',
-    'versionadded',
-    'versionchanged'] + SPHINX_DIRECTIVES
 
-_SPHINX_EXT_AUTOSUMMARY = [
-    'autosummary',
-    'currentmodule',
-]
+def _ignore_sphinx_directives():
+    """Register directives to ignore."""
+    sphinx_directives = [
+        'centered',
+        'include',
+        'deprecated',
+        'index',
+        'no-code-block',
+        'literalinclude',
+        'hlist',
+        'seealso',
+        'toctree',
+        'todo',
+        'versionadded',
+        'versionchanged'] + SPHINX_DIRECTIVES
 
-for _directive in _SPHINX_DIRECTIVES + _SPHINX_EXT_AUTOSUMMARY:
-    docutils.parsers.rst.directives.register_directive(_directive,
-                                                       IgnoredDirective)
+    sphinx_ext_autosummary = [
+        'autosummary',
+        'currentmodule',
+    ]
+
+    for _directive in sphinx_directives + sphinx_ext_autosummary:
+        docutils.parsers.rst.directives.register_directive(_directive,
+                                                           IgnoredDirective)
 
 
-def ignore_role(name, rawtext, text, lineno, inliner,
-                options=None, content=None):
+def _ignore_role(name, rawtext, text, lineno, inliner,
+                 options=None, content=None):
     """Stub for unknown roles."""
     # pylint: disable=unused-argument
     return ([], [])
 
-# Ignore Sphinx roles.
-for _role in ['ctype', ] + SPHINX_ROLES:
-    docutils.parsers.rst.roles.register_local_role(_role, ignore_role)
+
+def _ignore_sphinx_roles():
+    """Register roles to ignore."""
+    for _role in ['ctype'] + SPHINX_ROLES:
+        docutils.parsers.rst.roles.register_local_role(_role, _ignore_role)
+
+
+_ignore_sphinx_directives()
+_ignore_sphinx_roles()
 
 
 def bash_checker(code):
