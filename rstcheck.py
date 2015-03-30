@@ -63,30 +63,6 @@ __version__ = '1.0'
 SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
 
 
-def _get_directives_and_roles():
-    """Return a tuple of sphinx directive and roles."""
-    sphinx_directives = list(sphinx.domains.std.StandardDomain.directives)
-    sphinx_roles = list(sphinx.domains.std.StandardDomain.roles)
-
-    for domain in [sphinx.domains.c.CDomain,
-                   sphinx.domains.cpp.CPPDomain,
-                   sphinx.domains.javascript.JavaScriptDomain,
-                   sphinx.domains.python.PythonDomain]:
-
-        sphinx_directives += list(domain.directives) + [
-            '{}:{}'.format(domain.name, item)
-            for item in list(domain.directives)]
-
-        sphinx_roles += list(domain.roles) + [
-            '{}:{}'.format(domain.name, item)
-            for item in list(domain.roles)]
-
-    return (sphinx_directives, sphinx_roles)
-
-
-(SPHINX_DIRECTIVES, SPHINX_ROLES) = _get_directives_and_roles()
-
-
 def check(source, filename='<string>', report_level=1, ignore=None,
           warning_stream=sys.stderr):
     """Yield errors.
@@ -176,6 +152,27 @@ def check_rst(code, ignore):
                 continue
 
 
+def _get_directives_and_roles():
+    """Return a tuple of sphinx directive and roles."""
+    sphinx_directives = list(sphinx.domains.std.StandardDomain.directives)
+    sphinx_roles = list(sphinx.domains.std.StandardDomain.roles)
+
+    for domain in [sphinx.domains.c.CDomain,
+                   sphinx.domains.cpp.CPPDomain,
+                   sphinx.domains.javascript.JavaScriptDomain,
+                   sphinx.domains.python.PythonDomain]:
+
+        sphinx_directives += list(domain.directives) + [
+            '{}:{}'.format(domain.name, item)
+            for item in list(domain.directives)]
+
+        sphinx_roles += list(domain.roles) + [
+            '{}:{}'.format(domain.name, item)
+            for item in list(domain.roles)]
+
+    return (sphinx_directives, sphinx_roles)
+
+
 class IgnoredDirective(docutils.parsers.rst.Directive):
 
     """Stub for unknown directives."""
@@ -187,9 +184,18 @@ class IgnoredDirective(docutils.parsers.rst.Directive):
         return []
 
 
-def _ignore_sphinx_directives():
-    """Register directives to ignore."""
-    sphinx_directives = [
+def _ignore_role(name, rawtext, text, lineno, inliner,
+                 options=None, content=None):
+    """Stub for unknown roles."""
+    # pylint: disable=unused-argument
+    return ([], [])
+
+
+def _ignore_sphinx():
+    """Register sphinx directives and roles to ignore."""
+    (sphinx_directives, sphinx_roles) = _get_directives_and_roles()
+
+    sphinx_directives += [
         'centered',
         'include',
         'deprecated',
@@ -201,33 +207,22 @@ def _ignore_sphinx_directives():
         'toctree',
         'todo',
         'versionadded',
-        'versionchanged'] + SPHINX_DIRECTIVES
+        'versionchanged']
 
     sphinx_ext_autosummary = [
         'autosummary',
         'currentmodule',
     ]
 
-    for _directive in sphinx_directives + sphinx_ext_autosummary:
-        docutils.parsers.rst.directives.register_directive(_directive,
+    for directive in sphinx_directives + sphinx_ext_autosummary:
+        docutils.parsers.rst.directives.register_directive(directive,
                                                            IgnoredDirective)
 
-
-def _ignore_role(name, rawtext, text, lineno, inliner,
-                 options=None, content=None):
-    """Stub for unknown roles."""
-    # pylint: disable=unused-argument
-    return ([], [])
+    for role in sphinx_roles + ['ctype']:
+        docutils.parsers.rst.roles.register_local_role(role, _ignore_role)
 
 
-def _ignore_sphinx_roles():
-    """Register roles to ignore."""
-    for _role in ['ctype'] + SPHINX_ROLES:
-        docutils.parsers.rst.roles.register_local_role(_role, _ignore_role)
-
-
-_ignore_sphinx_directives()
-_ignore_sphinx_roles()
+_ignore_sphinx()
 
 
 def bash_checker(code):
