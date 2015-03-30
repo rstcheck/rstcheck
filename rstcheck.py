@@ -51,6 +51,11 @@ import sphinx
 import sphinx.directives
 import sphinx.roles
 
+from sphinx.domains.std import StandardDomain
+from sphinx.domains.c import CDomain
+from sphinx.domains.cpp import CPPDomain
+from sphinx.domains.javascript import JavaScriptDomain
+from sphinx.domains.python import PythonDomain
 
 __version__ = '1.0'
 
@@ -62,6 +67,16 @@ SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
 # roles so that we understand Sphinx-specific syntax.
 assert sphinx.directives
 assert sphinx.roles
+
+sphinx_roles = list(StandardDomain.roles.keys())
+sphinx_directives = list(StandardDomain.directives.keys())
+
+for domain in [CDomain, CPPDomain, JavaScriptDomain, PythonDomain]:
+    name = domain.name
+    sphinx_roles += list(domain.roles.keys()) + [
+        "%s:%s" % (name, item) for item in list(domain.roles.keys())]
+    sphinx_directives += list(domain.directives.keys()) + [
+        "%s:%s" % (name, item) for item in list(domain.directives.keys())]
 
 
 def check(source, filename='<string>', report_level=1, ignore=None,
@@ -166,24 +181,17 @@ class IgnoredDirective(docutils.parsers.rst.Directive):
 # Ignore Sphinx directives.
 _SPHINX_DIRECTIVES = [
     'centered',
-    'c:function',
-    'c:type',
     'include',
     'deprecated',
-    'envvar',
-    'glossary',
     'index',
     'no-code-block',
     'literalinclude',
     'hlist',
-    'option',
-    'productionlist',
-    'py:function',
     'seealso',
     'toctree',
     'todo',
     'versionadded',
-    'versionchanged']
+    'versionchanged'] + sphinx_directives
 
 _SPHINX_EXT_AUTOSUMMARY = [
     'autosummary',
@@ -202,17 +210,7 @@ def ignore_role(name, rawtext, text, lineno, inliner,
     return ([], [])
 
 # Ignore Sphinx roles.
-for _role in [
-        'class',
-        'ctype',
-        'envvar',
-        'exc',
-        'keyword',
-        'option',
-        'py:func',
-        'ref',
-        'term',
-        'token']:
+for _role in ['ctype', ] + sphinx_roles:
     docutils.parsers.rst.roles.register_local_role(_role, ignore_role)
 
 
