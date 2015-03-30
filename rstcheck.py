@@ -63,25 +63,28 @@ __version__ = '1.0'
 SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
 
 
-# These are imported for side effect only. They register the directives and
-# roles so that we understand Sphinx-specific syntax.
-assert sphinx.directives
-assert sphinx.roles
+def _get_directives_and_roles():
+    """Return a tuple of sphinx directive and roles."""
+    sphinx_directives = list(sphinx.domains.std.StandardDomain.directives)
+    sphinx_roles = list(sphinx.domains.std.StandardDomain.roles)
 
-SPHINX_ROLES = list(sphinx.domains.std.StandardDomain.roles)
-SPHINX_DIRECTIVES = list(sphinx.domains.std.StandardDomain.directives)
+    for domain in [sphinx.domains.c.CDomain,
+                   sphinx.domains.cpp.CPPDomain,
+                   sphinx.domains.javascript.JavaScriptDomain,
+                   sphinx.domains.python.PythonDomain]:
 
-for _domain in [sphinx.domains.c.CDomain,
-                sphinx.domains.cpp.CPPDomain,
-                sphinx.domains.javascript.JavaScriptDomain,
-                sphinx.domains.python.PythonDomain]:
-    SPHINX_ROLES += list(_domain.roles) + [
-        '{}:{}'.format(_domain.name, item)
-        for item in list(_domain.roles)]
+        sphinx_directives += list(domain.directives) + [
+            '{}:{}'.format(domain.name, item)
+            for item in list(domain.directives)]
 
-    SPHINX_DIRECTIVES += list(_domain.directives) + [
-        '{}:{}'.format(_domain.name, item)
-        for item in list(_domain.directives)]
+        sphinx_roles += list(domain.roles) + [
+            '{}:{}'.format(domain.name, item)
+            for item in list(domain.roles)]
+
+    return (sphinx_directives, sphinx_roles)
+
+
+(SPHINX_DIRECTIVES, SPHINX_ROLES) = _get_directives_and_roles()
 
 
 def check(source, filename='<string>', report_level=1, ignore=None,
