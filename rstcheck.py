@@ -49,13 +49,13 @@ import docutils.writers
 
 import sphinx
 import sphinx.directives
+import sphinx.domains.c
+import sphinx.domains.cpp
+import sphinx.domains.javascript
+import sphinx.domains.python
+import sphinx.domains.std
 import sphinx.roles
 
-from sphinx.domains.std import StandardDomain
-from sphinx.domains.c import CDomain
-from sphinx.domains.cpp import CPPDomain
-from sphinx.domains.javascript import JavaScriptDomain
-from sphinx.domains.python import PythonDomain
 
 __version__ = '1.0'
 
@@ -68,17 +68,20 @@ SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
 assert sphinx.directives
 assert sphinx.roles
 
-SPHINX_ROLES = list(StandardDomain.roles)
-SPHINX_DIRECTIVES = list(StandardDomain.directives)
+SPHINX_ROLES = list(sphinx.domains.std.StandardDomain.roles)
+SPHINX_DIRECTIVES = list(sphinx.domains.std.StandardDomain.directives)
 
-for _domain in [CDomain, CPPDomain, JavaScriptDomain, PythonDomain]:
-    SPHINX_ROLES += list(_domain.roles.keys()) + [
-        "%s:%s" % (_domain.name, item)
-        for item in list(_domain.roles.keys())]
+for _domain in [sphinx.domains.c.CDomain,
+                sphinx.domains.cpp.CPPDomain,
+                sphinx.domains.javascript.JavaScriptDomain,
+                sphinx.domains.python.PythonDomain]:
+    SPHINX_ROLES += list(_domain.roles) + [
+        '{}:{}'.format(_domain.name, item)
+        for item in list(_domain.roles)]
 
-    SPHINX_DIRECTIVES += list(_domain.directives.keys()) + [
-        "%s:%s" % (_domain.name, item)
-        for item in list(_domain.directives.keys())]
+    SPHINX_DIRECTIVES += list(_domain.directives) + [
+        '{}:{}'.format(_domain.name, item)
+        for item in list(_domain.directives)]
 
 
 def check(source, filename='<string>', report_level=1, ignore=None,
