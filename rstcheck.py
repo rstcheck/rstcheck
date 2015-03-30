@@ -68,15 +68,17 @@ SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
 assert sphinx.directives
 assert sphinx.roles
 
-sphinx_roles = list(StandardDomain.roles.keys())
-sphinx_directives = list(StandardDomain.directives.keys())
+SPHINX_ROLES = list(StandardDomain.roles)
+SPHINX_DIRECTIVES = list(StandardDomain.directives)
 
-for domain in [CDomain, CPPDomain, JavaScriptDomain, PythonDomain]:
-    name = domain.name
-    sphinx_roles += list(domain.roles.keys()) + [
-        "%s:%s" % (name, item) for item in list(domain.roles.keys())]
-    sphinx_directives += list(domain.directives.keys()) + [
-        "%s:%s" % (name, item) for item in list(domain.directives.keys())]
+for _domain in [CDomain, CPPDomain, JavaScriptDomain, PythonDomain]:
+    SPHINX_ROLES += list(_domain.roles.keys()) + [
+        "%s:%s" % (_domain.name, item)
+        for item in list(_domain.roles.keys())]
+
+    SPHINX_DIRECTIVES += list(_domain.directives.keys()) + [
+        "%s:%s" % (_domain.name, item)
+        for item in list(_domain.directives.keys())]
 
 
 def check(source, filename='<string>', report_level=1, ignore=None,
@@ -191,7 +193,7 @@ _SPHINX_DIRECTIVES = [
     'toctree',
     'todo',
     'versionadded',
-    'versionchanged'] + sphinx_directives
+    'versionchanged'] + SPHINX_DIRECTIVES
 
 _SPHINX_EXT_AUTOSUMMARY = [
     'autosummary',
@@ -210,7 +212,7 @@ def ignore_role(name, rawtext, text, lineno, inliner,
     return ([], [])
 
 # Ignore Sphinx roles.
-for _role in ['ctype', ] + sphinx_roles:
+for _role in ['ctype', ] + SPHINX_ROLES:
     docutils.parsers.rst.roles.register_local_role(_role, ignore_role)
 
 
