@@ -153,7 +153,7 @@ def check_rst(code, ignore):
 
 
 def _get_directives_and_roles():
-    """Return a tuple of sphinx directive and roles."""
+    """Return a tuple of Sphinx directive and roles."""
     sphinx_directives = list(sphinx.domains.std.StandardDomain.directives)
     sphinx_roles = list(sphinx.domains.std.StandardDomain.roles)
 
@@ -192,7 +192,7 @@ def _ignore_role(name, rawtext, text, lineno, inliner,
 
 
 def _ignore_sphinx():
-    """Register sphinx directives and roles to ignore."""
+    """Register Sphinx directives and roles to ignore."""
     (sphinx_directives, sphinx_roles) = _get_directives_and_roles()
 
     sphinx_directives += [
