@@ -56,6 +56,10 @@ import sphinx.domains.python
 import sphinx.domains.std
 import sphinx.roles
 
+try:
+    import configparser
+except ImportError:
+    import ConfigParser as configparser
 
 __version__ = '1.0'
 
@@ -152,7 +156,36 @@ def check_rst(code, ignore):
                 continue
 
 
-def _get_directives_and_roles():
+def _get_directives_and_roles_from_config():
+    """
+    Return a tuple of Sphinx directive and roles. From a file ``.rstcheck.ini``
+    that is located in the directory where the script is being run.
+
+    ``.rstcheck.ini`` example:
+
+    ::
+
+        [roles]
+        ignore=foo,bar,src,baz
+
+        [directives]
+        ignore=one,two,tree
+    """
+    path = os.path.join(os.getcwd(), '.rstcheck.ini')
+    cp = configparser.ConfigParser()
+    cp.read(path)
+    try:
+        roles = cp.get('roles', 'ignore').split(',')
+    except (configparser.NoOptionError, configparser.NoSectionError):
+        roles = []
+    try:
+        directives = cp.get('directives', 'ignore').split(',')
+    except (configparser.NoOptionError, configparser.NoSectionError):
+        directives = []
+    return (directives, roles)
+
+
+def _get_directives_and_roles_from_sphinx():
     """Return a tuple of Sphinx directive and roles."""
     sphinx_directives = list(sphinx.domains.std.StandardDomain.directives)
     sphinx_roles = list(sphinx.domains.std.StandardDomain.roles)
@@ -193,7 +226,9 @@ def _ignore_role(name, rawtext, text, lineno, inliner,
 
 def _ignore_sphinx():
     """Register Sphinx directives and roles to ignore."""
-    (sphinx_directives, sphinx_roles) = _get_directives_and_roles()
+    (sphinx_directives, sphinx_roles) =\
+        [sum(l, []) for l in zip(_get_directives_and_roles_from_sphinx(),
+                                 _get_directives_and_roles_from_config())]
 
     sphinx_directives += [
         'centered',
