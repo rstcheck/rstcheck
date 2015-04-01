@@ -159,12 +159,10 @@ def check_rst(code, ignore):
 def _get_directives_and_roles_from_config():
     """Return a tuple of Sphinx directive and roles.
 
-    From a file ``.rstcheck.ini`` that is located in the directory where the
+    From a file ".rstcheck.ini" that is located in the directory where the
     script is being run.
 
-    ``.rstcheck.ini`` example:
-
-    ::
+    A ".rstcheck.ini" example:
 
         [roles]
         ignore=foo,bar,src,baz
