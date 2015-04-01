@@ -7,6 +7,7 @@ check:
 		--disable=no-member \
 		--disable=too-few-public-methods \
 		--disable=too-many-arguments \
+		--function-rgx='[a-z_][a-z0-9_]{2,50}$$' \
 		--rcfile=/dev/null \
 		rstcheck.py setup.py
 	check-manifest
