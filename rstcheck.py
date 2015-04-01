@@ -173,7 +173,7 @@ def _get_directives_and_roles_from_config():
         ignore=one,two,tree
 
     """
-    path = os.path.join(os.getcwd(), '.rstcheck.ini')
+    path = os.path.join(os.getcwd(), '.rstcheck.cfg')
     parser = configparser.ConfigParser()
     parser.read(path)
     try:
