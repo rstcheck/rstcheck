@@ -9,7 +9,7 @@ trap "echo -e '\x1b[01;31mFailed\x1b[0m'" ERR
 
 (
     cd examples/with_configuration
-    ../../rstcheck.py good.rst 2>&1
+    ../../rstcheck.py good.rst
 )
 
 if ./rstcheck.py examples/bad_cpp.rst
