@@ -67,8 +67,7 @@ __version__ = '1.1'
 SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
 
 
-def check(source, filename='<string>', report_level=1, ignore=None,
-          warning_stream=sys.stderr):
+def check(source, filename='<string>', report_level=1, ignore=None):
     """Yield errors.
 
     Use lower report_level for noisier error output.
@@ -84,15 +83,27 @@ def check(source, filename='<string>', report_level=1, ignore=None,
     """
     writer = CheckWriter(source, filename, ignore=ignore)
 
+    string_io = io.StringIO()
+
     docutils.core.publish_string(
         source, writer=writer,
         source_path=filename,
         settings_overrides={'report_level': report_level,
-                            'warning_stream': warning_stream})
+                            'warning_stream': string_io})
 
     for checker in writer.checkers:
         for error in checker():
             yield error
+
+    rst_errors = string_io.getvalue().strip()
+    if rst_errors:
+        for message in rst_errors.splitlines():
+            try:
+                yield parse_gcc_style_error_message(message,
+                                                    filename=filename,
+                                                    has_column=False)
+            except ValueError:
+                continue
 
 
 def _check_file(filename, report_level=1, ignore=None):
@@ -136,24 +147,12 @@ def check_json(code):
 
 def check_rst(code, ignore):
     """Yield errors in nested RST code."""
-    string_io = io.StringIO()
     filename = '<string>'
 
     for result in check(code,
                         filename=filename,
-                        ignore=ignore,
-                        warning_stream=string_io):
+                        ignore=ignore):
         yield result
-
-    rst_errors = string_io.getvalue().strip()
-    if rst_errors:
-        for message in rst_errors.splitlines():
-            try:
-                yield parse_gcc_style_error_message(message,
-                                                    filename=filename,
-                                                    has_column=False)
-            except ValueError:
-                continue
 
 
 def _get_directives_and_roles_from_config():

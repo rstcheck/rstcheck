@@ -2,17 +2,15 @@
 
 trap "echo -e '\x1b[01;31mFailed\x1b[0m'" ERR
 
-readonly root_path="$PWD"
-
 ./rstcheck.py examples/good.rst
 ./rstcheck.py examples/unicode.rst
 ./rstcheck.py examples/unknown.rst
 ./rstcheck.py - < examples/good.rst
 
-cd examples/with_configuration
-# This error does not affect the exit status for some reason.
-../../rstcheck.py good.rst 2>&1 | grep --count ERROR | grep 0
-cd "$root_path"
+(
+    cd examples/with_configuration
+    ../../rstcheck.py good.rst 2>&1
+)
 
 if ./rstcheck.py examples/bad_cpp.rst
 then
