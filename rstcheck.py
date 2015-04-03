@@ -175,14 +175,19 @@ def _get_directives_and_roles_from_config():
     parser = configparser.ConfigParser()
     parser.read(path)
     try:
-        roles = parser.get('roles', 'ignore').split(',')
+        roles = _split_comma_separated(parser.get('roles', 'ignore'))
     except (configparser.NoOptionError, configparser.NoSectionError):
         roles = []
     try:
-        directives = parser.get('directives', 'ignore').split(',')
+        directives = _split_comma_separated(parser.get('directives', 'ignore'))
     except (configparser.NoOptionError, configparser.NoSectionError):
         directives = []
     return (directives, roles)
+
+
+def _split_comma_separated(text):
+    """Return list of split and stripped strings."""
+    return [t.strip() for t in text.split(',')]
 
 
 def _get_directives_and_roles_from_sphinx():
@@ -463,9 +468,10 @@ def main():
     status = 0
     for filename in args.files:
         try:
-            for error in _check_file(filename,
-                                     report_level=args.report,
-                                     ignore=args.ignore.split(',')):
+            for error in _check_file(
+                    filename,
+                    report_level=args.report,
+                    ignore=_split_comma_separated(args.ignore)):
                 print('{}:{}: (ERROR/3) {}'.format(filename,
                                                    error[0],
                                                    error[1]),
