@@ -88,7 +88,9 @@ Options
 
 ::
 
-    usage: rstcheck [-h] [--report level] [--ignore language] files [files ...]
+    usage: rstcheck [-h] [--report level] [--ignore language] [--debug]
+                    [--version]
+                    files [files ...]
 
     Checks code blocks in reStructuredText.
 
@@ -97,9 +99,11 @@ Options
 
     optional arguments:
       -h, --help         show this help message and exit
-      --report level     report system messages at or higher than level; 1 info, 2
-                         warning, 3 error, 4 severe, 5 none (default: 1)
+      --report level     report system messages at or higher than level; info, 1,
+                         warning, 2, error, 3, severe, 4, none, 5 (default: info)
       --ignore language  comma-separated list of languages to ignore
+      --debug            show output helpful for debugging
+      --version          show program's version number and exit
 
 
 Ignore languages
