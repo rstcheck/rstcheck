@@ -66,6 +66,8 @@ __version__ = '1.1.1'
 
 SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
 
+RSTCHECK_COMMENT_RE = re.compile('.. rstcheck:')
+
 
 def check(source, filename='<string>', report_level=1, ignore=None):
     """Yield errors.
@@ -81,6 +83,9 @@ def check(source, filename='<string>', report_level=1, ignore=None):
     Each code block is checked asynchronously in a subprocess.
 
     """
+    ignore = ignore or []
+    ignore.extend(find_ignored_languages(source))
+
     writer = CheckWriter(source, filename, ignore=ignore)
 
     string_io = io.StringIO()
@@ -108,6 +113,23 @@ def check(source, filename='<string>', report_level=1, ignore=None):
                                                     has_column=False)
             except ValueError:
                 continue
+
+
+def find_ignored_languages(source):
+    """Yield ignored languages.
+
+    Languages are ignored via comment. For example, to ignore C++ and Python:
+
+    .. rstcheck: ignore-language=cpp,python
+
+    """
+    for line in source.splitlines():
+        match = RSTCHECK_COMMENT_RE.match(line)
+        if match:
+            key_and_value = line[match.end():].strip().split('=')
+            if key_and_value[0] == 'ignore-language':
+                for language in key_and_value[1].split(','):
+                    yield language.strip()
 
 
 def _check_file(filename, report_level=1, ignore=None):

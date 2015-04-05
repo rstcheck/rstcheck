@@ -101,6 +101,17 @@ Options
       --ignore language  comma-separated list of languages to ignore
 
 
+Ignore languages
+================
+
+You can ignore checking of nested code blocks by language. Either use the
+command-line option ``--ignore`` or put a comment in the document:
+
+.. code-block:: rst
+
+    .. rstcheck: ignore-language=cpp,python,rst
+
+
 Configuration
 =============
 
@@ -156,3 +167,6 @@ To check reStructuredText in Vim using Syntastic_:
     let g:syntastic_rst_checkers = ['rstcheck']
 
 .. _Syntastic: https://github.com/scrooloose/syntastic
+
+
+.. rstcheck: ignore-language=cpp,python,rst

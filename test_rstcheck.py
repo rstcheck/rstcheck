@@ -69,6 +69,40 @@ Test
     }
 """))
 
+    def test_check_json_with_ignore(self):
+        self.assert_lines_equal(
+            [],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: json
+
+    {
+        'abc': 123
+    }
+
+.. rstcheck: ignore-language=json,python,rst
+"""))
+
+    def test_check_json_with_unmatched_ignores_only(self):
+        self.assert_lines_equal(
+            [7],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: json
+
+    {
+        'abc': 123
+    }
+
+.. rstcheck: ignore-language=cpp,python,rst
+"""))
+
     def test_check_with_extra_blank_lines_before(self):
         self.assert_lines_equal(
             [8],
