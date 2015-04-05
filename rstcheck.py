@@ -552,7 +552,6 @@ class CheckWriter(docutils.writers.Writer):
 
 def main():
     """Return 0 on success."""
-    thresholds = docutils.frontend.OptionParser.thresholds
     threshold_choices = docutils.frontend.OptionParser.threshold_choices
 
     parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
@@ -561,9 +560,10 @@ def main():
     parser.add_argument('--report', metavar='level',
                         choices=threshold_choices,
                         default='info',
-                        help='report system messages at or higher than level; '
-                             '1 info, 2 warning, 3 error, 4 severe, 5 none '
-                             '(default: %(default)s)')
+                        help='report system messages at or higher than '
+                             'level; ' +
+                             ', '.join(threshold_choices) +
+                             ' (default: %(default)s)')
     parser.add_argument('--ignore', metavar='language', default='',
                         help='comma-separated list of languages to ignore')
     parser.add_argument('--debug', action='store_true',
@@ -572,7 +572,8 @@ def main():
                         version='%(prog)s ' + __version__)
     args = parser.parse_args()
 
-    args.report = int(thresholds.get(args.report, args.report))
+    threshold_dictionary = docutils.frontend.OptionParser.thresholds
+    args.report = int(threshold_dictionary.get(args.report, args.report))
 
     status = 0
     for filename in args.files:
