@@ -328,6 +328,12 @@ def _ignore_sphinx():
 _ignore_sphinx()
 
 
+# The checker functions below return a checker. This is for  purposes of
+# asynchronous checking. As we visit each code block, a subprocess gets
+# launched to run the checker. They all run in the background until we finish
+# traversing the document. At that point, we accumulate the errors.
+
+
 def bash_checker(code):
     """Return checker."""
     run = run_in_subprocess(code, '.bash', ['bash', '-n'])
