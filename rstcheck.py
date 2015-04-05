@@ -69,6 +69,13 @@ SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
 RSTCHECK_COMMENT_RE = re.compile('.. rstcheck:')
 
 
+class Error(Exception):
+
+    def __init__(self, message, line_number):
+        self.line_number = line_number
+        Exception.__init__(self, message)
+
+
 def check(source, filename='<string>', report_level=1, ignore=None):
     """Yield errors.
 
@@ -84,7 +91,11 @@ def check(source, filename='<string>', report_level=1, ignore=None):
 
     """
     ignore = ignore or []
-    ignore.extend(find_ignored_languages(source))
+
+    try:
+        ignore.extend(find_ignored_languages(source))
+    except Error as error:
+        yield (error.line_number, '{}'.format(error))
 
     writer = CheckWriter(source, filename, ignore=ignore)
 
@@ -123,10 +134,14 @@ def find_ignored_languages(source):
     .. rstcheck: ignore-language=cpp,python
 
     """
-    for line in source.splitlines():
+    for (index, line) in enumerate(source.splitlines()):
         match = RSTCHECK_COMMENT_RE.match(line)
         if match:
             key_and_value = line[match.end():].strip().split('=')
+            if len(key_and_value) != 2:
+                raise Error('Expected "key=value" syntax',
+                            line_number=index + 1)
+
             if key_and_value[0] == 'ignore-language':
                 for language in key_and_value[1].split(','):
                     yield language.strip()
@@ -161,7 +176,7 @@ def check_json(code):
     try:
         json.loads(code)
     except ValueError as exception:
-        message = str(exception)
+        message = '{}'.format(exception)
         line_number = 0
 
         found = re.search(r': line\s+([0-9]+)[^:]*$', message)

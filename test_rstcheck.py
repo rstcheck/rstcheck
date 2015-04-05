@@ -12,7 +12,7 @@ import rstcheck
 class Tests(unittest.TestCase):
 
     def assert_lines_equal(self, line_numbers, results):
-        self.assertEqual(line_numbers, list(dict(results)))
+        self.assertEqual(set(line_numbers), set(dict(results)))
 
     def test_parse_gcc_style_error_message(self):
         self.assertEqual(
@@ -101,6 +101,23 @@ Test
     }
 
 .. rstcheck: ignore-language=cpp,python,rst
+"""))
+
+    def test_check_json_with_bad_ignore(self):
+        self.assert_lines_equal(
+            [7, 10],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: json
+
+    {
+        'abc': 123
+    }
+
+.. rstcheck: ignore-language json,python,rst
 """))
 
     def test_check_with_extra_blank_lines_before(self):
