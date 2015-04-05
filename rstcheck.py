@@ -450,6 +450,12 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         if language in self.ignore:
             return
 
+        if language == 'doctest' or (
+                language == 'python' and
+                node.rawsource.lstrip().startswith('>>> ')):
+            self.visit_doctest_block(node)
+            raise docutils.nodes.SkipNode
+
         checker = {
             'bash': bash_checker,
             'c': c_checker,

@@ -287,6 +287,37 @@ Testing
 .. rstcheck: ignore-language=doctest
 """))
 
+    def test_check_doctest_in_code_block(self):
+        self.assert_lines_equal(
+            [7],
+            rstcheck.check(
+                """\
+Testing
+=======
+
+.. code-block:: doctest
+
+    >>> x = 1
+    >>>> x
+    1
+"""))
+
+    def test_check_doctest_in_python_code_block(self):
+        """I'm not sure if this is correct, but I've seen people do it."""
+        self.assert_lines_equal(
+            [7],
+            rstcheck.check(
+                """\
+Testing
+=======
+
+.. code-block:: python
+
+    >>> x = 1
+    >>>> x
+    1
+"""))
+
 
 if __name__ == '__main__':
     unittest.main()
