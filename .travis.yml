@@ -18,7 +18,6 @@ install:
 script:
     - ./test_rstcheck.py
     - ./test.bash
-    - rstcheck examples/good.rst
-    - rstcheck --ignore=cpp,python,rst README.rst
+    - rstcheck examples/good.rst README.rst
     - pep8 ./*.py
     - pyflakes ./*.py
