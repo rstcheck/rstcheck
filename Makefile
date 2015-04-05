@@ -14,7 +14,7 @@ check:
 	python setup.py --long-description | \
 		rstcheck --ignore=cpp,python,rst -
 	scspell rstcheck.py setup.py README.rst
-	./rstcheck.py --ignore=cpp,python,rst README.rst
+	./rstcheck.py README.rst
 
 readme:
 	@restview --long-description --strict
