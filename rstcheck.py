@@ -71,6 +71,8 @@ RSTCHECK_COMMENT_RE = re.compile('.. rstcheck:')
 
 class Error(Exception):
 
+    """rstcheck exception."""
+
     def __init__(self, message, line_number):
         self.line_number = line_number
         Exception.__init__(self, message)
