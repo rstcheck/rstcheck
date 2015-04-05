@@ -89,7 +89,8 @@ def check(source, filename='<string>', report_level=1, ignore=None):
         docutils.core.publish_string(
             source, writer=writer,
             source_path=filename,
-            settings_overrides={'report_level': report_level,
+            settings_overrides={'halt_level': 0,
+                                'report_level': report_level,
                                 'warning_stream': string_io})
     except docutils.utils.SystemMessage:
         pass
