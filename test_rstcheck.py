@@ -118,6 +118,15 @@ Test
 
 """))
 
+    def test_check_rst(self):
+        self.assert_lines_equal(
+            [2],
+            rstcheck.check(
+                """\
+Test
+===
+"""))
+
     def test_check_nested_rst(self):
         self.assert_lines_equal(
             [32],
