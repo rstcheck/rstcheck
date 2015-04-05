@@ -79,7 +79,10 @@ class Error(Exception):
         Exception.__init__(self, message)
 
 
-def check(source, filename='<string>', report_level=1, ignore=None):
+def check(source,
+          filename='<string>',
+          report_level=docutils.utils.Reporter.INFO_LEVEL,
+          ignore=None):
     """Yield errors.
 
     Use lower report_level for noisier error output.
@@ -160,7 +163,7 @@ def find_ignored_languages(source):
                     yield language.strip()
 
 
-def _check_file(filename, report_level=1, ignore=None):
+def _check_file(filename, report_level, ignore):
     """Yield errors."""
     if filename == '-':
         contents = sys.stdin.read()
@@ -549,10 +552,15 @@ class CheckWriter(docutils.writers.Writer):
 
 def main():
     """Return 0 on success."""
+    thresholds = docutils.frontend.OptionParser.thresholds
+    threshold_choices = docutils.frontend.OptionParser.threshold_choices
+
     parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
     parser.add_argument('files', nargs='+',
                         help='files to check')
-    parser.add_argument('--report', type=int, metavar='level', default=1,
+    parser.add_argument('--report', metavar='level',
+                        choices=threshold_choices,
+                        default='info',
                         help='report system messages at or higher than level; '
                              '1 info, 2 warning, 3 error, 4 severe, 5 none '
                              '(default: %(default)s)')
@@ -563,6 +571,8 @@ def main():
     parser.add_argument('--version', action='version',
                         version='%(prog)s ' + __version__)
     args = parser.parse_args()
+
+    args.report = int(thresholds.get(args.report, args.report))
 
     status = 0
     for filename in args.files:

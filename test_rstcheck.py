@@ -178,6 +178,16 @@ Test
 ===
 """))
 
+    def test_check_rst_report_level(self):
+        self.assert_lines_equal(
+            [],
+            rstcheck.check(
+                """\
+Test
+===
+""",
+                report_level=5))
+
     def test_check_nested_rst(self):
         self.assert_lines_equal(
             [32],

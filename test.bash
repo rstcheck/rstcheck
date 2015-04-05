@@ -38,6 +38,8 @@ then
     exit 1
 fi
 
+./rstcheck.py --report=none examples/bad_rst.rst
+
 if ./rstcheck.py examples/bad_rst_in_rst.rst
 then
     exit 1
