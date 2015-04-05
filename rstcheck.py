@@ -571,10 +571,18 @@ def main():
                     filename,
                     report_level=args.report,
                     ignore=split_comma_separated(args.ignore)):
-                print('{}:{}: (ERROR/3) {}'.format(filename,
-                                                   error[0],
-                                                   error[1]),
+
+                line_number = error[0]
+                message = error[1]
+
+                if not re.match(r'\([A-Z]+/[0-9]+\)', message):
+                    message = '(ERROR/3) ' + message
+
+                print('{}:{}: {}'.format(filename,
+                                         line_number,
+                                         message),
                       file=sys.stderr)
+
                 status = 1
         except IOError as exception:
             print(exception, file=sys.stderr)
