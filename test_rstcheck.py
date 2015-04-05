@@ -272,6 +272,18 @@ Testing
 1
 """))
 
+    def test_check_doctest_do_not_crash_when_indented(self):
+        """docutils does not provide line number when indented."""
+        list(rstcheck.check(
+            """\
+Testing
+=======
+
+    >>> x = 1
+    >>>> x
+    1
+"""))
+
     def test_check_doctest_with_ignore(self):
         self.assert_lines_equal(
             [],

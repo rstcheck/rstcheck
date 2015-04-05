@@ -497,10 +497,14 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
                     for result in all_results:
                         error_offset = result[0] - 1
 
-                        yield (
-                            beginning_of_code_block(node, self.contents) +
-                            error_offset,
-                            '({}) {}'.format(language, result[1]))
+                        try:
+                            yield (
+                                beginning_of_code_block(node, self.contents) +
+                                error_offset,
+                                '({}) {}'.format(language, result[1]))
+                        except TypeError:
+                            # Ignore case where node's line_number is None.
+                            pass
                 else:
                     yield (self.filename, 0, 'unknown error')
         self.checkers.append(run_check)
