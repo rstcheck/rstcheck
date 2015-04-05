@@ -272,6 +272,21 @@ Testing
 1
 """))
 
+    def test_check_doctest_with_ignore(self):
+        self.assert_lines_equal(
+            [],
+            rstcheck.check(
+                """\
+Testing
+=======
+
+>>> x = 1
+>>>> x
+1
+
+.. rstcheck: ignore-language=doctest
+"""))
+
 
 if __name__ == '__main__':
     unittest.main()

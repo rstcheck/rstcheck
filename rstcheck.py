@@ -437,6 +437,9 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 
     def visit_doctest_block(self, node):
         """Check syntax of doctest."""
+        if 'doctest' in self.ignore:
+            return
+
         self._add_check(node=node,
                         run=lambda: check_doctest(node.rawsource),
                         language='doctest')
