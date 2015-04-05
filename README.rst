@@ -6,7 +6,7 @@ rstcheck
     :target: https://travis-ci.org/myint/rstcheck
     :alt: Build status
 
-Checks syntax of reStructuredText, code blocks nested within it, and doctests.
+Checks syntax of reStructuredText and code blocks nested within it.
 
 
 Installation
@@ -21,6 +21,7 @@ Supported languages in code blocks
 ==================================
 
 - Bash
+- Doctest
 - C (C99)
 - C++ (C++11)
 - JSON
