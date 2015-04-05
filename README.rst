@@ -116,10 +116,10 @@ Configuration
 =============
 
 If your project has custom roles and directives, you can specify them in the
-local configuration of project. ``rstcheck`` looks for a file ``.rstcheck.cfg``
-in the directory where it was launched.
+local configuration of the project. ``rstcheck`` looks for a file
+``.rstcheck.cfg`` in the directory where it was launched.
 
-For example, you have the following directory structure::
+For example, consider a project with the following directory structure::
 
     docs
     ├── foo
@@ -151,7 +151,8 @@ For example, you have the following directory structure::
 
        Hello
 
-Run ``rstcheck`` from the appropriate directory::
+``rstcheck`` will consider the ``.rstcheck.cfg`` if run from the appropriate
+directory::
 
     $ cd docs
     $ rstcheck foo/bar.rst
