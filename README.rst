@@ -101,6 +101,51 @@ Options
       --ignore language  comma-separated list of languages to ignore
 
 
+Config
+======
+
+If your project has custom roles and directives, you can specify them in the local config of project.
+``rstcheck`` looks for a file ``.rstcheck.cfg`` in the directory where it was launched.
+
+For example, you have the following directory structure:
+
+::
+
+   docs
+   ├── foo
+   │   └── bar.rst
+   ├── index.rst
+   └── .rstcheck.cfg
+
+``.rstcheck.cfg`` contains:
+
+.. code-block:: cfg
+
+   [roles]
+   ignore=src,RFC
+
+   [directives]
+   ignore=one,two,tree
+
+``bar.rst`` contains:
+
+.. code-block:: rst
+
+   Bar
+   ===
+
+   :src:`hello_world.py`
+   :RFC:`793`
+
+   .. one::
+
+      Hello
+
+.. code-block:: bash
+
+   $ cd docs
+   $ rstcheck foo/bar.rst
+
 Usage in Vim
 ============
 
