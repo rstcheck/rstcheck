@@ -18,6 +18,7 @@ install:
 script:
     - ./test_rstcheck.py
     - ./test.bash
+    - python -m doctest -v README.rst
     - rstcheck examples/good.rst README.rst
     - pep8 ./*.py
     - pyflakes ./*.py

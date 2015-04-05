@@ -174,8 +174,10 @@ Use as a module
 ===============
 
 >>> import rstcheck
->>> list(rstcheck.check('Example\n==='))
-[(2, '(INFO/1) Possible title underline, too short for the title.')]
+>>> errors = list(rstcheck.check('Example\n==='))
+>>> line_number_and_message = errors[0]
+>>> line_number_and_message[0]
+2
 
 
 .. rstcheck: ignore-language=cpp,python,rst

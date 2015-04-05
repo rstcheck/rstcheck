@@ -42,9 +42,4 @@ then
     exit 1
 fi
 
-if python -c 'import sys; 0 if sys.version_info >= (3,) else 1'
-then
-    python -m doctest -v README.rst
-fi
-
 echo -e '\x1b[01;32mOkay\x1b[0m'
