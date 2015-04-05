@@ -328,7 +328,7 @@ def _ignore_sphinx():
 _ignore_sphinx()
 
 
-# The checker functions below return a checker. This is for  purposes of
+# The checker functions below return a checker. This is for purposes of
 # asynchronous checking. As we visit each code block, a subprocess gets
 # launched to run the checker. They all run in the background until we finish
 # traversing the document. At that point, we accumulate the errors.
