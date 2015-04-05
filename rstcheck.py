@@ -132,9 +132,19 @@ def check(source, filename='<string>', report_level=1, ignore=None):
 def find_ignored_languages(source):
     """Yield ignored languages.
 
-    Languages are ignored via comment. For example, to ignore C++ and Python:
+    Languages are ignored via comment.
 
-    .. rstcheck: ignore-language=cpp,python
+    For example, to ignore C++, JSON, and Python:
+
+    >>> list(find_ignored_languages('''
+    ... Example
+    ... =======
+    ...
+    ... .. rstcheck: ignore-language=cpp,json
+    ...
+    ... .. rstcheck: ignore-language=python
+    ... '''))
+    ['cpp', 'json', 'python']
 
     """
     for (index, line) in enumerate(source.splitlines()):
