@@ -2,6 +2,12 @@
 
 trap "echo -e '\x1b[01;31mFailed\x1b[0m'" ERR
 
+if python -c 'import sys; sys.exit(0 if sys.version_info >= (3,) else 1)'
+then
+    ./rstcheck.py examples/good.rst README.rst
+    python -m doctest -v README.rst rstcheck.py
+fi
+
 ./rstcheck.py examples/good.rst
 ./rstcheck.py examples/unicode.rst
 ./rstcheck.py examples/unknown.rst

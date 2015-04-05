@@ -18,7 +18,5 @@ install:
 script:
     - ./test_rstcheck.py
     - ./test.bash
-    - python -m doctest -v README.rst rstcheck.py
-    - if [ "$TRAVIS_PYTHON_VERSION" != "2.7" ]; then rstcheck examples/good.rst README.rst; fi
     - pep8 ./*.py
     - pyflakes ./*.py
