@@ -177,8 +177,8 @@ Use as a module
 ``rstcheck.check()`` yields a series of tuples. The first value of each tuple
 is the line number (not the line index). The second value is the error message.
 
->>> import rstcheck
->>> list(rstcheck.check('Example\n==='))
-[(2, '(INFO/1) Possible title underline, too short for the title.')]
+    >>> import rstcheck
+    >>> list(rstcheck.check('Example\n==='))
+    [(2, '(INFO/1) Possible title underline, too short for the title.')]
 
 .. rstcheck: ignore-language=cpp,python,rst
