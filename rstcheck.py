@@ -30,6 +30,7 @@ from __future__ import unicode_literals
 
 import argparse
 import contextlib
+import doctest
 import io
 import json
 import locale
@@ -196,6 +197,24 @@ def check_rst(code, ignore):
                         filename=filename,
                         ignore=ignore):
         yield result
+
+
+def check_doctest(code):
+    """Yield doctest syntax errors.
+
+    This does not run the test as that would be unsafe. Nor does this check the
+    Python syntax in the doctest. That could be purposely incorrect for testing
+    purposes.
+
+    """
+    parser = doctest.DocTestParser()
+    try:
+        parser.parse(code)
+    except ValueError as exception:
+        message = '{}'.format(exception)
+        match = re.match('line ([0-9]+)', message)
+        if match:
+            yield (int(match.group(1)), message)
 
 
 def _get_directives_and_roles_from_config():
@@ -416,6 +435,12 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         self.ignore = ignore or []
         self.ignore.append(None)
 
+    def visit_doctest_block(self, node):
+        """Check syntax of doctest."""
+        self._add_check(node=node,
+                        run=lambda: check_doctest(node.rawsource),
+                        language='doctest')
+
     def visit_literal_block(self, node):
         """Check syntax of code block."""
         language = node.get('language', None)
@@ -433,24 +458,27 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 
         if checker:
             run = checker(node.rawsource)
-
-            def run_check():
-                """Yield errors."""
-                all_results = run()
-                if all_results is not None:
-                    if all_results:
-                        for result in all_results:
-                            error_offset = result[0] - 1
-
-                            yield (
-                                beginning_of_code_block(node, self.contents) +
-                                error_offset,
-                                '({}) {}'.format(language, result[1]))
-                    else:
-                        yield (self.filename, 0, 'unknown error')
-            self.checkers.append(run_check)
+            self._add_check(node=node, run=run, language=language)
 
         raise docutils.nodes.SkipNode
+
+    def _add_check(self, node, run, language):
+        """Add checker that will be run."""
+        def run_check():
+            """Yield errors."""
+            all_results = run()
+            if all_results is not None:
+                if all_results:
+                    for result in all_results:
+                        error_offset = result[0] - 1
+
+                        yield (
+                            beginning_of_code_block(node, self.contents) +
+                            error_offset,
+                            '({}) {}'.format(language, result[1]))
+                else:
+                    yield (self.filename, 0, 'unknown error')
+        self.checkers.append(run_check)
 
     def unknown_visit(self, node):
         """Ignore."""

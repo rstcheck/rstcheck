@@ -6,7 +6,7 @@ rstcheck
     :target: https://travis-ci.org/myint/rstcheck
     :alt: Build status
 
-Checks syntax of reStructuredText and code blocks nested within it.
+Checks syntax of reStructuredText, code blocks nested within it, and doctests.
 
 
 Installation
@@ -168,6 +168,14 @@ To check reStructuredText in Vim using Syntastic_:
     let g:syntastic_rst_checkers = ['rstcheck']
 
 .. _Syntastic: https://github.com/scrooloose/syntastic
+
+
+Use as a module
+===============
+
+>>> import rstcheck
+>>> list(rstcheck.check('Example\n==='))
+[(2, '(INFO/1) Possible title underline, too short for the title.')]
 
 
 .. rstcheck: ignore-language=cpp,python,rst

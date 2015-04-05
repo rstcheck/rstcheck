@@ -259,6 +259,19 @@ Test
 
 """))
 
+    def test_check_doctest(self):
+        self.assert_lines_equal(
+            [5],
+            rstcheck.check(
+                """\
+Testing
+=======
+
+>>> x = 1
+>>>> x
+1
+"""))
+
 
 if __name__ == '__main__':
     unittest.main()
