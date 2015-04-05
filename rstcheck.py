@@ -85,11 +85,14 @@ def check(source, filename='<string>', report_level=1, ignore=None):
 
     string_io = io.StringIO()
 
-    docutils.core.publish_string(
-        source, writer=writer,
-        source_path=filename,
-        settings_overrides={'report_level': report_level,
-                            'warning_stream': string_io})
+    try:
+        docutils.core.publish_string(
+            source, writer=writer,
+            source_path=filename,
+            settings_overrides={'report_level': report_level,
+                                'warning_stream': string_io})
+    except docutils.utils.SystemMessage:
+        pass
 
     for checker in writer.checkers:
         for error in checker():
@@ -476,9 +479,6 @@ def main():
                                                    error[1]),
                       file=sys.stderr)
                 status = 1
-        except docutils.utils.SystemMessage:
-            # docutils already prints a message to standard error.
-            status = 1
         except IOError as exception:
             print(exception, file=sys.stderr)
             status = 1
