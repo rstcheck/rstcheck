@@ -34,6 +34,7 @@ import doctest
 import io
 import json
 import locale
+import multiprocessing
 import os
 import re
 import subprocess
@@ -173,8 +174,10 @@ def find_ignored_languages(source):
                     yield language.strip()
 
 
-def _check_file(filename, report_level, ignore):
+def _check_file(paremters):
     """Yield errors."""
+    (filename, report_level, ignore) = paremters
+
     if filename == '-':
         contents = sys.stdin.read()
     else:
@@ -184,11 +187,13 @@ def _check_file(filename, report_level, ignore):
 
     ignore_from_config(os.path.dirname(os.path.realpath(filename)))
 
+    all_errors = []
     for error in check(contents,
                        filename=filename,
                        report_level=report_level,
                        ignore=ignore):
-        yield error
+        all_errors.append(error)
+    return (filename, all_errors)
 
 
 def check_python(code):
@@ -623,13 +628,23 @@ def main():
     args.report = int(threshold_dictionary.get(args.report, args.report))
 
     status = 0
-    for filename in args.files:
-        try:
-            for error in _check_file(
-                    filename,
-                    report_level=args.report,
-                    ignore=split_comma_separated(args.ignore)):
+    pool = multiprocessing.Pool(multiprocessing.cpu_count())
+    try:
+        if len(args.files) > 1:
+            # Run in separate process to avoid mutating the global docutils
+            # settings based on the local configuration.
+            results = pool.map(
+                _check_file,
+                [(name, args.report, split_comma_separated(args.ignore))
+                 for name in args.files])
+        else:
+            results = [
+                _check_file((args.files[0],
+                             args.report,
+                             split_comma_separated(args.ignore)))]
 
+        for (filename, errors) in results:
+            for error in errors:
                 line_number = error[0]
                 message = error[1]
 
@@ -642,12 +657,12 @@ def main():
                       file=sys.stderr)
 
                 status = 1
-        except IOError as exception:
-            print(exception, file=sys.stderr)
-            status = 1
-        except IgnoreException:
-            if args.debug:
-                traceback.print_exc(file=sys.stderr)
+    except IOError as exception:
+        print(exception, file=sys.stderr)
+        status = 1
+    except IgnoreException:
+        if args.debug:
+            traceback.print_exc(file=sys.stderr)
 
     return status
 
