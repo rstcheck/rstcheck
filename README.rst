@@ -122,7 +122,8 @@ Configuration
 
 If your project has custom roles and directives, you can specify them in the
 local configuration of the project. ``rstcheck`` looks for a file
-``.rstcheck.cfg`` in the directory where it was launched.
+``.rstcheck.cfg`` in the directory or ancestor directory of the file it is
+checking.
 
 For example, consider a project with the following directory structure::
 
@@ -156,8 +157,7 @@ For example, consider a project with the following directory structure::
 
        Hello
 
-``rstcheck`` will consider the ``.rstcheck.cfg`` if run from the appropriate
-directory::
+``rstcheck`` will consider the ``.rstcheck.cfg``::
 
     $ cd docs
     $ rstcheck foo/bar.rst

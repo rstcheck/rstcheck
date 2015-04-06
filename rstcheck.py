@@ -79,6 +79,11 @@ class Error(Exception):
         Exception.__init__(self, message)
 
 
+class IgnoreException(Exception):
+
+    """rstcheck internal exception."""
+
+
 def check(source,
           filename='<string>',
           report_level=docutils.utils.Reporter.INFO_LEVEL,
@@ -116,6 +121,11 @@ def check(source,
                                 'warning_stream': string_io})
     except docutils.utils.SystemMessage:
         pass
+    except AttributeError:
+        # Sphinx will sometimes throw an exception trying to access
+        # "self.state.document.settings.env". Ignore this for now until we
+        # figure out a better approach.
+        raise IgnoreException()
 
     for checker in writer.checkers:
         for error in checker():
@@ -171,6 +181,8 @@ def _check_file(filename, report_level, ignore):
         with contextlib.closing(
                 docutils.io.FileInput(source_path=filename)) as input_file:
             contents = input_file.read()
+
+    ignore_from_config(os.path.dirname(os.path.realpath(filename)))
 
     for error in check(contents,
                        filename=filename,
@@ -230,7 +242,7 @@ def check_doctest(code):
             yield (int(match.group(1)), message)
 
 
-def _get_directives_and_roles_from_config():
+def _get_directives_and_roles_from_config(path):
     """Return a tuple of Sphinx directive and roles.
 
     From a file ".rstcheck.ini" that is located in the directory where the
@@ -245,7 +257,6 @@ def _get_directives_and_roles_from_config():
         ignore=one,two,tree
 
     """
-    path = os.path.join(os.getcwd(), '.rstcheck.cfg')
     parser = configparser.ConfigParser()
     parser.read(path)
     try:
@@ -305,13 +316,9 @@ def _ignore_role(name, rawtext, text, lineno, inliner,
 
 def _ignore_sphinx():
     """Register Sphinx directives and roles to ignore."""
-    (sphinx_directives, sphinx_roles) = [
-        sum(l, [])
-        for l in zip(_get_directives_and_roles_from_sphinx(),
-                     _get_directives_and_roles_from_config())
-    ]
+    (directives, roles) = _get_directives_and_roles_from_sphinx()
 
-    sphinx_directives += [
+    directives += [
         'centered',
         'include',
         'deprecated',
@@ -325,20 +332,60 @@ def _ignore_sphinx():
         'versionadded',
         'versionchanged']
 
-    sphinx_ext_autosummary = [
+    ext_autosummary = [
         'autosummary',
         'currentmodule',
     ]
 
-    for directive in sphinx_directives + sphinx_ext_autosummary:
+    for directive in directives + ext_autosummary:
         docutils.parsers.rst.directives.register_directive(directive,
                                                            IgnoredDirective)
 
-    for role in sphinx_roles + ['ctype']:
+    for role in roles + ['ctype']:
         docutils.parsers.rst.roles.register_local_role(role, _ignore_role)
 
 
 _ignore_sphinx()
+
+
+def find_config(directory):
+    """Return configuration filename.
+
+    Find configuration in directory or its ancestor.
+
+    """
+    directory = os.path.realpath(directory)
+
+    while directory:
+        candidate = os.path.join(directory, '.rstcheck.cfg')
+        if os.path.exists(candidate):
+            return candidate
+
+        parent_directory = os.path.dirname(directory)
+        if parent_directory == directory:
+            break
+        else:
+            directory = parent_directory
+
+
+def ignore_from_config(directory):
+    """Ignore directives/roles based on a configuration file.
+
+    Find configuration in directory or its ancestor.
+
+    """
+    config_path = find_config(directory)
+    if not config_path:
+        return
+
+    (directives, roles) = _get_directives_and_roles_from_config(config_path)
+
+    for directive in directives:
+        docutils.parsers.rst.directives.register_directive(directive,
+                                                           IgnoredDirective)
+
+    for role in roles:
+        docutils.parsers.rst.roles.register_local_role(role, _ignore_role)
 
 
 # The checker functions below return a checker. This is for purposes of
@@ -598,10 +645,7 @@ def main():
         except IOError as exception:
             print(exception, file=sys.stderr)
             status = 1
-        except AttributeError:
-            # Sphinx will sometimes throw an exception trying to access
-            # "self.state.document.settings.env". Ignore this for now until we
-            # figure out a better approach.
+        except IgnoreException:
             if args.debug:
                 traceback.print_exc(file=sys.stderr)
 

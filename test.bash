@@ -12,11 +12,7 @@ fi
 ./rstcheck.py examples/unicode.rst
 ./rstcheck.py examples/unknown.rst
 ./rstcheck.py - < examples/good.rst
-
-(
-    cd examples/with_configuration
-    ../../rstcheck.py good.rst
-)
+./rstcheck.py examples/with_configuration/good.rst
 
 if ./rstcheck.py examples/bad_cpp.rst
 then
