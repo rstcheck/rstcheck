@@ -186,6 +186,7 @@ def _check_file(paremters):
             contents = input_file.read()
 
     ignore_from_config(os.path.dirname(os.path.realpath(filename)))
+    _ignore_sphinx()
 
     all_errors = []
     for error in check(contents,
@@ -348,9 +349,6 @@ def _ignore_sphinx():
 
     for role in roles + ['ctype']:
         docutils.parsers.rst.roles.register_local_role(role, _ignore_role)
-
-
-_ignore_sphinx()
 
 
 def find_config(directory):
@@ -632,7 +630,8 @@ def main():
     try:
         if len(args.files) > 1:
             # Run in separate process to avoid mutating the global docutils
-            # settings based on the local configuration.
+            # settings based on the local configuration. It also avoids
+            # mutating the settings when rstcheck is used as a module.
             results = pool.map(
                 _check_file,
                 [(name, args.report, split_comma_separated(args.ignore))

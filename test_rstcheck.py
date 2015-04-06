@@ -9,6 +9,10 @@ import unittest
 import rstcheck
 
 
+# We don't do this in the module itself to avoid mutation.
+rstcheck._ignore_sphinx()
+
+
 class Tests(unittest.TestCase):
 
     def assert_lines_equal(self, line_numbers, results):
