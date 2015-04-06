@@ -5,6 +5,7 @@ check:
 		--disable=bad-continuation \
 		--disable=locally-disabled \
 		--disable=no-member \
+		--disable=not-callable \
 		--disable=too-few-public-methods \
 		--disable=too-many-arguments \
 		--function-rgx='[a-z_][a-z0-9_]{2,50}$$' \
