@@ -622,6 +622,9 @@ def main():
                         version='%(prog)s ' + __version__)
     args = parser.parse_args()
 
+    if '-' in args.files and len(args.files) > 1:
+        parser.error("'-' for standard in can only be checked alone")
+
     threshold_dictionary = docutils.frontend.OptionParser.thresholds
     args.report = int(threshold_dictionary.get(args.report, args.report))
 

@@ -14,6 +14,9 @@ fi
 ./rstcheck.py - < examples/good.rst
 ./rstcheck.py examples/with_configuration/good.rst
 
+# Test multiple files.
+./rstcheck.py examples/good.rst examples/unicode.rst
+
 if ./rstcheck.py examples/bad_cpp.rst
 then
     exit 1
@@ -30,6 +33,18 @@ then
 fi
 
 if ./rstcheck.py examples/bad_rst.rst
+then
+    exit 1
+fi
+
+# Test multiple files.
+if ./rstcheck.py examples/bad_cpp.rst examples/good.rst
+then
+    exit 1
+fi
+
+# "-" should only be allowed to be checked alone.
+if ./rstcheck.py - examples/good.rst
 then
     exit 1
 fi
