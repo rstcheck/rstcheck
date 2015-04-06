@@ -174,9 +174,9 @@ def find_ignored_languages(source):
                     yield language.strip()
 
 
-def _check_file(paremters):
+def _check_file(parameters):
     """Yield errors."""
-    (filename, report_level, ignore) = paremters
+    (filename, report_level, ignore) = parameters
 
     if filename == '-':
         contents = sys.stdin.read()
