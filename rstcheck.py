@@ -186,7 +186,7 @@ def _check_file(parameters):
             contents = input_file.read()
 
     ignore_from_config(os.path.dirname(os.path.realpath(filename)))
-    _ignore_sphinx()
+    ignore_sphinx()
 
     all_errors = []
     for error in check(contents,
@@ -320,7 +320,7 @@ def _ignore_role(name, rawtext, text, lineno, inliner,
     return ([], [])
 
 
-def _ignore_sphinx():
+def ignore_sphinx():
     """Register Sphinx directives and roles to ignore."""
     (directives, roles) = _get_directives_and_roles_from_sphinx()
 

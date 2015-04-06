@@ -10,7 +10,7 @@ import rstcheck
 
 
 # We don't do this in the module itself to avoid mutation.
-rstcheck._ignore_sphinx()
+rstcheck.ignore_sphinx()
 
 
 class Tests(unittest.TestCase):
