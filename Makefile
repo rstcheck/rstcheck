@@ -12,8 +12,7 @@ check:
 		--rcfile=/dev/null \
 		rstcheck.py setup.py
 	check-manifest
-	python setup.py --long-description | \
-		rstcheck --ignore=cpp,python,rst -
+	python setup.py --long-description | rstcheck -
 	scspell rstcheck.py setup.py README.rst
 	./rstcheck.py README.rst
 
