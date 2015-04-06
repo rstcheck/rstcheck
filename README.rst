@@ -157,10 +157,9 @@ For example, consider a project with the following directory structure::
 
        Hello
 
-``rstcheck`` will consider the ``.rstcheck.cfg``::
+``rstcheck`` will make use of the ``.rstcheck.cfg``::
 
-    $ cd docs
-    $ rstcheck foo/bar.rst
+    $ rstcheck docs/foo/bar.rst
 
 
 Usage in Vim
@@ -184,5 +183,8 @@ is the line number (not the line index). The second value is the error message.
 >>> import rstcheck
 >>> list(rstcheck.check('Example\n==='))
 [(2, '(INFO/1) Possible title underline, too short for the title.')]
+
+Note that this does not load any configuration as that would mutate the
+``docutils`` registries.
 
 .. rstcheck: ignore-language=cpp,python,rst
