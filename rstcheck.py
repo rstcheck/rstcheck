@@ -40,7 +40,6 @@ import re
 import subprocess
 import sys
 import tempfile
-import traceback
 
 import docutils.core
 import docutils.io
@@ -80,15 +79,11 @@ class Error(Exception):
         Exception.__init__(self, message)
 
 
-class IgnoreException(Exception):
-
-    """rstcheck internal exception."""
-
-
 def check(source,
           filename='<string>',
           report_level=docutils.utils.Reporter.INFO_LEVEL,
-          ignore=None):
+          ignore=None,
+          debug=False):
     """Yield errors.
 
     Use lower report_level for noisier error output.
@@ -126,7 +121,8 @@ def check(source,
         # Sphinx will sometimes throw an exception trying to access
         # "self.state.document.settings.env". Ignore this for now until we
         # figure out a better approach.
-        raise IgnoreException()
+        if debug:
+            raise
 
     for checker in writer.checkers:
         for error in checker():
@@ -176,7 +172,7 @@ def find_ignored_languages(source):
 
 def _check_file(parameters):
     """Yield errors."""
-    (filename, report_level, ignore) = parameters
+    (filename, report_level, ignore, debug) = parameters
 
     if filename == '-':
         contents = sys.stdin.read()
@@ -192,7 +188,8 @@ def _check_file(parameters):
     for error in check(contents,
                        filename=filename,
                        report_level=report_level,
-                       ignore=ignore):
+                       ignore=ignore,
+                       debug=debug):
         all_errors.append(error)
     return (filename, all_errors)
 
@@ -637,13 +634,20 @@ def main():
             # mutating the settings when rstcheck is used as a module.
             results = pool.map(
                 _check_file,
-                [(name, args.report, split_comma_separated(args.ignore))
+                [(name,
+                  args.report,
+                  split_comma_separated(args.ignore),
+                  args.debug)
                  for name in args.files])
         else:
             results = [
-                _check_file((args.files[0],
-                             args.report,
-                             split_comma_separated(args.ignore)))]
+                _check_file(
+                    (args.files[0],
+                     args.report,
+                     split_comma_separated(args.ignore),
+                     args.debug)
+                )
+            ]
 
         for (filename, errors) in results:
             for error in errors:
@@ -662,9 +666,6 @@ def main():
     except IOError as exception:
         print(exception, file=sys.stderr)
         status = 1
-    except IgnoreException:
-        if args.debug:
-            traceback.print_exc(file=sys.stderr)
 
     return status
 
