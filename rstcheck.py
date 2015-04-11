@@ -67,7 +67,7 @@ __version__ = '1.3a0'
 
 SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
 
-RSTCHECK_COMMENT_RE = re.compile('.. rstcheck:')
+RSTCHECK_COMMENT_RE = re.compile(r'\.\. rstcheck:')
 
 
 class Error(Exception):
