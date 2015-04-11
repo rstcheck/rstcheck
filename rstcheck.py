@@ -62,7 +62,7 @@ try:
 except ImportError:
     import ConfigParser as configparser
 
-__version__ = '1.3a0'
+__version__ = '1.3'
 
 
 SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
