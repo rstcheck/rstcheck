@@ -137,11 +137,9 @@ For example, consider a project with the following directory structure::
 
 .. code-block:: cfg
 
-    [roles]
-    ignore=src,RFC
-
-    [directives]
-    ignore=one,two,three
+    [rstcheck]
+    ignore_directives=one,two,three
+    ignore_roles=src,RFC
 
 ``bar.rst`` contains:
 

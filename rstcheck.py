@@ -62,7 +62,7 @@ try:
 except ImportError:
     import ConfigParser as configparser
 
-__version__ = '1.2.1'
+__version__ = '1.3a0'
 
 
 SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
@@ -262,20 +262,36 @@ def _get_directives_and_roles_from_config(path):
     """
     parser = configparser.ConfigParser()
     parser.read(path)
+
+    try:
+        options = dict(parser.items('rstcheck'))
+    except configparser.NoSectionError:
+        options = {}
+
+    directives = get_and_split(options, 'ignore_directives')
+    roles = get_and_split(options, 'ignore_roles')
+
+    # Deprecated since 1.3.
     try:
         roles = split_comma_separated(parser.get('roles', 'ignore'))
     except (configparser.NoOptionError, configparser.NoSectionError):
-        roles = []
+        pass
     try:
         directives = split_comma_separated(parser.get('directives', 'ignore'))
     except (configparser.NoOptionError, configparser.NoSectionError):
-        directives = []
+        pass
+
     return (directives, roles)
+
+
+def get_and_split(options, key):
+    """Return list of split and stripped strings."""
+    return split_comma_separated(options.get(key, ''))
 
 
 def split_comma_separated(text):
     """Return list of split and stripped strings."""
-    return [t.strip() for t in text.split(',')]
+    return [t.strip() for t in text.split(',') if t.strip()]
 
 
 def _get_directives_and_roles_from_sphinx():
