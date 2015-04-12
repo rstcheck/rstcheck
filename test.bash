@@ -14,6 +14,11 @@ fi
 ./rstcheck.py - < examples/good.rst
 ./rstcheck.py examples/with_configuration/good.rst
 
+./rstcheck.py \
+    --ignore-directives=my-directive \
+    --ignore-role=some-custom-thing \
+    examples/good_with_custom.rst
+
 # Test multiple files.
 ./rstcheck.py examples/good.rst examples/unicode.rst
 

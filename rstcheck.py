@@ -635,6 +635,8 @@ def parse_args():
         parser.error("'-' for standard in can only be checked alone")
 
     args.ignore_language = split_comma_separated(args.ignore_language)
+    args.ignore_directives = split_comma_separated(args.ignore_directives)
+    args.ignore_roles = split_comma_separated(args.ignore_roles)
 
     threshold_dictionary = docutils.frontend.OptionParser.thresholds
     args.report = int(threshold_dictionary.get(args.report, args.report))

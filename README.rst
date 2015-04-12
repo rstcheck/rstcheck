@@ -88,22 +88,28 @@ Options
 
 ::
 
-    usage: rstcheck [-h] [--report level] [--ignore language] [--debug]
-                    [--version]
+    usage: rstcheck [-h] [--report level] [--ignore-language language]
+                    [--ignore-directives directives] [--ignore-roles roles]
+                    [--debug] [--version]
                     files [files ...]
 
     Checks code blocks in reStructuredText.
 
     positional arguments:
-      files              files to check
+      files                 files to check
 
     optional arguments:
-      -h, --help         show this help message and exit
-      --report level     report system messages at or higher than level; info, 1,
-                         warning, 2, error, 3, severe, 4, none, 5 (default: info)
-      --ignore language  comma-separated list of languages to ignore
-      --debug            show output helpful for debugging
-      --version          show program's version number and exit
+      -h, --help            show this help message and exit
+      --report level        report system messages at or higher than level; info,
+                            1, warning, 2, error, 3, severe, 4, none, 5 (default:
+                            info)
+      --ignore-language language, --ignore language
+                            comma-separated list of languages to ignore
+      --ignore-directives directives
+                            comma-separated list of directives to ignore
+      --ignore-roles roles  comma-separated list of roles to ignore
+      --debug               show output helpful for debugging
+      --version             show program's version number and exit
 
 
 Ignore languages
