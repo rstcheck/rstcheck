@@ -247,20 +247,7 @@ def check_doctest(code):
 
 
 def _get_directives_and_roles_from_config(path):
-    """Return a tuple of Sphinx directive and roles.
-
-    From a file ".rstcheck.ini" that is located in the directory where the
-    script is being run.
-
-    A ".rstcheck.ini" example:
-
-        [roles]
-        ignore=foo,bar,src,baz
-
-        [directives]
-        ignore=one,two,tree
-
-    """
+    """Return a tuple of Sphinx directive and roles."""
     parser = configparser.ConfigParser()
     parser.read(path)
 
