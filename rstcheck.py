@@ -183,6 +183,7 @@ def _check_file(parameters):
             contents = input_file.read()
 
     ignore_from_config(os.path.dirname(os.path.realpath(filename)))
+    ignore_directives_and_roles(args.ignore_directives, args.ignore_roles)
     ignore_sphinx()
 
     all_errors = []
@@ -344,12 +345,8 @@ def ignore_sphinx():
         'currentmodule',
     ]
 
-    for directive in directives + ext_autosummary:
-        docutils.parsers.rst.directives.register_directive(directive,
-                                                           IgnoredDirective)
-
-    for role in roles + ['ctype']:
-        docutils.parsers.rst.roles.register_local_role(role, _ignore_role)
+    ignore_directives_and_roles(directives + ext_autosummary,
+                                roles + ['ctype'])
 
 
 def find_config(directory):
@@ -382,8 +379,12 @@ def ignore_from_config(directory):
     if not config_path:
         return
 
-    (directives, roles) = _get_directives_and_roles_from_config(config_path)
+    ignore_directives_and_roles(
+        *_get_directives_and_roles_from_config(config_path))
 
+
+def ignore_directives_and_roles(directives, roles):
+    """Ignore directives/roles in docutils."""
     for directive in directives:
         docutils.parsers.rst.directives.register_directive(directive,
                                                            IgnoredDirective)
