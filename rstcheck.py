@@ -171,14 +171,15 @@ def find_ignored_languages(source):
 
 
 def _check_file(parameters):
-    """Yield errors."""
-    (filename, report_level, ignore, debug) = parameters
+    """Return list of errors."""
+    (filename, args) = parameters
 
     if filename == '-':
         contents = sys.stdin.read()
     else:
         with contextlib.closing(
-                docutils.io.FileInput(source_path=filename)) as input_file:
+                docutils.io.FileInput(source_path=filename)
+        ) as input_file:
             contents = input_file.read()
 
     ignore_from_config(os.path.dirname(os.path.realpath(filename)))
@@ -187,9 +188,9 @@ def _check_file(parameters):
     all_errors = []
     for error in check(contents,
                        filename=filename,
-                       report_level=report_level,
-                       ignore=ignore,
-                       debug=debug):
+                       report_level=args.report,
+                       ignore=args.ignore_language,
+                       debug=args.debug):
         all_errors.append(error)
     return (filename, all_errors)
 
@@ -613,8 +614,8 @@ class CheckWriter(docutils.writers.Writer):
         self.checkers += visitor.checkers
 
 
-def main():
-    """Return 0 on success."""
+def parse_args():
+    """Return parsed command-line arguments."""
     threshold_choices = docutils.frontend.OptionParser.threshold_choices
 
     parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
@@ -627,8 +628,15 @@ def main():
                              'level; ' +
                              ', '.join(threshold_choices) +
                              ' (default: %(default)s)')
-    parser.add_argument('--ignore', metavar='language', default='',
+    parser.add_argument('--ignore-language', '--ignore',
+                        metavar='language', default='',
                         help='comma-separated list of languages to ignore')
+    parser.add_argument('--ignore-directives',
+                        metavar='directives', default='',
+                        help='comma-separated list of directives to ignore')
+    parser.add_argument('--ignore-roles',
+                        metavar='roles', default='',
+                        help='comma-separated list of roles to ignore')
     parser.add_argument('--debug', action='store_true',
                         help='show output helpful for debugging')
     parser.add_argument('--version', action='version',
@@ -638,8 +646,17 @@ def main():
     if '-' in args.files and len(args.files) > 1:
         parser.error("'-' for standard in can only be checked alone")
 
+    args.ignore_language = split_comma_separated(args.ignore_language)
+
     threshold_dictionary = docutils.frontend.OptionParser.thresholds
     args.report = int(threshold_dictionary.get(args.report, args.report))
+
+    return args
+
+
+def main():
+    """Return 0 on success."""
+    args = parse_args()
 
     status = 0
     pool = multiprocessing.Pool(multiprocessing.cpu_count())
@@ -650,20 +667,9 @@ def main():
             # mutating the settings when rstcheck is used as a module.
             results = pool.map(
                 _check_file,
-                [(name,
-                  args.report,
-                  split_comma_separated(args.ignore),
-                  args.debug)
-                 for name in args.files])
+                [(name, args) for name in args.files])
         else:
-            results = [
-                _check_file(
-                    (args.files[0],
-                     args.report,
-                     split_comma_separated(args.ignore),
-                     args.debug)
-                )
-            ]
+            results = [_check_file((args.files[0], args))]
 
         for (filename, errors) in results:
             for error in errors:
