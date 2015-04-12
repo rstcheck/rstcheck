@@ -27,6 +27,8 @@ then
     exit 1
 fi
 
+./rstcheck.py --ignore-language=cpp examples/bad_cpp.rst
+
 if ./rstcheck.py - < examples/bad_cpp.rst
 then
     exit 1
