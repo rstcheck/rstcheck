@@ -614,7 +614,8 @@ def parse_args():
                         default='info',
                         help='report system messages at or higher than '
                              'level; ' +
-                             ', '.join(threshold_choices) +
+                             ', '.join(choice for choice in threshold_choices
+                                       if not choice.isdigit()) +
                              ' (default: %(default)s)')
     parser.add_argument('--ignore-language', '--ignore',
                         metavar='language', default='',

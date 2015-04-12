@@ -101,8 +101,7 @@ Options
     optional arguments:
       -h, --help            show this help message and exit
       --report level        report system messages at or higher than level; info,
-                            1, warning, 2, error, 3, severe, 4, none, 5 (default:
-                            info)
+                            warning, error, severe, none (default: info)
       --ignore-language language, --ignore language
                             comma-separated list of languages to ignore
       --ignore-directives directives
