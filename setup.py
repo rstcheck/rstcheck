@@ -3,6 +3,8 @@
 """Installer for rstcheck."""
 
 import ast
+import io
+
 import setuptools
 
 
@@ -14,7 +16,7 @@ def version():
                 return ast.parse(line).body[0].value.s
 
 
-with open('README.rst') as readme:
+with io.open('README.rst', encoding='utf-8') as readme:
     setuptools.setup(
         name='rstcheck',
         version=version(),
