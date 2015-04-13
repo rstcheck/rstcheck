@@ -652,11 +652,16 @@ def main():
     status = 0
     pool = multiprocessing.Pool(multiprocessing.cpu_count())
     try:
-        # Run in separate process to avoid mutating the global docutils
-        # settings based on the local configuration. It also avoids
-        # mutating the settings when rstcheck is used as a module.
-        results = pool.map(_check_file,
-                           [(name, args) for name in args.files])
+        if len(args.files) > 1:
+            # Run in separate process to avoid mutating the global docutils
+            # settings based on the local configuration. It also avoids
+            # mutating the settings when rstcheck is used as a module.
+            results = pool.map(
+                _check_file,
+                [(name, args) for name in args.files])
+        else:
+            # This is for the case where we read from standard in.
+            results = [_check_file((args.files[0], args))]
 
         for (filename, errors) in results:
             for error in errors:
