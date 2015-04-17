@@ -232,9 +232,9 @@ def check_rst(code, ignore):
 def check_doctest(code):
     """Yield doctest syntax errors.
 
-    This does not run the test as that would be unsafe. Nor does this check the
-    Python syntax in the doctest. That could be purposely incorrect for testing
-    purposes.
+    This does not run the test as that would be unsafe. Nor does this
+    check the Python syntax in the doctest. That could be purposely
+    incorrect for testing purposes.
 
     """
     parser = doctest.DocTestParser()
