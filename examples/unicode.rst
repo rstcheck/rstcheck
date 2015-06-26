@@ -2,7 +2,7 @@
 Тест
 ====
 
-.. sourcecode:: python
+.. code-block:: python
 
    print('Привет!')
 
