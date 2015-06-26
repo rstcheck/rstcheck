@@ -13,6 +13,7 @@ fi
 ./rstcheck.py examples/unknown.rst
 ./rstcheck.py - < examples/good.rst
 ./rstcheck.py examples/with_configuration/good.rst
+./rstcheck.py examples/good_cpp_with_local_include.rst
 
 ./rstcheck.py \
     --ignore-directives=my-directive \

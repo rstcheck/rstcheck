@@ -399,9 +399,10 @@ def ignore_directives_and_roles(directives, roles):
 # traversing the document. At that point, we accumulate the errors.
 
 
-def bash_checker(code):
+def bash_checker(code, working_directory):
     """Return checker."""
-    run = run_in_subprocess(code, '.bash', ['bash', '-n'])
+    run = run_in_subprocess(code, '.bash', ['bash', '-n'],
+                            working_directory=working_directory)
 
     def run_check():
         """Yield errors."""
@@ -419,22 +420,25 @@ def bash_checker(code):
     return run_check
 
 
-def c_checker(code):
+def c_checker(code, working_directory):
     """Return checker."""
-    return gcc_checker(code, '.c', [os.getenv('CC', 'gcc'), '-std=c99', '-I.'])
+    return gcc_checker(code, '.c', [os.getenv('CC', 'gcc'), '-std=c99', '-I.'],
+                       working_directory=working_directory)
 
 
-def cpp_checker(code):
+def cpp_checker(code, working_directory):
     """Return checker."""
     return gcc_checker(code, '.cpp', [os.getenv('CXX', 'g++'), '-std=c++0x',
-                                      '-I.'])
+                                      '-I.'],
+                       working_directory=working_directory)
 
 
-def gcc_checker(code, filename_suffix, arguments):
+def gcc_checker(code, filename_suffix, arguments, working_directory):
     """Return checker."""
     run = run_in_subprocess(code,
                             filename_suffix,
-                            arguments + ['-pedantic', '-fsyntax-only'])
+                            arguments + ['-pedantic', '-fsyntax-only'],
+                            working_directory=working_directory)
 
     def run_check():
         """Yield errors."""
@@ -474,7 +478,7 @@ def get_encoding():
     return locale.getpreferredencoding() or sys.getdefaultencoding()
 
 
-def run_in_subprocess(code, filename_suffix, arguments):
+def run_in_subprocess(code, filename_suffix, arguments, working_directory):
     """Return None on success."""
     temporary_file = tempfile.NamedTemporaryFile(mode='wb',
                                                  suffix=filename_suffix)
@@ -483,7 +487,8 @@ def run_in_subprocess(code, filename_suffix, arguments):
 
     process = subprocess.Popen(arguments + [temporary_file.name],
                                stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
+                               stderr=subprocess.PIPE,
+                               cwd=working_directory)
 
     def run():
         """Yield errors."""
@@ -504,6 +509,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         self.checkers = []
         self.contents = contents
         self.filename = filename
+        self.working_directory = os.path.dirname(os.path.realpath(filename))
         self.ignore = ignore or []
         self.ignore.append(None)
 
@@ -532,13 +538,14 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
             'bash': bash_checker,
             'c': c_checker,
             'cpp': cpp_checker,
-            'json': lambda source: lambda: check_json(source),
-            'python': lambda source: lambda: check_python(source),
-            'rst': lambda source: lambda: check_rst(source, ignore=self.ignore)
+            'json': lambda source, _: lambda: check_json(source),
+            'python': lambda source, _: lambda: check_python(source),
+            'rst': lambda source, _: lambda: check_rst(source,
+                                                       ignore=self.ignore)
         }.get(language)
 
         if checker:
-            run = checker(node.rawsource)
+            run = checker(node.rawsource, self.working_directory)
             self._add_check(node=node, run=run, language=language)
 
         raise docutils.nodes.SkipNode
