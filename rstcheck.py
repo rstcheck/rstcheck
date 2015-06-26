@@ -421,12 +421,13 @@ def bash_checker(code):
 
 def c_checker(code):
     """Return checker."""
-    return gcc_checker(code, '.c', [os.getenv('CC', 'gcc'), '-std=c99'])
+    return gcc_checker(code, '.c', [os.getenv('CC', 'gcc'), '-std=c99', '-I.'])
 
 
 def cpp_checker(code):
     """Return checker."""
-    return gcc_checker(code, '.cpp', [os.getenv('CXX', 'g++'), '-std=c++0x'])
+    return gcc_checker(code, '.cpp', [os.getenv('CXX', 'g++'), '-std=c++0x',
+                                      '-I.'])
 
 
 def gcc_checker(code, filename_suffix, arguments):
