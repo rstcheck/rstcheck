@@ -20,7 +20,7 @@ with io.open('README.rst', encoding='utf-8') as readme:
     setuptools.setup(
         name='rstcheck',
         version=version(),
-        url='http://github.com/myint/rstcheck',
+        url='https://github.com/myint/rstcheck',
         description='Checks syntax of reStructuredText and code blocks nested '
                     'within it.',
         long_description=readme.read(),
