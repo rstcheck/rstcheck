@@ -10,7 +10,7 @@ import setuptools
 
 def version():
     """Return version string."""
-    with open('rstcheck.py') as input_file:
+    with io.open('rstcheck.py', encoding='utf-8') as input_file:
         for line in input_file:
             if line.startswith('__version__'):
                 return ast.parse(line).body[0].value.s
