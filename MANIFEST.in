@@ -1,5 +1,6 @@
 include AUTHORS.rst
 include README.rst
+include LICENSE
 
 exclude .travis.yml
 exclude Makefile
