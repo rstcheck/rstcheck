@@ -8,6 +8,7 @@ check:
 		--disable=not-callable \
 		--disable=too-few-public-methods \
 		--disable=too-many-arguments \
+		--disable=undefined-variable \
 		--function-rgx='[a-z_][a-z0-9_]{2,50}$$' \
 		--rcfile=/dev/null \
 		rstcheck.py setup.py
