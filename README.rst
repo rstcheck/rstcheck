@@ -111,8 +111,8 @@ Options
       --version             show program's version number and exit
 
 
-Ignore languages
-================
+Ignore specific languages
+=========================
 
 You can ignore checking of nested code blocks by language. Either use the
 command-line option ``--ignore`` or put a comment in the document:
