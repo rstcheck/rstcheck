@@ -636,7 +636,7 @@ def parse_args():
                         metavar='roles', default='',
                         help='comma-separated list of roles to ignore')
     parser.add_argument('--debug', action='store_true',
-                        help='show output helpful for debugging')
+                        help='show helpful for debugging')
     parser.add_argument('--version', action='version',
                         version='%(prog)s ' + __version__)
     args = parser.parse_args()
