@@ -41,6 +41,11 @@ import subprocess
 import sys
 import tempfile
 
+try:
+    import configparser
+except ImportError:
+    import ConfigParser as configparser
+
 import docutils.core
 import docutils.io
 import docutils.nodes
@@ -57,10 +62,6 @@ import sphinx.domains.python
 import sphinx.domains.std
 import sphinx.roles
 
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
 
 __version__ = '1.4.1'
 
