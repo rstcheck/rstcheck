@@ -63,7 +63,7 @@ import sphinx.domains.std
 import sphinx.roles
 
 
-__version__ = '1.4.1'
+__version__ = '1.4.2'
 
 
 SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
