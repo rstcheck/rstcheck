@@ -6,8 +6,4 @@ exclude .travis.yml
 exclude Makefile
 exclude test.bash
 exclude test_rstcheck.py
-exclude examples
-exclude examples/with_configuration
-recursive-exclude examples/with_configuration *.cfg
-recursive-exclude examples *.h
-recursive-exclude examples *.rst
+prune examples
