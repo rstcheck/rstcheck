@@ -89,7 +89,8 @@ Options
 ::
 
     usage: rstcheck [-h] [--report level] [--ignore-language language]
-                    [--ignore-directives directives] [--ignore-roles roles]
+                    [--ignore-directives directives]
+                    [--ignore-substitutions substitutions] [--ignore-roles roles]
                     [--debug] [--version]
                     files [files ...]
 
@@ -106,10 +107,11 @@ Options
                             comma-separated list of languages to ignore
       --ignore-directives directives
                             comma-separated list of directives to ignore
+      --ignore-substitutions substitutions
+                            comma-separated list of substitutions to ignore
       --ignore-roles roles  comma-separated list of roles to ignore
-      --debug               show output helpful for debugging
+      --debug               show helpful for debugging
       --version             show program's version number and exit
-
 
 Ignore specific languages
 =========================
