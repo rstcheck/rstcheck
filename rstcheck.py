@@ -187,7 +187,7 @@ def _check_file(parameters):
     ignore_directives_and_roles(args.ignore_directives, args.ignore_roles)
     ignore_sphinx()
     for substitution in args.ignore_substitutions:
-        contents = contents.replace(u"|{}|".format(substitution), "None")
+        contents = contents.replace('|{}|'.format(substitution), 'None')
 
     all_errors = []
     for error in check(contents,
