@@ -186,6 +186,8 @@ def _check_file(parameters):
     ignore_from_config(os.path.dirname(os.path.realpath(filename)))
     ignore_directives_and_roles(args.ignore_directives, args.ignore_roles)
     ignore_sphinx()
+    for substitution in args.ignore_substitutions:
+        contents = contents.replace(u"|{}|".format(substitution), "None")
 
     all_errors = []
     for error in check(contents,
@@ -632,6 +634,9 @@ def parse_args():
     parser.add_argument('--ignore-directives',
                         metavar='directives', default='',
                         help='comma-separated list of directives to ignore')
+    parser.add_argument('--ignore-substitutions',
+                        metavar='substitutions', default='',
+                        help='comma-separated list of substitutions to ignore')
     parser.add_argument('--ignore-roles',
                         metavar='roles', default='',
                         help='comma-separated list of roles to ignore')
@@ -647,6 +652,9 @@ def parse_args():
     args.ignore_language = split_comma_separated(args.ignore_language)
     args.ignore_directives = split_comma_separated(args.ignore_directives)
     args.ignore_roles = split_comma_separated(args.ignore_roles)
+    args.ignore_substitutions = split_comma_separated(
+        args.ignore_substitutions
+    )
 
     threshold_dictionary = docutils.frontend.OptionParser.thresholds
     args.report = int(threshold_dictionary.get(args.report, args.report))
