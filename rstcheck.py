@@ -614,7 +614,7 @@ class CheckWriter(docutils.writers.Writer):
 
 
 def decode_filename(filename):
-    """Decode filename if it is a byte string."""
+    """Return Unicode filename."""
     if hasattr(filename, 'decode'):
         return filename.decode(sys.getfilesystemencoding())
     else:
