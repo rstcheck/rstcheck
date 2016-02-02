@@ -613,12 +613,12 @@ class CheckWriter(docutils.writers.Writer):
         self.checkers += visitor.checkers
 
 
-def decode(value):
-    """Decode value if it is a byte string."""
-    if hasattr(value, 'decode'):
-        return value.decode(get_encoding())
+def decode_filename(filename):
+    """Decode filename if it is a byte string."""
+    if hasattr(filename, 'decode'):
+        return filename.decode(sys.getfilesystemencoding())
     else:
-        return value
+        return filename
 
 
 def parse_args():
@@ -626,7 +626,7 @@ def parse_args():
     threshold_choices = docutils.frontend.OptionParser.threshold_choices
 
     parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
-    parser.add_argument('files', nargs='+', type=decode,
+    parser.add_argument('files', nargs='+', type=decode_filename,
                         help='files to check')
     parser.add_argument('--report', metavar='level',
                         choices=threshold_choices,
