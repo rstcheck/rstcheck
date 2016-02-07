@@ -674,7 +674,8 @@ def output_message(text, file=sys.stderr):
     """Output message to terminal."""
     if hasattr(file, 'encoding') and file.encoding is None:
         # If the output file does not support Unicode, encode it to a byte
-        # string. This occurs when Python is launched in Vim on some machines.
+        # string. On some machines, this occurs when Python is redirecting to
+        # file (or piping to something like Vim).
         text = text.encode('utf-8')
 
     print(text, file=file)
