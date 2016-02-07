@@ -670,6 +670,16 @@ def parse_args():
     return args
 
 
+def output_message(text, file=sys.stderr):
+    """Output message to terminal."""
+    if hasattr(file, 'encoding') and file.encoding is None:
+        # If the output file does not support Unicode, encode it to a byte
+        # string. This occurs when Python is launched in Vim on some machines.
+        text = text.encode('utf-8')
+
+    print(text, file=file)
+
+
 def main():
     """Return 0 on success."""
     args = parse_args()
@@ -696,14 +706,13 @@ def main():
                 if not re.match(r'\([A-Z]+/[0-9]+\)', message):
                     message = '(ERROR/3) ' + message
 
-                print('{}:{}: {}'.format(filename,
-                                         line_number,
-                                         message),
-                      file=sys.stderr)
+                output_message('{}:{}: {}'.format(filename,
+                                                  line_number,
+                                                  message))
 
                 status = 1
     except IOError as exception:
-        print(exception, file=sys.stderr)
+        output_message(exception)
         status = 1
 
     return status
