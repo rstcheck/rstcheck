@@ -22,7 +22,7 @@ with io.open('README.rst', encoding='utf-8') as readme:
         version=version(),
         url='https://github.com/myint/rstcheck',
         description='Checks syntax of reStructuredText and code blocks nested '
-                    'within it.',
+                    'within it',
         long_description=readme.read(),
         classifiers=[
             'License :: OSI Approved :: MIT License',
