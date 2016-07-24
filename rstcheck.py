@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (C) 2013-2015 Steven Myint
+# Copyright (C) 2013-2016 Steven Myint
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -63,10 +63,10 @@ import sphinx.domains.std
 import sphinx.roles
 
 
-__version__ = '1.5.1'
+__version__ = '2.0a0'
 
 
-SPHINX_CODE_BLOCK_DELTA = -1 if sphinx.version_info >= (1, 3) else 0
+SPHINX_CODE_BLOCK_DELTA = -1
 
 RSTCHECK_COMMENT_RE = re.compile(r'\.\. rstcheck:')
 
@@ -262,16 +262,6 @@ def _get_directives_and_roles_from_config(path):
 
     directives = get_and_split(options, 'ignore_directives')
     roles = get_and_split(options, 'ignore_roles')
-
-    # Deprecated since 1.3.
-    try:
-        roles = split_comma_separated(parser.get('roles', 'ignore'))
-    except (configparser.NoOptionError, configparser.NoSectionError):
-        pass
-    try:
-        directives = split_comma_separated(parser.get('directives', 'ignore'))
-    except (configparser.NoOptionError, configparser.NoSectionError):
-        pass
 
     return (directives, roles)
 
