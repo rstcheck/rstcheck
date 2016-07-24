@@ -702,7 +702,7 @@ def main():
                                                   message))
 
                 status = 1
-    except IOError as exception:
+    except (IOError, UnicodeError) as exception:
         output_message(exception)
         status = 1
 
