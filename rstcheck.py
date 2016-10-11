@@ -63,7 +63,7 @@ import sphinx.domains.std
 import sphinx.roles
 
 
-__version__ = '2.1'
+__version__ = '2.2'
 
 
 SPHINX_CODE_BLOCK_DELTA = -1
