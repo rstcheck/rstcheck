@@ -231,6 +231,8 @@ Test
                         print(
 """))
 
+    @unittest.skipIf(not rstcheck.SPHINX_INSTALLED,
+                     'Requires sphinx')
     def test_ignore_sphinx_directives(self):
         self.assert_lines_equal(
             [],

@@ -192,4 +192,18 @@ is the line number (not the line index). The second value is the error message.
 Note that this does not load any configuration as that would mutate the
 ``docutils`` registries.
 
+
+Sphinx
+======
+
+To enable Sphinx::
+
+    $ pip install sphinx==1.4
+
+The last time this was checked, newer versions of Sphinx were not compatible.
+
+To check that Sphinx support is enabled::
+
+    $ rstcheck -h | grep 'Sphinx is enabled'
+
 .. rstcheck: ignore-language=cpp,python,rst

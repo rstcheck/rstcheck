@@ -53,20 +53,27 @@ import docutils.parsers.rst
 import docutils.utils
 import docutils.writers
 
-import sphinx
-import sphinx.directives
-import sphinx.domains.c
-import sphinx.domains.cpp
-import sphinx.domains.javascript
-import sphinx.domains.python
-import sphinx.domains.std
-import sphinx.roles
+try:
+    import sphinx
+    SPHINX_INSTALLED = (1, 3) <= sphinx.version_info < (1, 5)
+except ImportError:
+    SPHINX_INSTALLED = False
+
+if SPHINX_INSTALLED:
+    import sphinx.directives
+    import sphinx.domains.c
+    import sphinx.domains.cpp
+    import sphinx.domains.javascript
+    import sphinx.domains.python
+    import sphinx.domains.std
+    import sphinx.roles
 
 
 __version__ = '2.2'
 
 
-SPHINX_CODE_BLOCK_DELTA = -1
+if SPHINX_INSTALLED:
+    SPHINX_CODE_BLOCK_DELTA = -1
 
 RSTCHECK_COMMENT_RE = re.compile(r'\.\. rstcheck:')
 
@@ -78,6 +85,34 @@ class Error(Exception):
     def __init__(self, message, line_number):
         self.line_number = line_number
         Exception.__init__(self, message)
+
+
+if not SPHINX_INSTALLED:
+    class CodeBlockDirective(docutils.parsers.rst.Directive):
+
+        """Code block directive."""
+
+        has_content = True
+        optional_arguments = 1
+
+        def run(self):
+            """Run directive."""
+            try:
+                language = self.arguments[0]
+            except IndexError:
+                language = ''
+            code = '\n'.join(self.content)
+            literal = docutils.nodes.literal_block(code, code)
+            literal['classes'].append('code-block')
+            literal['language'] = language
+            return [literal]
+
+    docutils.parsers.rst.directives.register_directive('code',
+                                                       CodeBlockDirective)
+    docutils.parsers.rst.directives.register_directive('code-block',
+                                                       CodeBlockDirective)
+    docutils.parsers.rst.directives.register_directive('sourcecode',
+                                                       CodeBlockDirective)
 
 
 def check(source,
@@ -186,6 +221,7 @@ def _check_file(parameters):
     ignore_from_config(os.path.dirname(os.path.realpath(filename)))
     ignore_directives_and_roles(args.ignore_directives, args.ignore_roles)
     ignore_sphinx()
+
     for substitution in args.ignore_substitutions:
         contents = contents.replace('|{}|'.format(substitution), 'None')
 
@@ -278,21 +314,71 @@ def split_comma_separated(text):
 
 def _get_directives_and_roles_from_sphinx():
     """Return a tuple of Sphinx directive and roles."""
-    sphinx_directives = list(sphinx.domains.std.StandardDomain.directives)
-    sphinx_roles = list(sphinx.domains.std.StandardDomain.roles)
+    if SPHINX_INSTALLED:
+        sphinx_directives = list(sphinx.domains.std.StandardDomain.directives)
+        sphinx_roles = list(sphinx.domains.std.StandardDomain.roles)
 
-    for domain in [sphinx.domains.c.CDomain,
-                   sphinx.domains.cpp.CPPDomain,
-                   sphinx.domains.javascript.JavaScriptDomain,
-                   sphinx.domains.python.PythonDomain]:
+        for domain in [sphinx.domains.c.CDomain,
+                       sphinx.domains.cpp.CPPDomain,
+                       sphinx.domains.javascript.JavaScriptDomain,
+                       sphinx.domains.python.PythonDomain]:
 
-        sphinx_directives += list(domain.directives) + [
-            '{}:{}'.format(domain.name, item)
-            for item in list(domain.directives)]
+            sphinx_directives += list(domain.directives) + [
+                '{}:{}'.format(domain.name, item)
+                for item in list(domain.directives)]
 
-        sphinx_roles += list(domain.roles) + [
-            '{}:{}'.format(domain.name, item)
-            for item in list(domain.roles)]
+            sphinx_roles += list(domain.roles) + [
+                '{}:{}'.format(domain.name, item)
+                for item in list(domain.roles)]
+    else:
+        sphinx_roles = [
+            'abbr',
+            'command',
+            'dfn',
+            'doc',
+            'download',
+            'envvar',
+            'file',
+            'guilabel',
+            'kbd',
+            'keyword',
+            'mailheader',
+            'makevar',
+            'manpage',
+            'menuselection',
+            'mimetype',
+            'newsgroup',
+            'option',
+            'program',
+            'py:func',
+            'ref',
+            'regexp',
+            'samp',
+            'term',
+            'token']
+
+        sphinx_directives = [
+            'autosummary',
+            'currentmodule',
+            'centered',
+            'c:function',
+            'c:type',
+            'include',
+            'deprecated',
+            'envvar',
+            'glossary',
+            'index',
+            'no-code-block',
+            'literalinclude',
+            'hlist',
+            'option',
+            'productionlist',
+            'py:function',
+            'seealso',
+            'toctree',
+            'todo',
+            'versionadded',
+            'versionchanged']
 
     return (sphinx_directives, sphinx_roles)
 
@@ -581,11 +667,36 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 def beginning_of_code_block(node, full_contents):
     """Return line number of beginning of code block."""
     line_number = node.line
-    delta = len(node.non_default_attributes())
-    current_line_contents = full_contents.splitlines()[line_number:]
-    blank_lines = next((i for (i, x) in enumerate(current_line_contents) if x),
-                       0)
-    return line_number + delta - 1 + blank_lines - 1 + SPHINX_CODE_BLOCK_DELTA
+
+    if SPHINX_INSTALLED:
+        delta = len(node.non_default_attributes())
+        current_line_contents = full_contents.splitlines()[line_number:]
+        blank_lines = next(
+            (i for (i, x) in enumerate(current_line_contents) if x),
+            0)
+        return (
+            line_number +
+            delta - 1 +
+            blank_lines - 1 +
+            SPHINX_CODE_BLOCK_DELTA)
+    else:
+        lines = full_contents.splitlines()
+        code_block_length = len(node.rawsource.splitlines())
+
+        try:
+            # Case where there are no extra spaces.
+            if lines[line_number - 1].strip():
+                return line_number - code_block_length + 1
+        except IndexError:
+            pass
+
+        # The offsets are wrong if the RST text has multiple blank lines after
+        # the code block. This is a workaround.
+        for line_number in range(node.line, 1, -1):
+            if lines[line_number - 2].strip():
+                break
+
+        return line_number - code_block_length
 
 
 class CheckWriter(docutils.writers.Writer):
@@ -621,7 +732,11 @@ def parse_args():
     """Return parsed command-line arguments."""
     threshold_choices = docutils.frontend.OptionParser.threshold_choices
 
-    parser = argparse.ArgumentParser(description=__doc__, prog='rstcheck')
+    parser = argparse.ArgumentParser(
+        description=__doc__ + (' Sphinx is enabled.'
+                               if SPHINX_INSTALLED else ''),
+        prog='rstcheck')
+
     parser.add_argument('files', nargs='+', type=decode_filename,
                         help='files to check')
     parser.add_argument('--report', metavar='level',
@@ -645,9 +760,10 @@ def parse_args():
                         metavar='roles', default='',
                         help='comma-separated list of roles to ignore')
     parser.add_argument('--debug', action='store_true',
-                        help='show helpful for debugging')
+                        help='show messages helpful for debugging')
     parser.add_argument('--version', action='version',
                         version='%(prog)s ' + __version__)
+
     args = parser.parse_args()
 
     if '-' in args.files and len(args.files) > 1:

@@ -3,6 +3,7 @@ check:
 	pylint \
 		--reports=no \
 		--disable=bad-continuation \
+		--disable=import-error \
 		--disable=locally-disabled \
 		--disable=no-member \
 		--disable=not-callable \
@@ -13,7 +14,7 @@ check:
 		--rcfile=/dev/null \
 		rstcheck.py setup.py
 	check-manifest
-	python setup.py --long-description | rstcheck -
+	python setup.py --long-description | ./rstcheck.py -
 	scspell rstcheck.py setup.py README.rst
 	./rstcheck.py README.rst
 
