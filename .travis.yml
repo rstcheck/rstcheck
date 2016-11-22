@@ -19,7 +19,7 @@ install:
     - if [ "$SPHINX" -eq 1 ]; then pip install sphinx==1.4; fi
 
 script:
-    - if [ "$SPHINX" -eq 1 ]; then ./rstcheck.py | grep 'Sphinx is enabled'; fi
+    - if [ "$SPHINX" -eq 1 ]; then ./rstcheck.py -h | grep 'Sphinx is enabled'; fi
     - ./test_rstcheck.py
     - ./test.bash
     - pep8 ./*.py
