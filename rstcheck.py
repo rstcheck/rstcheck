@@ -732,8 +732,8 @@ def parse_args():
     threshold_choices = docutils.frontend.OptionParser.threshold_choices
 
     parser = argparse.ArgumentParser(
-        description=__doc__ +
-                   (' Sphinx is enabled.' if SPHINX_INSTALLED else ''),
+        description=__doc__ + (' Sphinx is enabled.'
+                               if SPHINX_INSTALLED else ''),
         prog='rstcheck')
 
     parser.add_argument('files', nargs='+', type=decode_filename,
