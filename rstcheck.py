@@ -667,16 +667,35 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 def beginning_of_code_block(node, full_contents):
     """Return line number of beginning of code block."""
     line_number = node.line
-    delta = len(node.non_default_attributes())
-    current_line_contents = full_contents.splitlines()[line_number:]
-    blank_lines = next((i for (i, x) in enumerate(current_line_contents) if x),
-                       0)
-    result = line_number + delta - 1 + blank_lines - 1
 
     if SPHINX_INSTALLED:
-        return result + SPHINX_CODE_BLOCK_DELTA
+        delta = len(node.non_default_attributes())
+        current_line_contents = full_contents.splitlines()[line_number:]
+        blank_lines = next((i for (i, x) in enumerate(current_line_contents) if x),
+                           0)
+        return (
+            line_number +
+            delta - 1 +
+            blank_lines - 1 +
+            SPHINX_CODE_BLOCK_DELTA)
     else:
-        return result
+        lines = full_contents.splitlines()
+        code_block_length = len(node.rawsource.splitlines())
+
+        try:
+            # Case where there are no extra spaces.
+            if lines[line_number - 1].strip():
+                return line_number - code_block_length + 1
+        except IndexError:
+            pass
+
+        # The offsets are wrong if the RST text has multiple blank lines after
+        # the code block. This is a workaround.
+        for line_number in range(node.line, 1, -1):
+            if lines[line_number - 2].strip():
+                break
+
+        return line_number - code_block_length
 
 
 class CheckWriter(docutils.writers.Writer):
