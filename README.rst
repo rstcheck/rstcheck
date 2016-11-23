@@ -9,12 +9,15 @@ rstcheck
 Checks syntax of reStructuredText and code blocks nested within it.
 
 
+.. contents::
+
+
 Installation
 ============
 
 From pip::
 
-    $ pip install --upgrade rstcheck
+    $ pip install rstcheck
 
 
 Supported languages in code blocks
@@ -167,6 +170,22 @@ For example, consider a project with the following directory structure::
     $ rstcheck docs/foo/bar.rst
 
 
+Sphinx
+======
+
+To enable Sphinx::
+
+    $ pip install sphinx==1.4
+
+The last time this was checked, newer versions of Sphinx were not compatible.
+
+To check that Sphinx support is enabled::
+
+    $ rstcheck -h | grep 'Sphinx is enabled'
+
+.. rstcheck: ignore-language=cpp,python,rst
+
+
 Usage in Vim
 ============
 
@@ -191,19 +210,3 @@ is the line number (not the line index). The second value is the error message.
 
 Note that this does not load any configuration as that would mutate the
 ``docutils`` registries.
-
-
-Sphinx
-======
-
-To enable Sphinx::
-
-    $ pip install sphinx==1.4
-
-The last time this was checked, newer versions of Sphinx were not compatible.
-
-To check that Sphinx support is enabled::
-
-    $ rstcheck -h | grep 'Sphinx is enabled'
-
-.. rstcheck: ignore-language=cpp,python,rst
