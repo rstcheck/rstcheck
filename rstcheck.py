@@ -605,13 +605,16 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         """Check syntax of code block."""
         # For "..code-block:: language"
         language = node.get('language', None)
-        if language in self.ignore:
+        if not language:
             # For "..code:: language"
             classes = node.get('classes')
             if 'code' in classes:
                 language = classes[-1]
             else:
                 return
+
+        if language in self.ignore:
+            return
 
         if language == 'doctest' or (
                 language == 'python' and
