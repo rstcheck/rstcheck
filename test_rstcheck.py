@@ -347,5 +347,10 @@ Testing
 """))
 
 
+def main():
+    with rstcheck.enable_sphinx_if_possible():
+        unittest.main()
+
+
 if __name__ == '__main__':
-    unittest.main()
+    main()

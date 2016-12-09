@@ -175,9 +175,9 @@ Sphinx
 
 To enable Sphinx::
 
-    $ pip install sphinx==1.4
+    $ pip install sphinx
 
-The last time this was checked, newer versions of Sphinx were not compatible.
+The installed Sphinx version must be at least 1.5.
 
 To check that Sphinx support is enabled::
 

@@ -16,7 +16,7 @@ env:
 install:
     - python setup.py --quiet install
     - pip install pep8 pyflakes
-    - if [ "$SPHINX" -eq 1 ]; then pip install sphinx==1.4; fi
+    - if [ "$SPHINX" -eq 1 ]; then pip install sphinx; fi
 
 script:
     - if [ "$SPHINX" -eq 1 ]; then ./rstcheck.py -h | grep 'Sphinx is enabled'; fi

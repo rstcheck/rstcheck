@@ -37,6 +37,7 @@ import locale
 import multiprocessing
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -55,11 +56,12 @@ import docutils.writers
 
 try:
     import sphinx
-    SPHINX_INSTALLED = (1, 3) <= sphinx.version_info < (1, 5)
+    SPHINX_INSTALLED = sphinx.version_info >= (1, 5)
 except ImportError:
     SPHINX_INSTALLED = False
 
 if SPHINX_INSTALLED:
+    import sphinx.application
     import sphinx.directives
     import sphinx.domains.c
     import sphinx.domains.cpp
@@ -69,7 +71,7 @@ if SPHINX_INSTALLED:
     import sphinx.roles
 
 
-__version__ = '2.2'
+__version__ = '3.0a0'
 
 
 if SPHINX_INSTALLED:
@@ -796,42 +798,62 @@ def output_message(text, file=sys.stderr):
     print(text, file=file)
 
 
+@contextlib.contextmanager
+def enable_sphinx_if_possible():
+    """Register Sphinx directives and roles."""
+    if SPHINX_INSTALLED:
+        temporary_directory = tempfile.mkdtemp()
+        try:
+            sphinx.application.Sphinx(srcdir=temporary_directory,
+                                      confdir=None,
+                                      outdir=temporary_directory,
+                                      doctreedir=temporary_directory,
+                                      buildername='dummy',
+                                      status=None)
+            yield
+        finally:
+            shutil.rmtree(temporary_directory)
+    else:
+        yield
+
+
 def main():
     """Return 0 on success."""
     args = parse_args()
 
-    status = 0
-    pool = multiprocessing.Pool(multiprocessing.cpu_count())
-    try:
-        if len(args.files) > 1:
-            # Run in separate process to avoid mutating the global docutils
-            # settings based on the local configuration. It also avoids
-            # mutating the settings when rstcheck is used as a module.
-            results = pool.map(
-                _check_file,
-                [(name, args) for name in args.files])
-        else:
-            # This is for the case where we read from standard in.
-            results = [_check_file((args.files[0], args))]
+    with enable_sphinx_if_possible():
+        status = 0
+        pool = multiprocessing.Pool(multiprocessing.cpu_count())
+        try:
+            if len(args.files) > 1:
+                # Run in separate process to avoid mutating the global docutils
+                # settings based on the local configuration. It also avoids
+                # mutating the settings when rstcheck is used as a module.
+                results = pool.map(
+                    _check_file,
+                    [(name, args) for name in args.files])
+            else:
+                # This is for the case where we read from standard in.
+                results = [_check_file((args.files[0], args))]
 
-        for (filename, errors) in results:
-            for error in errors:
-                line_number = error[0]
-                message = error[1]
+            for (filename, errors) in results:
+                for error in errors:
+                    line_number = error[0]
+                    message = error[1]
 
-                if not re.match(r'\([A-Z]+/[0-9]+\)', message):
-                    message = '(ERROR/3) ' + message
+                    if not re.match(r'\([A-Z]+/[0-9]+\)', message):
+                        message = '(ERROR/3) ' + message
 
-                output_message('{}:{}: {}'.format(filename,
-                                                  line_number,
-                                                  message))
+                    output_message('{}:{}: {}'.format(filename,
+                                                      line_number,
+                                                      message))
 
-                status = 1
-    except (IOError, UnicodeError) as exception:
-        output_message(exception)
-        status = 1
+                    status = 1
+        except (IOError, UnicodeError) as exception:
+            output_message(exception)
+            status = 1
 
-    return status
+        return status
 
 
 if __name__ == '__main__':
