@@ -53,6 +53,19 @@ class Tests(unittest.TestCase):
 Test
 ====
 
+.. code:: python
+
+    print(
+"""))
+
+    def test_check_code_block(self):
+        self.assert_lines_equal(
+            [6],
+            rstcheck.check(
+                """\
+Test
+====
+
 .. code-block:: python
 
     print(
@@ -232,7 +245,7 @@ Test
 """))
 
     @unittest.skipIf(not rstcheck.SPHINX_INSTALLED,
-                     'Requires sphinx')
+                     'Requires Sphinx')
     def test_ignore_sphinx_directives(self):
         self.assert_lines_equal(
             [],
@@ -313,6 +326,23 @@ Testing
 1
 
 .. rstcheck: ignore-language=doctest
+"""))
+
+    @unittest.skipIf(rstcheck.SPHINX_INSTALLED,
+                     'Does not work with Sphinx')
+    def test_check_doctest_in_code(self):
+        self.assert_lines_equal(
+            [7],
+            rstcheck.check(
+                """\
+Testing
+=======
+
+.. code:: doctest
+
+    >>> x = 1
+    >>>> x
+    1
 """))
 
     def test_check_doctest_in_code_block(self):

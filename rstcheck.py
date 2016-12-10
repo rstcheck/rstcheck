@@ -608,14 +608,17 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 
         self._add_check(node=node,
                         run=lambda: check_doctest(node.rawsource),
-                        language='doctest')
+                        language='doctest',
+                        is_code_node=False)
 
     def visit_literal_block(self, node):
         """Check syntax of code block."""
         # For "..code-block:: language"
         language = node.get('language', None)
+        is_code_node = False
         if not language:
             # For "..code:: language"
+            is_code_node = True
             classes = node.get('classes')
             if 'code' in classes:
                 language = classes[-1]
@@ -643,11 +646,14 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 
         if checker:
             run = checker(node.rawsource, self.working_directory)
-            self._add_check(node=node, run=run, language=language)
+            self._add_check(node=node,
+                            run=run,
+                            language=language,
+                            is_code_node=is_code_node)
 
         raise docutils.nodes.SkipNode
 
-    def _add_check(self, node, run, language):
+    def _add_check(self, node, run, language, is_code_node):
         """Add checker that will be run."""
         def run_check():
             """Yield errors."""
@@ -657,14 +663,16 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
                     for result in all_results:
                         error_offset = result[0] - 1
 
-                        try:
+                        line_number = getattr(node, 'line', None)
+                        if line_number is not None:
                             yield (
-                                beginning_of_code_block(node, self.contents) +
+                                beginning_of_code_block(
+                                    node=node,
+                                    line_number=line_number,
+                                    full_contents=self.contents,
+                                    is_code_node=is_code_node) +
                                 error_offset,
                                 '({}) {}'.format(language, result[1]))
-                        except TypeError:
-                            # Ignore case where node's line_number is None.
-                            pass
                 else:
                     yield (self.filename, 0, 'unknown error')
         self.checkers.append(run_check)
@@ -676,11 +684,9 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         """Ignore."""
 
 
-def beginning_of_code_block(node, full_contents):
+def beginning_of_code_block(node, line_number, full_contents, is_code_node):
     """Return line number of beginning of code block."""
-    line_number = node.line
-
-    if SPHINX_INSTALLED:
+    if SPHINX_INSTALLED and not is_code_node:
         delta = len(node.non_default_attributes())
         current_line_contents = full_contents.splitlines()[line_number:]
         blank_lines = next(
@@ -704,7 +710,7 @@ def beginning_of_code_block(node, full_contents):
 
         # The offsets are wrong if the RST text has multiple blank lines after
         # the code block. This is a workaround.
-        for line_number in range(node.line, 1, -1):
+        for line_number in range(line_number, 1, -1):
             if lines[line_number - 2].strip():
                 break
 
