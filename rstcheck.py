@@ -89,32 +89,35 @@ class Error(Exception):
         Exception.__init__(self, message)
 
 
-if not SPHINX_INSTALLED:
-    class CodeBlockDirective(docutils.parsers.rst.Directive):
+class CodeBlockDirective(docutils.parsers.rst.Directive):
 
-        """Code block directive."""
+    """Code block directive."""
 
-        has_content = True
-        optional_arguments = 1
+    has_content = True
+    optional_arguments = 1
 
-        def run(self):
-            """Run directive."""
-            try:
-                language = self.arguments[0]
-            except IndexError:
-                language = ''
-            code = '\n'.join(self.content)
-            literal = docutils.nodes.literal_block(code, code)
-            literal['classes'].append('code-block')
-            literal['language'] = language
-            return [literal]
+    def run(self):
+        """Run directive."""
+        try:
+            language = self.arguments[0]
+        except IndexError:
+            language = ''
+        code = '\n'.join(self.content)
+        literal = docutils.nodes.literal_block(code, code)
+        literal['classes'].append('code-block')
+        literal['language'] = language
+        return [literal]
 
-    docutils.parsers.rst.directives.register_directive('code',
-                                                       CodeBlockDirective)
-    docutils.parsers.rst.directives.register_directive('code-block',
-                                                       CodeBlockDirective)
-    docutils.parsers.rst.directives.register_directive('sourcecode',
-                                                       CodeBlockDirective)
+
+def register_code_directive():
+    """Register code directive."""
+    if not SPHINX_INSTALLED:
+        docutils.parsers.rst.directives.register_directive('code',
+                                                           CodeBlockDirective)
+        docutils.parsers.rst.directives.register_directive('code-block',
+                                                           CodeBlockDirective)
+        docutils.parsers.rst.directives.register_directive('sourcecode',
+                                                           CodeBlockDirective)
 
 
 def check(source,
@@ -220,6 +223,9 @@ def _check_file(parameters):
         ) as input_file:
             contents = input_file.read()
 
+    # Do this at call time rather than import time to avoid unnecessarily
+    # mutating state.
+    register_code_directive()
     ignore_from_config(os.path.dirname(os.path.realpath(filename)))
     ignore_directives_and_roles(args.ignore_directives, args.ignore_roles)
     ignore_sphinx()
