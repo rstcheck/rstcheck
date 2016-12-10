@@ -80,6 +80,10 @@ if SPHINX_INSTALLED:
 RSTCHECK_COMMENT_RE = re.compile(r'\.\. rstcheck:')
 
 
+# This is for the cases where code in a readme uses includes in that directory.
+INCLUDE_FLAGS = ['-I.', '-I..']
+
+
 class Error(Exception):
 
     """rstcheck exception."""
@@ -510,14 +514,15 @@ def bash_checker(code, working_directory):
 
 def c_checker(code, working_directory):
     """Return checker."""
-    return gcc_checker(code, '.c', [os.getenv('CC', 'gcc'), '-std=c99', '-I.'],
+    return gcc_checker(code, '.c',
+                       [os.getenv('CC', 'gcc'), '-std=c99'] + INCLUDE_FLAGS,
                        working_directory=working_directory)
 
 
 def cpp_checker(code, working_directory):
     """Return checker."""
-    return gcc_checker(code, '.cpp', [os.getenv('CXX', 'g++'), '-std=c++0x',
-                                      '-I.'],
+    return gcc_checker(code, '.cpp',
+                       [os.getenv('CXX', 'g++'), '-std=c++0x'] + INCLUDE_FLAGS,
                        working_directory=working_directory)
 
 
