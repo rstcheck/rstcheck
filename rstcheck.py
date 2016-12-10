@@ -138,6 +138,11 @@ def check(source,
     Each code block is checked asynchronously in a subprocess.
 
     """
+    # Do this at call time rather than import time to avoid unnecessarily
+    # mutating state.
+    register_code_directive()
+    ignore_sphinx()
+
     ignore = ignore or []
 
     try:
@@ -223,12 +228,8 @@ def _check_file(parameters):
         ) as input_file:
             contents = input_file.read()
 
-    # Do this at call time rather than import time to avoid unnecessarily
-    # mutating state.
-    register_code_directive()
     ignore_from_config(os.path.dirname(os.path.realpath(filename)))
     ignore_directives_and_roles(args.ignore_directives, args.ignore_roles)
-    ignore_sphinx()
 
     for substitution in args.ignore_substitutions:
         contents = contents.replace('|{}|'.format(substitution), 'None')
