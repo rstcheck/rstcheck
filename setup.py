@@ -37,4 +37,4 @@ with io.open('README.rst', encoding='utf-8') as readme:
         keywords='restructuredtext,lint,check,pypi,readme,rst,analyze',
         py_modules=['rstcheck'],
         entry_points={'console_scripts': ['rstcheck = rstcheck:main']},
-        install_requires=['docutils'])
+        install_requires=['docutils >= 0.8'])
