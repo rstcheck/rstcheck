@@ -37,13 +37,13 @@ Examples
 
 With bad Python syntax:
 
-.. code-block:: rst
+.. code:: rst
 
     ====
     Test
     ====
 
-    .. code-block:: python
+    .. code:: python
 
         print(
 
@@ -54,13 +54,13 @@ With bad Python syntax:
 
 With bad C++ syntax:
 
-.. code-block:: rst
+.. code:: rst
 
     ====
     Test
     ====
 
-    .. code-block:: cpp
+    .. code:: cpp
 
         int main()
         {
@@ -74,7 +74,7 @@ With bad C++ syntax:
 
 With bad syntax in the reStructuredText document itself:
 
-.. code-block:: rst
+.. code:: rst
 
     ====
     Test
@@ -183,15 +183,13 @@ To check that Sphinx support is enabled::
 
     $ rstcheck -h | grep 'Sphinx is enabled'
 
-.. rstcheck: ignore-language=cpp,python,rst
-
 
 Usage in Vim
 ============
 
 To check reStructuredText in Vim using Syntastic_:
 
-.. code-block:: vim
+.. code:: vim
 
     let g:syntastic_rst_checkers = ['rstcheck']
 
@@ -210,3 +208,5 @@ is the line number (not the line index). The second value is the error message.
 
 Note that this does not load any configuration as that would mutate the
 ``docutils`` registries.
+
+.. rstcheck: ignore-language=cpp,python,rst
