@@ -209,4 +209,15 @@ is the line number (not the line index). The second value is the error message.
 Note that this does not load any configuration as that would mutate the
 ``docutils`` registries.
 
+
+History
+=======
+
+3.0 (2016-12-19)
+================
+
+- Optionally support Sphinx 1.5. Sphinx support will be enabled if Sphinx is
+  installed.
+
+
 .. rstcheck: ignore-language=cpp,python,rst
