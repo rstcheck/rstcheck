@@ -214,7 +214,7 @@ History
 =======
 
 3.0 (2016-12-19)
-================
+----------------
 
 - Optionally support Sphinx 1.5. Sphinx support will be enabled if Sphinx is
   installed.
