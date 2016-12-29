@@ -219,5 +219,15 @@ History
 - Optionally support Sphinx 1.5. Sphinx support will be enabled if Sphinx is
   installed.
 
+2.0 (2015-07-27)
+----------------
+
+- Support loading settings from configuration files.
+
+1.0 (2015-03-14)
+----------------
+
+- Add Sphinx support.
+
 
 .. rstcheck: ignore-language=cpp,python,rst
