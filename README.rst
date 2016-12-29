@@ -229,5 +229,10 @@ History
 
 - Add Sphinx support.
 
+0.1 (2013-12-02)
+----------------
+
+- Initial version.
+
 
 .. rstcheck: ignore-language=cpp,python,rst
