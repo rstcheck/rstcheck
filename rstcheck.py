@@ -124,6 +124,14 @@ def register_code_directive():
                                                            CodeBlockDirective)
 
 
+def strip_byte_order_mark(text):
+    """Return text with byte order mark (BOM) removed."""
+    try:
+        return text.encode('utf-8').decode('utf-8-sig')
+    except UnicodeError:
+        return text
+
+
 def check(source,
           filename='<string>',
           report_level=docutils.utils.Reporter.INFO_LEVEL,
@@ -157,6 +165,11 @@ def check(source,
     writer = CheckWriter(source, filename, ignore=ignore)
 
     string_io = io.StringIO()
+
+    # This is a hack to avoid false positive from docutils (#23). docutils
+    # mistakes BOMs for actual visible letters. This results in the "underline
+    # too short" warning firing.
+    source = strip_byte_order_mark(source)
 
     try:
         docutils.core.publish_string(
