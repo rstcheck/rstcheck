@@ -216,9 +216,9 @@ History
 3.0.1 (2017-03-01)
 ------------------
 
-- Support UTF-8 byte order mark (BOM). Previously, ``docutils`` would interpret
-  the BOM as a visible character, which would lead to false positives about
-  underlines being too short.
+- Support UTF-8 byte order marks (BOM). Previously, ``docutils`` would
+  interpret the BOM as a visible character, which would lead to false positives
+  about underlines being too short.
 
 3.0 (2016-12-19)
 ----------------
