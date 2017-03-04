@@ -72,7 +72,7 @@ if SPHINX_INSTALLED:
     import sphinx.roles
 
 
-__version__ = '3.0.1'
+__version__ = '3.1a0'
 
 
 if SPHINX_INSTALLED:
