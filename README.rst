@@ -28,6 +28,7 @@ Supported languages in code blocks
 - C (C99)
 - C++ (C++11)
 - JSON
+- XML
 - Python
 - reStructuredText
 

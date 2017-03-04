@@ -137,6 +137,76 @@ Test
 .. rstcheck: ignore-language json,python,rst
 """))
 
+    def test_check_xml(self):
+        self.assert_lines_equal(
+            [8],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: xml
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <root>
+       </abc>123<abc>
+    </root>
+"""))
+
+    def test_check_xml_with_ignore(self):
+        self.assert_lines_equal(
+            [],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: xml
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <root>
+       </abc>123<abc>
+    </root>
+
+.. rstcheck: ignore-language=xml,python,rst
+"""))
+
+    def test_check_xml_with_unmatched_ignores_only(self):
+        self.assert_lines_equal(
+            [8],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: xml
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <root>
+       </abc>123<abc>
+    </root>
+
+.. rstcheck: ignore-language=cpp,python,rst
+"""))
+
+    def test_check_xml_with_bad_ignore(self):
+        self.assert_lines_equal(
+            [8, 11],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: xml
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <root>
+       </abc>123<abc>
+    </root>
+
+.. rstcheck: ignore-language xml,python,rst
+"""))
+
     def test_check_with_extra_blank_lines_before(self):
         self.assert_lines_equal(
             [8],
