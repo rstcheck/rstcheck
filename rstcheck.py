@@ -41,6 +41,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from xml.etree import ElementTree
 
 try:
     import configparser
@@ -274,6 +275,21 @@ def check_json(code):
     try:
         json.loads(code)
     except ValueError as exception:
+        message = '{}'.format(exception)
+        line_number = 0
+
+        found = re.search(r': line\s+([0-9]+)[^:]*$', message)
+        if found:
+            line_number = int(found.group(1))
+
+        yield (int(line_number), message)
+
+
+def check_xml(code):
+    """Yield errors."""
+    try:
+        ElementTree.fromstring(code)
+    except ElementTree.ParseError as exception:
         message = '{}'.format(exception)
         line_number = 0
 
@@ -657,6 +673,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
             'c': c_checker,
             'cpp': cpp_checker,
             'json': lambda source, _: lambda: check_json(source),
+            'xml': lambda source, _: lambda: check_xml(source),
             'python': lambda source, _: lambda: check_python(source),
             'rst': lambda source, _: lambda: check_rst(source,
                                                        ignore=self.ignore)
