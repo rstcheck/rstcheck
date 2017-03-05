@@ -319,7 +319,7 @@ def check_regex(code):
                     break
 
         yield (int(line_number), message)
-        
+
 
 def check_rst(code, ignore):
     """Yield errors in nested RST code."""

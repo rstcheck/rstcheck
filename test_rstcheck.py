@@ -218,7 +218,7 @@ Test
 .. code-block:: regex
 
     [0-9]++
-    
+
 """))
 
     def test_check_regex_with_ignore(self):
