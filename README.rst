@@ -29,6 +29,7 @@ Supported languages in code blocks
 - C++ (C++11)
 - JSON
 - XML
+- Regular Expressions
 - Python
 - reStructuredText
 

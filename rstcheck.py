@@ -300,6 +300,27 @@ def check_xml(code):
         yield (int(line_number), message)
 
 
+def check_regex(code):
+    """Yield errors."""
+    try:
+        re.compile(code)
+    except re.error as exception:
+        message = '{}'.format(exception)
+        line_number = 0
+
+        found = re.search(r'position\s+([0-9]+)', message)
+        if found:
+            position = int(found.group(1))
+            length = 0
+            for i, line in enumerate(code.splitlines()):
+                length += len(line)
+                if position < length:
+                    line_number = i + 1
+                    break
+
+        yield (int(line_number), message)
+        
+
 def check_rst(code, ignore):
     """Yield errors in nested RST code."""
     filename = '<string>'
@@ -674,6 +695,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
             'cpp': cpp_checker,
             'json': lambda source, _: lambda: check_json(source),
             'xml': lambda source, _: lambda: check_xml(source),
+            'regex': lambda source, _: lambda: check_regex(source),
             'python': lambda source, _: lambda: check_python(source),
             'rst': lambda source, _: lambda: check_rst(source,
                                                        ignore=self.ignore)

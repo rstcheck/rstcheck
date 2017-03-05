@@ -207,6 +207,65 @@ Test
 .. rstcheck: ignore-language xml,python,rst
 """))
 
+    def test_check_regex(self):
+        self.assert_lines_equal(
+            [6],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: regex
+
+    [0-9]++
+    
+"""))
+
+    def test_check_regex_with_ignore(self):
+        self.assert_lines_equal(
+            [],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: regex
+
+    [0-9]++
+
+.. rstcheck: ignore-language=regex,python,rst
+"""))
+
+    def test_check_regex_with_unmatched_ignores_only(self):
+        self.assert_lines_equal(
+            [6],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: regex
+
+    [0-9]++
+
+.. rstcheck: ignore-language=cpp,python,rst
+"""))
+
+    def test_check_regex_with_bad_ignore(self):
+        self.assert_lines_equal(
+            [6, 8],
+            rstcheck.check(
+                """\
+Test
+====
+
+.. code-block:: regex
+
+    [0-9]++
+
+.. rstcheck: ignore-language regex,python,rst
+"""))
+        
     def test_check_with_extra_blank_lines_before(self):
         self.assert_lines_equal(
             [8],
