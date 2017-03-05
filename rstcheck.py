@@ -306,7 +306,7 @@ def check_regex(code):
         re.compile(code)
     except re.error as exception:
         message = '{}'.format(exception)
-        line_number = 0
+        line_number = 1
 
         found = re.search(r'position\s+([0-9]+)', message)
         if found:
