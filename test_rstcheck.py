@@ -207,6 +207,7 @@ Test
 .. rstcheck: ignore-language xml,python,rst
 """))
 
+<<<<<<< HEAD
     def test_check_regex(self):
         self.assert_lines_equal(
             [6],
@@ -266,6 +267,8 @@ Test
 .. rstcheck: ignore-language regex,python,rst
 """))
         
+=======
+>>>>>>> 37c99b49e59f2ba0b743849e5175f2246e487b54
     def test_check_with_extra_blank_lines_before(self):
         self.assert_lines_equal(
             [8],

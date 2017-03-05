@@ -72,7 +72,7 @@ if SPHINX_INSTALLED:
     import sphinx.roles
 
 
-__version__ = '3.0.1'
+__version__ = '3.1a0'
 
 
 if SPHINX_INSTALLED:
@@ -300,6 +300,7 @@ def check_xml(code):
         yield (int(line_number), message)
 
 
+<<<<<<< HEAD
 def check_regex(code):
     """Yield errors."""
     try:
@@ -321,6 +322,8 @@ def check_regex(code):
         yield (int(line_number), message)
         
 
+=======
+>>>>>>> 37c99b49e59f2ba0b743849e5175f2246e487b54
 def check_rst(code, ignore):
     """Yield errors in nested RST code."""
     filename = '<string>'
@@ -695,7 +698,10 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
             'cpp': cpp_checker,
             'json': lambda source, _: lambda: check_json(source),
             'xml': lambda source, _: lambda: check_xml(source),
+<<<<<<< HEAD
             'regex': lambda source, _: lambda: check_regex(source),
+=======
+>>>>>>> 37c99b49e59f2ba0b743849e5175f2246e487b54
             'python': lambda source, _: lambda: check_python(source),
             'rst': lambda source, _: lambda: check_rst(source,
                                                        ignore=self.ignore)
