@@ -214,6 +214,11 @@ Note that this does not load any configuration as that would mutate the
 History
 =======
 
+3.1
+---
+
+- Add support for checking XML code blocks (thanks to Sameer Singh).
+
 3.0.1 (2017-03-01)
 ------------------
 
