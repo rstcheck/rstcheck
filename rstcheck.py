@@ -41,7 +41,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from xml.etree import ElementTree
+import xml.etree.ElementTree
 
 try:
     import configparser
@@ -288,8 +288,8 @@ def check_json(code):
 def check_xml(code):
     """Yield errors."""
     try:
-        ElementTree.fromstring(code)
-    except ElementTree.ParseError as exception:
+        xml.etree.ElementTree.fromstring(code)
+    except xml.etree.ElementTree.ParseError as exception:
         message = '{}'.format(exception)
         line_number = 0
 
