@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# System tests.
+
 set -eux
 
 trap "echo -e '\x1b[01;31mFailed\x1b[0m'" ERR
