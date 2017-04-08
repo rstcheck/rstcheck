@@ -242,7 +242,7 @@ def _check_file(parameters):
         contents = sys.stdin.read()
     else:
         with contextlib.closing(
-                docutils.io.FileInput(source_path=filename)
+            docutils.io.FileInput(source_path=filename)
         ) as input_file:
             contents = input_file.read()
 
