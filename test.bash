@@ -29,7 +29,7 @@ done
 
 ./rstcheck.py --ignore-language=cpp examples/bad/bad_cpp.rst
 
-./rstcheck.py - < examples/good/good.rst
+./rstcheck.py - < examples/good/simple.rst
 ./rstcheck.py examples/with_configuration/good.rst
 
 # Test multiple mix of good/bad files.
