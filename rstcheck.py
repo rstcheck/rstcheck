@@ -58,7 +58,7 @@ import docutils.writers
 try:
     import sphinx
     SPHINX_INSTALLED = sphinx.version_info >= (1, 5)
-except ImportError:
+except (AttributeError, ImportError):
     SPHINX_INSTALLED = False
 
 if SPHINX_INSTALLED:
