@@ -82,7 +82,7 @@ Test
 .. code-block:: json
 
     {
-        'abc': 123
+        "abc": 123:
     }
 """))
 
@@ -97,7 +97,7 @@ Test
 .. code-block:: json
 
     {
-        'abc': 123
+        "abc": 123:
     }
 
 .. rstcheck: ignore-language=json,python,rst
@@ -114,7 +114,7 @@ Test
 .. code-block:: json
 
     {
-        'abc': 123
+        "abc": 123:
     }
 
 .. rstcheck: ignore-language=cpp,python,rst
@@ -131,7 +131,7 @@ Test
 .. code-block:: json
 
     {
-        'abc': 123
+        "abc": 123:
     }
 
 .. rstcheck: ignore-language json,python,rst

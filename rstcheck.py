@@ -270,6 +270,11 @@ def check_python(code):
         yield (int(exception.lineno), exception.msg)
 
 
+def character_index_to_line_number(text, character_index):
+    """Return (1-indexed) line number of the character index."""
+    return text.count('\n', 0, character_index) + 1
+
+
 def check_json(code):
     """Yield errors."""
     try:
@@ -281,6 +286,12 @@ def check_json(code):
         found = re.search(r': line\s+([0-9]+)[^:]*$', message)
         if found:
             line_number = int(found.group(1))
+        else:
+            found = re.search(r'\(char\s+([0-9]+)\)', message)
+            if found:
+                line_number = character_index_to_line_number(
+                    text=code,
+                    character_index=int(found.group(1)))
 
         yield (int(line_number), message)
 
