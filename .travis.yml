@@ -16,7 +16,7 @@ env:
     - SPHINX=1
 
 install:
-    - python setup.py --quiet install
+    - pip install .
     - pip install pycodestyle pyflakes
     - if [[ "$SPHINX" == 1 ]]; then pip install sphinx; fi
 
