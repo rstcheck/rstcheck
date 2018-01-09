@@ -12,13 +12,12 @@ python:
 
 env:
     -
-    - LANG=
     - SPHINX=1
 
 install:
-    - pip install .
-    - pip install pycodestyle pyflakes
-    - if [[ "$SPHINX" == 1 ]]; then pip install sphinx; fi
+    - pip install --retries=20 .
+    - pip install --retries=20 pycodestyle pyflakes
+    - if [[ "$SPHINX" == 1 ]]; then pip install --retries=20 sphinx; fi
 
 script:
     - if [[ "$SPHINX" == 1 ]]; then ./rstcheck.py -h | grep 'Sphinx is enabled'; fi
