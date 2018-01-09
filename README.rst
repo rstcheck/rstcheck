@@ -211,6 +211,20 @@ Note that this does not load any configuration as that would mutate the
 ``docutils`` registries.
 
 
+Testing
+=======
+
+To run all the tests, do::
+
+    $ make test
+
+Unit tests are in ``test_rstcheck.py``.
+
+System tests are composed of example good/bad input. The test inputs are
+contained in the ``examples`` directory. For basic tests, adding a test should
+just be a matter of adding files to ``examples/good`` or ``examples/bad``.
+
+
 History
 =======
 
