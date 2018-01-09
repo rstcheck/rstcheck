@@ -12,7 +12,6 @@ python:
 
 env:
     -
-    - LANG=
     - SPHINX=1
 
 install:
