@@ -688,6 +688,13 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 
         raise docutils.nodes.SkipNode
 
+    def visit_paragraph(self, node):
+        """Check syntax of reStructuredText."""
+        find = re.search(r'\[[^\]]+\]\([^\)]+\)', str(node))
+        if find is not None:
+            self.document.reporter.warning(
+                '(rst) Link is formatted in Markdown style.', base_node=node)
+
     def _add_check(self, node, run, language, is_code_node):
         """Add checker that will be run."""
         def run_check():
