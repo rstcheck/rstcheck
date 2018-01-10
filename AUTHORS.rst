@@ -8,3 +8,4 @@ Patches
 - LCD 047 (https://github.com/lcd047)
 - uralbash (https://github.com/uralbash)
 - Michael Fladischer (https://github.com/fladi)
+- biscuitsnake (https://github.com/biscuitsnake)
