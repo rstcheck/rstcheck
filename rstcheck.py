@@ -690,7 +690,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 
     def visit_paragraph(self, node):
         """Check syntax of reStructuredText."""
-        find = re.search(r'\[[^\]]+\]\([^\)]+\)', str(node))
+        find = re.search(r'\[[^\]]+\]\([^\)]+\)', node.rawsource)
         if find is not None:
             self.document.reporter.warning(
                 '(rst) Link is formatted in Markdown style.', base_node=node)
