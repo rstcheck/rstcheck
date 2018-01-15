@@ -83,6 +83,8 @@ RSTCHECK_COMMENT_RE = re.compile(r'\.\. rstcheck:')
 
 # This is for the cases where code in a readme uses includes in that directory.
 INCLUDE_FLAGS = ['-I.', '-I..']
+CONFIG_FILES = ['.rstcheck.cfg',
+                'setup.cfg']
 
 
 class Error(Exception):
@@ -479,9 +481,10 @@ def find_config(directory):
     directory = os.path.realpath(directory)
 
     while directory:
-        candidate = os.path.join(directory, '.rstcheck.cfg')
-        if os.path.exists(candidate):
-            return candidate
+        for filename in CONFIG_FILES:
+            candidate = os.path.join(directory, filename)
+            if os.path.exists(candidate):
+                return candidate
 
         parent_directory = os.path.dirname(directory)
         if parent_directory == directory:
