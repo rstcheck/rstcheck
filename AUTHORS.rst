@@ -9,3 +9,4 @@ Patches
 - uralbash (https://github.com/uralbash)
 - Michael Fladischer (https://github.com/fladi)
 - biscuitsnake (https://github.com/biscuitsnake)
+- Maël Pedretti (https://github.com/73VW)
