@@ -92,7 +92,7 @@ Options
 
 ::
 
-    usage: rstcheck [-h] [--report level] [--ignore-language language]
+    usage: rstcheck [-h] [-r] [--report level] [--ignore-language language]
                     [--ignore-directives directives]
                     [--ignore-substitutions substitutions] [--ignore-roles roles]
                     [--debug] [--version]
@@ -105,6 +105,7 @@ Options
 
     optional arguments:
       -h, --help            show this help message and exit
+      -r, --recursive       run recursively over directories
       --report level        report system messages at or higher than level; info,
                             warning, error, severe, none (default: info)
       --ignore-language language, --ignore language
@@ -114,8 +115,9 @@ Options
       --ignore-substitutions substitutions
                             comma-separated list of substitutions to ignore
       --ignore-roles roles  comma-separated list of roles to ignore
-      --debug               show helpful for debugging
+      --debug               show messages helpful for debugging
       --version             show program's version number and exit
+
 
 Ignore specific languages
 =========================

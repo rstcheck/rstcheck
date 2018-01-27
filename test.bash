@@ -51,6 +51,12 @@ then
     exit 1
 fi
 
+./rstcheck.py --recursive examples/good
+if ./rstcheck.py --recursive examples/bad
+then
+    exit 1
+fi
+
 if python -c 'import sys; sys.exit(0 if sys.version_info >= (3,) else 1)'
 then
     python -m doctest -v README.rst rstcheck.py
