@@ -802,6 +802,8 @@ def parse_args():
 
     parser.add_argument('files', nargs='+', type=decode_filename,
                         help='files to check')
+    parser.add_argument('-r', '--recursive', action='store_true',
+                        help='run recursively over directories')
     parser.add_argument('--report', metavar='level',
                         choices=threshold_choices,
                         default='info',
@@ -829,8 +831,12 @@ def parse_args():
 
     args = parser.parse_args()
 
-    if '-' in args.files and len(args.files) > 1:
-        parser.error("'-' for standard in can only be checked alone")
+    if '-' in args.files:
+        if len(args.files) > 1:
+            parser.error("'-' for standard in can only be checked alone")
+    else:
+        args.files = list(find_files(filenames=args.files,
+                                     recursive=args.recursive))
 
     args.ignore_language = split_comma_separated(args.ignore_language)
     args.ignore_directives = split_comma_separated(args.ignore_directives)
@@ -875,9 +881,39 @@ def enable_sphinx_if_possible():
         yield
 
 
+def match_file(filename):
+    """Return True if file is okay for modifying/recursing."""
+    base_name = os.path.basename(filename)
+
+    if base_name.startswith('.'):
+        return False
+
+    if not os.path.isdir(filename) and not filename.lower().endswith('.rst'):
+        return False
+
+    return True
+
+
+def find_files(filenames, recursive):
+    """Yield filenames."""
+    while filenames:
+        name = filenames.pop(0)
+        if recursive and os.path.isdir(name):
+            for root, directories, children in os.walk(name):
+                filenames += [os.path.join(root, f) for f in children
+                              if match_file(os.path.join(root, f))]
+                directories[:] = [d for d in directories
+                                  if match_file(os.path.join(root, d))]
+        else:
+            yield name
+
+
 def main():
     """Return 0 on success."""
     args = parse_args()
+
+    if not args.files:
+        return 0
 
     with enable_sphinx_if_possible():
         status = 0
