@@ -230,6 +230,14 @@ just be a matter of adding files to ``examples/good`` or ``examples/bad``.
 History
 =======
 
+3.2 (2018-02-17)
+----------------
+
+- Check for invalid Markdown-style links (thanks to biscuitsnake).
+- Allow configuration to be stored in ``setup.cfg`` (thanks to Maël Pedretti).
+- Add ``--recursive`` option to recursively drill down directories to check for
+  all ``*.rst`` files.
+
 3.1 (2017-03-08)
 ----------------
 
