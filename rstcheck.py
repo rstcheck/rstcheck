@@ -248,7 +248,9 @@ def _check_file(parameters):
         ) as input_file:
             contents = input_file.read()
 
-    ignore_from_config(os.path.dirname(os.path.realpath(filename)))
+    load_configuration_from_file(
+        os.path.dirname(os.path.realpath(filename)), args)
+
     ignore_directives_and_roles(args.ignore_directives, args.ignore_roles)
 
     for substitution in args.ignore_substitutions:
@@ -330,25 +332,9 @@ def check_doctest(code):
             yield (int(match.group(1)), message)
 
 
-def _get_directives_and_roles_from_config(path):
-    """Return a tuple of Sphinx directive and roles."""
-    parser = configparser.ConfigParser()
-    parser.read(path)
-
-    try:
-        options = dict(parser.items('rstcheck'))
-    except configparser.NoSectionError:
-        options = {}
-
-    directives = get_and_split(options, 'ignore_directives')
-    roles = get_and_split(options, 'ignore_roles')
-
-    return (directives, roles)
-
-
-def get_and_split(options, key):
+def get_and_split(options, key, default=''):
     """Return list of split and stripped strings."""
-    return split_comma_separated(options.get(key, ''))
+    return split_comma_separated(options.get(key, default))
 
 
 def split_comma_separated(text):
@@ -493,18 +479,39 @@ def find_config(directory):
             directory = parent_directory
 
 
-def ignore_from_config(directory):
-    """Ignore directives/roles based on a configuration file.
+def load_configuration_from_file(directory, args):
+    options = _get_options(directory)
 
-    Find configuration in directory or its ancestor.
+    args.report = options.get('report_level', args.report)
+    threshold_dictionary = docutils.frontend.OptionParser.thresholds
+    args.report = int(threshold_dictionary.get(args.report, args.report))
 
-    """
+    args.ignore_language = get_and_split(
+        options, 'ignore_language', args.ignore_language)
+
+    args.ignore_directives = get_and_split(
+        options, 'ignore_directives', args.ignore_directives)
+
+    args.ignore_substitutions = get_and_split(
+        options, 'ignore_substitutions', args.ignore_substitutions)
+
+    args.ignore_roles = get_and_split(
+        options, 'ignore_roles', args.ignore_roles)
+
+
+def _get_options(directory):
     config_path = find_config(directory)
     if not config_path:
-        return
+        return {}
 
-    ignore_directives_and_roles(
-        *_get_directives_and_roles_from_config(config_path))
+    parser = configparser.ConfigParser()
+    parser.read(config_path)
+    try:
+        options = dict(parser.items('rstcheck'))
+    except configparser.NoSectionError:
+        return {}
+    else:
+        return options
 
 
 def ignore_directives_and_roles(directives, roles):
@@ -837,16 +844,6 @@ def parse_args():
     else:
         args.files = list(find_files(filenames=args.files,
                                      recursive=args.recursive))
-
-    args.ignore_language = split_comma_separated(args.ignore_language)
-    args.ignore_directives = split_comma_separated(args.ignore_directives)
-    args.ignore_roles = split_comma_separated(args.ignore_roles)
-    args.ignore_substitutions = split_comma_separated(
-        args.ignore_substitutions
-    )
-
-    threshold_dictionary = docutils.frontend.OptionParser.thresholds
-    args.report = int(threshold_dictionary.get(args.report, args.report))
 
     return args
 
