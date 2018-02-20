@@ -1,7 +1,8 @@
 default: check test
 
 
-# These can be obscure so only use it if it is installed.
+# These checkers are more obscure. So consider them optional. Only run them if
+# they are installed.
 CHECK_MANIFEST := $(shell command -v check-manifest 2> /dev/null)
 SCSPELL := $(shell command -v scspell 2> /dev/null)
 
