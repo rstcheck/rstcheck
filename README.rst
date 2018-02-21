@@ -130,13 +130,13 @@ command-line option ``--ignore`` or put a comment in the document:
     .. rstcheck: ignore-language=cpp,python,rst
 
 
-Configuration
-=============
+Configuration file
+==================
 
-If your project has custom roles and directives, you can specify them in the
-local configuration of the project. ``rstcheck`` looks for a file
-``.rstcheck.cfg`` in the directory or ancestor directory of the file it is
-checking.
+You can use the same arguments from the command line as options in the
+local configuration file of the project (just replace ``-`` for ``_``).
+``rstcheck`` looks for a file ``.rstcheck.cfg`` in the directory or
+ancestor directory of the file it is checking.
 
 For example, consider a project with the following directory structure::
 
@@ -153,6 +153,7 @@ For example, consider a project with the following directory structure::
     [rstcheck]
     ignore_directives=one,two,three
     ignore_roles=src,RFC
+    report_level=warning
 
 ``bar.rst`` contains:
 
