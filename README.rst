@@ -190,13 +190,20 @@ To check that Sphinx support is enabled::
 Usage in Vim
 ============
 
-To check reStructuredText in Vim using Syntastic_:
+Using with Syntastic_:
+----------------------
 
 .. code:: vim
 
     let g:syntastic_rst_checkers = ['rstcheck']
 
+Using with ALE_:
+----------------
+
+Just install ``rstcheck`` and make sure is on your path.
+
 .. _Syntastic: https://github.com/scrooloose/syntastic
+.. _ALE: https://github.com/w0rp/ale
 
 
 Use as a module
