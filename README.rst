@@ -153,7 +153,7 @@ For example, consider a project with the following directory structure::
     [rstcheck]
     ignore_directives=one,two,three
     ignore_roles=src,RFC
-    report_level=warning
+    report=warning
 
 ``bar.rst`` contains:
 
