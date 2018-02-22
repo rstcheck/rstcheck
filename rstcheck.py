@@ -30,6 +30,7 @@ from __future__ import unicode_literals
 
 import argparse
 import contextlib
+import copy
 import doctest
 import io
 import json
@@ -922,7 +923,7 @@ def main():
                 # mutating the settings when rstcheck is used as a module.
                 results = pool.map(
                     _check_file,
-                    [(name, args) for name in args.files])
+                    [(name, copy.copy(args)) for name in args.files])
             else:
                 # This is for the case where we read from standard in.
                 results = [_check_file((args.files[0], args))]
