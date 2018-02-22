@@ -482,7 +482,7 @@ def find_config(directory):
 def load_configuration_from_file(directory, args):
     options = _get_options(directory)
 
-    args.report = options.get('report_level', args.report)
+    args.report = options.get('report', args.report)
     threshold_dictionary = docutils.frontend.OptionParser.thresholds
     args.report = int(threshold_dictionary.get(args.report, args.report))
 

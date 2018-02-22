@@ -1,4 +1,4 @@
-.. my-directive::
+.. my-custom-directive::
 
 
 :some-custom-thing:`testing`
