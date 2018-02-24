@@ -29,6 +29,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+import copy
 import contextlib
 import doctest
 import io
@@ -152,6 +153,9 @@ def check(source,
 
     Each code block is checked asynchronously in a subprocess.
 
+    Note that this function mutates state by calling the ``docutils``
+    ``register_*()`` functions.
+
     """
     # Do this at call time rather than import time to avoid unnecessarily
     # mutating state.
@@ -248,7 +252,7 @@ def _check_file(parameters):
         ) as input_file:
             contents = input_file.read()
 
-    load_configuration_from_file(
+    args = load_configuration_from_file(
         os.path.dirname(os.path.realpath(filename)), args)
 
     ignore_directives_and_roles(args.ignore_directives, args.ignore_roles)
@@ -480,6 +484,9 @@ def find_config(directory):
 
 
 def load_configuration_from_file(directory, args):
+    """Return new ``args`` with configuration loaded from file."""
+    args = copy.copy(args)
+
     options = _get_options(directory)
 
     args.report = options.get('report', args.report)
@@ -497,6 +504,8 @@ def load_configuration_from_file(directory, args):
 
     args.ignore_roles = get_and_split(
         options, 'ignore_roles', args.ignore_roles)
+
+    return args
 
 
 def _get_options(directory):
@@ -917,9 +926,6 @@ def main():
         pool = multiprocessing.Pool(multiprocessing.cpu_count())
         try:
             if len(args.files) > 1:
-                # Run in separate process to avoid mutating the global docutils
-                # settings based on the local configuration. It also avoids
-                # mutating the settings when rstcheck is used as a module.
                 results = pool.map(
                     _check_file,
                     [(name, args) for name in args.files])
