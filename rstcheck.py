@@ -502,8 +502,8 @@ def load_configuration_from_file(directory, args):
     args.ignore_language = get_and_split(
         options, 'ignore_language', args.ignore_language)
 
-    args.ignore_messages = get_and_split(
-        options, 'ignore_messages', args.ignore_messages)
+    args.ignore_messages = options.get(
+        'ignore_messages', args.ignore_messages)
 
     args.ignore_directives = get_and_split(
         options, 'ignore_directives', args.ignore_directives)
