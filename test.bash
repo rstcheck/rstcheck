@@ -70,7 +70,7 @@ then
     exit 1
 fi
 
-# Ignoere message on configuration file
+# Ignore message on configuration file
 ./rstcheck.py examples/with_configuration/bad-2.rst
 
 if python -c 'import sys; sys.exit(0 if sys.version_info >= (3,) else 1)'
