@@ -496,6 +496,9 @@ def load_configuration_from_file(directory, args):
     args.ignore_language = get_and_split(
         options, 'ignore_language', args.ignore_language)
 
+    args.ignore_messages = get_and_split(
+        options, 'ignore_messages', args.ignore_messages)
+
     args.ignore_directives = get_and_split(
         options, 'ignore_directives', args.ignore_directives)
 
@@ -831,6 +834,9 @@ def parse_args():
     parser.add_argument('--ignore-language', '--ignore',
                         metavar='language', default='',
                         help='comma-separated list of languages to ignore')
+    parser.add_argument('--ignore-messages',
+                        metavar='messages', default='',
+                        help='python regex that match the messages to ignore')
     parser.add_argument('--ignore-directives',
                         metavar='directives', default='',
                         help='comma-separated list of directives to ignore')
