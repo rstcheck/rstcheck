@@ -204,6 +204,9 @@ def check(source,
     if rst_errors:
         for message in rst_errors.splitlines():
             try:
+                ignore_regex = ignore.get('messages', '')
+                if ignore_regex and re.search(ignore_regex, message):
+                    continue
                 yield parse_gcc_style_error_message(message,
                                                     filename=filename,
                                                     has_column=False)
