@@ -162,10 +162,12 @@ def check(source,
     register_code_directive()
     ignore_sphinx()
 
-    ignore = ignore or []
+    ignore = ignore or {}
 
     try:
-        ignore.extend(find_ignored_languages(source))
+        ignore.setdefault('languages', []).extend(
+            find_ignored_languages(source)
+        )
     except Error as error:
         yield (error.line_number, '{}'.format(error))
 
@@ -260,11 +262,15 @@ def _check_file(parameters):
     for substitution in args.ignore_substitutions:
         contents = contents.replace('|{}|'.format(substitution), 'None')
 
+    ignore = {
+        'languages': args.ignore_language,
+        'messages': args.ignore_messages,
+    }
     all_errors = []
     for error in check(contents,
                        filename=filename,
                        report_level=args.report,
-                       ignore=args.ignore_language,
+                       ignore=ignore,
                        debug=args.debug):
         all_errors.append(error)
     return (filename, all_errors)
@@ -654,12 +660,12 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         self.contents = contents
         self.filename = filename
         self.working_directory = os.path.dirname(os.path.realpath(filename))
-        self.ignore = ignore or []
-        self.ignore.append(None)
+        self.ignore = ignore or {}
+        self.ignore.setdefault('languages', []).append(None)
 
     def visit_doctest_block(self, node):
         """Check syntax of doctest."""
-        if 'doctest' in self.ignore:
+        if 'doctest' in self.ignore['languages']:
             return
 
         self._add_check(node=node,
@@ -681,7 +687,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
             else:
                 return
 
-        if language in self.ignore:
+        if language in self.ignore['languages']:
             return
 
         if language == 'doctest' or (
