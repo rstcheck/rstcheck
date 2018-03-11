@@ -93,7 +93,7 @@ Options
 ::
 
     usage: rstcheck [-h] [-r] [--report level] [--ignore-language language]
-                    [--ignore-directives directives]
+                    [--ignore-messages messages] [--ignore-directives directives]
                     [--ignore-substitutions substitutions] [--ignore-roles roles]
                     [--debug] [--version]
                     files [files ...]
@@ -110,6 +110,8 @@ Options
                             warning, error, severe, none (default: info)
       --ignore-language language, --ignore language
                             comma-separated list of languages to ignore
+      --ignore-messages messages
+                            python regex that match the messages to ignore
       --ignore-directives directives
                             comma-separated list of directives to ignore
       --ignore-substitutions substitutions
@@ -129,6 +131,15 @@ command-line option ``--ignore`` or put a comment in the document:
 
     .. rstcheck: ignore-language=cpp,python,rst
 
+Ignore specific errors
+======================
+
+Since docutils doesn't categorize their error messages beyond the high-level
+categories of: info, warning, error, and severe; we need filter them out at a
+textual level. This is done by passing a Python regex. As example you can pass
+a regex like this to ignore several errors::
+
+    (Title underline too short.*|Duplicate implicit target.*')
 
 Configuration file
 ==================
@@ -153,6 +164,7 @@ For example, consider a project with the following directory structure::
     [rstcheck]
     ignore_directives=one,two,three
     ignore_roles=src,RFC
+    ignore_messages=(Document or section may not begin with a transition\.$)
     report=warning
 
 ``bar.rst`` contains:

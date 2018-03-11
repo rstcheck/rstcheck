@@ -162,10 +162,12 @@ def check(source,
     register_code_directive()
     ignore_sphinx()
 
-    ignore = ignore or []
+    ignore = ignore or {}
 
     try:
-        ignore.extend(find_ignored_languages(source))
+        ignore.setdefault('languages', []).extend(
+            find_ignored_languages(source)
+        )
     except Error as error:
         yield (error.line_number, '{}'.format(error))
 
@@ -202,6 +204,9 @@ def check(source,
     if rst_errors:
         for message in rst_errors.splitlines():
             try:
+                ignore_regex = ignore.get('messages', '')
+                if ignore_regex and re.search(ignore_regex, message):
+                    continue
                 yield parse_gcc_style_error_message(message,
                                                     filename=filename,
                                                     has_column=False)
@@ -260,11 +265,15 @@ def _check_file(parameters):
     for substitution in args.ignore_substitutions:
         contents = contents.replace('|{}|'.format(substitution), 'None')
 
+    ignore = {
+        'languages': args.ignore_language,
+        'messages': args.ignore_messages,
+    }
     all_errors = []
     for error in check(contents,
                        filename=filename,
                        report_level=args.report,
-                       ignore=args.ignore_language,
+                       ignore=ignore,
                        debug=args.debug):
         all_errors.append(error)
     return (filename, all_errors)
@@ -496,6 +505,9 @@ def load_configuration_from_file(directory, args):
     args.ignore_language = get_and_split(
         options, 'ignore_language', args.ignore_language)
 
+    args.ignore_messages = options.get(
+        'ignore_messages', args.ignore_messages)
+
     args.ignore_directives = get_and_split(
         options, 'ignore_directives', args.ignore_directives)
 
@@ -651,12 +663,12 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         self.contents = contents
         self.filename = filename
         self.working_directory = os.path.dirname(os.path.realpath(filename))
-        self.ignore = ignore or []
-        self.ignore.append(None)
+        self.ignore = ignore or {}
+        self.ignore.setdefault('languages', []).append(None)
 
     def visit_doctest_block(self, node):
         """Check syntax of doctest."""
-        if 'doctest' in self.ignore:
+        if 'doctest' in self.ignore['languages']:
             return
 
         self._add_check(node=node,
@@ -678,7 +690,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
             else:
                 return
 
-        if language in self.ignore:
+        if language in self.ignore['languages']:
             return
 
         if language == 'doctest' or (
@@ -831,6 +843,9 @@ def parse_args():
     parser.add_argument('--ignore-language', '--ignore',
                         metavar='language', default='',
                         help='comma-separated list of languages to ignore')
+    parser.add_argument('--ignore-messages',
+                        metavar='messages', default='',
+                        help='python regex that match the messages to ignore')
     parser.add_argument('--ignore-directives',
                         metavar='directives', default='',
                         help='comma-separated list of directives to ignore')
