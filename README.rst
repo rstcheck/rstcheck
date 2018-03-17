@@ -250,8 +250,8 @@ just be a matter of adding files to ``examples/good`` or ``examples/bad``.
 History
 =======
 
-3.3 (...)
----------
+3.3 (2018-03-17)
+----------------
 
 - Parse more options from configuration file (thanks to Santos Gallegos).
 - Allow ignoring specific (info/warning/error) messages via
