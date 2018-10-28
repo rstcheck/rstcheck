@@ -887,17 +887,18 @@ def output_message(text, file=sys.stderr):
 def enable_sphinx_if_possible():
     """Register Sphinx directives and roles."""
     if SPHINX_INSTALLED:
-        temporary_directory = tempfile.mkdtemp()
+        srcdir = tempfile.mkdtemp()
+        outdir = os.path.join(srcdir, '_build')
         try:
-            sphinx.application.Sphinx(srcdir=temporary_directory,
+            sphinx.application.Sphinx(srcdir=srcdir,
                                       confdir=None,
-                                      outdir=temporary_directory,
-                                      doctreedir=temporary_directory,
+                                      outdir=outdir,
+                                      doctreedir=outdir,
                                       buildername='dummy',
                                       status=None)
             yield
         finally:
-            shutil.rmtree(temporary_directory)
+            shutil.rmtree(srcdir)
     else:
         yield
 
