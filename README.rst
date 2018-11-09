@@ -250,6 +250,11 @@ just be a matter of adding files to ``examples/good`` or ``examples/bad``.
 History
 =======
 
+3.3.1 (2018-10-09)
+------------------
+
+- Make compatible with Sphinx >= 1.8.
+
 3.3 (2018-03-17)
 ----------------
 
