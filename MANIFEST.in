@@ -5,5 +5,5 @@ include LICENSE
 exclude .travis.yml
 exclude Makefile
 exclude test.bash
-exclude test_rstcheck.py
+include test_rstcheck.py
 prune examples
