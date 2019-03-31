@@ -471,18 +471,28 @@ def ignore_sphinx():
                                 roles + ['ctype'])
 
 
-def find_config(directory):
+def find_config(directory_or_file, debug=False):
     """Return configuration filename.
 
-    Find configuration in directory or its ancestor.
-
+    If `directory_or_file` is a file, return the real-path of that file. If it
+    is a directory, find the configuration (any file name in CONFIG_FILES) in
+    that directory or its ancestors.
     """
-    directory = os.path.realpath(directory)
+    directory_or_file = os.path.realpath(directory_or_file)
+    if os.path.isfile(directory_or_file):
+        if debug:
+            print('using config file {}'.format(directory_or_file),
+                  file=sys.stderr)
+        return directory_or_file
+    directory = directory_or_file
 
     while directory:
         for filename in CONFIG_FILES:
             candidate = os.path.join(directory, filename)
             if os.path.exists(candidate):
+                if debug:
+                    print('using config file {}'.format(candidate),
+                          file=sys.stderr)
                 return candidate
 
         parent_directory = os.path.dirname(directory)
@@ -496,7 +506,11 @@ def load_configuration_from_file(directory, args):
     """Return new ``args`` with configuration loaded from file."""
     args = copy.copy(args)
 
-    options = _get_options(directory)
+    directory_or_file = directory
+    if args.config is not None:
+        directory_or_file = args.config
+
+    options = _get_options(directory_or_file, debug=args.debug)
 
     args.report = options.get('report', args.report)
     threshold_dictionary = docutils.frontend.OptionParser.thresholds
@@ -520,8 +534,8 @@ def load_configuration_from_file(directory, args):
     return args
 
 
-def _get_options(directory):
-    config_path = find_config(directory)
+def _get_options(directory_or_file, debug=False):
+    config_path = find_config(directory_or_file, debug=debug)
     if not config_path:
         return {}
 
@@ -830,6 +844,8 @@ def parse_args():
 
     parser.add_argument('files', nargs='+', type=decode_filename,
                         help='files to check')
+    parser.add_argument('--config', metavar='CONFIG', default=None,
+                        help='location of config file')
     parser.add_argument('-r', '--recursive', action='store_true',
                         help='run recursively over directories')
     parser.add_argument('--report', metavar='level',
