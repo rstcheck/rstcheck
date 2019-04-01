@@ -92,19 +92,21 @@ Options
 
 ::
 
-    usage: rstcheck [-h] [-r] [--report level] [--ignore-language language]
-                    [--ignore-messages messages] [--ignore-directives directives]
+    usage: rstcheck [-h] [--config CONFIG] [-r] [--report level]
+                    [--ignore-language language] [--ignore-messages messages]
+                    [--ignore-directives directives]
                     [--ignore-substitutions substitutions] [--ignore-roles roles]
                     [--debug] [--version]
                     files [files ...]
 
-    Checks code blocks in reStructuredText.
+    Checks code blocks in reStructuredText. Sphinx is enabled.
 
     positional arguments:
       files                 files to check
 
     optional arguments:
       -h, --help            show this help message and exit
+      --config CONFIG       location of config file
       -r, --recursive       run recursively over directories
       --report level        report system messages at or higher than level; info,
                             warning, error, severe, none (default: info)
@@ -146,13 +148,13 @@ Configuration file
 
 You can use the same arguments from the command line as options in the
 local configuration file of the project (just replace ``-`` for ``_``).
-``rstcheck`` looks for a file ``.rstcheck.cfg`` in the directory or
-ancestor directory of the file it is checking.
+``rstcheck`` looks for a file ``.rstcheck.cfg`` or ``setup.cfg`` in the
+directory or ancestor directories of the file it is checking.
 
 For example, consider a project with the following directory structure::
 
-    docs
-    ├── foo
+    foo
+    ├── docs
     │   └── bar.rst
     ├── index.rst
     └── .rstcheck.cfg
@@ -183,7 +185,29 @@ For example, consider a project with the following directory structure::
 
 ``rstcheck`` will make use of the ``.rstcheck.cfg``::
 
-    $ rstcheck docs/foo/bar.rst
+    $ rstcheck foo/docs/bar.rst
+
+
+For a Python project, you should put the configuration settings for
+``rstcheck`` inside the general ``setup.cfg`` `distutils configuration file`_,
+in the project root.
+
+You can override the location of the config file with the ``--config`` argument::
+
+    $ rstcheck --config $HOME/.rstcheck.ini foo/docs/bar.rst
+
+will use the file ``.rstcheck.ini`` in your home directory. If the argument to
+``--config`` is a directory, ``rstcheck`` will search that directory and any
+any of its ancestors for a file ``.rstcheck.cfg`` or ``setup.cfg``::
+
+   $ rstcheck --config foo /tmp/bar.rst
+
+would use the project configuration in ``./foo/.rstcheck.cfg`` to check the
+unrelated file ``/tmp/bar.rst``.
+Calling ``rstcheck`` with the ``--debug`` option will show the location of the
+config file that is being used, if any.
+
+.. _distutils configuration file: https://docs.python.org/3/distutils/configfile.html
 
 
 Sphinx
@@ -249,6 +273,11 @@ just be a matter of adding files to ``examples/good`` or ``examples/bad``.
 
 History
 =======
+
+(next version)
+--------------
+
+- Add ``--config`` option to change the location of the config file.
 
 3.3.1 (2018-10-09)
 ------------------

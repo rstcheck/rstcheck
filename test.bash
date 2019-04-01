@@ -73,6 +73,27 @@ fi
 # Ignore message on configuration file
 ./rstcheck.py examples/with_configuration/bad-2.rst
 
+# Ignore existing configuration file
+# It's doesn't matter if /dev/null is empty or doesn't exist
+if ./rstcheck.py --config=/dev/null examples/with_configuration/good.rst
+then
+    exit 1
+fi
+
+# Check that we can use an unrelated configuration file
+if ./rstcheck.py examples/without_configuration/good.rst
+then
+    # the check should fail if we don't have a configuration
+    exit 1
+fi
+# specify the folder of the config file
+./rstcheck.py --debug --config examples/with_configuration examples/without_configuration/good.rst
+# specify an explicit config file
+./rstcheck.py --debug --config examples/with_configuration/rstcheck.ini examples/without_configuration/good.rst
+# specify a folder from which we have to walk up
+./rstcheck.py --debug --config examples/with_configuration/dummydir examples/without_configuration/good.rst
+
+
 if python -c 'import sys; sys.exit(0 if sys.version_info >= (3,) else 1)'
 then
     python -m doctest -v README.rst rstcheck.py
