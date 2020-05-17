@@ -256,6 +256,17 @@ is the line number (not the line index). The second value is the error message.
 Note that this does not load any configuration as that would mutate the
 ``docutils`` registries.
 
+Use as a pre-commit hook
+========================
+
+Add this to your ``.pre-commit-config.yaml``
+
+.. code-block:: yaml
+
+    -   repo: https://github.com/myint/rstcheck
+        rev: ''  # Use the sha / tag you want to point at
+        hooks:
+        -   id: rstcheck
 
 Testing
 =======
