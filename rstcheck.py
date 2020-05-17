@@ -981,6 +981,8 @@ def main():
         except (IOError, UnicodeError) as exception:
             output_message(exception)
             status = 1
+        finally:
+            pool.close()
 
         return status
 
