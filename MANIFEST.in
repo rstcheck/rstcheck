@@ -3,6 +3,7 @@ include README.rst
 include LICENSE
 
 exclude .travis.yml
+exclude .pre-commit-hooks.yaml
 exclude Makefile
 include test.bash
 include test_rstcheck.py
