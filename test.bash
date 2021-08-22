@@ -92,6 +92,8 @@ fi
 ./rstcheck.py --debug --config examples/with_configuration/rstcheck.ini examples/without_configuration/good.rst
 # specify a folder from which we have to walk up
 ./rstcheck.py --debug --config examples/with_configuration/dummydir examples/without_configuration/good.rst
+# specify explicitely pyproject.toml
+./rstcheck.py --debug --config examples/with_configuration/pyproject.toml examples/without_configuration/good.rst
 
 
 if python -c 'import sys; sys.exit(0 if sys.version_info >= (3,) else 1)'

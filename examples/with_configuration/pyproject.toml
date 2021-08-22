@@ -1,0 +1,15 @@
+[tool.rstcheck]
+ignore_directives = [
+	"foobar", 
+	"my-directive"
+]
+ignore_roles = [
+	"some-custom-thing"
+]
+ignore_messages = [
+	"(Document or section may not begin with a transition\\.$)"
+]
+ignore_language = [
+	"cpp"
+]
+report = "warning"
