@@ -1025,7 +1025,11 @@ def main() -> int:  # noqa: CCR001
 
     with enable_sphinx_if_possible():
         status = 0
-        with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
+        pool_size = multiprocessing.cpu_count()
+        if sys.platform == "win32":
+            # Work around https://bugs.python.org/issue45077
+            pool_size = min(pool_size, 61)
+        with multiprocessing.Pool(pool_size) as pool:
             try:
                 if len(args.files) > 1:
                     results = pool.map(_check_file, [(name, args) for name in args.files])
