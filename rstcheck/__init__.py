@@ -616,7 +616,7 @@ def c_checker(code: str, working_directory: str) -> CheckerRunFunction:
     return gcc_checker(
         code,
         ".c",
-        [os.getenv("CC", "gcc"), "-std=c99"] + INCLUDE_FLAGS,
+        [os.getenv("CC", "gcc")] + INCLUDE_FLAGS,
         working_directory=working_directory,
     )
 
@@ -626,7 +626,7 @@ def cpp_checker(code: str, working_directory: str) -> CheckerRunFunction:
     return gcc_checker(
         code,
         ".cpp",
-        [os.getenv("CXX", "g++"), "-std=c++0x"] + INCLUDE_FLAGS,
+        [os.getenv("CXX", "g++")] + INCLUDE_FLAGS,
         working_directory=working_directory,
     )
 
