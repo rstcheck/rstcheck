@@ -288,7 +288,11 @@ History
 (next version)
 --------------
 
+3.4.0 (2022-04-12)
+------------------
+
 - Add ``--config`` option to change the location of the config file.
+- Add ``pre-commit`` hooks config.
 
 3.3.1 (2018-10-09)
 ------------------
