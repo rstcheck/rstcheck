@@ -1,0 +1,26 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "rstcheck"
+version = "3.5.0"
+description = "Checks syntax of reStructuredText and code blocks nested within it"
+authors = ["Steven Myint <git@stevenmyint.com>"]
+maintainers = ["Christian Riedel <cielquan@protonmail.com>"]
+license = "MIT"
+repository = "https://github.com/myint/rstcheck"
+classifiers = ["Topic :: Software Development :: Quality Assurance"]
+keywords = ["restructuredtext", "rst", "linter", "static-analysis"]
+packages = [{ include = "rstcheck.py" }]
+
+[tool.poetry.scripts]
+rstcheck = "rstcheck:main"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+docutils = ">=0.7"
+sphinx = {version = ">=3.5", optional = true}
+
+[tool.poetry.extras]
+sphinx = ["sphinx"]
