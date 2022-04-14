@@ -1,9 +1,0 @@
-include AUTHORS.rst
-include README.rst
-include LICENSE
-
-exclude .travis.yml
-exclude Makefile
-include test.bash
-include test_rstcheck.py
-graft examples

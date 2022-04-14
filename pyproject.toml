@@ -10,9 +10,15 @@ authors = ["Steven Myint <git@stevenmyint.com>"]
 maintainers = ["Christian Riedel <cielquan@protonmail.com>"]
 license = "MIT"
 repository = "https://github.com/myint/rstcheck"
+readme = "README.rst"
 classifiers = ["Topic :: Software Development :: Quality Assurance"]
 keywords = ["restructuredtext", "rst", "linter", "static-analysis"]
-packages = [{ include = "rstcheck.py" }]
+packages = [
+  { include = "rstcheck.py" },
+  { include = "test_rstcheck.py", format = "sdist" },
+  { include = "test.bash", format = "sdist" },
+  { include = "AUTHORS.rst", format = "sdist" },
+]
 
 [tool.poetry.scripts]
 rstcheck = "rstcheck:main"
