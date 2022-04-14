@@ -42,7 +42,14 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import warnings
 import xml.etree.ElementTree
+
+if sys.version_info < (3, 7):
+    warnings.warn(
+        "Python versions prior 3.7 are deprecated. Please update your python version.",
+        FutureWarning
+    )
 
 try:
     import configparser
