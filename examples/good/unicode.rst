@@ -4,7 +4,7 @@
 
 .. code-block:: python
 
-   print('Привет!')
+   print("Привет!")
 
 .. code-block:: bash
 
