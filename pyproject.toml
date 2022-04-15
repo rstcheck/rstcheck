@@ -26,6 +26,7 @@ rstcheck = "rstcheck:main"
 [tool.poetry.dependencies]
 python = "^3.7"
 docutils = ">=0.7"
+docutils-stubs = ">=0.0.22"
 sphinx = {version = ">=3.5", optional = true}
 
 [tool.poetry.dev-dependencies]
