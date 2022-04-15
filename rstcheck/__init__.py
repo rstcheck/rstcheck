@@ -40,7 +40,6 @@ import subprocess
 import sys
 import tempfile
 import typing
-import warnings
 import xml.etree.ElementTree
 
 import docutils.core
@@ -50,13 +49,6 @@ import docutils.parsers.rst
 import docutils.utils
 import docutils.writers
 import typing_extensions
-
-
-if sys.version_info < (3, 7):
-    warnings.warn(
-        "Python versions prior 3.7 are deprecated. Please update your python version.",
-        FutureWarning,
-    )
 
 
 try:
