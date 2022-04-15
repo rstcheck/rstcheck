@@ -103,7 +103,6 @@ Returned by closure of type `CheckerFunction`.
 CheckerFunction = typing.Callable[[str, str], CheckerRunFunction]
 """Closure to return check runner function."""
 
-
 RunCheckFunction = typing.Callable[..., YieldedErrorTuple]
 """Wrapper function for `CheckerRunFunction` functions.
 
