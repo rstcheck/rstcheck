@@ -159,6 +159,7 @@ repos:
     rev: "3f0afc179dbd0907230fb3123f2938b0b63d3b7f" # frozen: 0.11.0
     hooks:
       - id: flakeheaven
+        types: [python]
         additional_dependencies:
           - "git+https://github.com/cielquan/my-flake8-plugins.git@v1.2.2"
 
