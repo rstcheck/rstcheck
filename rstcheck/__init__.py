@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# pylint: disable=too-many-lines
 
 # Copyright (C) 2013-2017 Steven Myint
 #
@@ -466,7 +467,7 @@ def _ignore_role(
     content: typing.Optional[typing.List[str]] = None,
 ) -> typing.Tuple[typing.List, typing.List]:
     """Stub for unknown roles."""
-    # pylint: disable=unused-argument
+    # pylint: disable=unused-argument,too-many-arguments
     return ([], [])
 
 
@@ -522,8 +523,7 @@ def find_config(directory_or_file: str, debug: bool = False) -> typing.Optional[
         parent_directory = os.path.dirname(directory)
         if parent_directory == directory:
             break
-        else:
-            directory = parent_directory
+        directory = parent_directory
 
     return None
 
@@ -683,11 +683,13 @@ def run_in_subprocess(
     working_directory: typing.AnyStr,
 ) -> typing.Callable[..., typing.Optional[typing.Tuple[str, str]]]:
     """Return None on success."""
-    temporary_file = tempfile.NamedTemporaryFile(mode="wb", suffix=filename_suffix)
+    temporary_file = tempfile.NamedTemporaryFile(  # pylint: disable=consider-using-with
+        mode="wb", suffix=filename_suffix
+    )
     temporary_file.write(code.encode("utf-8"))
     temporary_file.flush()
 
-    process = subprocess.Popen(
+    process = subprocess.Popen(  # pylint: disable=consider-using-with
         arguments + [temporary_file.name],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -829,24 +831,24 @@ def beginning_of_code_block(
         current_line_contents = full_contents.splitlines()[line_number:]
         blank_lines = next((i for (i, x) in enumerate(current_line_contents) if x), 0)
         return line_number + delta - 1 + blank_lines - 1 + SPHINX_CODE_BLOCK_DELTA
-    else:
-        lines = full_contents.splitlines()
-        code_block_length = len(node.rawsource.splitlines())
 
-        try:
-            # Case where there are no extra spaces.
-            if lines[line_number - 1].strip():
-                return line_number - code_block_length + 1
-        except IndexError:
-            pass
+    lines = full_contents.splitlines()
+    code_block_length = len(node.rawsource.splitlines())
 
-        # The offsets are wrong if the RST text has multiple blank lines after
-        # the code block. This is a workaround.
-        for line_number in range(line_number, 1, -1):
-            if lines[line_number - 2].strip():
-                break
+    try:
+        # Case where there are no extra spaces.
+        if lines[line_number - 1].strip():
+            return line_number - code_block_length + 1
+    except IndexError:
+        pass
 
-        return line_number - code_block_length
+    # The offsets are wrong if the RST text has multiple blank lines after
+    # the code block. This is a workaround.
+    for line_no in range(line_number, 1, -1):
+        if lines[line_no - 2].strip():
+            break
+
+    return line_no - code_block_length
 
 
 class CheckWriter(docutils.writers.Writer):
@@ -873,8 +875,7 @@ def decode_filename(filename: typing.Union[str, bytes]) -> str:
     """Return Unicode filename."""
     if isinstance(filename, bytes):
         return filename.decode(sys.getfilesystemencoding())
-    else:
-        return filename
+    return filename
 
 
 def parse_args() -> argparse.Namespace:
@@ -947,7 +948,7 @@ def parse_args() -> argparse.Namespace:
 
 def output_message(
     text: typing.Union[typing.AnyStr, Exception], file: typing.TextIO = sys.stderr
-) -> None:  # TODO: improve typing
+) -> None:
     """Output message to terminal."""
     if file.encoding is None:
         # If the output file does not support Unicode, encode it to a byte
@@ -1016,30 +1017,28 @@ def main() -> int:
 
     with enable_sphinx_if_possible():
         status = 0
-        pool = multiprocessing.Pool(multiprocessing.cpu_count())
-        try:
-            if len(args.files) > 1:
-                results = pool.map(_check_file, [(name, args) for name in args.files])
-            else:
-                # This is for the case where we read from standard in.
-                results = [_check_file((args.files[0], args))]
+        with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
+            try:
+                if len(args.files) > 1:
+                    results = pool.map(_check_file, [(name, args) for name in args.files])
+                else:
+                    # This is for the case where we read from standard in.
+                    results = [_check_file((args.files[0], args))]
 
-            for (filename, errors) in results:
-                for error in errors:
-                    line_number = error[0]
-                    message = error[1]
+                for (filename, errors) in results:
+                    for error in errors:
+                        line_number = error[0]
+                        message = error[1]
 
-                    if not re.match(r"\([A-Z]+/[0-9]+\)", message):
-                        message = "(ERROR/3) " + message
+                        if not re.match(r"\([A-Z]+/[0-9]+\)", message):
+                            message = "(ERROR/3) " + message
 
-                    output_message(f"{filename}:{line_number}: {message}")
+                        output_message(f"{filename}:{line_number}: {message}")
 
-                    status = 1
-        except (OSError, UnicodeError) as exception:
-            output_message(exception)
-            status = 1
-        finally:
-            pool.close()
+                        status = 1
+            except (OSError, UnicodeError) as exception:
+                output_message(exception)
+                status = 1
 
         return status
 

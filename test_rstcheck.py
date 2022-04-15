@@ -12,7 +12,7 @@ import rstcheck
 rstcheck.ignore_sphinx()
 
 
-class Tests(unittest.TestCase):
+class Tests(unittest.TestCase):  # pylint: disable=too-many-public-methods
     def assert_lines_equal(self, line_numbers, results):
         self.assertEqual(set(line_numbers), set(dict(results)))
 
@@ -402,7 +402,8 @@ Testing
             ),
         )
 
-    def test_check_doctest_do_not_crash_when_indented(self):
+    @staticmethod
+    def test_check_doctest_do_not_crash_when_indented():
         """docutils does not provide line number when indented."""
         list(
             rstcheck.check(
