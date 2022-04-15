@@ -2,11 +2,11 @@
 rstcheck
 ========
 
-.. image:: https://github.com/github/docs/actions/workflows/test.yaml/badge.svg?branch=master
+.. image:: https://github.com/myint/rstcheck/actions/workflows/test.yaml/badge.svg?branch=master
     :target: https://github.com/myint/rstcheck/actions/workflows/test.yaml
     :alt: Test status
 
-.. image:: https://github.com/github/docs/actions/workflows/qa.yaml/badge.svg?branch=master
+.. image:: https://github.com/myint/rstcheck/actions/workflows/qa.yaml/badge.svg?branch=master
     :target: https://github.com/myint/rstcheck/actions/workflows/qa.yaml
     :alt: QA status
 
