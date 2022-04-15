@@ -2,9 +2,13 @@
 rstcheck
 ========
 
-.. image:: https://travis-ci.org/myint/rstcheck.svg?branch=master
-    :target: https://travis-ci.org/myint/rstcheck
-    :alt: Build status
+.. image:: https://github.com/github/docs/actions/workflows/test.yml/badge.svg?branch=master
+    :target: https://github.com/myint/rstcheck/actions/workflows/test.yaml
+    :alt: Test status
+
+.. image:: https://github.com/github/docs/actions/workflows/qa.yml/badge.svg?branch=master
+    :target: https://github.com/myint/rstcheck/actions/workflows/qa.yaml
+    :alt: QA status
 
 Checks syntax of reStructuredText and code blocks nested within it.
 
