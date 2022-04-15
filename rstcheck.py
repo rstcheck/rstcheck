@@ -199,7 +199,7 @@ def check(
             raise
 
     for checker in writer.checkers:
-        for error in checker():
+        for error in checker():  # type: ignore[misc]
             yield error
 
     rst_errors = string_io.getvalue().strip()
