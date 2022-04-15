@@ -11,3 +11,4 @@ Patches
 - biscuitsnake (https://github.com/biscuitsnake)
 - Maël Pedretti (https://github.com/73VW)
 - Santos Gallegos (https://github.com/stsewd)
+- Christian Riedel (https://github.com/cielquan)
