@@ -215,9 +215,18 @@ Sphinx
 
 To enable Sphinx::
 
+    $ pip install rstcheck[sphinx]
+
+    # or
+
     $ pip install sphinx
 
-The installed Sphinx version must be at least 1.5.
+With version 4.0 ``rstcheck`` added Sphinx as an optional extra where the version's lower
+constraint is >=4.0 because of Sphinx's open upper constraints on jinja2 and markupsafe,
+which result in import errors if not pinned below version 3 and 2 respectively. This happend
+in Sphinx version 4.0.
+
+You can also add Sphinx by yourself but the installed Sphinx version must be at least 1.5.
 
 To check that Sphinx support is enabled::
 
