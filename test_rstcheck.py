@@ -3,6 +3,7 @@
 """Test suite for rstcheck."""
 
 
+import typing
 import unittest
 
 import rstcheck
@@ -13,10 +14,10 @@ rstcheck.ignore_sphinx()
 
 
 class Tests(unittest.TestCase):  # pylint: disable=too-many-public-methods
-    def assert_lines_equal(self, line_numbers, results):
+    def assert_lines_equal(self, line_numbers: typing.List[int], results: rstcheck.YieldedErrorTuple) -> None:
         self.assertEqual(set(line_numbers), set(dict(results)))
 
-    def test_parse_gcc_style_error_message(self):
+    def test_parse_gcc_style_error_message(self) -> None:
         self.assertEqual(
             (32, "error message"),
             rstcheck.parse_gcc_style_error_message(
@@ -24,7 +25,7 @@ class Tests(unittest.TestCase):  # pylint: disable=too-many-public-methods
             ),
         )
 
-    def test_parse_gcc_style_error_message_with_no_column(self):
+    def test_parse_gcc_style_error_message_with_no_column(self) -> None:
         self.assertEqual(
             (32, "error message"),
             rstcheck.parse_gcc_style_error_message(
@@ -32,7 +33,7 @@ class Tests(unittest.TestCase):  # pylint: disable=too-many-public-methods
             ),
         )
 
-    def test_parse_gcc_style_error_message_with_parsing_error(self):
+    def test_parse_gcc_style_error_message_with_parsing_error(self) -> None:
         with self.assertRaises(ValueError):
             rstcheck.parse_gcc_style_error_message(":32:3 error message", filename="filename")
 
@@ -41,7 +42,7 @@ class Tests(unittest.TestCase):  # pylint: disable=too-many-public-methods
                 "filename:32: error message", filename="filename", has_column=True
             )
 
-    def test_check(self):
+    def test_check(self) -> None:
         self.assert_lines_equal(
             [6],
             rstcheck.check(
@@ -56,7 +57,7 @@ Test
             ),
         )
 
-    def test_check_code_block(self):
+    def test_check_code_block(self) -> None:
         self.assert_lines_equal(
             [6],
             rstcheck.check(
@@ -71,7 +72,7 @@ Test
             ),
         )
 
-    def test_check_json(self):
+    def test_check_json(self) -> None:
         self.assert_lines_equal(
             [7],
             rstcheck.check(
@@ -88,7 +89,7 @@ Test
             ),
         )
 
-    def test_check_json_with_ignore(self):
+    def test_check_json_with_ignore(self) -> None:
         self.assert_lines_equal(
             [],
             rstcheck.check(
@@ -107,7 +108,7 @@ Test
             ),
         )
 
-    def test_check_json_with_unmatched_ignores_only(self):
+    def test_check_json_with_unmatched_ignores_only(self) -> None:
         self.assert_lines_equal(
             [7],
             rstcheck.check(
@@ -126,7 +127,7 @@ Test
             ),
         )
 
-    def test_check_json_with_bad_ignore(self):
+    def test_check_json_with_bad_ignore(self) -> None:
         self.assert_lines_equal(
             [7, 10],
             rstcheck.check(
@@ -145,7 +146,7 @@ Test
             ),
         )
 
-    def test_check_xml(self):
+    def test_check_xml(self) -> None:
         self.assert_lines_equal(
             [8],
             rstcheck.check(
@@ -163,7 +164,7 @@ Test
             ),
         )
 
-    def test_check_xml_with_ignore(self):
+    def test_check_xml_with_ignore(self) -> None:
         self.assert_lines_equal(
             [],
             rstcheck.check(
@@ -183,7 +184,7 @@ Test
             ),
         )
 
-    def test_check_xml_with_unmatched_ignores_only(self):
+    def test_check_xml_with_unmatched_ignores_only(self) -> None:
         self.assert_lines_equal(
             [8],
             rstcheck.check(
@@ -203,7 +204,7 @@ Test
             ),
         )
 
-    def test_check_xml_with_bad_ignore(self):
+    def test_check_xml_with_bad_ignore(self) -> None:
         self.assert_lines_equal(
             [8, 11],
             rstcheck.check(
@@ -223,7 +224,7 @@ Test
             ),
         )
 
-    def test_check_with_extra_blank_lines_before(self):
+    def test_check_with_extra_blank_lines_before(self) -> None:
         self.assert_lines_equal(
             [8],
             rstcheck.check(
@@ -240,7 +241,7 @@ Test
             ),
         )
 
-    def test_check_with_extra_blank_lines_after(self):
+    def test_check_with_extra_blank_lines_after(self) -> None:
         self.assert_lines_equal(
             [6],
             rstcheck.check(
@@ -258,7 +259,7 @@ Test
             ),
         )
 
-    def test_check_with_extra_blank_lines_before_and_after(self):
+    def test_check_with_extra_blank_lines_before_and_after(self) -> None:
         self.assert_lines_equal(
             [8],
             rstcheck.check(
@@ -278,7 +279,7 @@ Test
             ),
         )
 
-    def test_check_rst(self):
+    def test_check_rst(self) -> None:
         self.assert_lines_equal(
             [2],
             rstcheck.check(
@@ -289,7 +290,7 @@ Test
             ),
         )
 
-    def test_check_rst_report_level(self):
+    def test_check_rst_report_level(self) -> None:
         self.assert_lines_equal(
             [],
             rstcheck.check(
@@ -301,7 +302,7 @@ Test
             ),
         )
 
-    def test_check_nested_rst(self):
+    def test_check_nested_rst(self) -> None:
         self.assert_lines_equal(
             [32],
             rstcheck.check(
@@ -343,7 +344,7 @@ Test
         )
 
     @unittest.skipIf(not rstcheck.SPHINX_INSTALLED, "Requires Sphinx")
-    def test_ignore_sphinx_directives(self):
+    def test_ignore_sphinx_directives(self) -> None:
         self.assert_lines_equal(
             [],
             rstcheck.check(
@@ -387,7 +388,7 @@ Test
             ),
         )
 
-    def test_check_doctest(self):
+    def test_check_doctest(self) -> None:
         self.assert_lines_equal(
             [5],
             rstcheck.check(
@@ -403,7 +404,7 @@ Testing
         )
 
     @staticmethod
-    def test_check_doctest_do_not_crash_when_indented():
+    def test_check_doctest_do_not_crash_when_indented() -> None:
         """docutils does not provide line number when indented."""
         list(
             rstcheck.check(
@@ -418,7 +419,7 @@ Testing
             )
         )
 
-    def test_check_doctest_with_ignore(self):
+    def test_check_doctest_with_ignore(self) -> None:
         self.assert_lines_equal(
             [],
             rstcheck.check(
@@ -436,7 +437,7 @@ Testing
         )
 
     @unittest.skipIf(rstcheck.SPHINX_INSTALLED, "Does not work with Sphinx")
-    def test_check_doctest_in_code(self):
+    def test_check_doctest_in_code(self) -> None:
         self.assert_lines_equal(
             [7],
             rstcheck.check(
@@ -453,7 +454,7 @@ Testing
             ),
         )
 
-    def test_check_doctest_in_code_block(self):
+    def test_check_doctest_in_code_block(self) -> None:
         self.assert_lines_equal(
             [7],
             rstcheck.check(
@@ -470,7 +471,7 @@ Testing
             ),
         )
 
-    def test_check_doctest_in_python_code_block(self):
+    def test_check_doctest_in_python_code_block(self) -> None:
         """I'm not sure if this is correct, but I've seen people do it."""
         self.assert_lines_equal(
             [7],
@@ -489,7 +490,7 @@ Testing
         )
 
 
-def main():
+def main() -> None:
     with rstcheck.enable_sphinx_if_possible():
         unittest.main()
 
