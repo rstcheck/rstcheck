@@ -297,6 +297,17 @@ History
 (next version)
 --------------
 
+4.0.0 (2022-04-15)
+------------------
+
+- Drop support for python versions prior 3.7
+- Add inline type annotations
+- Add ``sphinx`` as extra
+- Update build process and set up ``poetry``
+- Add ``pre-commit`` and ``tox`` for automated testing, linting and formatting
+- Move from travis to github actions
+- Activate dependabot
+
 3.5.0 (2022-04-14)
 ------------------
 
