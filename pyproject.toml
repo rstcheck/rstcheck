@@ -28,7 +28,7 @@ python = "^3.7"
 docutils = ">=0.7"
 types-docutils = ">=0.18"
 typing-extensions = ">=4.1"
-sphinx = {version = ">=3.5", optional = true}
+sphinx = {version = ">=1.5", optional = true}
 
 [tool.poetry.dev-dependencies]
 pre-commit = ">=2.17"
