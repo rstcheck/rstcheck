@@ -25,6 +25,7 @@
 
 
 import argparse
+import configparser
 import contextlib
 import copy
 import doctest
@@ -41,24 +42,19 @@ import tempfile
 import warnings
 import xml.etree.ElementTree
 
-
-if sys.version_info < (3, 7):
-    warnings.warn(
-        "Python versions prior 3.7 are deprecated. Please update your python version.",
-        FutureWarning,
-    )
-
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
-
 import docutils.core
 import docutils.io
 import docutils.nodes
 import docutils.parsers.rst
 import docutils.utils
 import docutils.writers
+
+
+if sys.version_info < (3, 7):
+    warnings.warn(
+        "Python versions prior 3.7 are deprecated. Please update your python version.",
+        FutureWarning,
+    )
 
 
 try:
