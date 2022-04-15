@@ -756,7 +756,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
                                 f"({language}) {result[1]}",
                             )
                 else:
-                    yield (self.filename, 0, "unknown error")
+                    yield (0, "unknown error")
 
         self.checkers.append(run_check)
 
