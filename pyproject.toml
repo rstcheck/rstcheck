@@ -14,7 +14,7 @@ readme = "README.rst"
 classifiers = ["Topic :: Software Development :: Quality Assurance"]
 keywords = ["restructuredtext", "rst", "linter", "static-analysis"]
 packages = [
-  { include = "rstcheck.py" },
+  { include = "rstcheck" },
   { include = "test_rstcheck.py", format = "sdist" },
   { include = "test.bash", format = "sdist" },
   { include = "AUTHORS.rst", format = "sdist" },

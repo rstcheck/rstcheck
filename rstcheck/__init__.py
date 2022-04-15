@@ -39,6 +39,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import typing
 import warnings
 import xml.etree.ElementTree
 
@@ -48,6 +49,7 @@ import docutils.nodes
 import docutils.parsers.rst
 import docutils.utils
 import docutils.writers
+import typing_extensions
 
 
 if sys.version_info < (3, 7):
@@ -89,11 +91,39 @@ INCLUDE_FLAGS = ["-I.", "-I.."]
 CONFIG_FILES = [".rstcheck.cfg", "setup.cfg"]
 
 
+class IgnoreDict(typing_extensions.TypedDict, total=False):
+    languages: typing.List[typing.Optional[str]]
+    messages: str
+
+
+ErrorTuple = typing.Tuple[int, str]
+"""Tuple with line number and error message."""
+
+YieldedErrorTuple = typing.Generator[ErrorTuple, None, None]
+"""Yielded version of type `ErrorTuple`."""
+
+CheckerRunFunction = typing.Callable[..., YieldedErrorTuple]
+"""Function to run checks.
+
+Returned by closure of type `CheckerFunction`.
+"""
+
+CheckerFunction = typing.Callable[[str, str], CheckerRunFunction]
+"""Closure to return check runner function."""
+
+
+RunCheckFunction = typing.Callable[..., YieldedErrorTuple]
+"""Wrapper function for `CheckerRunFunction` functions.
+
+Returned by a closure.
+"""
+
+
 class Error(Exception):
 
     """rstcheck exception."""
 
-    def __init__(self, message, line_number):
+    def __init__(self, message: str, line_number: int) -> None:
         self.line_number = line_number
         Exception.__init__(self, message)
 
@@ -105,7 +135,7 @@ class CodeBlockDirective(docutils.parsers.rst.Directive):
     has_content = True
     optional_arguments = 1
 
-    def run(self):
+    def run(self) -> typing.List[docutils.nodes.literal_block]:
         """Run directive."""
         try:
             language = self.arguments[0]
@@ -118,7 +148,7 @@ class CodeBlockDirective(docutils.parsers.rst.Directive):
         return [literal]
 
 
-def register_code_directive():
+def register_code_directive() -> None:
     """Register code directive."""
     if not SPHINX_INSTALLED:
         docutils.parsers.rst.directives.register_directive("code", CodeBlockDirective)
@@ -126,7 +156,7 @@ def register_code_directive():
         docutils.parsers.rst.directives.register_directive("sourcecode", CodeBlockDirective)
 
 
-def strip_byte_order_mark(text):
+def strip_byte_order_mark(text: str) -> str:
     """Return text with byte order mark (BOM) removed."""
     try:
         return text.encode("utf-8").decode("utf-8-sig")
@@ -135,12 +165,13 @@ def strip_byte_order_mark(text):
 
 
 def check(
-    source,
-    filename="<string>",
-    report_level=docutils.utils.Reporter.INFO_LEVEL,
-    ignore=None,
-    debug=False,
-):
+    source: str,
+    filename: str = "<string>",
+    report_level: int = docutils.utils.Reporter.INFO_LEVEL,
+    ignore: typing.Optional[IgnoreDict] = None,
+    # ignore: typing.Optional[typing.Dict[str, typing.Union[str, typing.List[str]]]] = None,
+    debug: bool = False,
+) -> YieldedErrorTuple:
     """Yield errors.
 
     Use lower report_level for noisier error output.
@@ -214,7 +245,7 @@ def check(
                 continue
 
 
-def find_ignored_languages(source):
+def find_ignored_languages(source: str) -> typing.Generator[str, None, None]:
     """Yield ignored languages.
 
     Languages are ignored via comment.
@@ -244,7 +275,9 @@ def find_ignored_languages(source):
                     yield language.strip()
 
 
-def _check_file(parameters):
+def _check_file(
+    parameters: typing.Tuple[str, argparse.Namespace]
+) -> typing.Tuple[str, typing.List[ErrorTuple]]:
     """Return list of errors."""
     (filename, args) = parameters
 
@@ -261,7 +294,7 @@ def _check_file(parameters):
     for substitution in args.ignore_substitutions:
         contents = contents.replace(f"|{substitution}|", "None")
 
-    ignore = {
+    ignore: IgnoreDict = {
         "languages": args.ignore_language,
         "messages": args.ignore_messages,
     }
@@ -273,15 +306,15 @@ def _check_file(parameters):
     return (filename, all_errors)
 
 
-def check_python(code):
+def check_python(code: str) -> YieldedErrorTuple:
     """Yield errors."""
     try:
         compile(code, "<string>", "exec")
     except SyntaxError as exception:
-        yield (int(exception.lineno), exception.msg)
+        yield (int(exception.lineno or 0), exception.msg)
 
 
-def check_json(code):
+def check_json(code: str) -> YieldedErrorTuple:
     """Yield errors."""
     try:
         json.loads(code)
@@ -296,7 +329,7 @@ def check_json(code):
         yield (int(line_number), message)
 
 
-def check_xml(code):
+def check_xml(code: str) -> YieldedErrorTuple:
     """Yield errors."""
     try:
         xml.etree.ElementTree.fromstring(code)
@@ -311,14 +344,14 @@ def check_xml(code):
         yield (int(line_number), message)
 
 
-def check_rst(code, ignore):
+def check_rst(code: str, ignore: IgnoreDict) -> YieldedErrorTuple:
     """Yield errors in nested RST code."""
     filename = "<string>"
 
     yield from check(code, filename=filename, ignore=ignore)
 
 
-def check_doctest(code):
+def check_doctest(code: str) -> YieldedErrorTuple:
     """Yield doctest syntax errors.
 
     This does not run the test as that would be unsafe. Nor does this
@@ -336,17 +369,17 @@ def check_doctest(code):
             yield (int(match.group(1)), message)
 
 
-def get_and_split(options, key, default=""):
+def get_and_split(options: typing.Dict[str, str], key: str, default: str = "") -> typing.List[str]:
     """Return list of split and stripped strings."""
     return split_comma_separated(options.get(key, default))
 
 
-def split_comma_separated(text):
+def split_comma_separated(text: str) -> typing.List[str]:
     """Return list of split and stripped strings."""
     return [t.strip() for t in text.split(",") if t.strip()]
 
 
-def _get_directives_and_roles_from_sphinx():
+def _get_directives_and_roles_from_sphinx() -> typing.Tuple[typing.List[str], typing.List[str]]:
     """Return a tuple of Sphinx directive and roles."""
     if SPHINX_INSTALLED:
         sphinx_directives = list(sphinx.domains.std.StandardDomain.directives)
@@ -427,18 +460,26 @@ class IgnoredDirective(docutils.parsers.rst.Directive):
 
     has_content = True
 
-    def run(self):
+    def run(self) -> typing.List:
         """Do nothing."""
         return []
 
 
-def _ignore_role(name, rawtext, text, lineno, inliner, options=None, content=None):
+def _ignore_role(
+    name: str,
+    rawtext: str,
+    text: str,
+    lineno: int,
+    inliner: docutils.parsers.rst.states.Inliner,
+    options: typing.Optional[typing.Dict[str, typing.Any]] = None,
+    content: typing.Optional[typing.List[str]] = None,
+) -> typing.Tuple[typing.List, typing.List]:
     """Stub for unknown roles."""
     # pylint: disable=unused-argument
     return ([], [])
 
 
-def ignore_sphinx():
+def ignore_sphinx() -> None:
     """Register Sphinx directives and roles to ignore."""
     (directives, roles) = _get_directives_and_roles_from_sphinx()
 
@@ -465,7 +506,7 @@ def ignore_sphinx():
     ignore_directives_and_roles(directives + ext_autosummary, roles + ["ctype"])
 
 
-def find_config(directory_or_file, debug=False):
+def find_config(directory_or_file: str, debug: bool = False) -> typing.Optional[str]:
     """Return configuration filename.
 
     If `directory_or_file` is a file, return the real-path of that file. If it
@@ -493,8 +534,10 @@ def find_config(directory_or_file, debug=False):
         else:
             directory = parent_directory
 
+    return None
 
-def load_configuration_from_file(directory, args):
+
+def load_configuration_from_file(directory: str, args: argparse.Namespace) -> argparse.Namespace:
     """Return new ``args`` with configuration loaded from file."""
     args = copy.copy(args)
 
@@ -523,7 +566,7 @@ def load_configuration_from_file(directory, args):
     return args
 
 
-def _get_options(directory_or_file, debug=False):
+def _get_options(directory_or_file: str, debug: bool = False) -> typing.Dict[str, str]:
     config_path = find_config(directory_or_file, debug=debug)
     if not config_path:
         return {}
@@ -538,7 +581,7 @@ def _get_options(directory_or_file, debug=False):
         return options
 
 
-def ignore_directives_and_roles(directives, roles):
+def ignore_directives_and_roles(directives: typing.List[str], roles: typing.List[str]) -> None:
     """Ignore directives/roles in docutils."""
     for directive in directives:
         docutils.parsers.rst.directives.register_directive(directive, IgnoredDirective)
@@ -553,11 +596,11 @@ def ignore_directives_and_roles(directives, roles):
 # traversing the document. At that point, we accumulate the errors.
 
 
-def bash_checker(code, working_directory):
+def bash_checker(code: str, working_directory: str) -> CheckerRunFunction:
     """Return checker."""
     run = run_in_subprocess(code, ".bash", ["bash", "-n"], working_directory=working_directory)
 
-    def run_check():
+    def run_check() -> YieldedErrorTuple:
         """Yield errors."""
         result = run()
         if result:
@@ -573,7 +616,7 @@ def bash_checker(code, working_directory):
     return run_check
 
 
-def c_checker(code, working_directory):
+def c_checker(code: str, working_directory: str) -> CheckerRunFunction:
     """Return checker."""
     return gcc_checker(
         code,
@@ -583,7 +626,7 @@ def c_checker(code, working_directory):
     )
 
 
-def cpp_checker(code, working_directory):
+def cpp_checker(code: str, working_directory: str) -> CheckerRunFunction:
     """Return checker."""
     return gcc_checker(
         code,
@@ -593,7 +636,9 @@ def cpp_checker(code, working_directory):
     )
 
 
-def gcc_checker(code, filename_suffix, arguments, working_directory):
+def gcc_checker(
+    code: str, filename_suffix: str, arguments: typing.List[str], working_directory: str
+) -> CheckerRunFunction:
     """Return checker."""
     run = run_in_subprocess(
         code,
@@ -602,7 +647,7 @@ def gcc_checker(code, filename_suffix, arguments, working_directory):
         working_directory=working_directory,
     )
 
-    def run_check():
+    def run_check() -> YieldedErrorTuple:
         """Yield errors."""
         result = run()
         if result:
@@ -616,7 +661,9 @@ def gcc_checker(code, filename_suffix, arguments, working_directory):
     return run_check
 
 
-def parse_gcc_style_error_message(message, filename, has_column=True):
+def parse_gcc_style_error_message(
+    message: str, filename: str, has_column: typing.Optional[bool] = True
+) -> ErrorTuple:
     """Parse GCC-style error message.
 
     Return (line_number, message). Raise ValueError if message cannot be
@@ -633,12 +680,17 @@ def parse_gcc_style_error_message(message, filename, has_column=True):
     return (line_number, split_message[colons].strip())
 
 
-def get_encoding():
+def get_encoding() -> str:
     """Return preferred encoding."""
     return locale.getpreferredencoding() or sys.getdefaultencoding()
 
 
-def run_in_subprocess(code, filename_suffix, arguments, working_directory):
+def run_in_subprocess(
+    code: str,
+    filename_suffix: typing.AnyStr,
+    arguments: typing.List[str],
+    working_directory: typing.AnyStr,
+) -> typing.Callable[..., typing.Optional[typing.Tuple[str, str]]]:
     """Return None on success."""
     temporary_file = tempfile.NamedTemporaryFile(mode="wb", suffix=filename_suffix)
     temporary_file.write(code.encode("utf-8"))
@@ -651,11 +703,12 @@ def run_in_subprocess(code, filename_suffix, arguments, working_directory):
         cwd=working_directory,
     )
 
-    def run():
+    def run() -> typing.Optional[typing.Tuple[str, str]]:
         """Yield errors."""
         raw_result = process.communicate()
         if process.returncode != 0:
             return (raw_result[1].decode(get_encoding()), temporary_file.name)
+        return None
 
     return run
 
@@ -664,16 +717,18 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 
     """Visits code blocks and checks for syntax errors in code."""
 
-    def __init__(self, document, contents, filename, ignore):
+    def __init__(
+        self, document: docutils.nodes.document, contents: str, filename: str, ignore: IgnoreDict
+    ) -> None:
         docutils.nodes.NodeVisitor.__init__(self, document)
-        self.checkers = []
+        self.checkers: typing.List[RunCheckFunction] = []
         self.contents = contents
         self.filename = filename
         self.working_directory = os.path.dirname(os.path.realpath(filename))
         self.ignore = ignore or {}
         self.ignore.setdefault("languages", []).append(None)
 
-    def visit_doctest_block(self, node):
+    def visit_doctest_block(self, node: docutils.nodes.Element) -> None:
         """Check syntax of doctest."""
         if "doctest" in self.ignore["languages"]:
             return
@@ -685,7 +740,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
             is_code_node=False,
         )
 
-    def visit_literal_block(self, node):
+    def visit_literal_block(self, node: docutils.nodes.Element) -> None:
         """Check syntax of code block."""
         # For "..code-block:: language"
         language = node.get("language", None)
@@ -708,7 +763,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
             self.visit_doctest_block(node)
             raise docutils.nodes.SkipNode
 
-        checker = {
+        check_dict: typing.Dict[str, CheckerFunction] = {
             "bash": bash_checker,
             "c": c_checker,
             "cpp": cpp_checker,
@@ -716,7 +771,8 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
             "xml": lambda source, _: lambda: check_xml(source),
             "python": lambda source, _: lambda: check_python(source),
             "rst": lambda source, _: lambda: check_rst(source, ignore=self.ignore),
-        }.get(language)
+        }
+        checker = check_dict.get(language)
 
         if checker:
             run = checker(node.rawsource, self.working_directory)
@@ -724,7 +780,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 
         raise docutils.nodes.SkipNode
 
-    def visit_paragraph(self, node):
+    def visit_paragraph(self, node: docutils.nodes.Element) -> None:
         """Check syntax of reStructuredText."""
         find = re.search(r"\[[^\]]+\]\([^\)]+\)", node.rawsource)
         if find is not None:
@@ -732,10 +788,16 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
                 "(rst) Link is formatted in Markdown style.", base_node=node
             )
 
-    def _add_check(self, node, run, language, is_code_node):
+    def _add_check(
+        self,
+        node: docutils.nodes.Element,
+        run: CheckerRunFunction,
+        language: str,
+        is_code_node: bool,
+    ) -> None:
         """Add checker that will be run."""
 
-        def run_check():
+        def run_check() -> YieldedErrorTuple:
             """Yield errors."""
             all_results = run()
             if all_results is not None:
@@ -760,14 +822,16 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
 
         self.checkers.append(run_check)
 
-    def unknown_visit(self, node):
+    def unknown_visit(self, node: docutils.nodes.Node) -> None:
         """Ignore."""
 
-    def unknown_departure(self, node):
+    def unknown_departure(self, node: docutils.nodes.Node) -> None:
         """Ignore."""
 
 
-def beginning_of_code_block(node, line_number, full_contents, is_code_node):
+def beginning_of_code_block(
+    node: docutils.nodes.Element, line_number: int, full_contents: str, is_code_node: bool
+) -> int:
     """Return line number of beginning of code block."""
     if SPHINX_INSTALLED and not is_code_node:
         delta = len(node.non_default_attributes())
@@ -798,14 +862,14 @@ class CheckWriter(docutils.writers.Writer):
 
     """Runs CheckTranslator on code blocks."""
 
-    def __init__(self, contents, filename, ignore):
+    def __init__(self, contents: str, filename: str, ignore: IgnoreDict) -> None:
         docutils.writers.Writer.__init__(self)
-        self.checkers = []
+        self.checkers: typing.List[RunCheckFunction] = []
         self.contents = contents
         self.filename = filename
         self.ignore = ignore
 
-    def translate(self):
+    def translate(self) -> None:
         """Run CheckTranslator."""
         visitor = CheckTranslator(
             self.document, contents=self.contents, filename=self.filename, ignore=self.ignore
@@ -814,15 +878,15 @@ class CheckWriter(docutils.writers.Writer):
         self.checkers += visitor.checkers
 
 
-def decode_filename(filename):
+def decode_filename(filename: typing.Union[str, bytes]) -> str:
     """Return Unicode filename."""
-    if hasattr(filename, "decode"):
+    if isinstance(filename, bytes):
         return filename.decode(sys.getfilesystemencoding())
     else:
         return filename
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     """Return parsed command-line arguments."""
     threshold_choices = docutils.frontend.OptionParser.threshold_choices
 
@@ -890,7 +954,9 @@ def parse_args():
     return args
 
 
-def output_message(text, file=sys.stderr):
+def output_message(
+    text: typing.Union[typing.AnyStr, Exception], file: typing.TextIO = sys.stderr
+) -> None:  # TODO: improve typing
     """Output message to terminal."""
     if file.encoding is None:
         # If the output file does not support Unicode, encode it to a byte
@@ -902,7 +968,7 @@ def output_message(text, file=sys.stderr):
 
 
 @contextlib.contextmanager
-def enable_sphinx_if_possible():
+def enable_sphinx_if_possible() -> typing.Generator[None, None, None]:
     """Register Sphinx directives and roles."""
     if SPHINX_INSTALLED:
         srcdir = tempfile.mkdtemp()
@@ -914,7 +980,7 @@ def enable_sphinx_if_possible():
                 outdir=outdir,
                 doctreedir=outdir,
                 buildername="dummy",
-                status=None,
+                status=None,  # type: ignore[arg-type] # NOTE: type hint is incorrect
             )
             yield
         finally:
@@ -923,7 +989,7 @@ def enable_sphinx_if_possible():
         yield
 
 
-def match_file(filename):
+def match_file(filename: str) -> bool:
     """Return True if file is okay for modifying/recursing."""
     base_name = os.path.basename(filename)
 
@@ -936,7 +1002,7 @@ def match_file(filename):
     return True
 
 
-def find_files(filenames, recursive):
+def find_files(filenames: typing.List[str], recursive: bool) -> typing.Generator[str, None, None]:
     """Yield filenames."""
     while filenames:
         name = filenames.pop(0)
@@ -950,7 +1016,7 @@ def find_files(filenames, recursive):
             yield name
 
 
-def main():
+def main() -> int:
     """Return 0 on success."""
     args = parse_args()
 
