@@ -77,6 +77,7 @@ repos:
     rev: 7ae9389351f4090e3993de28015a05a18ca6b8a7 # frozen: v1.12.1
     hooks:
       - id: blacken-docs
+        exclude: examples|test_rstcheck.py
 
   # ----------------------------------------------
   # JS / TS / HTML / CSS / MD / JSON / YAML
