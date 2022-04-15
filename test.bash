@@ -94,10 +94,7 @@ fi
 ./rstcheck.py --debug --config examples/with_configuration/dummydir examples/without_configuration/good.rst
 
 
-if python -c 'import sys; sys.exit(0 if sys.version_info >= (3,) else 1)'
-then
-    python -m doctest -v README.rst rstcheck.py
-    ./rstcheck.py README.rst
-fi
+python3 -m doctest -v README.rst rstcheck.py
+./rstcheck.py README.rst
 
 echo -e '\x1b[01;32mOkay\x1b[0m'
