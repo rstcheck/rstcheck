@@ -284,11 +284,19 @@ Add this to your ``.pre-commit-config.yaml``
 Testing
 =======
 
-To run all the tests, do::
+To run all the tests create a venv, install tox and call::
 
-    $ make test
+    $ python3 -m venv .venv
+    $ source .venv/bin/activate
+    $ pip install tox
+    $ tox
 
 Unit tests are in ``test_rstcheck.py``.
+
+You can implify this if you have ``poetry`` available::
+
+    $ poetry install
+    $ poetry run tox
 
 System tests are composed of example good/bad input. The test inputs are
 contained in the ``examples`` directory. For basic tests, adding a test should
