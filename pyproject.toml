@@ -72,6 +72,12 @@ python_version = 3.7  # CHANGE ME
 base = ["https://raw.githubusercontent.com/Cielquan/my-flake8-plugins/v1.2.2/flakeheaven-base.toml"]
 min_python_version = "3.7"  # CHANGE ME
 
+[tool.flakeheaven.exceptions."examples"]
+flake8-eradicate = ["-E800"]
+
+[tool.flakeheaven.exceptions."test_rstcheck.py"]
+# flake8-aaa = ["+*"]
+flake8-bandit = ["-S101"]
 
 # -- PYLINT CONFIG --------------------------------------------------------------------
 [tool.pylint]

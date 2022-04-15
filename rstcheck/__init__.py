@@ -37,11 +37,11 @@ import multiprocessing
 import os
 import re
 import shutil
-import subprocess
+import subprocess  # noqa: S404
 import sys
 import tempfile
 import typing
-import xml.etree.ElementTree
+import xml.etree.ElementTree  # noqa: S405
 
 import docutils.core
 import docutils.io
@@ -85,6 +85,8 @@ CONFIG_FILES = [".rstcheck.cfg", "setup.cfg"]
 
 
 class IgnoreDict(typing_extensions.TypedDict, total=False):
+    """Type for the ignore dictionary passed around some functions."""
+
     languages: typing.List[typing.Optional[str]]
     messages: str
 
@@ -112,16 +114,15 @@ Returned by a closure.
 
 
 class Error(Exception):
-
     """rstcheck exception."""
 
     def __init__(self, message: str, line_number: int) -> None:
+        """Init of custom rstcheck exception."""
         self.line_number = line_number
         Exception.__init__(self, message)
 
 
 class CodeBlockDirective(docutils.parsers.rst.Directive):
-
     """Code block directive."""
 
     has_content = True
@@ -156,12 +157,11 @@ def strip_byte_order_mark(text: str) -> str:
         return text
 
 
-def check(
+def check(  # noqa: CCR001
     source: str,
     filename: str = "<string>",
     report_level: int = docutils.utils.Reporter.INFO_LEVEL,
     ignore: typing.Optional[IgnoreDict] = None,
-    # ignore: typing.Optional[typing.Dict[str, typing.Union[str, typing.List[str]]]] = None,
     debug: bool = False,
 ) -> YieldedErrorTuple:
     """Yield errors.
@@ -222,8 +222,7 @@ def check(
             raise
 
     for checker in writer.checkers:
-        for error in checker():  # type: ignore[misc]
-            yield error
+        yield from checker()
 
     rst_errors = string_io.getvalue().strip()
     if rst_errors:
@@ -237,7 +236,7 @@ def check(
                 continue
 
 
-def find_ignored_languages(source: str) -> typing.Generator[str, None, None]:
+def find_ignored_languages(source: str) -> typing.Generator[str, None, None]:  # noqa: CCR001
     """Yield ignored languages.
 
     Languages are ignored via comment.
@@ -274,17 +273,17 @@ def _check_file(
     (filename, args) = parameters
 
     if filename == "-":
-        contents = sys.stdin.read()
+        input_file_contents = sys.stdin.read()
     else:
         with contextlib.closing(docutils.io.FileInput(source_path=filename)) as input_file:
-            contents = input_file.read()
+            input_file_contents = input_file.read()
 
     args = load_configuration_from_file(os.path.dirname(os.path.realpath(filename)), args)
 
     ignore_directives_and_roles(args.ignore_directives, args.ignore_roles)
 
     for substitution in args.ignore_substitutions:
-        contents = contents.replace(f"|{substitution}|", "None")
+        input_file_contents = input_file_contents.replace(f"|{substitution}|", "None")
 
     ignore: IgnoreDict = {
         "languages": args.ignore_language,
@@ -292,7 +291,11 @@ def _check_file(
     }
     all_errors = []
     for error in check(
-        contents, filename=filename, report_level=args.report, ignore=ignore, debug=args.debug
+        input_file_contents,
+        filename=filename,
+        report_level=args.report,
+        ignore=ignore,
+        debug=args.debug,
     ):
         all_errors.append(error)
     return (filename, all_errors)
@@ -324,7 +327,7 @@ def check_json(code: str) -> YieldedErrorTuple:
 def check_xml(code: str) -> YieldedErrorTuple:
     """Yield errors."""
     try:
-        xml.etree.ElementTree.fromstring(code)
+        xml.etree.ElementTree.fromstring(code)  # noqa: S314
     except xml.etree.ElementTree.ParseError as exception:
         message = f"{exception}"
         line_number = 0
@@ -447,7 +450,6 @@ def _get_directives_and_roles_from_sphinx() -> typing.Tuple[typing.List[str], ty
 
 
 class IgnoredDirective(docutils.parsers.rst.Directive):
-
     """Stub for unknown directives."""
 
     has_content = True
@@ -498,7 +500,9 @@ def ignore_sphinx() -> None:
     ignore_directives_and_roles(directives + ext_autosummary, roles + ["ctype"])
 
 
-def find_config(directory_or_file: str, debug: bool = False) -> typing.Optional[str]:
+def find_config(  # noqa: CCR001
+    directory_or_file: str, debug: bool = False
+) -> typing.Optional[str]:
     """Return configuration filename.
 
     If `directory_or_file` is a file, return the real-path of that file. If it
@@ -659,7 +663,6 @@ def parse_gcc_style_error_message(
 
     Return (line_number, message). Raise ValueError if message cannot be
     parsed.
-
     """
     colons = 2 if has_column else 1
     prefix = filename + ":"
@@ -689,7 +692,7 @@ def run_in_subprocess(
     temporary_file.write(code.encode("utf-8"))
     temporary_file.flush()
 
-    process = subprocess.Popen(  # pylint: disable=consider-using-with
+    process = subprocess.Popen(  # pylint: disable=consider-using-with  # noqa: S603
         arguments + [temporary_file.name],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -707,15 +710,19 @@ def run_in_subprocess(
 
 
 class CheckTranslator(docutils.nodes.NodeVisitor):
-
     """Visits code blocks and checks for syntax errors in code."""
 
     def __init__(
-        self, document: docutils.nodes.document, contents: str, filename: str, ignore: IgnoreDict
+        self,
+        document: docutils.nodes.document,
+        file_contents: str,
+        filename: str,
+        ignore: IgnoreDict,
     ) -> None:
+        """Init CheckTranslator."""
         docutils.nodes.NodeVisitor.__init__(self, document)
         self.checkers: typing.List[RunCheckFunction] = []
-        self.contents = contents
+        self.file_contents = file_contents
         self.filename = filename
         self.working_directory = os.path.dirname(os.path.realpath(filename))
         self.ignore = ignore or {}
@@ -781,7 +788,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
                 "(rst) Link is formatted in Markdown style.", base_node=node
             )
 
-    def _add_check(
+    def _add_check(  # noqa: CCR001
         self,
         node: docutils.nodes.Element,
         run: CheckerRunFunction,
@@ -790,7 +797,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
     ) -> None:
         """Add checker that will be run."""
 
-        def run_check() -> YieldedErrorTuple:
+        def run_check() -> YieldedErrorTuple:  # noqa: CCR001
             """Yield errors."""
             all_results = run()
             if all_results is not None:
@@ -804,7 +811,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
                                 beginning_of_code_block(
                                     node=node,
                                     line_number=line_number,
-                                    full_contents=self.contents,
+                                    full_contents=self.file_contents,
                                     is_code_node=is_code_node,
                                 )
                                 + error_offset,
@@ -835,12 +842,10 @@ def beginning_of_code_block(
     lines = full_contents.splitlines()
     code_block_length = len(node.rawsource.splitlines())
 
-    try:
+    with contextlib.suppress(IndexError):
         # Case where there are no extra spaces.
         if lines[line_number - 1].strip():
             return line_number - code_block_length + 1
-    except IndexError:
-        pass
 
     # The offsets are wrong if the RST text has multiple blank lines after
     # the code block. This is a workaround.
@@ -852,20 +857,23 @@ def beginning_of_code_block(
 
 
 class CheckWriter(docutils.writers.Writer):
-
     """Runs CheckTranslator on code blocks."""
 
-    def __init__(self, contents: str, filename: str, ignore: IgnoreDict) -> None:
+    def __init__(self, file_contents: str, filename: str, ignore: IgnoreDict) -> None:
+        """Init CheckWriter."""
         docutils.writers.Writer.__init__(self)
         self.checkers: typing.List[RunCheckFunction] = []
-        self.contents = contents
+        self.file_contents = file_contents
         self.filename = filename
         self.ignore = ignore
 
     def translate(self) -> None:
         """Run CheckTranslator."""
         visitor = CheckTranslator(
-            self.document, contents=self.contents, filename=self.filename, ignore=self.ignore
+            self.document,
+            file_contents=self.file_contents,
+            filename=self.filename,
+            ignore=self.ignore,
         )
         self.document.walkabout(visitor)
         self.checkers += visitor.checkers
@@ -947,16 +955,16 @@ def parse_args() -> argparse.Namespace:
 
 
 def output_message(
-    text: typing.Union[typing.AnyStr, Exception], file: typing.TextIO = sys.stderr
+    text: typing.Union[typing.AnyStr, Exception], output_file: typing.TextIO = sys.stderr
 ) -> None:
     """Output message to terminal."""
-    if file.encoding is None:
+    if output_file.encoding is None:
         # If the output file does not support Unicode, encode it to a byte
         # string. On some machines, this occurs when Python is redirecting to
         # file (or piping to something like Vim).
         text = text.encode("utf-8")
 
-    print(text, file=file)
+    print(text, file=output_file)
 
 
 @contextlib.contextmanager
@@ -1008,7 +1016,7 @@ def find_files(filenames: typing.List[str], recursive: bool) -> typing.Generator
             yield name
 
 
-def main() -> int:
+def main() -> int:  # noqa: CCR001
     """Return 0 on success."""
     args = parse_args()
 
