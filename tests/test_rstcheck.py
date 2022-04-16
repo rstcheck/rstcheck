@@ -19,25 +19,25 @@ class Tests(unittest.TestCase):  # pylint: disable=too-many-public-methods
     @staticmethod
     def assert_lines_equal(
         line_numbers: typing.List[int], results: rstcheck.YieldedErrorTuple
-    ) -> None:
+    ) -> None:  # noqa: AAA01
         """Test if the line numbers match the results."""
         assert set(line_numbers) == set(dict(results))
 
-    @staticmethod
+    @staticmethod  # noqa: AAA01
     def test_parse_gcc_style_error_message() -> None:
         """Test `parse_gcc_style_error_message`."""
         assert (32, "error message") == rstcheck.parse_gcc_style_error_message(
             "filename:32:7: error message", filename="filename"
         )
 
-    @staticmethod
+    @staticmethod  # noqa: AAA01
     def test_parse_gcc_style_error_message_with_no_column() -> None:
         """Test `parse_gcc_style_error_message` with no column."""
         assert (32, "error message") == rstcheck.parse_gcc_style_error_message(
             "filename:32: error message", filename="filename", has_column=False
         )
 
-    def test_parse_gcc_style_error_message_with_parsing_error(self) -> None:
+    def test_parse_gcc_style_error_message_with_parsing_error(self) -> None:  # noqa: AAA01
         """Test `parse_gcc_style_error_message` raising exceptions."""
         with self.assertRaises(ValueError):  # noqa: PT009
             rstcheck.parse_gcc_style_error_message(":32:3 error message", filename="filename")
@@ -47,7 +47,7 @@ class Tests(unittest.TestCase):  # pylint: disable=too-many-public-methods
                 "filename:32: error message", filename="filename", has_column=True
             )
 
-    def test_check(self) -> None:
+    def test_check(self) -> None:  # noqa: AAA01
         """Test `check`."""
         self.assert_lines_equal(
             [6],
@@ -63,7 +63,7 @@ Test
             ),
         )
 
-    def test_check_code_block(self) -> None:
+    def test_check_code_block(self) -> None:  # noqa: AAA01
         """Test `check` with python code block."""
         self.assert_lines_equal(
             [6],
@@ -79,7 +79,7 @@ Test
             ),
         )
 
-    def test_check_json(self) -> None:
+    def test_check_json(self) -> None:  # noqa: AAA01
         """Test `check` with json."""
         self.assert_lines_equal(
             [7],
@@ -97,7 +97,7 @@ Test
             ),
         )
 
-    def test_check_json_with_ignore(self) -> None:
+    def test_check_json_with_ignore(self) -> None:  # noqa: AAA01
         """Test `check` with json and ignore."""
         self.assert_lines_equal(
             [],
@@ -117,7 +117,7 @@ Test
             ),
         )
 
-    def test_check_json_with_unmatched_ignores_only(self) -> None:
+    def test_check_json_with_unmatched_ignores_only(self) -> None:  # noqa: AAA01
         """Test `check` with json and unmatched ignore."""
         self.assert_lines_equal(
             [7],
@@ -137,7 +137,7 @@ Test
             ),
         )
 
-    def test_check_json_with_bad_ignore(self) -> None:
+    def test_check_json_with_bad_ignore(self) -> None:  # noqa: AAA01
         """Test `check` with json and bad ignore."""
         self.assert_lines_equal(
             [7, 10],
@@ -157,7 +157,7 @@ Test
             ),
         )
 
-    def test_check_xml(self) -> None:
+    def test_check_xml(self) -> None:  # noqa: AAA01
         """Test `check` with xml."""
         self.assert_lines_equal(
             [8],
@@ -176,7 +176,7 @@ Test
             ),
         )
 
-    def test_check_xml_with_ignore(self) -> None:
+    def test_check_xml_with_ignore(self) -> None:  # noqa: AAA01
         """Test `check` with xml and ignore."""
         self.assert_lines_equal(
             [],
@@ -197,7 +197,7 @@ Test
             ),
         )
 
-    def test_check_xml_with_unmatched_ignores_only(self) -> None:
+    def test_check_xml_with_unmatched_ignores_only(self) -> None:  # noqa: AAA01
         """Test `check` with xml and unmatched ignore."""
         self.assert_lines_equal(
             [8],
@@ -218,7 +218,7 @@ Test
             ),
         )
 
-    def test_check_xml_with_bad_ignore(self) -> None:
+    def test_check_xml_with_bad_ignore(self) -> None:  # noqa: AAA01
         """Test `check` with xml and bad ignore."""
         self.assert_lines_equal(
             [8, 11],
@@ -239,7 +239,7 @@ Test
             ),
         )
 
-    def test_check_with_extra_blank_lines_before(self) -> None:
+    def test_check_with_extra_blank_lines_before(self) -> None:  # noqa: AAA01
         """Test `check` with python and extra blank lines before."""
         self.assert_lines_equal(
             [8],
@@ -257,7 +257,7 @@ Test
             ),
         )
 
-    def test_check_with_extra_blank_lines_after(self) -> None:
+    def test_check_with_extra_blank_lines_after(self) -> None:  # noqa: AAA01
         """Test `check` with python and extra blank lines after."""
         self.assert_lines_equal(
             [6],
@@ -276,7 +276,7 @@ Test
             ),
         )
 
-    def test_check_with_extra_blank_lines_before_and_after(self) -> None:
+    def test_check_with_extra_blank_lines_before_and_after(self) -> None:  # noqa: AAA01
         """Test `check` with python and extra blank lines before and after."""
         self.assert_lines_equal(
             [8],
@@ -297,7 +297,7 @@ Test
             ),
         )
 
-    def test_check_rst(self) -> None:
+    def test_check_rst(self) -> None:  # noqa: AAA01
         """Test `check` with rst."""
         self.assert_lines_equal(
             [2],
@@ -309,7 +309,7 @@ Test
             ),
         )
 
-    def test_check_rst_report_level(self) -> None:
+    def test_check_rst_report_level(self) -> None:  # noqa: AAA01
         """Test `check` with rst and set report level."""
         self.assert_lines_equal(
             [],
@@ -322,7 +322,7 @@ Test
             ),
         )
 
-    def test_check_nested_rst(self) -> None:
+    def test_check_nested_rst(self) -> None:  # noqa: AAA01
         """Test `check` with nested rst."""
         self.assert_lines_equal(
             [32],
@@ -364,7 +364,7 @@ Test
             ),
         )
 
-    @unittest.skipIf(not rstcheck.SPHINX_INSTALLED, "Requires Sphinx")
+    @unittest.skipIf(not rstcheck.SPHINX_INSTALLED, "Requires Sphinx")  # noqa: AAA01
     def test_ignore_sphinx_directives(self) -> None:
         """Test `check` with sphinx directives to ignore."""
         self.assert_lines_equal(
@@ -410,7 +410,7 @@ Test
             ),
         )
 
-    def test_check_doctest(self) -> None:
+    def test_check_doctest(self) -> None:  # noqa: AAA01
         """Test `check` with doctest."""
         self.assert_lines_equal(
             [5],
@@ -426,7 +426,7 @@ Testing
             ),
         )
 
-    @staticmethod
+    @staticmethod  # noqa: AAA01
     def test_check_doctest_do_not_crash_when_indented() -> None:
         """Test `check` does not crash with intended doctest.
 
@@ -445,7 +445,7 @@ Testing
             )
         )
 
-    def test_check_doctest_with_ignore(self) -> None:
+    def test_check_doctest_with_ignore(self) -> None:  # noqa: AAA01
         """Test `check` with doctest and ignore."""
         self.assert_lines_equal(
             [],
@@ -463,7 +463,7 @@ Testing
             ),
         )
 
-    @unittest.skipIf(rstcheck.SPHINX_INSTALLED, "Does not work with Sphinx")
+    @unittest.skipIf(rstcheck.SPHINX_INSTALLED, "Does not work with Sphinx")  # noqa: AAA01
     def test_check_doctest_in_code(self) -> None:
         """Test `check` with doctest in code."""
         self.assert_lines_equal(
@@ -482,7 +482,7 @@ Testing
             ),
         )
 
-    def test_check_doctest_in_code_block(self) -> None:
+    def test_check_doctest_in_code_block(self) -> None:  # noqa: AAA01
         """Test `check` with doctest in code block."""
         self.assert_lines_equal(
             [7],
@@ -500,7 +500,7 @@ Testing
             ),
         )
 
-    def test_check_doctest_in_python_code_block(self) -> None:
+    def test_check_doctest_in_python_code_block(self) -> None:  # noqa: AAA01
         """I'm not sure if this is correct, but I've seen people do it."""
         self.assert_lines_equal(
             [7],
@@ -519,7 +519,7 @@ Testing
         )
 
 
-def main() -> None:
+def main() -> None:  # noqa: AAA01
     """Run test suite."""
     with rstcheck.enable_sphinx_if_possible():
         unittest.main()

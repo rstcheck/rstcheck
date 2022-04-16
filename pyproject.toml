@@ -88,9 +88,6 @@ min_python_version = "3.7"  # CHANGE ME
 [tool.flakeheaven.exceptions."examples"]
 flake8-eradicate = ["-E800"]
 
-[tool.flakeheaven.exceptions."tests/test_rstcheck.py"]
-flake8-aaa = ["-AAA01"]
-
 
 # -- PYLINT CONFIG --------------------------------------------------------------------
 [tool.pylint]
