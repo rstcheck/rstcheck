@@ -91,6 +91,7 @@ flake8-eradicate = ["-E800"]
 [tool.flakeheaven.exceptions."tests/test_rstcheck.py"]
 flake8-aaa = ["-AAA01"]
 
+
 # -- PYLINT CONFIG --------------------------------------------------------------------
 [tool.pylint]
 
