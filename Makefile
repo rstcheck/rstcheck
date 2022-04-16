@@ -9,12 +9,12 @@ SCSPELL := $(shell command -v scspell 2> /dev/null)
 
 check:
 	tox -e pre-commit
-	./rstcheck.py README.rst
+	./rstcheck/__init__.py README.rst
 ifdef CHECK_MANIFEST
 	$(CHECK_MANIFEST)
 endif
 ifdef SCSPELL
-	$(SCSPELL) rstcheck.py README.rst
+	$(SCSPELL) rstcheck/__init__.py README.rst
 endif
 
 
