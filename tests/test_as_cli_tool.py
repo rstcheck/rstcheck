@@ -8,7 +8,7 @@ import typing
 import pytest
 
 
-REPO_DIR = pathlib.Path(__file__).parents[1]
+REPO_DIR = pathlib.Path(__file__).resolve().parents[1]
 
 
 def get_good_example_files() -> typing.List[pathlib.Path]:
