@@ -309,6 +309,11 @@ History
 (next version)
 --------------
 
+- Fix shebangs and scripts to use ``python3`` instead of ``python`` (#78)
+- Improve the gcc checker functions by removing restrictions and
+  using environment variable flags (#88)
+- Fix pool size on windows by setting max to 61 (#86)
+
 4.0.0 (2022-04-15)
 ------------------
 
