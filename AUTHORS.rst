@@ -14,6 +14,7 @@ Additional contributions by (sorted by name)
 - Daniel M. Capella <polyzen@users.noreply.github.com>
 - Dmitry <root@uralbash.ru>
 - Eugene Lorman <eugene.lorman@gmail.com>
+- GitHub Actions <action@github.com>
 - Jochen Sprickerhof <git@jochen.sprickerhof.de>
 - John Vandenberg <jayvdb@gmail.com>
 - Kagami Sascha Rosylight <saschanaz@outlook.com>
