@@ -19,7 +19,7 @@ def get_good_example_files() -> typing.List[pathlib.Path]:
 def test_good_examples(test_file: pathlib.Path) -> None:
     """Test all files from examples/good."""
     result = subprocess.run(  # pylint: disable=subprocess-run-check # noqa: S603,S607
-        ["rstcheck", test_file]
+        ["rstcheck", str(test_file)]
     )
 
     assert result.returncode == 0
@@ -34,7 +34,7 @@ def get_bad_example_files() -> typing.List[pathlib.Path]:
 def test_bad_examples(test_file: pathlib.Path) -> None:
     """Test all files from examples/bad."""
     result = subprocess.run(  # pylint: disable=subprocess-run-check # noqa: S603,S607
-        ["rstcheck", test_file]
+        ["rstcheck", str(test_file)]
     )
 
     assert result.returncode != 0
