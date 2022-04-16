@@ -11,6 +11,8 @@ on: # yamllint disable-line rule:truthy
       - master
 
   pull_request:
+    branches:
+      - "**"
 
 jobs:
   build:
