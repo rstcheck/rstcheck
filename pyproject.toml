@@ -18,6 +18,7 @@ packages = [
   { include = "tests", format = "sdist" },
   { include = "AUTHORS.rst", format = "sdist" },
 ]
+include = ["examples"]
 
 [tool.poetry.scripts]
 rstcheck = "rstcheck:main"
