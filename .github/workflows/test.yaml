@@ -11,12 +11,15 @@ on: # yamllint disable-line rule:truthy
       - master
 
   pull_request:
+    branches:
+      - "**"
 
 jobs:
   build:
     name: Tests on ${{ matrix.os }} with python ${{ matrix.python-version }}
     if: >
       github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'pull_request' ||
       (github.event_name == 'push' &&
       contains(toJson(github.event.head_commit.message), '[skip ci]') == false)
     runs-on: ${{ matrix.os }}

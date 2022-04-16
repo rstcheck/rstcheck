@@ -2,11 +2,11 @@
 rstcheck
 ========
 
-.. image:: https://github.com/myint/rstcheck/actions/workflows/test.yaml/badge.svg?branch=master
+.. image:: https://github.com/myint/rstcheck/workflows/Test%20code/badge.svg?branch=master
     :target: https://github.com/myint/rstcheck/actions/workflows/test.yaml
     :alt: Test status
 
-.. image:: https://github.com/myint/rstcheck/actions/workflows/qa.yaml/badge.svg?branch=master
+.. image:: https://github.com/myint/rstcheck/workflows/QA/badge.svg?branch=master
     :target: https://github.com/myint/rstcheck/actions/workflows/qa.yaml
     :alt: QA status
 
@@ -321,6 +321,9 @@ History
 
 (next version)
 --------------
+
+- Rewrite test.bash script in pytest test cases adn run them on linux in CI
+- Add examples/ to sdist
 
 4.1.0 (2022-04-16)
 ------------------
