@@ -8,14 +8,13 @@ SCSPELL := $(shell command -v scspell 2> /dev/null)
 
 
 check:
-	pycodestyle rstcheck.py setup.py
-	python setup.py --long-description | ./rstcheck.py -
-	./rstcheck.py README.rst
+	tox -e pre-commit
+	./rstcheck/__init__.py README.rst
 ifdef CHECK_MANIFEST
 	$(CHECK_MANIFEST)
 endif
 ifdef SCSPELL
-	$(SCSPELL) rstcheck.py setup.py README.rst
+	$(SCSPELL) rstcheck/__init__.py README.rst
 endif
 
 

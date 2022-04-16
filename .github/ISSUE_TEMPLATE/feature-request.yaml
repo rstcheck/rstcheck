@@ -1,0 +1,90 @@
+---
+name: "\U0001F4A1 Feature Request"
+description: Ideas for new features and/or improvements? Submit them here!
+title: "[Feature]: "
+labels: ["feature", "triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        First of all thank you for discovering and submitting an issue.
+
+        To increase the chance that someone may be able to help you
+        please fill the form below as good as you can.
+
+  - type: checkboxes
+    id: todos
+    attributes:
+      label: To Dos
+      description: Before submitting please confirm and check the following options.
+      options:
+        - label: >
+            I have checked the [issues](https://github.com/myint/rstcheck/issues)
+            and think that this is not a duplicate.
+          required: true
+        - label: I added a very descriptive title to this issue.
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: |
+        What feature do you want to see beeing added?
+        Why do you want the feature? What are you circumstances?
+        How do you imagine that could be accomplished?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: What operating system are you on?
+      multiple: true
+      options:
+        - Linux
+        - Windows
+        - macOS
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: os-details
+    attributes:
+      label: Operating System Details
+      description: >
+        Optionally add more information about your operating system,
+        especially if you choose "Other".
+
+  - type: input
+    id: python-version
+    attributes:
+      label: Python Version
+      description: |
+        What Python version(s) are you using?
+
+        You can find the Python version with:
+
+        ```shell
+        python --version
+        ```
+    validations:
+      required: true
+
+  - type: input
+    id: rstcheck-version
+    attributes:
+      label: rstcheck Version
+      description: |
+        What rstcheck version are you using?
+
+        You can find the rstcheck version with:
+
+        ```shell
+        python -c "import rstcheck; print(rstcheck.__version__)"
+        ```
+    validations:
+      required: true

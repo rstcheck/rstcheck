@@ -1,0 +1,125 @@
+---
+name: "\U0001F41E Bug Report (rstcheck as a library)"
+description: Found a bug when using rstcheck as a library? Submit them here!
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        First of all thank you for discovering and submitting an issue.
+
+        To increase the chance that someone may be able to help you
+        please fill the form below as good as you can.
+
+  - type: checkboxes
+    id: todos
+    attributes:
+      label: To Dos
+      description: Before submitting please confirm and check the following options.
+      options:
+        - label: >
+            I tested with the
+            [latest released version](https://github.com/myint/rstcheck/releases/latest).
+          required: true
+        - label: >
+            I have checked the [issues](https://github.com/myint/rstcheck/issues)
+            and think that this is not a duplicate.
+          required: true
+        - label: I added a very descriptive title to this issue.
+          required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example Code (python)
+      description: >
+        Please add a self-contained, minimal, reproducible example with you use case.
+        [Help manual](https://stackoverflow.com/help/minimal-reproducible-example)
+
+        If the code can be copied, checked with rstcheck and the issue is directly
+        reproducible it increases the chance that someone might be able to help.
+      render: Python
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: |
+        Please copy and paste any relevant log output.
+        This will be automatically formatted into code, so no need for backticks.
+      render: Shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: |
+        What is the problem? What did you do?
+        Write a short description of what you did, what you expected and what accutally happened.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: What operating system are you on?
+      multiple: true
+      options:
+        - Linux
+        - Windows
+        - macOS
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: os-details
+    attributes:
+      label: Operating System Details
+      description: >
+        Optionally add more information about your operating system,
+        especially if you choose "Other".
+
+  - type: input
+    id: python-version
+    attributes:
+      label: Python Version
+      description: |
+        What Python version(s) are you using?
+
+        You can find the Python version with:
+
+        ```shell
+        python --version
+        ```
+    validations:
+      required: true
+
+  - type: input
+    id: rstcheck-version
+    attributes:
+      label: rstcheck Version
+      description: |
+        What rstcheck version are you using?
+
+        You can find the rstcheck version with:
+
+        ```shell
+        python -c "import rstcheck; print(rstcheck.__version__)"
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: >
+        Any additional information that did not match the fields above,
+        but may help to further understand the issue.

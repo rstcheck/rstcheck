@@ -2,9 +2,13 @@
 rstcheck
 ========
 
-.. image:: https://travis-ci.org/myint/rstcheck.svg?branch=master
-    :target: https://travis-ci.org/myint/rstcheck
-    :alt: Build status
+.. image:: https://github.com/myint/rstcheck/actions/workflows/test.yaml/badge.svg?branch=master
+    :target: https://github.com/myint/rstcheck/actions/workflows/test.yaml
+    :alt: Test status
+
+.. image:: https://github.com/myint/rstcheck/actions/workflows/qa.yaml/badge.svg?branch=master
+    :target: https://github.com/myint/rstcheck/actions/workflows/qa.yaml
+    :alt: QA status
 
 Checks syntax of reStructuredText and code blocks nested within it.
 
@@ -228,9 +232,18 @@ Sphinx
 
 To enable Sphinx::
 
+    $ pip install rstcheck[sphinx]
+
+    # or
+
     $ pip install sphinx
 
-The installed Sphinx version must be at least 1.5.
+With version 4.0 ``rstcheck`` added Sphinx as an optional extra where the version's lower
+constraint is >=4.0 because of Sphinx's open upper constraints on jinja2 and markupsafe,
+which result in import errors if not pinned below version 3 and 2 respectively. This happend
+in Sphinx version 4.0.
+
+You can also add Sphinx by yourself but the installed Sphinx version must be at least 1.5.
 
 To check that Sphinx support is enabled::
 
@@ -284,11 +297,19 @@ Add this to your ``.pre-commit-config.yaml``
 Testing
 =======
 
-To run all the tests, do::
+To run all the tests create a venv, install tox and call::
 
-    $ make test
+    $ python3 -m venv .venv
+    $ source .venv/bin/activate
+    $ pip install tox
+    $ tox
 
 Unit tests are in ``test_rstcheck.py``.
+
+You can implify this if you have ``poetry`` available::
+
+    $ poetry install
+    $ poetry run tox
 
 System tests are composed of example good/bad input. The test inputs are
 contained in the ``examples`` directory. For basic tests, adding a test should
@@ -300,6 +321,26 @@ History
 
 (next version)
 --------------
+
+4.1.0 (2022-04-16)
+------------------
+
+- Fix shebangs and scripts to use ``python3`` instead of ``python`` (#78)
+- Improve the gcc checker functions by removing restrictions and
+  using environment variable flags (#88)
+- Fix pool size on windows by setting max to 61 (#86)
+- Update test.bash script and makefile with new file location
+
+4.0.0 (2022-04-15)
+------------------
+
+- Drop support for python versions prior 3.7
+- Add inline type annotations
+- Add ``sphinx`` as extra
+- Update build process and set up ``poetry``
+- Add ``pre-commit`` and ``tox`` for automated testing, linting and formatting
+- Move from travis to github actions
+- Activate dependabot
 
 3.5.0 (2022-04-14)
 ------------------

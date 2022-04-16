@@ -1,0 +1,243 @@
+---
+minimum_pre_commit_version: "2.17"
+default_stages: [commit]
+
+ci:
+  skip: [mypy, pylint]
+
+repos:
+  # ----------------------------------------------
+  # Meta hooks
+  # ----------------------------------------------
+
+  - repo: meta
+    hooks:
+      - id: identity
+        stages: [commit, manual]
+      - id: check-hooks-apply
+        stages: [manual]
+      - id: check-useless-excludes
+        stages: [manual]
+
+  # ----------------------------------------------
+  # File hooks
+  # ----------------------------------------------
+
+  # file checking out-of-the-box hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: db7346d375eda68a0174f2c057dd97f2fbffe030 # frozen: v4.2.0
+    hooks:
+      - id: check-case-conflict
+      - id: check-shebang-scripts-are-executable
+
+  # ----------------------------------------------
+  # Dependency hooks
+  # ----------------------------------------------
+
+  # safety - python dependency vulnerability checker
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+    rev: d0c2c5156e146e5030e6aafff1a0cb398875b4f2 # frozen: v1.2.4
+    hooks:
+      - id: python-safety-dependencies-check
+        args: ["--full-report"]
+        files: pyproject.toml
+
+  # ####################################################################################
+  #
+  #       FORMATTING
+  #
+  # ####################################################################################
+
+  # ----------------------------------------------
+  # Python
+  # ----------------------------------------------
+
+  # pyupgrade - upgrade old syntax to new
+  - repo: https://github.com/asottile/pyupgrade
+    rev: 256bd84aa5a17edbd3dcfaaa4f30f870168d2838 # frozen: v2.32.0
+    hooks:
+      - id: pyupgrade
+        args: ["--py37-plus"]
+
+  # isort - sort imports
+  - repo: https://github.com/PyCQA/isort
+    rev: c5e8fa75dda5f764d20f66a215d71c21cfa198e1 # frozen: 5.10.1
+    hooks:
+      - id: isort
+
+  # black - python formatter
+  - repo: https://github.com/psf/black
+    rev: ae2c0758c9e61a385df9700dc9c231bf54887041 # frozen: 22.3.0
+    hooks:
+      - id: black
+        args: ["--safe"]
+
+  # blacken-docs - black for python code in docs (rst/md/tex)
+  - repo: https://github.com/asottile/blacken-docs
+    rev: 7ae9389351f4090e3993de28015a05a18ca6b8a7 # frozen: v1.12.1
+    hooks:
+      - id: blacken-docs
+        exclude: examples|test_rstcheck.py
+
+  # ----------------------------------------------
+  # JS / TS / HTML / CSS / MD / JSON / YAML
+  # ----------------------------------------------
+
+  # prettier - multi formatter
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: 5e374fda194d7f7ce9eebbd582b2a5594838c85b # frozen: v2.6.2
+    hooks:
+      - id: prettier
+
+  # ----------------------------------------------
+  # General (code unspecific)
+  # ----------------------------------------------
+
+  # code unspecific out-of-the-box hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: db7346d375eda68a0174f2c057dd97f2fbffe030 # frozen: v4.2.0
+    hooks:
+      - id: end-of-file-fixer
+        stages: [commit]
+      - id: trailing-whitespace
+        stages: [commit]
+
+  # ####################################################################################
+  #
+  #       LINTING
+  #
+  # ####################################################################################
+
+  # ----------------------------------------------
+  # General (code unspecific)
+  # ----------------------------------------------
+
+  - repo: local
+    hooks:
+      # Find TODO:|FIXME:|BUG: comments in all files
+      # Inline skip: `#i#` directly after the colon after the tag-word
+      - id: find-todos
+        name: "Find TODO:|FIXME:|BUG: comments"
+        description: "Check for TODO:|FIXME:|BUG: comments in all files"
+        language: pygrep
+        entry: '(^|//!?|#|<!--|;|/\*(\*|!)?|\.\.)\s*(TODO:|FIXME:|BUG:)(?!#i#)'
+        exclude: TODO
+
+  # code unspecific out-of-the-box hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: db7346d375eda68a0174f2c057dd97f2fbffe030 # frozen: v4.2.0
+    hooks:
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  # ----------------------------------------------
+  # Python
+  # ----------------------------------------------
+
+  # python specific out-of-the-box hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: db7346d375eda68a0174f2c057dd97f2fbffe030 # frozen: v4.2.0
+    hooks:
+      - id: debug-statements
+      - id: fix-encoding-pragma
+        args: ["--remove"]
+      - id: name-tests-test
+        args: ["--django"]
+
+  # several python code regex hooks
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: 6f51a66bba59954917140ec2eeeaa4d5e630e6ce # frozen: v1.9.0
+    hooks:
+      - id: python-check-blanket-noqa
+      - id: python-check-blanket-type-ignore
+      - id: python-check-mock-methods
+      - id: python-no-eval
+      - id: python-no-log-warn
+
+  # flakeheaven - wrapper for flake8
+  - repo: https://github.com/flakeheaven/flakeheaven
+    rev: "3f0afc179dbd0907230fb3123f2938b0b63d3b7f" # frozen: 0.11.0
+    hooks:
+      - id: flakeheaven
+        types: [python]
+        additional_dependencies:
+          - "git+https://github.com/cielquan/my-flake8-plugins.git@v1.2.2"
+
+  # Lint hooks managed via tox envs b/c they need the pkg installed
+  - repo: local
+    hooks:
+      # mypy - python type checker
+      - id: mypy
+        name: mypy
+        description: run mypy over the installed package via tox
+        entry: tox
+        args: ["-e", "mypy"]
+        language: python
+        additional_dependencies: [tox]
+        types: [python]
+        pass_filenames: false
+        require_serial: true
+        # pylint - python linter
+      - id: pylint
+        name: pylint
+        description: run pylint over the installed package via tox
+        entry: tox
+        args: ["-e", "pylint"]
+        language: python
+        additional_dependencies: [tox]
+        types: [python]
+        require_serial: true
+
+  # poetry - python dependency maJSONnagement
+  - repo: https://github.com/python-poetry/poetry
+    rev: dca6ff2699a06c0217ed6d5a278fa3146e4136ff # frozen: 1.2.0b1
+    hooks:
+      - id: poetry-check
+
+  # ----------------------------------------------
+  # Shell script
+  # ----------------------------------------------
+
+  # shellscript (via PyPI package)
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: 4c7c3dd7161ef39e984cb295e93a968236dc8e8a # frozen: v0.8.0.4
+    hooks:
+      - id: shellcheck
+
+  # ----------------------------------------------
+  # reStructuredText
+  # ----------------------------------------------
+
+  # rstcheck - rst file checker
+  - repo: https://github.com/myint/rstcheck
+    rev: 3f92957478422df87bd730abde66f089cc1ee19b # commit after add of config; wait for release
+    hooks:
+      - id: rstcheck
+        additional_dependencies: [sphinx]
+        exclude: examples
+
+  # ----------------------------------------------
+  # TOML / YAML
+  # ----------------------------------------------
+
+  # JSON specific out-of-the-box hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: db7346d375eda68a0174f2c057dd97f2fbffe030 # frozen: v4.2.0
+    hooks:
+      - id: check-toml
+      - id: check-yaml
+
+  # yamllint - yaml linter
+  - repo: https://github.com/adrienverge/yamllint
+    rev: 058fef75598d1a9d9250487d91549abf379878e0 # frozen: v1.26.3
+    hooks:
+      - id: yamllint
+
+  # ----------------------------------------------
+  # Validate .pre-commit-hooks.yaml file
+  # ----------------------------------------------
+
+  - repo: https://github.com/pre-commit/pre-commit
+    rev: 0276e25f713ddfd66482f358d238186ca47a6eb4 # frozen: v2.18.1
+    hooks:
+      - id: validate_manifest

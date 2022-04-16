@@ -1,0 +1,113 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "rstcheck"
+version = "4.1.0"
+description = "Checks syntax of reStructuredText and code blocks nested within it"
+authors = ["Steven Myint <git@stevenmyint.com>"]
+maintainers = ["Christian Riedel <cielquan@protonmail.com>"]
+license = "MIT"
+repository = "https://github.com/myint/rstcheck"
+readme = "README.rst"
+classifiers = ["Topic :: Software Development :: Quality Assurance"]
+keywords = ["restructuredtext", "rst", "linter", "static-analysis"]
+packages = [
+  { include = "rstcheck" },
+  { include = "test_rstcheck.py", format = "sdist" },
+  { include = "test.bash", format = "sdist" },
+  { include = "AUTHORS.rst", format = "sdist" },
+]
+
+[tool.poetry.scripts]
+rstcheck = "rstcheck:main"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+docutils = ">=0.7,<0.19"
+types-docutils = ">=0.18,<0.19"
+typing-extensions = ">=4.1,<5"
+sphinx = {version = ">=4,<5", optional = true}
+
+[tool.poetry.dev-dependencies]
+pre-commit = ">=2.17"
+tox = ">=3.15"
+my-flake8-plugins = { git = "https://github.com/cielquan/my-flake8-plugins.git", rev = "v1.2.2", extras= ["flakeheaven"], optional = true }
+pylint = ">=2.12"
+mypy = ">=0.931"
+
+[tool.poetry.extras]
+sphinx = ["sphinx"]
+
+
+# -- BLACK CONFIG ---------------------------------------------------------------------
+[tool.black]
+line-length = 100
+exclude = "venv/"
+include = '\.pyi?$'  # single quotes needed
+
+
+# -- ISORT CONFIG ---------------------------------------------------------------------
+[tool.isort]
+profile = "black"
+lines_after_imports = 2
+combine_as_imports = true
+skip_gitignore = true
+
+
+# -- MYPY CONFIG ----------------------------------------------------------------------
+[tool.mypy]
+show_error_codes = true
+strict_optional = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+python_version = 3.7  # CHANGE ME
+
+
+# -- FLAKEHEAVEN CONFIG ----------------------------------------------------------------
+[tool.flakeheaven]
+base = ["https://raw.githubusercontent.com/Cielquan/my-flake8-plugins/v1.2.2/flakeheaven-base.toml"]
+min_python_version = "3.7"  # CHANGE ME
+
+[tool.flakeheaven.exceptions."examples"]
+flake8-eradicate = ["-E800"]
+
+[tool.flakeheaven.exceptions."test_rstcheck.py"]
+# flake8-aaa = ["+*"]
+flake8-bandit = ["-S101"]
+
+# -- PYLINT CONFIG --------------------------------------------------------------------
+[tool.pylint]
+
+[tool.pylint.messages_control]
+disable = [
+  # deactivate because double check
+  # https://github.com/PyCQA/pylint/issues/3512
+  "C0113",  # unneeded-not - F713[flake8]
+  "C0114",  # missing-module-docstring - D100,D104[flake8]
+  "C0115",  # missing-class-docstring - D101,D106[flake8]
+  "C0116",  # missing-function-docstring - D102,D103,D105[flake8]
+  "C0301",  # line-too-long - E501[pycodestyle]
+  "C0303",  # trailing-whitespace - W291,W293[falke8]
+  "C0304",  # missing-final-newline - W292[falke8]
+  "C0321",  # multiple-statements - E701[falke8]
+  "C0326",  # bad-whitespace - E201,E202,E225[falke8]
+  "C0330",  # bad-continuation - E129[falke8]
+  "C0411",  # wrong-import-order - I202[flake8]
+  "E0602",  # undefined-variable - F821[flake8]
+  "R0912",  # too-many-branches - C901[flake8]
+  "W0301",  # unnecessary-semicolon - E703[flake8]
+  "W0311",  # bad-indentation - E111[flake8]
+  "W0312",  # mixed-indentation - W191[flake8]
+  "W0611",  # unused-import - F401[flake8]
+  "W0612",  # unused-variable - F841[flake8]
+  "W0702",  # bare-except - E722[pycodestyle]
+  # deactivate because unwanted
+  "C040?",  # spelling
+  "W0511",  # fixme
+  # deactivate because of bugs
+  "W1203",  # Use % format in logger funcs | https://github.com/PyCQA/pylint/issues/2354
+]
