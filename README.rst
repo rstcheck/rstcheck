@@ -309,7 +309,7 @@ History
 (next version)
 --------------
 
-- Rewrite test.bash script in pytest test cases
+- Rewrite test.bash script in pytest test cases adn run them on linux in CI
 - Add examples/ to sdist
 
 4.1.0 (2022-04-16)
