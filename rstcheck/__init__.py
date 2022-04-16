@@ -36,6 +36,7 @@ import locale
 import multiprocessing
 import os
 import re
+import shlex
 import shutil
 import subprocess  # noqa: S404
 import sys
@@ -616,7 +617,10 @@ def c_checker(code: str, working_directory: str) -> CheckerRunFunction:
     return gcc_checker(
         code,
         ".c",
-        [os.getenv("CC", "gcc"), "-std=c99"] + INCLUDE_FLAGS,
+        [os.getenv("CC", "gcc")]
+        + shlex.split(os.getenv("CFLAGS", ""))
+        + shlex.split(os.getenv("CPPFLAGS", ""))
+        + INCLUDE_FLAGS,
         working_directory=working_directory,
     )
 
@@ -626,7 +630,10 @@ def cpp_checker(code: str, working_directory: str) -> CheckerRunFunction:
     return gcc_checker(
         code,
         ".cpp",
-        [os.getenv("CXX", "g++"), "-std=c++0x"] + INCLUDE_FLAGS,
+        [os.getenv("CXX", "g++")]
+        + shlex.split(os.getenv("CXXFLAGS", ""))
+        + shlex.split(os.getenv("CPPFLAGS", ""))
+        + INCLUDE_FLAGS,
         working_directory=working_directory,
     )
 
