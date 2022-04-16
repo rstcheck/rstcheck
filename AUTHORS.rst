@@ -13,6 +13,7 @@ Additional contributions by (sorted by name)
 - Christian Riedel <cielquan@protonmail.com>
 - Daniel M. Capella <polyzen@users.noreply.github.com>
 - Dmitry <root@uralbash.ru>
+- Doyle Rowland <doyle.rowland@reliaqual.com>
 - Eugene Lorman <eugene.lorman@gmail.com>
 - Jochen Sprickerhof <git@jochen.sprickerhof.de>
 - John Vandenberg <jayvdb@gmail.com>
