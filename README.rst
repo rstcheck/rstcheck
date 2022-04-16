@@ -309,6 +309,9 @@ History
 (next version)
 --------------
 
+4.1.0 (2022-04-16)
+------------------
+
 - Fix shebangs and scripts to use ``python3`` instead of ``python`` (#78)
 - Improve the gcc checker functions by removing restrictions and
   using environment variable flags (#88)
