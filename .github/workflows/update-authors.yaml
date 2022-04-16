@@ -38,7 +38,13 @@ jobs:
               ["git", "log", "--format=%aN <%aE>"], capture_output=True, check=True
           ).stdout.decode()
 
-          ignore_list = ("Steven Myint", "dependabot", "pre-commit-ci", "github-action")
+          ignore_list = (
+              "Steven Myint",
+              "dependabot",
+              "pre-commit-ci",
+              "github-action",
+              "GitHub Actions",
+          )
           authors = [
               author
               for author in set(git_authors.strip().split("\n"))
