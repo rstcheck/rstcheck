@@ -82,7 +82,7 @@ RSTCHECK_COMMENT_RE = re.compile(r"\.\. rstcheck:")
 
 # This is for the cases where code in a readme uses includes in that directory.
 INCLUDE_FLAGS = ["-I.", "-I.."]
-CONFIG_FILES = [".rstcheck.cfg", "setup.cfg"]
+CONFIG_FILES = [".rstcheck.cfg", "setup.cfg", "pyproject.toml"]
 
 
 class IgnoreDict(typing_extensions.TypedDict, total=False):
@@ -367,7 +367,10 @@ def check_doctest(code: str) -> YieldedErrorTuple:
 
 def get_and_split(options: typing.Dict[str, str], key: str, default: str = "") -> typing.List[str]:
     """Return list of split and stripped strings."""
-    return split_comma_separated(options.get(key, default))
+    if not isinstance(options.get(key, default), list):
+        return split_comma_separated(options.get(key, default))
+    else:
+        return options.get(key, default)
 
 
 def split_comma_separated(text: str) -> typing.List[str]:
@@ -566,15 +569,29 @@ def _get_options(directory_or_file: str, debug: bool = False) -> typing.Dict[str
     config_path = find_config(directory_or_file, debug=debug)
     if not config_path:
         return {}
-
-    parser = configparser.ConfigParser()
-    parser.read(config_path)
-    try:
-        options = dict(parser.items("rstcheck"))
-    except configparser.NoSectionError:
-        return {}
     else:
+        config_file = os.path.basename(config_path)
+
+    if config_file == "pyproject.toml":
+        import tomli
+
+        with open(config_path, "rb") as f:
+            config = tomli.load(f)
+        options = config.get("tool", {}).get("rstcheck", None)
+
+        options["ignore_messages"] = "\n".join(options.get("ignore_messages",
+                                                           ""))
+
         return options
+    else:
+        parser = configparser.ConfigParser()
+        parser.read(config_path)
+        try:
+            options = dict(parser.items("rstcheck"))
+        except configparser.NoSectionError:
+            return {}
+        else:
+            return options
 
 
 def ignore_directives_and_roles(directives: typing.List[str], roles: typing.List[str]) -> None:
