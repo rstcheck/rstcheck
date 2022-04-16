@@ -313,7 +313,7 @@ History
 - Improve the gcc checker functions by removing restrictions and
   using environment variable flags (#88)
 - Fix pool size on windows by setting max to 61 (#86)
-- Update test.bash script with new file location
+- Update test.bash script and makefile with new file location
 - Run test.bash script in ``tox`` envs
 
 4.0.0 (2022-04-15)
