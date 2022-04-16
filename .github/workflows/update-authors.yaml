@@ -78,6 +78,8 @@ jobs:
         with:
           add: AUTHORS.rst
           message: Update AUTHORS.rst file with new author(s)
+          author_name: GitHub Actions
+          author_email: action@github.com
           committer_name: GitHub Actions
           committer_email: actions@github.com
           push: true
