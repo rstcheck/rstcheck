@@ -38,7 +38,7 @@ jobs:
               ["git", "log", "--format=%aN <%aE>"], capture_output=True, check=True
           ).stdout.decode()
 
-          ignore_list = (
+          skip_list = (
               "Steven Myint",
               "dependabot",
               "pre-commit-ci",
@@ -48,7 +48,7 @@ jobs:
           authors = [
               author
               for author in set(git_authors.strip().split("\n"))
-              if not author.startswith(ignore_list)
+              if not author.startswith(skip_list)
           ]
           authors.sort()
 
