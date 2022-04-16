@@ -30,6 +30,7 @@ types-docutils = ">=0.18,<0.19"
 typing-extensions = ">=4.1,<5"
 sphinx = {version = ">=4,<5", optional = true}
 pytest = { version = ">=6", optional = true }
+pytest-xdist = { version = ">=2.5", extras = ["psutil"], optional = true }
 # TODO:#i# wait for new release
 # pytest-sugar = { version = ">=0.9.5", optional = true }
 pytest-sugar = { git = "https://github.com/Teemu/pytest-sugar.git", rev = "ee02ada200026f4bfabf2252c6c59b08f5564255", optional = true }
@@ -47,6 +48,7 @@ pytest = ">=6"
 sphinx = ["sphinx"]
 testing = [
   "pytest",
+  "pytest-xdist",
   "pytest-sugar",
   "pytest-randomly",
 ]
@@ -121,3 +123,7 @@ disable = [
   # deactivate because of bugs
   "W1203",  # Use % format in logger funcs | https://github.com/PyCQA/pylint/issues/2354
 ]
+
+# -- PYTEST CONFIG --------------------------------------------------------------------
+[tool.pytest.ini_options]
+addopts = "-ra --showlocals"
