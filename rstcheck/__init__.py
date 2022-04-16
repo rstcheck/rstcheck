@@ -579,8 +579,7 @@ def _get_options(directory_or_file: str, debug: bool = False) -> typing.Dict[str
             config = tomli.load(f)
         options = config.get("tool", {}).get("rstcheck", None)
 
-        options["ignore_messages"] = "\n".join(options.get("ignore_messages",
-                                                           ""))
+        options["ignore_messages"] = "\n".join(options.get("ignore_messages", ""))
 
         return options
     else:
