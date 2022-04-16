@@ -16,7 +16,6 @@ keywords = ["restructuredtext", "rst", "linter", "static-analysis"]
 packages = [
   { include = "rstcheck" },
   { include = "tests", format = "sdist" },
-  { include = "test.bash", format = "sdist" },
   { include = "AUTHORS.rst", format = "sdist" },
 ]
 
