@@ -49,7 +49,7 @@ sphinx = ["sphinx"]
 testing = [
   "pytest",
   "pytest-xdist",
-  "pytest-sugar",
+  # "pytest-sugar",
   "pytest-randomly",
 ]
 
