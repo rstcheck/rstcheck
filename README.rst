@@ -19,7 +19,9 @@ Checks syntax of reStructuredText and code blocks nested within it.
 Installation
 ============
 
-From pip::
+From pip
+
+.. code:: shell
 
     $ pip install rstcheck
 
@@ -52,7 +54,7 @@ With bad Python syntax:
 
         print(
 
-::
+.. code:: text
 
     $ rstcheck bad_python.rst
     bad_python.rst:7: (ERROR/3) (python) unexpected EOF while parsing
@@ -72,7 +74,7 @@ With bad C++ syntax:
             return x;
         }
 
-::
+.. code:: text
 
     $ rstcheck bad_cpp.rst
     bad_cpp.rst:9: (ERROR/3) (cpp) error: 'x' was not declared in this scope
@@ -85,7 +87,7 @@ With bad syntax in the reStructuredText document itself:
     Test
     ===
 
-::
+.. code:: text
 
     $ rstcheck bad_rst.rst
     bad_rst.rst:1: (SEVERE/4) Title overline & underline mismatch.
@@ -94,7 +96,7 @@ With bad syntax in the reStructuredText document itself:
 Options
 =======
 
-::
+.. code:: text
 
     usage: rstcheck [-h] [--config CONFIG] [-r] [--report level]
                     [--ignore-language language] [--ignore-messages messages]
@@ -133,7 +135,7 @@ Ignore specific languages
 You can ignore checking of nested code blocks by language. Either use the
 command-line option ``--ignore`` or put a comment in the document:
 
-.. code-block:: rst
+.. code:: rst
 
     .. rstcheck: ignore-language=cpp,python,rst
 
@@ -144,7 +146,9 @@ Ignore specific errors
 Since docutils doesn't categorize their error messages beyond the high-level
 categories of: info, warning, error, and severe; we need filter them out at a
 textual level. This is done by passing a Python regex. As example you can pass
-a regex like this to ignore several errors::
+a regex like this to ignore several errors
+
+.. code:: text
 
     (Title underline too short.*|Duplicate implicit target.*')
 
@@ -157,7 +161,9 @@ local configuration file of the project (just replace ``-`` for ``_``).
 ``rstcheck`` looks for a file ``.rstcheck.cfg`` or ``setup.cfg`` in the
 directory or ancestor directories of the file it is checking.
 
-For example, consider a project with the following directory structure::
+For example, consider a project with the following directory structure
+
+.. code:: text
 
     foo
     ├── docs
@@ -167,7 +173,7 @@ For example, consider a project with the following directory structure::
 
 ``.rstcheck.cfg`` contains:
 
-.. code-block:: cfg
+.. code:: ini
 
     [rstcheck]
     ignore_directives=one,two,three
@@ -177,7 +183,7 @@ For example, consider a project with the following directory structure::
 
 ``bar.rst`` contains:
 
-.. code-block:: rst
+.. code:: rst
 
     Bar
     ===
@@ -189,7 +195,9 @@ For example, consider a project with the following directory structure::
 
        Hello
 
-``rstcheck`` will make use of the ``.rstcheck.cfg``::
+``rstcheck`` will make use of the ``.rstcheck.cfg``
+
+.. code:: shell
 
     $ rstcheck foo/docs/bar.rst
 
@@ -198,13 +206,17 @@ For a Python project, you should put the configuration settings for
 ``rstcheck`` inside the general ``setup.cfg`` `distutils configuration file`_,
 in the project root.
 
-You can override the location of the config file with the ``--config`` argument::
+You can override the location of the config file with the ``--config`` argument
+
+.. code:: shell
 
     $ rstcheck --config $HOME/.rstcheck.ini foo/docs/bar.rst
 
 will use the file ``.rstcheck.ini`` in your home directory. If the argument to
 ``--config`` is a directory, ``rstcheck`` will search that directory and any
-any of its ancestors for a file ``.rstcheck.cfg`` or ``setup.cfg``::
+any of its ancestors for a file ``.rstcheck.cfg`` or ``setup.cfg``
+
+.. code:: shell
 
    $ rstcheck --config foo /tmp/bar.rst
 
@@ -219,7 +231,9 @@ config file that is being used, if any.
 Sphinx
 ======
 
-To enable Sphinx::
+To enable Sphinx
+
+.. code:: shell
 
     $ pip install rstcheck[sphinx]
 
@@ -234,7 +248,9 @@ in Sphinx version 4.0.
 
 You can also add Sphinx by yourself but the installed Sphinx version must be at least 1.5.
 
-To check that Sphinx support is enabled::
+To check that Sphinx support is enabled
+
+.. code:: shell
 
     $ rstcheck -h | grep 'Sphinx is enabled'
 
@@ -278,7 +294,7 @@ Use as a pre-commit hook
 
 Add this to your ``.pre-commit-config.yaml``
 
-.. code-block:: yaml
+.. code:: yaml
 
     -   repo: https://github.com/myint/rstcheck
         rev: ''  # Use the sha / tag you want to point at
@@ -302,7 +318,7 @@ You do not need to have `poetry`_ installed globally, but it is recommended to.
 
 For development venv creation run
 
-.. code-block:: shell
+.. code:: shell
 
     $ poetry install
 
@@ -315,7 +331,7 @@ For development venv creation run
 With global `poetry`_ you do not need to activate the venv. `poetry`_ will run
 commands inside the venv if you call them like this
 
-.. code-block:: shell
+.. code:: shell
 
     $ poetry run COMMAND
 
@@ -334,7 +350,7 @@ just be a matter of adding files to ``examples/good`` or ``examples/bad``.
 
 To run all the tests you have three options
 
-.. code-block:: shell
+.. code:: shell
 
     # With global `poetry` or with active development venv:
     $ poetry run tox
