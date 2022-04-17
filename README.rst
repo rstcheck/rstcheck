@@ -259,7 +259,6 @@ Just install ``rstcheck`` and make sure is on your path.
 .. _Syntastic: https://github.com/scrooloose/syntastic
 .. _ALE: https://github.com/w0rp/ale
 
-
 Use as a module
 ===============
 
@@ -285,6 +284,14 @@ Add this to your ``.pre-commit-config.yaml``
         rev: ''  # Use the sha / tag you want to point at
         hooks:
         -   id: rstcheck
+
+
+Use with Mega-Linter:
+=====================
+
+Just install `Mega-Linter <https://nvuillam.github.io/mega-linter/>`__ in your repository,
+`rstcheck <https://nvuillam.github.io/mega-linter/descriptors/rst_rstcheck/>`__
+is part of the 70 linters activated out of the box.
 
 
 Development
