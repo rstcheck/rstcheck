@@ -376,6 +376,7 @@ History
 - Add examples/ to sdist
 - Rewrite old test suite in pytest and AAA style
 - Add ``Development`` section to README and update ``Testing`` section
+- Add``Mega-Linter`` section to README
 
 
 4.1.0 (2022-04-16)
