@@ -372,6 +372,10 @@ History
 (next version)
 --------------
 
+
+5.0.0 (2022-04-17)
+------------------
+
 - Rewrite test.bash script in pytest test cases adn run them on linux in CI
 - Add examples/ to sdist
 - Rewrite old test suite in pytest and AAA style
