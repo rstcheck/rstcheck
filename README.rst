@@ -376,11 +376,18 @@ History
 5.0.0 (2022-04-17)
 ------------------
 
-- Rewrite test.bash script in pytest test cases adn run them on linux in CI
 - Add examples/ to sdist
-- Rewrite old test suite in pytest and AAA style
 - Add ``Development`` section to README and update ``Testing`` section
-- Add``Mega-Linter`` section to README
+- Add ``Mega-Linter`` section to README
+- Add ``BREAKING CHANGES`` sections to changelog
+
+.. _beaking_changes_v5:
+
+BREAKING CHANGES
+~~~~~~~~~~~~~~~~
+
+- Rewrite test.bash script in pytest test cases adn run them on linux in CI
+- Rewrite old test suite in pytest and AAA style
 
 
 4.1.0 (2022-04-16)
@@ -396,13 +403,20 @@ History
 4.0.0 (2022-04-15)
 ------------------
 
-- Drop support for python versions prior 3.7
 - Add inline type annotations
 - Add ``sphinx`` as extra
 - Update build process and set up ``poetry``
 - Add ``pre-commit`` and ``tox`` for automated testing, linting and formatting
 - Move from travis to github actions
 - Activate dependabot
+
+
+.. _beaking_changes_v4:
+
+BREAKING CHANGES
+~~~~~~~~~~~~~~~~
+
+- Drop support for python versions prior 3.7
 
 
 3.5.0 (2022-04-14)
