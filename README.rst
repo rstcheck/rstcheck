@@ -281,26 +281,59 @@ Add this to your ``.pre-commit-config.yaml``
         hooks:
         -   id: rstcheck
 
-Testing
-=======
 
-To run all the tests create a venv, install tox and call::
+Development
+===========
+
+This project relies on `poetry`_ as its management tool for dependencies, building and venvs.
+You do not need to have `poetry`_ installed globally, but it is recommended to.
+
+For development venv creation run
+
+.. code-block:: shell
+
+    $ poetry install
+
+    # or without global `poetry`
 
     $ python3 -m venv .venv
     $ source .venv/bin/activate
-    $ pip install tox
-    $ tox
+    $ pip install poetry
 
-Unit tests are in ``test_rstcheck.py``.
+With global `poetry`_ you do not need to activate the venv. `poetry`_ will run
+commands inside the venv if you call them like this
 
-You can implify this if you have ``poetry`` available::
+.. code-block:: shell
 
-    $ poetry install
-    $ poetry run tox
+    $ poetry run COMMAND
+
+.. _poetry: https://python-poetry.org/
+
+Testing
+-------
+
+Unit tests are in ``tests/test_rstcheck.py``.
+System tests are in ``tests/test_as_cli_tool.py``.
 
 System tests are composed of example good/bad input. The test inputs are
 contained in the ``examples`` directory. For basic tests, adding a test should
 just be a matter of adding files to ``examples/good`` or ``examples/bad``.
+
+To run all the tests you have three options
+
+.. code-block:: shell
+
+    # With global `poetry` or with active development venv:
+    $ poetry run tox
+
+    # With active development venv:
+    $ tox
+
+    # Without `poetry` and development venv:
+    $ python3 -m venv .venv
+    $ source .venv/bin/activate
+    $ pip install tox
+    $ tox
 
 
 History
@@ -312,6 +345,7 @@ History
 - Rewrite test.bash script in pytest test cases adn run them on linux in CI
 - Add examples/ to sdist
 - Rewrite old test suite in pytest and AAA style
+- Add ``Development`` section to README and update ``Testing`` section
 
 4.1.0 (2022-04-16)
 ------------------
