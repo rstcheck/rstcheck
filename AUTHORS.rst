@@ -22,6 +22,8 @@ Additional contributions by (sorted by name)
 - Maël Pedretti <73VW@users.noreply.github.com>
 - Michael Fladischer <FladischerMichael@fladi.at>
 - Michael Goerz <goerz@stanford.edu>
+- Nicolas Vuillamy <nicolas.vuillamy@gmail.com>
+- NicolasVuillamy <nicolas.vuillamy@gmail.com>
 - Sameer Singh <sam7thegreat@gmail.com>
 - Santos Gallegos <santos_g@outlook.com>
 - Svintsov Dmitry <root@uralbash.ru>
