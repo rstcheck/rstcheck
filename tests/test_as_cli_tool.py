@@ -1,5 +1,4 @@
 """Test suite for rstcheck as CLI tool."""
-
 import pathlib
 import subprocess  # noqa: S404
 import sys

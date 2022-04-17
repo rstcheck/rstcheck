@@ -19,7 +19,9 @@ Checks syntax of reStructuredText and code blocks nested within it.
 Installation
 ============
 
-From pip::
+From pip
+
+.. code:: shell
 
     $ pip install rstcheck
 
@@ -55,7 +57,7 @@ With bad Python syntax:
 
         print(
 
-::
+.. code:: text
 
     $ rstcheck bad_python.rst
     bad_python.rst:7: (ERROR/3) (python) unexpected EOF while parsing
@@ -75,7 +77,7 @@ With bad C++ syntax:
             return x;
         }
 
-::
+.. code:: text
 
     $ rstcheck bad_cpp.rst
     bad_cpp.rst:9: (ERROR/3) (cpp) error: 'x' was not declared in this scope
@@ -88,7 +90,7 @@ With bad syntax in the reStructuredText document itself:
     Test
     ===
 
-::
+.. code:: text
 
     $ rstcheck bad_rst.rst
     bad_rst.rst:1: (SEVERE/4) Title overline & underline mismatch.
@@ -97,7 +99,7 @@ With bad syntax in the reStructuredText document itself:
 Options
 =======
 
-::
+.. code:: text
 
     usage: rstcheck [-h] [--config CONFIG] [-r] [--report level]
                     [--ignore-language language] [--ignore-messages messages]
@@ -136,9 +138,10 @@ Ignore specific languages
 You can ignore checking of nested code blocks by language. Either use the
 command-line option ``--ignore`` or put a comment in the document:
 
-.. code-block:: rst
+.. code:: rst
 
     .. rstcheck: ignore-language=cpp,python,rst
+
 
 Ignore specific errors
 ======================
@@ -146,9 +149,12 @@ Ignore specific errors
 Since docutils doesn't categorize their error messages beyond the high-level
 categories of: info, warning, error, and severe; we need filter them out at a
 textual level. This is done by passing a Python regex. As example you can pass
-a regex like this to ignore several errors::
+a regex like this to ignore several errors
+
+.. code:: text
 
     (Title underline too short.*|Duplicate implicit target.*')
+
 
 Configuration file
 ==================
@@ -159,7 +165,9 @@ local configuration file of the project (just replace ``-`` for ``_``).
 ``pyproject.toml`` in the directory or ancestor directories of the file it is
 checking.
 
-For example, consider a project with the following directory structure::
+For example, consider a project with the following directory structure
+
+.. code:: text
 
     foo
     ├── docs
@@ -169,7 +177,7 @@ For example, consider a project with the following directory structure::
 
 ``.rstcheck.cfg`` contains:
 
-.. code-block:: cfg
+.. code:: ini
 
     [rstcheck]
     ignore_directives=one,two,three
@@ -179,7 +187,7 @@ For example, consider a project with the following directory structure::
 
 ``bar.rst`` contains:
 
-.. code-block:: rst
+.. code:: rst
 
     Bar
     ===
@@ -191,7 +199,9 @@ For example, consider a project with the following directory structure::
 
        Hello
 
-``rstcheck`` will make use of the ``.rstcheck.cfg``::
+``rstcheck`` will make use of the ``.rstcheck.cfg``
+
+.. code:: shell
 
     $ rstcheck foo/docs/bar.rst
 
@@ -209,13 +219,17 @@ escape the backslash in ``pyproject.toml`` like this
 ``"(Document or section may not begin with a transition\\.$)"``.  See the
 ``pyproject.toml`` file in ``examples/with_configuration``.
 
-You can override the location of the config file with the ``--config`` argument::
+You can override the location of the config file with the ``--config`` argument
+
+.. code:: shell
 
     $ rstcheck --config $HOME/.rstcheck.ini foo/docs/bar.rst
 
 will use the file ``.rstcheck.ini`` in your home directory. If the argument to
 ``--config`` is a directory, ``rstcheck`` will search that directory and any
-any of its ancestors for a file ``.rstcheck.cfg`` or ``setup.cfg``::
+any of its ancestors for a file ``.rstcheck.cfg`` or ``setup.cfg``
+
+.. code:: shell
 
    $ rstcheck --config foo /tmp/bar.rst
 
@@ -230,7 +244,9 @@ config file that is being used, if any.
 Sphinx
 ======
 
-To enable Sphinx::
+To enable Sphinx
+
+.. code:: shell
 
     $ pip install rstcheck[sphinx]
 
@@ -245,13 +261,16 @@ in Sphinx version 4.0.
 
 You can also add Sphinx by yourself but the installed Sphinx version must be at least 1.5.
 
-To check that Sphinx support is enabled::
+To check that Sphinx support is enabled
+
+.. code:: shell
 
     $ rstcheck -h | grep 'Sphinx is enabled'
 
 
 Usage in Vim
 ============
+
 
 Using with Syntastic_:
 ----------------------
@@ -260,6 +279,7 @@ Using with Syntastic_:
 
     let g:syntastic_rst_checkers = ['rstcheck']
 
+
 Using with ALE_:
 ----------------
 
@@ -267,7 +287,6 @@ Just install ``rstcheck`` and make sure is on your path.
 
 .. _Syntastic: https://github.com/scrooloose/syntastic
 .. _ALE: https://github.com/w0rp/ale
-
 
 Use as a module
 ===============
@@ -282,48 +301,107 @@ is the line number (not the line index). The second value is the error message.
 Note that this does not load any configuration as that would mutate the
 ``docutils`` registries.
 
+
 Use as a pre-commit hook
 ========================
 
 Add this to your ``.pre-commit-config.yaml``
 
-.. code-block:: yaml
+.. code:: yaml
 
     -   repo: https://github.com/myint/rstcheck
         rev: ''  # Use the sha / tag you want to point at
         hooks:
         -   id: rstcheck
 
-Testing
-=======
 
-To run all the tests create a venv, install tox and call::
+Use with Mega-Linter:
+=====================
+
+Just install `Mega-Linter <https://nvuillam.github.io/mega-linter/>`__ in your repository,
+`rstcheck <https://nvuillam.github.io/mega-linter/descriptors/rst_rstcheck/>`__
+is part of the 70 linters activated out of the box.
+
+
+Development
+===========
+
+This project relies on `poetry`_ as its management tool for dependencies, building and venvs.
+You do not need to have `poetry`_ installed globally, but it is recommended to.
+
+For development venv creation run
+
+.. code:: shell
+
+    $ poetry install
+
+    # or without global `poetry`
 
     $ python3 -m venv .venv
     $ source .venv/bin/activate
-    $ pip install tox
-    $ tox
+    $ pip install poetry
 
-Unit tests are in ``test_rstcheck.py``.
+With global `poetry`_ you do not need to activate the venv. `poetry`_ will run
+commands inside the venv if you call them like this
 
-You can implify this if you have ``poetry`` available::
+.. code:: shell
 
-    $ poetry install
-    $ poetry run tox
+    $ poetry run COMMAND
+
+.. _poetry: https://python-poetry.org/
+
+
+Testing
+-------
+
+Unit tests are in ``tests/test_rstcheck.py``.
+System tests are in ``tests/test_as_cli_tool.py``.
 
 System tests are composed of example good/bad input. The test inputs are
 contained in the ``examples`` directory. For basic tests, adding a test should
 just be a matter of adding files to ``examples/good`` or ``examples/bad``.
 
+To run all the tests you have three options
+
+.. code:: shell
+
+    # With global `poetry` or with active development venv:
+    $ poetry run tox
+
+    # With active development venv:
+    $ tox
+
+    # Without `poetry` and development venv:
+    $ python3 -m venv .venv
+    $ source .venv/bin/activate
+    $ pip install tox
+    $ tox
+
 
 History
 =======
 
+
 (next version)
 --------------
 
-- Rewrite test.bash script in pytest test cases adn run them on linux in CI
+
+5.0.0 (2022-04-17)
+------------------
+
 - Add examples/ to sdist
+- Add ``Development`` section to README and update ``Testing`` section
+- Add ``Mega-Linter`` section to README
+- Add ``BREAKING CHANGES`` sections to changelog
+
+.. _beaking_changes_v5:
+
+BREAKING CHANGES
+~~~~~~~~~~~~~~~~
+
+- Rewrite test.bash script in pytest test cases adn run them on linux in CI
+- Rewrite old test suite in pytest and AAA style
+
 
 4.1.0 (2022-04-16)
 ------------------
@@ -334,10 +412,10 @@ History
 - Fix pool size on windows by setting max to 61 (#86)
 - Update test.bash script and makefile with new file location
 
+
 4.0.0 (2022-04-15)
 ------------------
 
-- Drop support for python versions prior 3.7
 - Add inline type annotations
 - Add ``sphinx`` as extra
 - Update build process and set up ``poetry``
@@ -345,10 +423,20 @@ History
 - Move from travis to github actions
 - Activate dependabot
 
+
+.. _beaking_changes_v4:
+
+BREAKING CHANGES
+~~~~~~~~~~~~~~~~
+
+- Drop support for python versions prior 3.7
+
+
 3.5.0 (2022-04-14)
 ------------------
 
 - Deprecate python versions prior 3.7
+
 
 3.4.0 (2022-04-12)
 ------------------
@@ -356,10 +444,12 @@ History
 - Add ``--config`` option to change the location of the config file.
 - Add ``pre-commit`` hooks config.
 
+
 3.3.1 (2018-10-09)
 ------------------
 
 - Make compatible with Sphinx >= 1.8.
+
 
 3.3 (2018-03-17)
 ----------------
@@ -367,6 +457,7 @@ History
 - Parse more options from configuration file (thanks to Santos Gallegos).
 - Allow ignoring specific (info/warning/error) messages via
   ``--ignore-messages`` (thanks to Santos Gallegos).
+
 
 3.2 (2018-02-17)
 ----------------
@@ -376,10 +467,12 @@ History
 - Add ``--recursive`` option to recursively drill down directories to check for
   all ``*.rst`` files.
 
+
 3.1 (2017-03-08)
 ----------------
 
 - Add support for checking XML code blocks (thanks to Sameer Singh).
+
 
 3.0.1 (2017-03-01)
 ------------------
@@ -388,21 +481,25 @@ History
   interpret the BOM as a visible character, which would lead to false positives
   about underlines being too short.
 
+
 3.0 (2016-12-19)
 ----------------
 
 - Optionally support Sphinx 1.5. Sphinx support will be enabled if Sphinx is
   installed.
 
+
 2.0 (2015-07-27)
 ----------------
 
 - Support loading settings from configuration files.
 
+
 1.0 (2015-03-14)
 ----------------
 
 - Add Sphinx support.
+
 
 0.1 (2013-12-02)
 ----------------

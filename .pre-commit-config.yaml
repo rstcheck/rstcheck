@@ -215,6 +215,7 @@ repos:
       - id: rstcheck
         additional_dependencies: [sphinx]
         exclude: examples
+        args: ["--config", ".rstcheck.project.cfg"]
 
   # ----------------------------------------------
   # TOML / YAML

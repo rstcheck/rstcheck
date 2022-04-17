@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # pylint: disable=too-many-lines
 
-# Copyright (C) 2013-2017 Steven Myint
+# Copyright (C) 2013-2022 Steven Myint
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -23,8 +23,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """Checks code blocks in reStructuredText."""
-
-
 import argparse
 import configparser
 import contextlib
@@ -72,7 +70,7 @@ if SPHINX_INSTALLED:
     import sphinx.roles
 
 
-__version__ = "4.1.0"
+__version__ = "5.0.0"
 
 
 if SPHINX_INSTALLED:
@@ -696,7 +694,7 @@ def parse_gcc_style_error_message(
     colons = 2 if has_column else 1
     prefix = filename + ":"
     if not message.startswith(prefix):
-        raise ValueError()
+        raise ValueError("Message cannot be parsed.")
     message = message[len(prefix) :]
     split_message = message.split(":", colons)
     line_number = int(split_message[0])
