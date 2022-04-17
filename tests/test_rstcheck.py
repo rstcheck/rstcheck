@@ -4,7 +4,8 @@
 
 
 import typing
-import unittest
+
+import pytest
 
 import rstcheck
 
@@ -13,46 +14,59 @@ import rstcheck
 rstcheck.ignore_sphinx()
 
 
-class Tests(unittest.TestCase):  # pylint: disable=too-many-public-methods
-    """Test suite."""
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_parse_gcc_style_error_message() -> None:
+    """Test `parse_gcc_style_error_message`."""
+    error_tuple = (32, "error message")
+    pre_parse_err_msg = "filename:32:7: error message"
 
-    @staticmethod
-    def assert_lines_equal(
-        line_numbers: typing.List[int], results: rstcheck.YieldedErrorTuple
-    ) -> None:  # noqa: AAA01
-        """Test if the line numbers match the results."""
-        assert set(line_numbers) == set(dict(results))
+    result = rstcheck.parse_gcc_style_error_message(pre_parse_err_msg, filename="filename")
 
-    @staticmethod  # noqa: AAA01
-    def test_parse_gcc_style_error_message() -> None:
-        """Test `parse_gcc_style_error_message`."""
-        assert (32, "error message") == rstcheck.parse_gcc_style_error_message(
-            "filename:32:7: error message", filename="filename"
+    assert error_tuple == result
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_parse_gcc_style_error_message_with_no_column() -> None:
+    """Test `parse_gcc_style_error_message` with no column."""
+    error_tuple = (32, "error message")
+    pre_parse_err_msg = "filename:32: error message"
+
+    result = rstcheck.parse_gcc_style_error_message(
+        pre_parse_err_msg, filename="filename", has_column=False
+    )
+
+    assert error_tuple == result
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_parse_gcc_style_error_message_with_parsing_error_missing_file() -> None:
+    """Test `parse_gcc_style_error_message` raising exceptions."""
+    pre_parse_err_msg = ":32:3 error message"
+
+    with pytest.raises(ValueError, match="Message cannot be parsed."):
+        rstcheck.parse_gcc_style_error_message(pre_parse_err_msg, filename="filename")
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_parse_gcc_style_error_message_with_parsing_error_missing_column() -> None:
+    """Test `parse_gcc_style_error_message` raising exceptions."""
+    pre_parse_err_msg = "filename:32: error message"
+
+    with pytest.raises(IndexError):
+        rstcheck.parse_gcc_style_error_message(
+            pre_parse_err_msg, filename="filename", has_column=True
         )
 
-    @staticmethod  # noqa: AAA01
-    def test_parse_gcc_style_error_message_with_no_column() -> None:
-        """Test `parse_gcc_style_error_message` with no column."""
-        assert (32, "error message") == rstcheck.parse_gcc_style_error_message(
-            "filename:32: error message", filename="filename", has_column=False
-        )
 
-    def test_parse_gcc_style_error_message_with_parsing_error(self) -> None:  # noqa: AAA01
-        """Test `parse_gcc_style_error_message` raising exceptions."""
-        with self.assertRaises(ValueError):  # noqa: PT009
-            rstcheck.parse_gcc_style_error_message(":32:3 error message", filename="filename")
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check() -> None:
+    """Test `check`."""
+    line_numbers = {
+        6,
+    }
 
-        with self.assertRaises(IndexError):  # noqa: PT009
-            rstcheck.parse_gcc_style_error_message(
-                "filename:32: error message", filename="filename", has_column=True
-            )
-
-    def test_check(self) -> None:  # noqa: AAA01
-        """Test `check`."""
-        self.assert_lines_equal(
-            [6],
-            rstcheck.check(
-                """\
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -60,15 +74,20 @@ Test
 
     print(
 """
-            ),
-        )
+    )
 
-    def test_check_code_block(self) -> None:  # noqa: AAA01
-        """Test `check` with python code block."""
-        self.assert_lines_equal(
-            [6],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_code_block() -> None:
+    """Test `check` with python code block."""
+    line_numbers = {
+        6,
+    }
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -76,15 +95,20 @@ Test
 
     print(
 """
-            ),
-        )
+    )
 
-    def test_check_json(self) -> None:  # noqa: AAA01
-        """Test `check` with json."""
-        self.assert_lines_equal(
-            [7],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_json() -> None:
+    """Test `check` with json."""
+    line_numbers = {
+        7,
+    }
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -94,15 +118,18 @@ Test
         'abc': 123
     }
 """
-            ),
-        )
+    )
 
-    def test_check_json_with_ignore(self) -> None:  # noqa: AAA01
-        """Test `check` with json and ignore."""
-        self.assert_lines_equal(
-            [],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_json_with_ignore() -> None:
+    """Test `check` with json and ignore."""
+    line_numbers: typing.Set[int] = set()
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -114,15 +141,20 @@ Test
 
 .. rstcheck: ignore-language=json,python,rst
 """
-            ),
-        )
+    )
 
-    def test_check_json_with_unmatched_ignores_only(self) -> None:  # noqa: AAA01
-        """Test `check` with json and unmatched ignore."""
-        self.assert_lines_equal(
-            [7],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_json_with_unmatched_ignores_only() -> None:
+    """Test `check` with json and unmatched ignore."""
+    line_numbers = {
+        7,
+    }
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -134,15 +166,21 @@ Test
 
 .. rstcheck: ignore-language=cpp,python,rst
 """
-            ),
-        )
+    )
 
-    def test_check_json_with_bad_ignore(self) -> None:  # noqa: AAA01
-        """Test `check` with json and bad ignore."""
-        self.assert_lines_equal(
-            [7, 10],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_json_with_bad_ignore() -> None:
+    """Test `check` with json and bad ignore."""
+    line_numbers = {
+        7,
+        10,
+    }
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -154,15 +192,20 @@ Test
 
 .. rstcheck: ignore-language json,python,rst
 """
-            ),
-        )
+    )
 
-    def test_check_xml(self) -> None:  # noqa: AAA01
-        """Test `check` with xml."""
-        self.assert_lines_equal(
-            [8],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_xml() -> None:
+    """Test `check` with xml."""
+    line_numbers = {
+        8,
+    }
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -173,15 +216,18 @@ Test
        </abc>123<abc>
     </root>
 """
-            ),
-        )
+    )
 
-    def test_check_xml_with_ignore(self) -> None:  # noqa: AAA01
-        """Test `check` with xml and ignore."""
-        self.assert_lines_equal(
-            [],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_xml_with_ignore() -> None:
+    """Test `check` with xml and ignore."""
+    line_numbers: typing.Set[int] = set()
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -194,15 +240,20 @@ Test
 
 .. rstcheck: ignore-language=xml,python,rst
 """
-            ),
-        )
+    )
 
-    def test_check_xml_with_unmatched_ignores_only(self) -> None:  # noqa: AAA01
-        """Test `check` with xml and unmatched ignore."""
-        self.assert_lines_equal(
-            [8],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_xml_with_unmatched_ignores_only() -> None:
+    """Test `check` with xml and unmatched ignore."""
+    line_numbers = {
+        8,
+    }
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -215,15 +266,21 @@ Test
 
 .. rstcheck: ignore-language=cpp,python,rst
 """
-            ),
-        )
+    )
 
-    def test_check_xml_with_bad_ignore(self) -> None:  # noqa: AAA01
-        """Test `check` with xml and bad ignore."""
-        self.assert_lines_equal(
-            [8, 11],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_xml_with_bad_ignore() -> None:
+    """Test `check` with xml and bad ignore."""
+    line_numbers = {
+        8,
+        11,
+    }
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -236,15 +293,20 @@ Test
 
 .. rstcheck: ignore-language xml,python,rst
 """
-            ),
-        )
+    )
 
-    def test_check_with_extra_blank_lines_before(self) -> None:  # noqa: AAA01
-        """Test `check` with python and extra blank lines before."""
-        self.assert_lines_equal(
-            [8],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_with_extra_blank_lines_before() -> None:
+    """Test `check` with python and extra blank lines before."""
+    line_numbers = {
+        8,
+    }
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -254,15 +316,20 @@ Test
 
     print(
 """
-            ),
-        )
+    )
 
-    def test_check_with_extra_blank_lines_after(self) -> None:  # noqa: AAA01
-        """Test `check` with python and extra blank lines after."""
-        self.assert_lines_equal(
-            [6],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_with_extra_blank_lines_after() -> None:
+    """Test `check` with python and extra blank lines after."""
+    line_numbers = {
+        6,
+    }
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -273,15 +340,20 @@ Test
 
 
 """
-            ),
-        )
+    )
 
-    def test_check_with_extra_blank_lines_before_and_after(self) -> None:  # noqa: AAA01
-        """Test `check` with python and extra blank lines before and after."""
-        self.assert_lines_equal(
-            [8],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_with_extra_blank_lines_before_and_after() -> None:
+    """Test `check` with python and extra blank lines before and after."""
+    line_numbers = {
+        8,
+    }
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -294,40 +366,53 @@ Test
 
 
 """
-            ),
-        )
+    )
 
-    def test_check_rst(self) -> None:  # noqa: AAA01
-        """Test `check` with rst."""
-        self.assert_lines_equal(
-            [2],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_rst() -> None:
+    """Test `check` with rst."""
+    line_numbers = {
+        2,
+    }
+
+    result = rstcheck.check(
+        """\
 Test
 ===
 """
-            ),
-        )
+    )
 
-    def test_check_rst_report_level(self) -> None:  # noqa: AAA01
-        """Test `check` with rst and set report level."""
-        self.assert_lines_equal(
-            [],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_rst_report_level() -> None:
+    """Test `check` with rst and set report level."""
+    line_numbers: typing.Set[int] = set()
+
+    result = rstcheck.check(
+        """\
 Test
 ===
 """,
-                report_level=5,
-            ),
-        )
+        report_level=5,
+    )
 
-    def test_check_nested_rst(self) -> None:  # noqa: AAA01
-        """Test `check` with nested rst."""
-        self.assert_lines_equal(
-            [32],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_nested_rst() -> None:
+    """Test `check` with nested rst."""
+    line_numbers = {
+        32,
+    }
+
+    result = rstcheck.check(
+        """\
 Test
 ====
 
@@ -361,16 +446,19 @@ Test
 
                         print(
 """
-            ),
-        )
+    )
 
-    @unittest.skipIf(not rstcheck.SPHINX_INSTALLED, "Requires Sphinx")  # noqa: AAA01
-    def test_ignore_sphinx_directives(self) -> None:
-        """Test `check` with sphinx directives to ignore."""
-        self.assert_lines_equal(
-            [],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.skipif(not rstcheck.SPHINX_INSTALLED, reason="Requires Sphinx")
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_ignore_sphinx_directives() -> None:
+    """Test `check` with sphinx directives to ignore."""
+    line_numbers: typing.Set[int] = set()
+
+    result = rstcheck.check(
+        """\
 .. toctree::
     :maxdepth: 2
 
@@ -407,15 +495,20 @@ Test
    :linenos:
 
 """
-            ),
-        )
+    )
 
-    def test_check_doctest(self) -> None:  # noqa: AAA01
-        """Test `check` with doctest."""
-        self.assert_lines_equal(
-            [5],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_doctest() -> None:
+    """Test `check` with doctest."""
+    line_numbers = {
+        5,
+    }
+
+    result = rstcheck.check(
+        """\
 Testing
 =======
 
@@ -423,18 +516,20 @@ Testing
 >>>> x
 1
 """
-            ),
-        )
+    )
 
-    @staticmethod  # noqa: AAA01
-    def test_check_doctest_do_not_crash_when_indented() -> None:
-        """Test `check` does not crash with intended doctest.
+    assert line_numbers == set(dict(result))
 
-        docutils does not provide line number when indented.
-        """
-        list(
-            rstcheck.check(
-                """\
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_doctest_do_not_crash_when_indented() -> None:
+    """Test `check` does not crash with intended doctest.
+
+    docutils does not provide line number when indented.
+    """
+    list(
+        rstcheck.check(
+            """\
 Testing
 =======
 
@@ -442,15 +537,17 @@ Testing
     >>>> x
     1
 """
-            )
         )
+    )  # act
 
-    def test_check_doctest_with_ignore(self) -> None:  # noqa: AAA01
-        """Test `check` with doctest and ignore."""
-        self.assert_lines_equal(
-            [],
-            rstcheck.check(
-                """\
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_doctest_with_ignore() -> None:
+    """Test `check` with doctest and ignore."""
+    line_numbers: typing.Set[int] = set()
+
+    result = rstcheck.check(
+        """\
 Testing
 =======
 
@@ -460,16 +557,21 @@ Testing
 
 .. rstcheck: ignore-language=doctest
 """
-            ),
-        )
+    )
 
-    @unittest.skipIf(rstcheck.SPHINX_INSTALLED, "Does not work with Sphinx")  # noqa: AAA01
-    def test_check_doctest_in_code(self) -> None:
-        """Test `check` with doctest in code."""
-        self.assert_lines_equal(
-            [7],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.skipif(rstcheck.SPHINX_INSTALLED, reason="Does not work with Sphinx")
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_doctest_in_code() -> None:
+    """Test `check` with doctest in code."""
+    line_numbers = {
+        7,
+    }
+
+    result = rstcheck.check(
+        """\
 Testing
 =======
 
@@ -479,15 +581,20 @@ Testing
     >>>> x
     1
 """
-            ),
-        )
+    )
 
-    def test_check_doctest_in_code_block(self) -> None:  # noqa: AAA01
-        """Test `check` with doctest in code block."""
-        self.assert_lines_equal(
-            [7],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_doctest_in_code_block() -> None:
+    """Test `check` with doctest in code block."""
+    line_numbers = {
+        7,
+    }
+
+    result = rstcheck.check(
+        """\
 Testing
 =======
 
@@ -497,15 +604,20 @@ Testing
     >>>> x
     1
 """
-            ),
-        )
+    )
 
-    def test_check_doctest_in_python_code_block(self) -> None:  # noqa: AAA01
-        """I'm not sure if this is correct, but I've seen people do it."""
-        self.assert_lines_equal(
-            [7],
-            rstcheck.check(
-                """\
+    assert line_numbers == set(dict(result))
+
+
+@pytest.mark.usefixtures("enable_sphinx_if_possible")
+def test_check_doctest_in_python_code_block() -> None:
+    """I'm not sure if this is correct, but I've seen people do it."""
+    line_numbers = {
+        7,
+    }
+
+    result = rstcheck.check(
+        """\
 Testing
 =======
 
@@ -515,15 +627,6 @@ Testing
     >>>> x
     1
 """
-            ),
-        )
+    )
 
-
-def main() -> None:  # noqa: AAA01
-    """Run test suite."""
-    with rstcheck.enable_sphinx_if_possible():
-        unittest.main()
-
-
-if __name__ == "__main__":
-    main()
+    assert line_numbers == set(dict(result))

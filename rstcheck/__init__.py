@@ -674,7 +674,7 @@ def parse_gcc_style_error_message(
     colons = 2 if has_column else 1
     prefix = filename + ":"
     if not message.startswith(prefix):
-        raise ValueError()
+        raise ValueError("Message cannot be parsed.")
     message = message[len(prefix) :]
     split_message = message.split(":", colons)
     line_number = int(split_message[0])
