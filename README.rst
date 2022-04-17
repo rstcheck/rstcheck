@@ -2,9 +2,13 @@
 rstcheck
 ========
 
-.. image:: https://travis-ci.org/myint/rstcheck.svg?branch=master
-    :target: https://travis-ci.org/myint/rstcheck
-    :alt: Build status
+.. image:: https://github.com/myint/rstcheck/workflows/Test%20code/badge.svg?branch=master
+    :target: https://github.com/myint/rstcheck/actions/workflows/test.yaml
+    :alt: Test status
+
+.. image:: https://github.com/myint/rstcheck/workflows/QA/badge.svg?branch=master
+    :target: https://github.com/myint/rstcheck/actions/workflows/qa.yaml
+    :alt: QA status
 
 Checks syntax of reStructuredText and code blocks nested within it.
 
@@ -133,6 +137,7 @@ command-line option ``--ignore`` or put a comment in the document:
 
     .. rstcheck: ignore-language=cpp,python,rst
 
+
 Ignore specific errors
 ======================
 
@@ -142,6 +147,7 @@ textual level. This is done by passing a Python regex. As example you can pass
 a regex like this to ignore several errors::
 
     (Title underline too short.*|Duplicate implicit target.*')
+
 
 Configuration file
 ==================
@@ -215,9 +221,18 @@ Sphinx
 
 To enable Sphinx::
 
+    $ pip install rstcheck[sphinx]
+
+    # or
+
     $ pip install sphinx
 
-The installed Sphinx version must be at least 1.5.
+With version 4.0 ``rstcheck`` added Sphinx as an optional extra where the version's lower
+constraint is >=4.0 because of Sphinx's open upper constraints on jinja2 and markupsafe,
+which result in import errors if not pinned below version 3 and 2 respectively. This happend
+in Sphinx version 4.0.
+
+You can also add Sphinx by yourself but the installed Sphinx version must be at least 1.5.
 
 To check that Sphinx support is enabled::
 
@@ -227,12 +242,14 @@ To check that Sphinx support is enabled::
 Usage in Vim
 ============
 
+
 Using with Syntastic_:
 ----------------------
 
 .. code:: vim
 
     let g:syntastic_rst_checkers = ['rstcheck']
+
 
 Using with ALE_:
 ----------------
@@ -255,6 +272,7 @@ is the line number (not the line index). The second value is the error message.
 Note that this does not load any configuration as that would mutate the
 ``docutils`` registries.
 
+
 Use as a pre-commit hook
 ========================
 
@@ -267,6 +285,7 @@ Add this to your ``.pre-commit-config.yaml``
         hooks:
         -   id: rstcheck
 
+
 Use with Mega-Linter:
 =====================
 
@@ -274,32 +293,115 @@ Just install `Mega-Linter <https://nvuillam.github.io/mega-linter/>`__ in your r
 `rstcheck <https://nvuillam.github.io/mega-linter/descriptors/rst_rstcheck/>`__
 is part of the 70 linters activated out of the box.
 
+
+Development
+===========
+
+This project relies on `poetry`_ as its management tool for dependencies, building and venvs.
+You do not need to have `poetry`_ installed globally, but it is recommended to.
+
+For development venv creation run
+
+.. code-block:: shell
+
+    $ poetry install
+
+    # or without global `poetry`
+
+    $ python3 -m venv .venv
+    $ source .venv/bin/activate
+    $ pip install poetry
+
+With global `poetry`_ you do not need to activate the venv. `poetry`_ will run
+commands inside the venv if you call them like this
+
+.. code-block:: shell
+
+    $ poetry run COMMAND
+
+.. _poetry: https://python-poetry.org/
+
+
 Testing
-=======
+-------
 
-To run all the tests, do::
-
-    $ make test
-
-Unit tests are in ``test_rstcheck.py``.
+Unit tests are in ``tests/test_rstcheck.py``.
+System tests are in ``tests/test_as_cli_tool.py``.
 
 System tests are composed of example good/bad input. The test inputs are
 contained in the ``examples`` directory. For basic tests, adding a test should
 just be a matter of adding files to ``examples/good`` or ``examples/bad``.
 
+To run all the tests you have three options
+
+.. code-block:: shell
+
+    # With global `poetry` or with active development venv:
+    $ poetry run tox
+
+    # With active development venv:
+    $ tox
+
+    # Without `poetry` and development venv:
+    $ python3 -m venv .venv
+    $ source .venv/bin/activate
+    $ pip install tox
+    $ tox
+
 
 History
 =======
 
+
 (next version)
 --------------
 
+- Rewrite test.bash script in pytest test cases adn run them on linux in CI
+- Add examples/ to sdist
+- Rewrite old test suite in pytest and AAA style
+- Add ``Development`` section to README and update ``Testing`` section
+
+
+4.1.0 (2022-04-16)
+------------------
+
+- Fix shebangs and scripts to use ``python3`` instead of ``python`` (#78)
+- Improve the gcc checker functions by removing restrictions and
+  using environment variable flags (#88)
+- Fix pool size on windows by setting max to 61 (#86)
+- Update test.bash script and makefile with new file location
+
+
+4.0.0 (2022-04-15)
+------------------
+
+- Drop support for python versions prior 3.7
+- Add inline type annotations
+- Add ``sphinx`` as extra
+- Update build process and set up ``poetry``
+- Add ``pre-commit`` and ``tox`` for automated testing, linting and formatting
+- Move from travis to github actions
+- Activate dependabot
+
+
+3.5.0 (2022-04-14)
+------------------
+
+- Deprecate python versions prior 3.7
+
+
+3.4.0 (2022-04-12)
+------------------
+
 - Add ``--config`` option to change the location of the config file.
+- Add ``pre-commit`` hooks config.
+
 
 3.3.1 (2018-10-09)
 ------------------
 
 - Make compatible with Sphinx >= 1.8.
+
 
 3.3 (2018-03-17)
 ----------------
@@ -307,6 +409,7 @@ History
 - Parse more options from configuration file (thanks to Santos Gallegos).
 - Allow ignoring specific (info/warning/error) messages via
   ``--ignore-messages`` (thanks to Santos Gallegos).
+
 
 3.2 (2018-02-17)
 ----------------
@@ -316,10 +419,12 @@ History
 - Add ``--recursive`` option to recursively drill down directories to check for
   all ``*.rst`` files.
 
+
 3.1 (2017-03-08)
 ----------------
 
 - Add support for checking XML code blocks (thanks to Sameer Singh).
+
 
 3.0.1 (2017-03-01)
 ------------------
@@ -328,21 +433,25 @@ History
   interpret the BOM as a visible character, which would lead to false positives
   about underlines being too short.
 
+
 3.0 (2016-12-19)
 ----------------
 
 - Optionally support Sphinx 1.5. Sphinx support will be enabled if Sphinx is
   installed.
 
+
 2.0 (2015-07-27)
 ----------------
 
 - Support loading settings from configuration files.
 
+
 1.0 (2015-03-14)
 ----------------
 
 - Add Sphinx support.
+
 
 0.1 (2013-12-02)
 ----------------

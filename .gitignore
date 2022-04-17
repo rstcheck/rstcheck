@@ -11,3 +11,4 @@ build
 *.nav
 *.out
 *.snm
+poetry.lock
