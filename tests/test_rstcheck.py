@@ -1,5 +1,4 @@
 """Test suite for rstcheck."""
-
 import typing
 
 import pytest

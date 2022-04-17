@@ -23,8 +23,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """Checks code blocks in reStructuredText."""
-
-
 import argparse
 import configparser
 import contextlib
