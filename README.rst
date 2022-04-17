@@ -137,6 +137,7 @@ command-line option ``--ignore`` or put a comment in the document:
 
     .. rstcheck: ignore-language=cpp,python,rst
 
+
 Ignore specific errors
 ======================
 
@@ -146,6 +147,7 @@ textual level. This is done by passing a Python regex. As example you can pass
 a regex like this to ignore several errors::
 
     (Title underline too short.*|Duplicate implicit target.*')
+
 
 Configuration file
 ==================
@@ -240,12 +242,14 @@ To check that Sphinx support is enabled::
 Usage in Vim
 ============
 
+
 Using with Syntastic_:
 ----------------------
 
 .. code:: vim
 
     let g:syntastic_rst_checkers = ['rstcheck']
+
 
 Using with ALE_:
 ----------------
@@ -268,6 +272,7 @@ is the line number (not the line index). The second value is the error message.
 
 Note that this does not load any configuration as that would mutate the
 ``docutils`` registries.
+
 
 Use as a pre-commit hook
 ========================
@@ -309,6 +314,7 @@ commands inside the venv if you call them like this
 
 .. _poetry: https://python-poetry.org/
 
+
 Testing
 -------
 
@@ -339,6 +345,7 @@ To run all the tests you have three options
 History
 =======
 
+
 (next version)
 --------------
 
@@ -346,6 +353,7 @@ History
 - Add examples/ to sdist
 - Rewrite old test suite in pytest and AAA style
 - Add ``Development`` section to README and update ``Testing`` section
+
 
 4.1.0 (2022-04-16)
 ------------------
@@ -355,6 +363,7 @@ History
   using environment variable flags (#88)
 - Fix pool size on windows by setting max to 61 (#86)
 - Update test.bash script and makefile with new file location
+
 
 4.0.0 (2022-04-15)
 ------------------
@@ -367,10 +376,12 @@ History
 - Move from travis to github actions
 - Activate dependabot
 
+
 3.5.0 (2022-04-14)
 ------------------
 
 - Deprecate python versions prior 3.7
+
 
 3.4.0 (2022-04-12)
 ------------------
@@ -378,10 +389,12 @@ History
 - Add ``--config`` option to change the location of the config file.
 - Add ``pre-commit`` hooks config.
 
+
 3.3.1 (2018-10-09)
 ------------------
 
 - Make compatible with Sphinx >= 1.8.
+
 
 3.3 (2018-03-17)
 ----------------
@@ -389,6 +402,7 @@ History
 - Parse more options from configuration file (thanks to Santos Gallegos).
 - Allow ignoring specific (info/warning/error) messages via
   ``--ignore-messages`` (thanks to Santos Gallegos).
+
 
 3.2 (2018-02-17)
 ----------------
@@ -398,10 +412,12 @@ History
 - Add ``--recursive`` option to recursively drill down directories to check for
   all ``*.rst`` files.
 
+
 3.1 (2017-03-08)
 ----------------
 
 - Add support for checking XML code blocks (thanks to Sameer Singh).
+
 
 3.0.1 (2017-03-01)
 ------------------
@@ -410,21 +426,25 @@ History
   interpret the BOM as a visible character, which would lead to false positives
   about underlines being too short.
 
+
 3.0 (2016-12-19)
 ----------------
 
 - Optionally support Sphinx 1.5. Sphinx support will be enabled if Sphinx is
   installed.
 
+
 2.0 (2015-07-27)
 ----------------
 
 - Support loading settings from configuration files.
 
+
 1.0 (2015-03-14)
 ----------------
 
 - Add Sphinx support.
+
 
 0.1 (2013-12-02)
 ----------------
