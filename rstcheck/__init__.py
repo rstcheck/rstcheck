@@ -50,6 +50,7 @@ import docutils.nodes
 import docutils.parsers.rst
 import docutils.utils
 import docutils.writers
+import tomli
 import typing_extensions
 
 
@@ -367,10 +368,7 @@ def check_doctest(code: str) -> YieldedErrorTuple:
 
 def get_and_split(options: typing.Dict[str, str], key: str, default: str = "") -> typing.List[str]:
     """Return list of split and stripped strings."""
-    if not isinstance(options.get(key, default), list):
-        return split_comma_separated(options.get(key, default))
-    else:
-        return options.get(key, default)
+    return split_comma_separated(options.get(key, default))
 
 
 def split_comma_separated(text: str) -> typing.List[str]:
@@ -567,21 +565,13 @@ def load_configuration_from_file(directory: str, args: argparse.Namespace) -> ar
 
 def _get_options(directory_or_file: str, debug: bool = False) -> typing.Dict[str, str]:
     config_path = find_config(directory_or_file, debug=debug)
-    if not config_path:
+    if not config_path:  # pylint: disable=no-else-return
         return {}
     else:
         config_file = os.path.basename(config_path)
 
-    if config_file == "pyproject.toml":
-        import tomli
-
-        with open(config_path, "rb") as f:
-            config = tomli.load(f)
-        options = config.get("tool", {}).get("rstcheck", None)
-
-        options["ignore_messages"] = "\n".join(options.get("ignore_messages", ""))
-
-        return options
+    if config_file == "pyproject.toml":  # pylint: disable=no-else-return
+        return _get_pyproject_options(config_path)
     else:
         parser = configparser.ConfigParser()
         parser.read(config_path)
@@ -591,6 +581,22 @@ def _get_options(directory_or_file: str, debug: bool = False) -> typing.Dict[str
             return {}
         else:
             return options
+
+
+def _get_pyproject_options(config_path: str) -> typing.Dict[str, str]:
+    with open(config_path, "rb") as conf_file:
+        config = tomli.load(conf_file)
+        options: typing.Dict[str, str] = config.get("tool", {}).get("rstcheck", {})
+
+    # tomli returns a list of strings and ConfigParser returns a comma
+    # separated string.  This makes the options from pyproject.toml consistent
+    # with the options read from other configuration files.
+    options["ignore_directives"] = ",".join(options.get("ignore_directives", ""))
+    options["ignore_roles"] = ",".join(options.get("ignore_roles", ""))
+    options["ignore_messages"] = ",".join(options.get("ignore_messages", ""))
+    options["ignore_language"] = ",".join(options.get("ignore_language", ""))
+
+    return options
 
 
 def ignore_directives_and_roles(directives: typing.List[str], roles: typing.List[str]) -> None:

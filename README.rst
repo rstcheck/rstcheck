@@ -24,7 +24,7 @@ From pip::
     $ pip install rstcheck
 
 To use pyproject.toml for configuration::
-    
+
     $ pip install rstcheck[toml]
 
 Supported languages in code blocks
@@ -156,7 +156,7 @@ Configuration file
 You can use the same arguments from the command line as options in the
 local configuration file of the project (just replace ``-`` for ``_``).
 ``rstcheck`` looks for a file ``.rstcheck.cfg``, ``setup.cfg``, or
-``pyproject.toml`` in the directory or ancestor directories of the file it is 
+``pyproject.toml`` in the directory or ancestor directories of the file it is
 checking.
 
 For example, consider a project with the following directory structure::
@@ -205,7 +205,7 @@ For a PEP-517/PEP-518 project, you should put the configuration settings for
 root.  These should be placed in a ``[tool.rstcheck]`` section.  Keep in mind
 backslashes need to be escaped, so to ignore the message
 ``"(Document or section may not begin with a transition\.$)"`` you'll need to
-escape the backslash in ``pyproject.toml`` like this 
+escape the backslash in ``pyproject.toml`` like this
 ``"(Document or section may not begin with a transition\\.$)"``.  See the
 ``pyproject.toml`` file in ``examples/with_configuration``.
 

@@ -1,6 +1,6 @@
 [tool.rstcheck]
 ignore_directives = [
-	"foobar", 
+	"foobar",
 	"my-directive"
 ]
 ignore_roles = [
