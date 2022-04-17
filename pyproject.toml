@@ -33,7 +33,7 @@ pytest = { version = ">=6", optional = true }
 pytest-xdist = { version = ">=2.5", extras = ["psutil"], optional = true }
 # TODO:#i# wait for new release
 # pytest-sugar = { version = ">=0.9.5", optional = true }
-pytest-sugar = { git = "https://github.com/Teemu/pytest-sugar.git", rev = "ee02ada200026f4bfabf2252c6c59b08f5564255", optional = true }
+# pytest-sugar = { git = "https://github.com/Teemu/pytest-sugar.git", rev = "ee02ada200026f4bfabf2252c6c59b08f5564255", optional = true }
 pytest-randomly = { version = ">=3", optional = true }
 
 [tool.poetry.dev-dependencies]
