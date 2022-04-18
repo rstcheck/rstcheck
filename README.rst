@@ -372,12 +372,16 @@ History
 (next version)
 --------------
 
+- Fix inability to ignore ``code``, ``code-block`` and ``sourcecode`` directives (#79)
+- Fix ``code-block`` options recognition (#62)
+
 .. _beaking_changes_v6:
 
 BREAKING CHANGES
 ~~~~~~~~~~~~~~~~
 
 - Drop support for sphinx < 2.0
+- Drop default values for directves and roles for sphinx (#65)
 
 
 5.0.0 (2022-04-17)
