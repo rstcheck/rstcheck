@@ -279,6 +279,7 @@ Just install ``rstcheck`` and make sure is on your path.
 .. _Syntastic: https://github.com/scrooloose/syntastic
 .. _ALE: https://github.com/w0rp/ale
 
+
 Use as a module
 ===============
 
