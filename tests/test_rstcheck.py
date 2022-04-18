@@ -87,7 +87,7 @@ def test_check_code_block() -> None:
 Test
 ====
 
-.. code-block:: python
+.. code:: python
 
     print(
 """
@@ -108,7 +108,7 @@ def test_check_json() -> None:
 Test
 ====
 
-.. code-block:: json
+.. code:: json
 
     {
         'abc': 123
@@ -129,7 +129,7 @@ def test_check_json_with_ignore() -> None:
 Test
 ====
 
-.. code-block:: json
+.. code:: json
 
     {
         'abc': 123
@@ -154,7 +154,7 @@ def test_check_json_with_unmatched_ignores_only() -> None:
 Test
 ====
 
-.. code-block:: json
+.. code:: json
 
     {
         'abc': 123
@@ -180,7 +180,7 @@ def test_check_json_with_bad_ignore() -> None:
 Test
 ====
 
-.. code-block:: json
+.. code:: json
 
     {
         'abc': 123
@@ -205,7 +205,7 @@ def test_check_xml() -> None:
 Test
 ====
 
-.. code-block:: xml
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
     <root>
@@ -227,7 +227,7 @@ def test_check_xml_with_ignore() -> None:
 Test
 ====
 
-.. code-block:: xml
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
     <root>
@@ -253,7 +253,7 @@ def test_check_xml_with_unmatched_ignores_only() -> None:
 Test
 ====
 
-.. code-block:: xml
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
     <root>
@@ -280,7 +280,7 @@ def test_check_xml_with_bad_ignore() -> None:
 Test
 ====
 
-.. code-block:: xml
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
     <root>
@@ -306,7 +306,7 @@ def test_check_with_extra_blank_lines_before() -> None:
 Test
 ====
 
-.. code-block:: python
+.. code:: python
 
 
 
@@ -329,7 +329,7 @@ def test_check_with_extra_blank_lines_after() -> None:
 Test
 ====
 
-.. code-block:: python
+.. code:: python
 
     print(
 
@@ -353,7 +353,7 @@ def test_check_with_extra_blank_lines_before_and_after() -> None:
 Test
 ====
 
-.. code-block:: python
+.. code:: python
 
 
 
@@ -412,33 +412,33 @@ def test_check_nested_rst() -> None:
 Test
 ====
 
-.. code-block:: rst
+.. code:: rst
 
     Test
     ====
 
-    .. code-block:: rst
+    .. code:: rst
 
 
         Test
         ====
 
-        .. code-block:: rst
+        .. code:: rst
 
             Test
             ====
 
-            .. code-block:: rst
+            .. code:: rst
 
                 Test
                 ====
 
-                .. code-block:: rst
+                .. code:: rst
 
                     Test
                     ====
 
-                    .. code-block:: python
+                    .. code:: python
 
                         print(
 """
@@ -471,12 +471,12 @@ def test_ignore_sphinx_directives() -> None:
 
    print('Hello')
 
-.. code-block:: ruby
+.. code:: ruby
    :linenos:
 
    puts "Hello!"
 
-.. code-block:: python
+.. code:: python
    :linenos:
    :emphasize-lines: 3,5
 
@@ -594,7 +594,7 @@ def test_check_doctest_in_code_block() -> None:
 Testing
 =======
 
-.. code-block:: doctest
+.. code:: doctest
 
     >>> x = 1
     >>>> x
@@ -617,7 +617,7 @@ def test_check_doctest_in_python_code_block() -> None:
 Testing
 =======
 
-.. code-block:: python
+.. code:: python
 
     >>> x = 1
     >>>> x

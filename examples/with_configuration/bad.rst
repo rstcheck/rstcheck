@@ -3,7 +3,7 @@
 
 :some-custom-thing:`testing`
 
-.. code-block:: cpp
+.. code:: cpp
 
     int main()
     {

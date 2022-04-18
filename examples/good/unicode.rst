@@ -2,11 +2,11 @@
 Тест
 ====
 
-.. code-block:: python
+.. code:: python
 
    print("Привет!")
 
-.. code-block:: bash
+.. code:: bash
 
     $ echo 'Привет' >> pipe.txt
     $ echo 'файловая труба!' >> pipe.txt
