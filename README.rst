@@ -370,6 +370,15 @@ To run all the tests you have three options
     $ tox
 
 
+Known limitations
+=================
+
+There are inherent limitations to what ``rstcheck`` can and cannot do. The reason for this is that
+``rstcheck`` itself does not parse the rst source but gives it to ``docutils`` and gets the errors
+back. Therefore rstcheck in the sense of rst source is more an error accumulation tool. The same
+goes for the source code in supported code blocks.
+
+
 History
 =======
 
@@ -379,6 +388,7 @@ History
 
 - Fix inability to ignore ``code``, ``code-block`` and ``sourcecode`` directives (#79)
 - Fix ``code-block`` options recognition (#62)
+- Add section with ``Known limitations`` to the README (#97)
 
 .. _beaking_changes_v6:
 
