@@ -379,6 +379,18 @@ back. Therefore rstcheck in the sense of rst source is more an error accumulatio
 goes for the source code in supported code blocks.
 
 
+Q: ``rstcheck`` only shows one error even if there are clearly multiple errors?
+-------------------------------------------------------------------------------
+
+A: This seems to be an upstream limitation with ``docutils``, which is used to parse rst source.
+``docutils`` returns after the first issue it encounters and therefore ``rstcheck`` also only gets
+the first error message.
+
+If the base rst source is errorless and gets parsed by ``docutils`` without issues and the source
+includes code blocks, those blocks are then individually parsed. This can result in multiple errors
+shown in one file.
+
+
 History
 =======
 
