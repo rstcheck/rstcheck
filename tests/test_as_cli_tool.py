@@ -68,6 +68,20 @@ def test_custom_directive_and_role() -> None:
 
 
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
+def test_custom_directive_and_role_with_pyproject_toml() -> None:
+    """Test custom directive and role read from pyproject.toml config file."""
+    result = subprocess.run(
+        [
+            "rstcheck",
+            "--config",
+            "examples/with_configuration/pyproject.toml",
+            "examples/custom/good_with_custom.rst",
+        ]
+    )
+
+    assert result.returncode == 0
+
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
 def test_bad_cpp_example() -> None:
     """Test bad c++ example."""
     result = subprocess.run(  # pylint: disable=subprocess-run-check # noqa: S603,S607
@@ -79,6 +93,22 @@ def test_bad_cpp_example() -> None:
     )
 
     assert result.returncode == 0
+
+
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
+def test_bad_cpp_with_pyproject_toml() -> None:
+    """Test bad c++ example with ignore language read from pyproject.toml config file."""
+    result = subprocess.run(
+        [
+            "rstcheck",
+            "--config",
+            "examples/with_configuration/pyproject.toml",
+            "examples/bad/bad_cpp.rst",
+        ]
+    )
+
+    assert result.returncode == 0
+
 
 
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
@@ -237,11 +267,56 @@ def test_bad_example_with_config_file() -> None:
 
 
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
+def test_good_example_with_pyproject_toml() -> None:
+    """Test good example with explicit pyproject.toml config file."""
+    result = subprocess.run(
+        [
+            "rstcheck",
+            "--config",
+            "examples/with_configuration/pyproject.toml",
+            "examples/with_configuration/good.rst",
+        ]
+    )
+
+    assert result.returncode == 0
+
+
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
+def test_bad_example_with_pyproject_toml() -> None:
+    """Test bad example with explicit pyproject.toml config file."""
+    result = subprocess.run(
+        [
+            "rstcheck",
+            "--config",
+            "examples/with_configuration/pyproject.toml",
+            "examples/with_configuration/bad.rst",
+        ]
+    )
+
+    assert result.returncode != 0
+
+
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
 def test_matching_ignore_msg_from_config_file_exits_zero() -> None:
     """Test matching ignore message from config file."""
     result = subprocess.run(  # pylint: disable=subprocess-run-check # noqa: S603,S607
         [
             "rstcheck",
+            "examples/with_configuration/bad-2.rst",
+        ]
+    )
+
+    assert result.returncode == 0
+
+
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
+def test_matching_ignore_msg_from_pyproject_toml_exits_zero() -> None:
+    """Test matching ignore message from pyproject.toml config file."""
+    result = subprocess.run(  # pylint: disable=subprocess-run-check # noqa: S603,S607
+        [
+            "rstcheck",
+            "--config",
+            "examples/with_configuration/pyproject.toml",
             "examples/with_configuration/bad-2.rst",
         ]
     )
