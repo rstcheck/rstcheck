@@ -6,10 +6,6 @@ import pytest
 import rstcheck
 
 
-# We don't do this in the module itself to avoid mutation.
-rstcheck.ignore_sphinx()
-
-
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
 def test_parse_gcc_style_error_message() -> None:
     """Test `parse_gcc_style_error_message`."""
@@ -61,8 +57,9 @@ def test_check() -> None:
         6,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
@@ -70,9 +67,10 @@ Test
 
     print(
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -82,18 +80,20 @@ def test_check_code_block() -> None:
         6,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: python
+.. code:: python
 
     print(
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -103,20 +103,22 @@ def test_check_json() -> None:
         7,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: json
+.. code:: json
 
     {
         'abc': 123
     }
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -124,12 +126,13 @@ def test_check_json_with_ignore() -> None:
     """Test `check` with json and ignore."""
     line_numbers: typing.Set[int] = set()
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: json
+.. code:: json
 
     {
         'abc': 123
@@ -137,9 +140,10 @@ Test
 
 .. rstcheck: ignore-language=json,python,rst
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -149,12 +153,13 @@ def test_check_json_with_unmatched_ignores_only() -> None:
         7,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: json
+.. code:: json
 
     {
         'abc': 123
@@ -162,9 +167,10 @@ Test
 
 .. rstcheck: ignore-language=cpp,python,rst
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -175,12 +181,13 @@ def test_check_json_with_bad_ignore() -> None:
         10,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: json
+.. code:: json
 
     {
         'abc': 123
@@ -188,9 +195,10 @@ Test
 
 .. rstcheck: ignore-language json,python,rst
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -200,21 +208,23 @@ def test_check_xml() -> None:
         8,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: xml
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
     <root>
        </abc>123<abc>
     </root>
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -222,12 +232,13 @@ def test_check_xml_with_ignore() -> None:
     """Test `check` with xml and ignore."""
     line_numbers: typing.Set[int] = set()
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: xml
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
     <root>
@@ -236,9 +247,10 @@ Test
 
 .. rstcheck: ignore-language=xml,python,rst
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -248,12 +260,13 @@ def test_check_xml_with_unmatched_ignores_only() -> None:
         8,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: xml
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
     <root>
@@ -262,9 +275,10 @@ Test
 
 .. rstcheck: ignore-language=cpp,python,rst
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -275,12 +289,13 @@ def test_check_xml_with_bad_ignore() -> None:
         11,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: xml
+.. code:: xml
 
     <?xml version="1.0" encoding="UTF-8"?>
     <root>
@@ -289,9 +304,10 @@ Test
 
 .. rstcheck: ignore-language xml,python,rst
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -301,20 +317,22 @@ def test_check_with_extra_blank_lines_before() -> None:
         8,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: python
+.. code:: python
 
 
 
     print(
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -324,21 +342,23 @@ def test_check_with_extra_blank_lines_after() -> None:
         6,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: python
+.. code:: python
 
     print(
 
 
 
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -348,12 +368,13 @@ def test_check_with_extra_blank_lines_before_and_after() -> None:
         8,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: python
+.. code:: python
 
 
 
@@ -362,9 +383,10 @@ Test
 
 
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -374,14 +396,16 @@ def test_check_rst() -> None:
         2,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ===
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -389,15 +413,17 @@ def test_check_rst_report_level() -> None:
     """Test `check` with rst and set report level."""
     line_numbers: typing.Set[int] = set()
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ===
 """,
-        report_level=5,
+            report_level=5,
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -407,44 +433,46 @@ def test_check_nested_rst() -> None:
         32,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Test
 ====
 
-.. code-block:: rst
+.. code:: rst
 
     Test
     ====
 
-    .. code-block:: rst
+    .. code:: rst
 
 
         Test
         ====
 
-        .. code-block:: rst
+        .. code:: rst
 
             Test
             ====
 
-            .. code-block:: rst
+            .. code:: rst
 
                 Test
                 ====
 
-                .. code-block:: rst
+                .. code:: rst
 
                     Test
                     ====
 
-                    .. code-block:: python
+                    .. code:: python
 
                         print(
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.skipif(not rstcheck.SPHINX_INSTALLED, reason="Requires Sphinx")
@@ -453,8 +481,9 @@ def test_ignore_sphinx_directives() -> None:
     """Test `check` with sphinx directives to ignore."""
     line_numbers: typing.Set[int] = set()
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 .. toctree::
     :maxdepth: 2
 
@@ -491,9 +520,10 @@ def test_ignore_sphinx_directives() -> None:
    :linenos:
 
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -503,8 +533,9 @@ def test_check_doctest() -> None:
         5,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Testing
 =======
 
@@ -512,9 +543,10 @@ Testing
 >>>> x
 1
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -542,8 +574,9 @@ def test_check_doctest_with_ignore() -> None:
     """Test `check` with doctest and ignore."""
     line_numbers: typing.Set[int] = set()
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Testing
 =======
 
@@ -553,9 +586,10 @@ Testing
 
 .. rstcheck: ignore-language=doctest
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.skipif(rstcheck.SPHINX_INSTALLED, reason="Does not work with Sphinx")
@@ -566,8 +600,9 @@ def test_check_doctest_in_code() -> None:
         7,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Testing
 =======
 
@@ -577,9 +612,10 @@ Testing
     >>>> x
     1
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
@@ -589,22 +625,25 @@ def test_check_doctest_in_code_block() -> None:
         7,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Testing
 =======
 
-.. code-block:: doctest
+.. code:: doctest
 
     >>> x = 1
     >>>> x
     1
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)
 
 
+@pytest.mark.skipif(not rstcheck.SPHINX_INSTALLED, reason="Requires Sphinx")
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
 def test_check_doctest_in_python_code_block() -> None:
     """I'm not sure if this is correct, but I've seen people do it."""
@@ -612,8 +651,9 @@ def test_check_doctest_in_python_code_block() -> None:
         7,
     }
 
-    result = rstcheck.check(
-        """\
+    result = dict(
+        rstcheck.check(
+            """\
 Testing
 =======
 
@@ -623,6 +663,7 @@ Testing
     >>>> x
     1
 """
+        )
     )
 
-    assert line_numbers == set(dict(result))
+    assert line_numbers == set(result)

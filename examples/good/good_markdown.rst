@@ -2,6 +2,6 @@
 Test
 ====
 
-.. code-block:: markdown
+.. code:: markdown
 
     [Markdown-style Link](https://www.example.com/)

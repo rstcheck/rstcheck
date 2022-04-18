@@ -2,14 +2,14 @@
 Test
 ====
 
-.. code-block:: bash
+.. code:: bash
 
     if [ "$x" == 'y' ]
     then
         exit 1
     fi
 
-.. code-block:: c
+.. code:: c
 
     float foo(int n)
     {
@@ -19,7 +19,7 @@ Test
         return x[0];
     }
 
-.. code-block:: cpp
+.. code:: cpp
 
     #include <iostream>
 
@@ -29,20 +29,20 @@ Test
         return x;
     }
 
-.. code-block:: python
+.. code:: python
 
     print(1)
 
 Run more tests for checking performance.
 
-.. code-block:: bash
+.. code:: bash
 
     if [ "$x" == 'y' ]
     then
         exit 1
     fi
 
-.. code-block:: c
+.. code:: c
 
     float foo(int n)
     {
@@ -52,7 +52,7 @@ Run more tests for checking performance.
         return x[0];
     }
 
-.. code-block:: cpp
+.. code:: cpp
 
     #include <iostream>
 
@@ -62,18 +62,18 @@ Run more tests for checking performance.
         return x;
     }
 
-.. code-block:: python
+.. code:: python
 
     print(1)
 
-.. code-block:: bash
+.. code:: bash
 
     if [ "$x" == 'y' ]
     then
         exit 1
     fi
 
-.. code-block:: c
+.. code:: c
 
     float foo(int n)
     {
@@ -83,7 +83,7 @@ Run more tests for checking performance.
         return x[0];
     }
 
-.. code-block:: cpp
+.. code:: cpp
 
     #include <iostream>
 
@@ -93,18 +93,18 @@ Run more tests for checking performance.
         return x;
     }
 
-.. code-block:: python
+.. code:: python
 
     print(1)
 
-.. code-block:: bash
+.. code:: bash
 
     if [ "$x" == 'y' ]
     then
         exit 1
     fi
 
-.. code-block:: c
+.. code:: c
 
     float foo(int n)
     {
@@ -114,7 +114,7 @@ Run more tests for checking performance.
         return x[0];
     }
 
-.. code-block:: cpp
+.. code:: cpp
 
     #include <iostream>
 
@@ -124,18 +124,18 @@ Run more tests for checking performance.
         return x;
     }
 
-.. code-block:: python
+.. code:: python
 
     print(1)
 
-.. code-block:: bash
+.. code:: bash
 
     if [ "$x" == 'y' ]
     then
         exit 1
     fi
 
-.. code-block:: c
+.. code:: c
 
     float foo(int n)
     {
@@ -145,7 +145,7 @@ Run more tests for checking performance.
         return x[0];
     }
 
-.. code-block:: cpp
+.. code:: cpp
 
     #include <iostream>
 
@@ -155,7 +155,7 @@ Run more tests for checking performance.
         return x;
     }
 
-.. code-block:: python
+.. code:: python
 
     # ¬∆˚ß∂ƒß∂ƒ˚¬∆
     print(1)

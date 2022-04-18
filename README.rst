@@ -165,6 +165,10 @@ local configuration file of the project (just replace ``-`` for ``_``).
 ``pyproject.toml`` in the directory or ancestor directories of the file it is
 checking.
 
+``.rstcheck.cfg`` takes precedence over ``setup.cfg``.
+
+Settings in the config file are overwritten by CLI options.
+
 For example, consider a project with the following directory structure
 
 .. code:: text
@@ -259,7 +263,7 @@ constraint is >=4.0 because of Sphinx's open upper constraints on jinja2 and mar
 which result in import errors if not pinned below version 3 and 2 respectively. This happend
 in Sphinx version 4.0.
 
-You can also add Sphinx by yourself but the installed Sphinx version must be at least 1.5.
+You can also add Sphinx by yourself but the installed Sphinx version must be at least 2.0.
 
 To check that Sphinx support is enabled
 
@@ -287,6 +291,7 @@ Just install ``rstcheck`` and make sure is on your path.
 
 .. _Syntastic: https://github.com/scrooloose/syntastic
 .. _ALE: https://github.com/w0rp/ale
+
 
 Use as a module
 ===============
@@ -378,12 +383,35 @@ To run all the tests you have three options
     $ tox
 
 
+Known limitations / FAQ
+=======================
+
+There are inherent limitations to what ``rstcheck`` can and cannot do. The reason for this is that
+``rstcheck`` itself does not parse the rst source but gives it to ``docutils`` and gets the errors
+back. Therefore rstcheck in the sense of rst source is more an error accumulation tool. The same
+goes for the source code in supported code blocks.
+
+
 History
 =======
 
 
 (next version)
 --------------
+
+- Fix inability to ignore ``code``, ``code-block`` and ``sourcecode`` directives (#79)
+- Fix ``code-block`` options recognition (#62)
+- Add section with ``Known limitations / FAQ`` to the README (#97)
+
+
+.. _beaking_changes_v6:
+
+BREAKING CHANGES
+~~~~~~~~~~~~~~~~
+
+- Drop support for sphinx < 2.0
+- Drop default values for directves and roles for sphinx (#65)
+- CLI options now take precedence over config file options (#96)
 
 
 5.0.0 (2022-04-17)
@@ -393,6 +421,7 @@ History
 - Add ``Development`` section to README and update ``Testing`` section
 - Add ``Mega-Linter`` section to README
 - Add ``BREAKING CHANGES`` sections to changelog
+
 
 .. _beaking_changes_v5:
 
