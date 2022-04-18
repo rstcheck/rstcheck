@@ -588,11 +588,14 @@ def _get_pyproject_options(config_path: str) -> typing.Dict[str, str]:
 
     # tomli returns a list of strings and ConfigParser returns a comma
     # separated string.  This makes the options from pyproject.toml consistent
-    # with the options read from other configuration files.
-    options["ignore_directives"] = ",".join(options.get("ignore_directives", ""))
-    options["ignore_roles"] = ",".join(options.get("ignore_roles", ""))
-    options["ignore_messages"] = ",".join(options.get("ignore_messages", ""))
-    options["ignore_language"] = ",".join(options.get("ignore_language", ""))
+    # with the options read from other configuration files.  The try block
+    # accounts for pyproject files without a rstcheck section.
+    for _ignore in ["ignore_directives", "ignore_roles", "ignore_messages", "ignore_language"]:
+        try:
+            if options[_ignore] != "":
+                options[_ignore] = ",".join(options.get(_ignore, ""))
+        except KeyError:
+            continue
 
     return options
 
