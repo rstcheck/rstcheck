@@ -12,3 +12,4 @@ build
 *.out
 *.snm
 poetry.lock
+*.bak.*
