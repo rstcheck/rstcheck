@@ -161,6 +161,8 @@ local configuration file of the project (just replace ``-`` for ``_``).
 ``rstcheck`` looks for a file ``.rstcheck.cfg`` or ``setup.cfg`` in the
 directory or ancestor directories of the file it is checking.
 
+``.rstcheck.cfg`` takes precedence over ``setup.cfg``.
+
 For example, consider a project with the following directory structure
 
 .. code:: text
