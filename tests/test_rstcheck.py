@@ -601,6 +601,7 @@ Testing
     assert line_numbers == set(dict(result))
 
 
+@pytest.mark.skipif(not rstcheck.SPHINX_INSTALLED, reason="Requires Sphinx")
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
 def test_check_doctest_in_python_code_block() -> None:
     """I'm not sure if this is correct, but I've seen people do it."""
@@ -613,7 +614,7 @@ def test_check_doctest_in_python_code_block() -> None:
 Testing
 =======
 
-.. code:: python
+.. code-block:: python
 
     >>> x = 1
     >>>> x
