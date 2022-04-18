@@ -160,7 +160,6 @@ def check(  # noqa: CCR001 # pylint: disable=too-many-arguments
     report_level: int = docutils.utils.Reporter.INFO_LEVEL,
     ignore: typing.Optional[IgnoreDict] = None,
     debug: bool = False,
-    use_sphinx_defaults: bool = False,
 ) -> YieldedErrorTuple:
     """Yield errors.
 
@@ -181,7 +180,7 @@ def check(  # noqa: CCR001 # pylint: disable=too-many-arguments
     # Do this at call time rather than import time to avoid unnecessarily
     # mutating state.
     register_code_directive()
-    ignore_sphinx(use_sphinx_defaults)
+    load_ignore_sphinx()
 
     ignore = ignore or {}
 
@@ -190,7 +189,7 @@ def check(  # noqa: CCR001 # pylint: disable=too-many-arguments
     except Error as error:
         yield (error.line_number, f"{error}")
 
-    writer = CheckWriter(source, filename, ignore=ignore, use_sphinx_defaults=use_sphinx_defaults)
+    writer = CheckWriter(source, filename, ignore=ignore)
 
     string_io = io.StringIO()
 
@@ -294,7 +293,6 @@ def _check_file(
         report_level=args.report,
         ignore=ignore,
         debug=args.debug,
-        use_sphinx_defaults=args.use_sphinx_defaults,
     ):
         all_errors.append(error)
     return (filename, all_errors)
@@ -338,15 +336,11 @@ def check_xml(code: str) -> YieldedErrorTuple:
         yield (int(line_number), message)
 
 
-def check_rst(
-    code: str, ignore: IgnoreDict, use_sphinx_defaults: bool = False
-) -> YieldedErrorTuple:
+def check_rst(code: str, ignore: IgnoreDict) -> YieldedErrorTuple:
     """Yield errors in nested RST code."""
     filename = "<string>"
 
-    yield from check(
-        code, filename=filename, ignore=ignore, use_sphinx_defaults=use_sphinx_defaults
-    )
+    yield from check(code, filename=filename, ignore=ignore)
 
 
 def check_doctest(code: str) -> YieldedErrorTuple:
@@ -396,65 +390,6 @@ def _get_directives_and_roles_from_sphinx() -> typing.Tuple[typing.List[str], ty
         sphinx_roles += list(domain.roles) + [
             f"{domain.name}:{item}" for item in list(domain.roles)
         ]
-
-    return (sphinx_directives, sphinx_roles)
-
-
-def _get_default_directives_and_roles_for_sphinx() -> typing.Tuple[
-    typing.List[str], typing.List[str]
-]:
-    """Return a tuple of default Sphinx directive and roles."""
-    sphinx_roles = [
-        "abbr",
-        "command",
-        "dfn",
-        "doc",
-        "download",
-        "envvar",
-        "file",
-        "guilabel",
-        "kbd",
-        "keyword",
-        "mailheader",
-        "makevar",
-        "manpage",
-        "menuselection",
-        "mimetype",
-        "newsgroup",
-        "option",
-        "program",
-        "py:func",
-        "ref",
-        "regexp",
-        "samp",
-        "term",
-        "token",
-    ]
-
-    sphinx_directives = [
-        "autosummary",
-        "code-block",
-        "currentmodule",
-        "centered",
-        "c:function",
-        "c:type",
-        "include",
-        "deprecated",
-        "envvar",
-        "glossary",
-        "index",
-        "no-code-block",
-        "literalinclude",
-        "hlist",
-        "option",
-        "productionlist",
-        "py:function",
-        "seealso",
-        "toctree",
-        "todo",
-        "versionadded",
-        "versionchanged",
-    ]
 
     return (sphinx_directives, sphinx_roles)
 
@@ -515,20 +450,16 @@ def _ignore_role(
     return ([], [])
 
 
-def ignore_sphinx(use_sphinx_defaults: bool) -> None:
+def load_ignore_sphinx() -> None:
     """Register Sphinx directives and roles to ignore."""
-    directives: typing.List[str] = []
-    roles: typing.List[str] = []
+    if not SPHINX_INSTALLED:
+        return
 
-    if SPHINX_INSTALLED:
-        (directives, roles) = _get_directives_and_roles_from_sphinx()
-    elif use_sphinx_defaults:
-        (directives, roles) = _get_default_directives_and_roles_for_sphinx()
+    (directives, roles) = _get_directives_and_roles_from_sphinx()
 
-    if SPHINX_INSTALLED or use_sphinx_defaults:
-        extended_ignores = _get_extended_default_directives_and_roles_for_sphinx()
-        directives += extended_ignores[0]
-        roles += extended_ignores[1]
+    extended_ignores = _get_extended_default_directives_and_roles_for_sphinx()
+    directives += extended_ignores[0]
+    roles += extended_ignores[1]
 
     ignore_directives_and_roles(directives, roles)
 
@@ -574,10 +505,6 @@ def load_configuration_from_file(directory: str, args: argparse.Namespace) -> ar
         directory_or_file = args.config
 
     options = _get_options(directory_or_file, debug=args.debug)
-
-    args.use_sphinx_defaults = (
-        options.get("use_sphinx_defaults", str(args.use_sphinx_defaults)).casefold() == "true"
-    )
 
     args.report = options.get("report", args.report)
     threshold_dictionary = docutils.frontend.OptionParser.thresholds
@@ -761,7 +688,6 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         file_contents: str,
         filename: str,
         ignore: IgnoreDict,
-        use_sphinx_defaults: bool = False,
     ) -> None:
         """Init CheckTranslator."""
         docutils.nodes.NodeVisitor.__init__(self, document)
@@ -771,7 +697,6 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         self.working_directory = os.path.dirname(os.path.realpath(filename))
         self.ignore = ignore or {}
         self.ignore.setdefault("languages", []).append(None)
-        self.use_sphinx_defaults = use_sphinx_defaults
 
     def visit_doctest_block(self, node: docutils.nodes.Element) -> None:
         """Check syntax of doctest."""
@@ -815,9 +740,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
             "json": lambda source, _: lambda: check_json(source),
             "xml": lambda source, _: lambda: check_xml(source),
             "python": lambda source, _: lambda: check_python(source),
-            "rst": lambda source, _: lambda: check_rst(
-                source, ignore=self.ignore, use_sphinx_defaults=self.use_sphinx_defaults
-            ),
+            "rst": lambda source, _: lambda: check_rst(source, ignore=self.ignore),
         }
         checker = check_dict.get(language)
 
@@ -911,7 +834,6 @@ class CheckWriter(docutils.writers.Writer):
         file_contents: str,
         filename: str,
         ignore: IgnoreDict,
-        use_sphinx_defaults: bool = False,
     ) -> None:
         """Init CheckWriter."""
         docutils.writers.Writer.__init__(self)
@@ -919,7 +841,6 @@ class CheckWriter(docutils.writers.Writer):
         self.file_contents = file_contents
         self.filename = filename
         self.ignore = ignore
-        self.use_sphinx_defaults = use_sphinx_defaults
 
     def translate(self) -> None:
         """Run CheckTranslator."""
@@ -928,7 +849,6 @@ class CheckWriter(docutils.writers.Writer):
             file_contents=self.file_contents,
             filename=self.filename,
             ignore=self.ignore,
-            use_sphinx_defaults=self.use_sphinx_defaults,
         )
         self.document.walkabout(visitor)
         self.checkers += visitor.checkers
