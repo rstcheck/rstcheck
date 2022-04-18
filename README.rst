@@ -370,8 +370,8 @@ To run all the tests you have three options
     $ tox
 
 
-Known limitations
-=================
+Known limitations / FAQ
+=======================
 
 There are inherent limitations to what ``rstcheck`` can and cannot do. The reason for this is that
 ``rstcheck`` itself does not parse the rst source but gives it to ``docutils`` and gets the errors
@@ -388,7 +388,7 @@ History
 
 - Fix inability to ignore ``code``, ``code-block`` and ``sourcecode`` directives (#79)
 - Fix ``code-block`` options recognition (#62)
-- Add section with ``Known limitations`` to the README (#97)
+- Add section with ``Known limitations / FAQ`` to the README (#97)
 
 
 .. _beaking_changes_v6:
