@@ -246,7 +246,7 @@ constraint is >=4.0 because of Sphinx's open upper constraints on jinja2 and mar
 which result in import errors if not pinned below version 3 and 2 respectively. This happend
 in Sphinx version 4.0.
 
-You can also add Sphinx by yourself but the installed Sphinx version must be at least 1.5.
+You can also add Sphinx by yourself but the installed Sphinx version must be at least 2.0.
 
 To check that Sphinx support is enabled
 
@@ -371,6 +371,17 @@ History
 
 (next version)
 --------------
+
+- Fix inability to ignore ``code``, ``code-block`` and ``sourcecode`` directives (#79)
+- Fix ``code-block`` options recognition (#62)
+
+.. _beaking_changes_v6:
+
+BREAKING CHANGES
+~~~~~~~~~~~~~~~~
+
+- Drop support for sphinx < 2.0
+- Drop default values for directves and roles for sphinx (#65)
 
 
 5.0.0 (2022-04-17)

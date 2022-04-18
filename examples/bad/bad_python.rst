@@ -2,6 +2,6 @@
 Test
 ====
 
-.. code-block:: python
+.. code:: python
 
     print(

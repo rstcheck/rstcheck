@@ -54,7 +54,7 @@ import typing_extensions
 try:
     import sphinx
 
-    SPHINX_INSTALLED = sphinx.version_info >= (1, 5)
+    SPHINX_INSTALLED = sphinx.version_info >= (2, 0)
 except (AttributeError, ImportError):
     SPHINX_INSTALLED = False
 
@@ -88,6 +88,7 @@ class IgnoreDict(typing_extensions.TypedDict, total=False):
 
     languages: typing.List[typing.Optional[str]]
     messages: str
+    directives: typing.List[str]
 
 
 ErrorTuple = typing.Tuple[int, str]
@@ -140,12 +141,20 @@ class CodeBlockDirective(docutils.parsers.rst.Directive):
         return [literal]
 
 
-def register_code_directive() -> None:
+def register_code_directive(
+    ignore_code_directive: bool = False,
+    ignore_codeblock_directive: bool = False,
+    ignore_sourcecode_directive: bool = False,
+) -> None:
     """Register code directive."""
     if not SPHINX_INSTALLED:
-        docutils.parsers.rst.directives.register_directive("code", CodeBlockDirective)
-        docutils.parsers.rst.directives.register_directive("code-block", CodeBlockDirective)
-        docutils.parsers.rst.directives.register_directive("sourcecode", CodeBlockDirective)
+        if not ignore_code_directive:
+            docutils.parsers.rst.directives.register_directive("code", CodeBlockDirective)
+        # NOTE: docutils maps `code-block` and `sourcecode` to `code`
+        if not ignore_codeblock_directive:
+            docutils.parsers.rst.directives.register_directive("code-block", CodeBlockDirective)
+        if not ignore_sourcecode_directive:
+            docutils.parsers.rst.directives.register_directive("sourcecode", CodeBlockDirective)
 
 
 def strip_byte_order_mark(text: str) -> str:
@@ -179,12 +188,16 @@ def check(  # noqa: CCR001
     ``register_*()`` functions.
 
     """
+    ignore = ignore or {}
+
     # Do this at call time rather than import time to avoid unnecessarily
     # mutating state.
-    register_code_directive()
-    ignore_sphinx()
-
-    ignore = ignore or {}
+    register_code_directive(
+        "code" in ignore.get("directives", []),
+        "code-block" in ignore.get("directives", []),
+        "sourcecode" in ignore.get("directives", []),
+    )
+    load_ignore_sphinx()
 
     try:
         ignore.setdefault("languages", []).extend(find_ignored_languages(source))
@@ -287,6 +300,7 @@ def _check_file(
     ignore: IgnoreDict = {
         "languages": args.ignore_language,
         "messages": args.ignore_messages,
+        "directives": args.ignore_directives,
     }
     all_errors = []
     for error in check(
@@ -374,76 +388,35 @@ def split_comma_separated(text: str) -> typing.List[str]:
 
 
 def _get_directives_and_roles_from_sphinx() -> typing.Tuple[typing.List[str], typing.List[str]]:
-    """Return a tuple of Sphinx directive and roles."""
-    if SPHINX_INSTALLED:
-        sphinx_directives = list(sphinx.domains.std.StandardDomain.directives)
-        sphinx_roles = list(sphinx.domains.std.StandardDomain.roles)
+    """Return a tuple of Sphinx directive and roles loaded from sphinx."""
+    sphinx_directives = list(sphinx.domains.std.StandardDomain.directives)
+    sphinx_roles = list(sphinx.domains.std.StandardDomain.roles)
 
-        for domain in [
-            sphinx.domains.c.CDomain,
-            sphinx.domains.cpp.CPPDomain,
-            sphinx.domains.javascript.JavaScriptDomain,
-            sphinx.domains.python.PythonDomain,
-        ]:
+    for domain in [
+        sphinx.domains.c.CDomain,
+        sphinx.domains.cpp.CPPDomain,
+        sphinx.domains.javascript.JavaScriptDomain,
+        sphinx.domains.python.PythonDomain,
+    ]:
 
-            sphinx_directives += list(domain.directives) + [
-                f"{domain.name}:{item}" for item in list(domain.directives)
-            ]
-
-            sphinx_roles += list(domain.roles) + [
-                f"{domain.name}:{item}" for item in list(domain.roles)
-            ]
-    else:
-        sphinx_roles = [
-            "abbr",
-            "command",
-            "dfn",
-            "doc",
-            "download",
-            "envvar",
-            "file",
-            "guilabel",
-            "kbd",
-            "keyword",
-            "mailheader",
-            "makevar",
-            "manpage",
-            "menuselection",
-            "mimetype",
-            "newsgroup",
-            "option",
-            "program",
-            "py:func",
-            "ref",
-            "regexp",
-            "samp",
-            "term",
-            "token",
+        sphinx_directives += list(domain.directives) + [
+            f"{domain.name}:{item}" for item in list(domain.directives)
         ]
 
-        sphinx_directives = [
-            "autosummary",
-            "currentmodule",
-            "centered",
-            "c:function",
-            "c:type",
-            "include",
-            "deprecated",
-            "envvar",
-            "glossary",
-            "index",
-            "no-code-block",
-            "literalinclude",
-            "hlist",
-            "option",
-            "productionlist",
-            "py:function",
-            "seealso",
-            "toctree",
-            "todo",
-            "versionadded",
-            "versionchanged",
+        sphinx_roles += list(domain.roles) + [
+            f"{domain.name}:{item}" for item in list(domain.roles)
         ]
+
+    sphinx_directives += list(
+        sphinx.application.docutils.directives._directives  # pylint: disable=protected-access
+    )
+    sphinx_roles += list(
+        sphinx.application.docutils.roles._roles  # pylint: disable=protected-access
+    )
+    if "code" in sphinx_directives:
+        sphinx_directives.remove("code")
+    if "code-block" in sphinx_directives:
+        sphinx_directives.remove("code-block")
 
     return (sphinx_directives, sphinx_roles)
 
@@ -472,31 +445,14 @@ def _ignore_role(
     return ([], [])
 
 
-def ignore_sphinx() -> None:
+def load_ignore_sphinx() -> None:
     """Register Sphinx directives and roles to ignore."""
+    if not SPHINX_INSTALLED:
+        return
+
     (directives, roles) = _get_directives_and_roles_from_sphinx()
 
-    directives += [
-        "centered",
-        "include",
-        "deprecated",
-        "index",
-        "no-code-block",
-        "literalinclude",
-        "hlist",
-        "seealso",
-        "toctree",
-        "todo",
-        "versionadded",
-        "versionchanged",
-    ]
-
-    ext_autosummary = [
-        "autosummary",
-        "currentmodule",
-    ]
-
-    ignore_directives_and_roles(directives + ext_autosummary, roles + ["ctype"])
+    ignore_directives_and_roles(directives, roles)
 
 
 def find_config(  # noqa: CCR001
@@ -722,7 +678,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         document: docutils.nodes.document,
         file_contents: str,
         filename: str,
-        ignore: IgnoreDict,
+        ignore: typing.Optional[IgnoreDict],
     ) -> None:
         """Init CheckTranslator."""
         docutils.nodes.NodeVisitor.__init__(self, document)

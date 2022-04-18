@@ -6,6 +6,8 @@ import typing
 
 import pytest
 
+import rstcheck
+
 
 REPO_DIR = pathlib.Path(__file__).resolve().parents[1]
 
@@ -324,3 +326,31 @@ class TestConfigFromOtherDirCanBeUsed:
         )
 
         assert result.returncode == 0
+
+
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
+@pytest.mark.skipif(rstcheck.SPHINX_INSTALLED, reason="Run only without sphinx.")
+def test_sphinx_role_erros_without_sphinx() -> None:
+    """Test sphinx example errors without sphinx."""
+    result = subprocess.run(  # pylint: disable=subprocess-run-check # noqa: S603,S607
+        [
+            "rstcheck",
+            "examples/sphinx/good.rst",
+        ]
+    )
+
+    assert result.returncode != 0
+
+
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
+@pytest.mark.skipif(not rstcheck.SPHINX_INSTALLED, reason="Run only with sphinx.")
+def test_sphinx_role_exits_zero_with_sphinx() -> None:
+    """Test sphinx example errors without sphinx."""
+    result = subprocess.run(  # pylint: disable=subprocess-run-check # noqa: S603,S607
+        [
+            "rstcheck",
+            "examples/sphinx/good.rst",
+        ]
+    )
+
+    assert result.returncode == 0

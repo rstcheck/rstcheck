@@ -2,7 +2,7 @@
 Test
 ====
 
-.. code-block:: rst
+.. code:: rst
 
     Testing
     ===

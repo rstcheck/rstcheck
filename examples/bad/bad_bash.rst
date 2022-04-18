@@ -2,6 +2,6 @@
 Test
 ====
 
-.. code-block:: bash
+.. code:: bash
 
     {
