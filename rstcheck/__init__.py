@@ -154,12 +154,13 @@ def strip_byte_order_mark(text: str) -> str:
         return text
 
 
-def check(  # noqa: CCR001
+def check(  # noqa: CCR001 # pylint: disable=too-many-arguments
     source: str,
     filename: str = "<string>",
     report_level: int = docutils.utils.Reporter.INFO_LEVEL,
     ignore: typing.Optional[IgnoreDict] = None,
     debug: bool = False,
+    use_sphinx_defaults: bool = False,
 ) -> YieldedErrorTuple:
     """Yield errors.
 
@@ -180,7 +181,7 @@ def check(  # noqa: CCR001
     # Do this at call time rather than import time to avoid unnecessarily
     # mutating state.
     register_code_directive()
-    ignore_sphinx()
+    ignore_sphinx(use_sphinx_defaults)
 
     ignore = ignore or {}
 
@@ -189,7 +190,7 @@ def check(  # noqa: CCR001
     except Error as error:
         yield (error.line_number, f"{error}")
 
-    writer = CheckWriter(source, filename, ignore=ignore)
+    writer = CheckWriter(source, filename, ignore=ignore, use_sphinx_defaults=use_sphinx_defaults)
 
     string_io = io.StringIO()
 
@@ -293,6 +294,7 @@ def _check_file(
         report_level=args.report,
         ignore=ignore,
         debug=args.debug,
+        use_sphinx_defaults=args.use_sphinx_defaults,
     ):
         all_errors.append(error)
     return (filename, all_errors)
@@ -336,11 +338,15 @@ def check_xml(code: str) -> YieldedErrorTuple:
         yield (int(line_number), message)
 
 
-def check_rst(code: str, ignore: IgnoreDict) -> YieldedErrorTuple:
+def check_rst(
+    code: str, ignore: IgnoreDict, use_sphinx_defaults: bool = False
+) -> YieldedErrorTuple:
     """Yield errors in nested RST code."""
     filename = "<string>"
 
-    yield from check(code, filename=filename, ignore=ignore)
+    yield from check(
+        code, filename=filename, ignore=ignore, use_sphinx_defaults=use_sphinx_defaults
+    )
 
 
 def check_doctest(code: str) -> YieldedErrorTuple:
@@ -748,12 +754,13 @@ def run_in_subprocess(
 class CheckTranslator(docutils.nodes.NodeVisitor):
     """Visits code blocks and checks for syntax errors in code."""
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         document: docutils.nodes.document,
         file_contents: str,
         filename: str,
         ignore: IgnoreDict,
+        use_sphinx_defaults: bool = False,
     ) -> None:
         """Init CheckTranslator."""
         docutils.nodes.NodeVisitor.__init__(self, document)
@@ -763,6 +770,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         self.working_directory = os.path.dirname(os.path.realpath(filename))
         self.ignore = ignore or {}
         self.ignore.setdefault("languages", []).append(None)
+        self.use_sphinx_defaults = use_sphinx_defaults
 
     def visit_doctest_block(self, node: docutils.nodes.Element) -> None:
         """Check syntax of doctest."""
@@ -806,7 +814,9 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
             "json": lambda source, _: lambda: check_json(source),
             "xml": lambda source, _: lambda: check_xml(source),
             "python": lambda source, _: lambda: check_python(source),
-            "rst": lambda source, _: lambda: check_rst(source, ignore=self.ignore),
+            "rst": lambda source, _: lambda: check_rst(
+                source, ignore=self.ignore, use_sphinx_defaults=self.use_sphinx_defaults
+            ),
         }
         checker = check_dict.get(language)
 
@@ -895,13 +905,20 @@ def beginning_of_code_block(
 class CheckWriter(docutils.writers.Writer):
     """Runs CheckTranslator on code blocks."""
 
-    def __init__(self, file_contents: str, filename: str, ignore: IgnoreDict) -> None:
+    def __init__(
+        self,
+        file_contents: str,
+        filename: str,
+        ignore: IgnoreDict,
+        use_sphinx_defaults: bool = False,
+    ) -> None:
         """Init CheckWriter."""
         docutils.writers.Writer.__init__(self)
         self.checkers: typing.List[RunCheckFunction] = []
         self.file_contents = file_contents
         self.filename = filename
         self.ignore = ignore
+        self.use_sphinx_defaults = use_sphinx_defaults
 
     def translate(self) -> None:
         """Run CheckTranslator."""
@@ -910,6 +927,7 @@ class CheckWriter(docutils.writers.Writer):
             file_contents=self.file_contents,
             filename=self.filename,
             ignore=self.ignore,
+            use_sphinx_defaults=self.use_sphinx_defaults,
         )
         self.document.walkabout(visitor)
         self.checkers += visitor.checkers
