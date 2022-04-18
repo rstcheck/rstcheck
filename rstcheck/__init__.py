@@ -413,8 +413,10 @@ def _get_directives_and_roles_from_sphinx() -> typing.Tuple[typing.List[str], ty
     sphinx_roles += list(
         sphinx.application.docutils.roles._roles  # pylint: disable=protected-access
     )
-    sphinx_directives.remove("code")
-    sphinx_directives.remove("code-block")
+    if "code" in sphinx_directives:
+        sphinx_directives.remove("code")
+    if "code-block" in sphinx_directives:
+        sphinx_directives.remove("code-block")
 
     return (sphinx_directives, sphinx_roles)
 
