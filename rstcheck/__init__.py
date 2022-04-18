@@ -433,6 +433,7 @@ def _get_default_directives_and_roles_for_sphinx() -> typing.Tuple[
 
     sphinx_directives = [
         "autosummary",
+        "code-block",
         "currentmodule",
         "centered",
         "c:function",
