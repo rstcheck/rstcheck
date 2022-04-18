@@ -210,7 +210,7 @@ repos:
 
   # rstcheck - rst file checker
   - repo: https://github.com/myint/rstcheck
-    rev: 3f92957478422df87bd730abde66f089cc1ee19b # commit after add of config; wait for release
+    rev: 209a4a9850083ba9922f3094a579c4009927906d # frozen: v5.0.0
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]

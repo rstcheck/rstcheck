@@ -220,7 +220,7 @@ def check(  # noqa: CCR001
             writer=writer,
             source_path=filename,
             settings_overrides={
-                "halt_level": report_level,
+                "halt_level": 5,
                 "report_level": report_level,
                 "warning_stream": string_io,
             },

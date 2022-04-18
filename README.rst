@@ -402,6 +402,7 @@ History
 - Fix inability to ignore ``code``, ``code-block`` and ``sourcecode`` directives (#79)
 - Fix ``code-block`` options recognition (#62)
 - Add section with ``Known limitations / FAQ`` to the README (#97)
+- Accumulate all errors in rst source instead of only one (#83)
 
 
 .. _beaking_changes_v6:
