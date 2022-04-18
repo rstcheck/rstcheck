@@ -163,6 +163,8 @@ directory or ancestor directories of the file it is checking.
 
 ``.rstcheck.cfg`` takes precedence over ``setup.cfg``.
 
+Settings in the config file are overwritten by CLI options.
+
 For example, consider a project with the following directory structure
 
 .. code:: text
@@ -384,6 +386,7 @@ BREAKING CHANGES
 
 - Drop support for sphinx < 2.0
 - Drop default values for directves and roles for sphinx (#65)
+- CLI options now take precedence over config file options (#96)
 
 
 5.0.0 (2022-04-17)

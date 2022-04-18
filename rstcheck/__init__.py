@@ -377,11 +377,6 @@ def check_doctest(code: str) -> YieldedErrorTuple:
             yield (int(match.group(1)), message)
 
 
-def get_and_split(options: typing.Dict[str, str], key: str, default: str = "") -> typing.List[str]:
-    """Return list of split and stripped strings."""
-    return split_comma_separated(options.get(key, default))
-
-
 def split_comma_separated(text: str) -> typing.List[str]:
     """Return list of split and stripped strings."""
     return [t.strip() for t in text.split(",") if t.strip()]
@@ -497,21 +492,25 @@ def load_configuration_from_file(directory: str, args: argparse.Namespace) -> ar
 
     options = _get_options(directory_or_file, debug=args.debug)
 
-    args.report = options.get("report", args.report)
+    args.report = args.report or options.get("report", "info")
     threshold_dictionary = docutils.frontend.OptionParser.thresholds
     args.report = int(threshold_dictionary.get(args.report, args.report))
 
-    args.ignore_language = get_and_split(options, "ignore_language", args.ignore_language)
+    args.ignore_messages = args.ignore_messages or options.get("ignore_messages", "")
 
-    args.ignore_messages = options.get("ignore_messages", args.ignore_messages)
-
-    args.ignore_directives = get_and_split(options, "ignore_directives", args.ignore_directives)
-
-    args.ignore_substitutions = get_and_split(
-        options, "ignore_substitutions", args.ignore_substitutions
+    args.ignore_language = split_comma_separated(
+        args.ignore_language or options.get("ignore_language", "")
     )
 
-    args.ignore_roles = get_and_split(options, "ignore_roles", args.ignore_roles)
+    args.ignore_directives = split_comma_separated(
+        args.ignore_directives or options.get("ignore_directives", "")
+    )
+
+    args.ignore_substitutions = split_comma_separated(
+        args.ignore_substitutions or options.get("ignore_substitutions", "")
+    )
+
+    args.ignore_roles = split_comma_separated(args.ignore_roles or options.get("ignore_roles", ""))
 
     return args
 
@@ -864,7 +863,6 @@ def parse_args() -> argparse.Namespace:
         "--report",
         metavar="level",
         choices=threshold_choices,
-        default="info",
         help="report system messages at or higher than "
         "level; "
         + ", ".join(choice for choice in threshold_choices if not choice.isdigit())
