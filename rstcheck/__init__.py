@@ -452,6 +452,38 @@ def _get_default_directives_and_roles_for_sphinx() -> typing.Tuple[
     return (sphinx_directives, sphinx_roles)
 
 
+def _get_extended_default_directives_and_roles_for_sphinx() -> typing.Tuple[
+    typing.List[str], typing.List[str]
+]:
+    """Return a tuple of extended default Sphinx directive and roles.
+
+    These are used wether sphinx can be loaded or not.
+    """
+    sphinx_directives = [
+        "centered",
+        "include",
+        "deprecated",
+        "index",
+        "no-code-block",
+        "literalinclude",
+        "hlist",
+        "seealso",
+        "toctree",
+        "todo",
+        "versionadded",
+        "versionchanged",
+    ]
+
+    ext_autosummary = [
+        "autosummary",
+        "currentmodule",
+    ]
+
+    sphinx_roles = ["ctype"]
+
+    return (sphinx_directives + ext_autosummary, sphinx_roles)
+
+
 class IgnoredDirective(docutils.parsers.rst.Directive):
     """Stub for unknown directives."""
 
