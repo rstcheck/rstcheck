@@ -391,50 +391,14 @@ def _get_directives_and_roles_from_sphinx() -> typing.Tuple[typing.List[str], ty
             f"{domain.name}:{item}" for item in list(domain.roles)
         ]
 
+    sphinx_directives += list(
+        sphinx.application.docutils.directives._directives  # pylint: disable=protected-access
+    )
+    sphinx_roles += list(
+        sphinx.application.docutils.roles._roles  # pylint: disable=protected-access
+    )
+
     return (sphinx_directives, sphinx_roles)
-
-
-def _get_extended_default_directives_and_roles_for_sphinx() -> typing.Tuple[
-    typing.List[str], typing.List[str]
-]:
-    """Return a tuple of Sphinx directive and roles.
-
-    These directive and roles cannot be loaded like the domain ones in
-    `_get_directives_and_roles_from_sphinx()`.
-
-    https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
-    """
-    sphinx_base_directives = [
-        "centered",
-        "code-block",
-        "codeauthor",
-        "deprecated",
-        "highlight",
-        "hlist",
-        "include",
-        "index",
-        "literalinclude",
-        "math",
-        "note",
-        "only",
-        "rubric",
-        "seealso",
-        "sectionauthor",
-        "tabularcolumns",
-        "toctree",
-        "versionadded",
-        "versionchanged",
-        "warning",
-    ]
-
-    ext_autosummary = [
-        "autosummary",
-        "currentmodule",
-    ]
-
-    sphinx_base_roles = ["ctype"]
-
-    return (sphinx_base_directives + ext_autosummary, sphinx_base_roles)
 
 
 class IgnoredDirective(docutils.parsers.rst.Directive):
@@ -467,10 +431,6 @@ def load_ignore_sphinx() -> None:
         return
 
     (directives, roles) = _get_directives_and_roles_from_sphinx()
-
-    extended_ignores = _get_extended_default_directives_and_roles_for_sphinx()
-    directives += extended_ignores[0]
-    roles += extended_ignores[1]
 
     ignore_directives_and_roles(directives, roles)
 
