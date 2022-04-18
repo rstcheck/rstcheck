@@ -390,6 +390,7 @@ History
 - Fix ``code-block`` options recognition (#62)
 - Add section with ``Known limitations`` to the README (#97)
 
+
 .. _beaking_changes_v6:
 
 BREAKING CHANGES
@@ -407,6 +408,7 @@ BREAKING CHANGES
 - Add ``Development`` section to README and update ``Testing`` section
 - Add ``Mega-Linter`` section to README
 - Add ``BREAKING CHANGES`` sections to changelog
+
 
 .. _beaking_changes_v5:
 
