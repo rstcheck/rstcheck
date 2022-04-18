@@ -6,10 +6,6 @@ import pytest
 import rstcheck
 
 
-# We don't do this in the module itself to avoid mutation.
-rstcheck.ignore_sphinx(True)
-
-
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
 def test_parse_gcc_style_error_message() -> None:
     """Test `parse_gcc_style_error_message`."""
