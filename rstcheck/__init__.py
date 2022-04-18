@@ -165,7 +165,7 @@ def strip_byte_order_mark(text: str) -> str:
         return text
 
 
-def check(  # noqa: CCR001 # pylint: disable=too-many-arguments
+def check(  # noqa: CCR001
     source: str,
     filename: str = "<string>",
     report_level: int = docutils.utils.Reporter.INFO_LEVEL,
@@ -671,7 +671,7 @@ def run_in_subprocess(
 class CheckTranslator(docutils.nodes.NodeVisitor):
     """Visits code blocks and checks for syntax errors in code."""
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         document: docutils.nodes.document,
         file_contents: str,
@@ -818,12 +818,7 @@ def beginning_of_code_block(
 class CheckWriter(docutils.writers.Writer):
     """Runs CheckTranslator on code blocks."""
 
-    def __init__(
-        self,
-        file_contents: str,
-        filename: str,
-        ignore: IgnoreDict,
-    ) -> None:
+    def __init__(self, file_contents: str, filename: str, ignore: IgnoreDict) -> None:
         """Init CheckWriter."""
         docutils.writers.Writer.__init__(self)
         self.checkers: typing.List[RunCheckFunction] = []
