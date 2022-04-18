@@ -514,7 +514,7 @@ def _ignore_role(
     return ([], [])
 
 
-def ignore_sphinx(use_sphinx_defaults: bool = False) -> None:
+def ignore_sphinx(use_sphinx_defaults: bool) -> None:
     """Register Sphinx directives and roles to ignore."""
     directives: typing.List[str] = []
     roles: typing.List[str] = []

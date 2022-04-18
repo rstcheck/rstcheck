@@ -7,7 +7,7 @@ import rstcheck
 
 
 # We don't do this in the module itself to avoid mutation.
-rstcheck.ignore_sphinx()
+rstcheck.ignore_sphinx(True)
 
 
 @pytest.mark.usefixtures("enable_sphinx_if_possible")
