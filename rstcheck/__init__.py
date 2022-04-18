@@ -902,6 +902,11 @@ def parse_args() -> argparse.Namespace:
         "-r", "--recursive", action="store_true", help="run recursively over directories"
     )
     parser.add_argument(
+        "--use-sphinx-defaults",
+        action="store_true",
+        help="run with default values for sphinx when it is not available",
+    )
+    parser.add_argument(
         "--report",
         metavar="level",
         choices=threshold_choices,
