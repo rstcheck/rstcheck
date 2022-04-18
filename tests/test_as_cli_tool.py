@@ -404,6 +404,39 @@ class TestConfigFromOtherDirCanBeUsed:
 
 
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
+class TestConfigIgnoredSubstitutions:
+    """Test that ignored substitutions in tables are correctly handled."""
+
+    @staticmethod
+    @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
+    def test_example_without_config_errors() -> None:
+        """Test that example errors by default."""
+        result = subprocess.run(  # pylint: disable=subprocess-run-check # noqa: S603,S607
+            [
+                "rstcheck",
+                "examples/without_configuration/table_substitutions.rst",
+            ]
+        )
+
+        assert result.returncode != 0
+
+    @staticmethod
+    @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
+    def test_example_with_ignored_substitutions_exits_zero() -> None:
+        """Test that ignored substitution references in a table are correctly handled."""
+        result = subprocess.run(  # pylint: disable=subprocess-run-check # noqa: S603,S607
+            [
+                "rstcheck",
+                "--ignore-substitutions",
+                "FOO_ID,BAR_ID",
+                "examples/without_configuration/table_substitutions.rst",
+            ]
+        )
+
+        assert result.returncode == 0
+
+
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Buggy on windows and macos.")
 @pytest.mark.skipif(rstcheck.SPHINX_INSTALLED, reason="Run only without sphinx.")
 def test_sphinx_role_erros_without_sphinx() -> None:
     """Test sphinx example errors without sphinx."""
