@@ -508,31 +508,22 @@ def _ignore_role(
     return ([], [])
 
 
-def ignore_sphinx() -> None:
+def ignore_sphinx(use_sphinx_defaults: bool = False) -> None:
     """Register Sphinx directives and roles to ignore."""
-    (directives, roles) = _get_directives_and_roles_from_sphinx()
+    directives: typing.List[str] = []
+    roles: typing.List[str] = []
 
-    directives += [
-        "centered",
-        "include",
-        "deprecated",
-        "index",
-        "no-code-block",
-        "literalinclude",
-        "hlist",
-        "seealso",
-        "toctree",
-        "todo",
-        "versionadded",
-        "versionchanged",
-    ]
+    if SPHINX_INSTALLED:
+        (directives, roles) = _get_directives_and_roles_from_sphinx()
+    elif use_sphinx_defaults:
+        (directives, roles) = _get_default_directives_and_roles_for_sphinx()
 
-    ext_autosummary = [
-        "autosummary",
-        "currentmodule",
-    ]
+    if SPHINX_INSTALLED or use_sphinx_defaults:
+        extended_ignores = _get_extended_default_directives_and_roles_for_sphinx()
+        directives += extended_ignores[0]
+        roles += extended_ignores[1]
 
-    ignore_directives_and_roles(directives + ext_autosummary, roles + ["ctype"])
+    ignore_directives_and_roles(directives, roles)
 
 
 def find_config(  # noqa: CCR001
