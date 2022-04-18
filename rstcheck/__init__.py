@@ -88,6 +88,7 @@ class IgnoreDict(typing_extensions.TypedDict, total=False):
 
     languages: typing.List[typing.Optional[str]]
     messages: str
+    directives: typing.List[str]
 
 
 ErrorTuple = typing.Tuple[int, str]
@@ -140,13 +141,20 @@ class CodeBlockDirective(docutils.parsers.rst.Directive):
         return [literal]
 
 
-def register_code_directive() -> None:
+def register_code_directive(
+    ignore_code_directive: bool = False,
+    ignore_codeblock_directive: bool = False,
+    ignore_sourcecode_directive: bool = False,
+) -> None:
     """Register code directive."""
     if not SPHINX_INSTALLED:
-        docutils.parsers.rst.directives.register_directive("code", CodeBlockDirective)
+        if not ignore_code_directive:
+            docutils.parsers.rst.directives.register_directive("code", CodeBlockDirective)
         # NOTE: docutils maps `code-block` and `sourcecode` to `code`
-        docutils.parsers.rst.directives.register_directive("code-block", CodeBlockDirective)
-        docutils.parsers.rst.directives.register_directive("sourcecode", CodeBlockDirective)
+        if not ignore_codeblock_directive:
+            docutils.parsers.rst.directives.register_directive("code-block", CodeBlockDirective)
+        if not ignore_sourcecode_directive:
+            docutils.parsers.rst.directives.register_directive("sourcecode", CodeBlockDirective)
 
 
 def strip_byte_order_mark(text: str) -> str:
@@ -180,12 +188,16 @@ def check(  # noqa: CCR001 # pylint: disable=too-many-arguments
     ``register_*()`` functions.
 
     """
+    ignore = ignore or {}
+
     # Do this at call time rather than import time to avoid unnecessarily
     # mutating state.
-    register_code_directive()
+    register_code_directive(
+        "code" in ignore.get("directives", []),
+        "code-block" in ignore.get("directives", []),
+        "sourcecode" in ignore.get("directives", []),
+    )
     load_ignore_sphinx()
-
-    ignore = ignore or {}
 
     try:
         ignore.setdefault("languages", []).extend(find_ignored_languages(source))
@@ -288,6 +300,7 @@ def _check_file(
     ignore: IgnoreDict = {
         "languages": args.ignore_language,
         "messages": args.ignore_messages,
+        "directives": args.ignore_directives,
     }
     all_errors = []
     for error in check(
