@@ -54,7 +54,7 @@ import typing_extensions
 try:
     import sphinx
 
-    SPHINX_INSTALLED = sphinx.version_info >= (1, 5)
+    SPHINX_INSTALLED = sphinx.version_info >= (2, 0)
 except (AttributeError, ImportError):
     SPHINX_INSTALLED = False
 
