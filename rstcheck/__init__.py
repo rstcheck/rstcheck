@@ -372,76 +372,82 @@ def split_comma_separated(text: str) -> typing.List[str]:
 
 
 def _get_directives_and_roles_from_sphinx() -> typing.Tuple[typing.List[str], typing.List[str]]:
-    """Return a tuple of Sphinx directive and roles."""
-    if SPHINX_INSTALLED:
-        sphinx_directives = list(sphinx.domains.std.StandardDomain.directives)
-        sphinx_roles = list(sphinx.domains.std.StandardDomain.roles)
+    """Return a tuple of Sphinx directive and roles loaded from sphinx."""
+    sphinx_directives = list(sphinx.domains.std.StandardDomain.directives)
+    sphinx_roles = list(sphinx.domains.std.StandardDomain.roles)
 
-        for domain in [
-            sphinx.domains.c.CDomain,
-            sphinx.domains.cpp.CPPDomain,
-            sphinx.domains.javascript.JavaScriptDomain,
-            sphinx.domains.python.PythonDomain,
-        ]:
+    for domain in [
+        sphinx.domains.c.CDomain,
+        sphinx.domains.cpp.CPPDomain,
+        sphinx.domains.javascript.JavaScriptDomain,
+        sphinx.domains.python.PythonDomain,
+    ]:
 
-            sphinx_directives += list(domain.directives) + [
-                f"{domain.name}:{item}" for item in list(domain.directives)
-            ]
-
-            sphinx_roles += list(domain.roles) + [
-                f"{domain.name}:{item}" for item in list(domain.roles)
-            ]
-    else:
-        sphinx_roles = [
-            "abbr",
-            "command",
-            "dfn",
-            "doc",
-            "download",
-            "envvar",
-            "file",
-            "guilabel",
-            "kbd",
-            "keyword",
-            "mailheader",
-            "makevar",
-            "manpage",
-            "menuselection",
-            "mimetype",
-            "newsgroup",
-            "option",
-            "program",
-            "py:func",
-            "ref",
-            "regexp",
-            "samp",
-            "term",
-            "token",
+        sphinx_directives += list(domain.directives) + [
+            f"{domain.name}:{item}" for item in list(domain.directives)
         ]
 
-        sphinx_directives = [
-            "autosummary",
-            "currentmodule",
-            "centered",
-            "c:function",
-            "c:type",
-            "include",
-            "deprecated",
-            "envvar",
-            "glossary",
-            "index",
-            "no-code-block",
-            "literalinclude",
-            "hlist",
-            "option",
-            "productionlist",
-            "py:function",
-            "seealso",
-            "toctree",
-            "todo",
-            "versionadded",
-            "versionchanged",
+        sphinx_roles += list(domain.roles) + [
+            f"{domain.name}:{item}" for item in list(domain.roles)
         ]
+
+    return (sphinx_directives, sphinx_roles)
+
+
+def _get_default_directives_and_roles_for_sphinx() -> typing.Tuple[
+    typing.List[str], typing.List[str]
+]:
+    """Return a tuple of default Sphinx directive and roles."""
+    sphinx_roles = [
+        "abbr",
+        "command",
+        "dfn",
+        "doc",
+        "download",
+        "envvar",
+        "file",
+        "guilabel",
+        "kbd",
+        "keyword",
+        "mailheader",
+        "makevar",
+        "manpage",
+        "menuselection",
+        "mimetype",
+        "newsgroup",
+        "option",
+        "program",
+        "py:func",
+        "ref",
+        "regexp",
+        "samp",
+        "term",
+        "token",
+    ]
+
+    sphinx_directives = [
+        "autosummary",
+        "currentmodule",
+        "centered",
+        "c:function",
+        "c:type",
+        "include",
+        "deprecated",
+        "envvar",
+        "glossary",
+        "index",
+        "no-code-block",
+        "literalinclude",
+        "hlist",
+        "option",
+        "productionlist",
+        "py:function",
+        "seealso",
+        "toctree",
+        "todo",
+        "versionadded",
+        "versionchanged",
+    ]
 
     return (sphinx_directives, sphinx_roles)
 
