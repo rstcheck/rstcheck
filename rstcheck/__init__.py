@@ -142,7 +142,8 @@ class CodeBlockDirective(docutils.parsers.rst.Directive):
 
 def register_code_directive() -> None:
     """Register code directive."""
-    docutils.parsers.rst.directives.register_directive("code", CodeBlockDirective)
+    if not SPHINX_INSTALLED:
+        docutils.parsers.rst.directives.register_directive("code", CodeBlockDirective)
 
 
 def strip_byte_order_mark(text: str) -> str:
@@ -537,6 +538,10 @@ def load_configuration_from_file(directory: str, args: argparse.Namespace) -> ar
         directory_or_file = args.config
 
     options = _get_options(directory_or_file, debug=args.debug)
+
+    args.use_sphinx_defaults = (
+        options.get("use_sphinx_defaults", str(args.use_sphinx_defaults)).casefold() == "true"
+    )
 
     args.report = options.get("report", args.report)
     threshold_dictionary = docutils.frontend.OptionParser.thresholds
