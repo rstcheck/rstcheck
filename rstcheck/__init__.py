@@ -48,9 +48,15 @@ import docutils.nodes
 import docutils.parsers.rst
 import docutils.utils
 import docutils.writers
-import tomli
 import typing_extensions
 
+
+try:
+    import tomli
+
+    TOMLI_INSTALLED = True
+except ImportError:
+    TOMLI_INSTALLED = False
 
 try:
     import sphinx
@@ -68,7 +74,6 @@ if SPHINX_INSTALLED:
     import sphinx.domains.python
     import sphinx.domains.std
     import sphinx.roles
-
 
 __version__ = "5.0.0"
 
@@ -523,7 +528,7 @@ def _get_options(directory_or_file: str, debug: bool = False) -> typing.Dict[str
     else:
         config_file = os.path.basename(config_path)
 
-    if config_file == "pyproject.toml":  # pylint: disable=no-else-return
+    if config_file == "pyproject.toml" and TOMLI_INSTALLED:  # pylint: disable=no-else-return
         return _get_pyproject_options(config_path)
     else:
         parser = configparser.ConfigParser()
