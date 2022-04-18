@@ -663,7 +663,7 @@ class CheckTranslator(docutils.nodes.NodeVisitor):
         document: docutils.nodes.document,
         file_contents: str,
         filename: str,
-        ignore: IgnoreDict,
+        ignore: typing.Optional[IgnoreDict],
     ) -> None:
         """Init CheckTranslator."""
         docutils.nodes.NodeVisitor.__init__(self, document)
