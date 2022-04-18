@@ -500,12 +500,12 @@ def test_ignore_sphinx_directives() -> None:
 
    print('Hello')
 
-.. code:: ruby
+.. code-block:: ruby
    :linenos:
 
    puts "Hello!"
 
-.. code:: python
+.. code-block:: python
    :linenos:
    :emphasize-lines: 3,5
 
