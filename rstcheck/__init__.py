@@ -144,6 +144,9 @@ def register_code_directive() -> None:
     """Register code directive."""
     if not SPHINX_INSTALLED:
         docutils.parsers.rst.directives.register_directive("code", CodeBlockDirective)
+        # NOTE: docutils maps `code-block` and `sourcecode` to `code`
+        docutils.parsers.rst.directives.register_directive("code-block", CodeBlockDirective)
+        docutils.parsers.rst.directives.register_directive("sourcecode", CodeBlockDirective)
 
 
 def strip_byte_order_mark(text: str) -> str:
