@@ -24,6 +24,7 @@ Additional contributions by (sorted by name)
 - Michael Goerz <goerz@stanford.edu>
 - Nicolas Vuillamy <nicolas.vuillamy@gmail.com>
 - NicolasVuillamy <nicolas.vuillamy@gmail.com>
+- Qeole <qeole@outlook.com>
 - Sameer Singh <sam7thegreat@gmail.com>
 - Santos Gallegos <santos_g@outlook.com>
 - Svintsov Dmitry <root@uralbash.ru>
