@@ -41,6 +41,7 @@ repos:
       - id: python-safety-dependencies-check
         args: ["--full-report"]
         files: pyproject.toml
+        exclude: examples
 
   # ####################################################################################
   #
