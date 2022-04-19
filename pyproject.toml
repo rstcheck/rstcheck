@@ -47,6 +47,7 @@ pytest = ">=6"
 
 [tool.poetry.extras]
 sphinx = ["sphinx"]
+toml = ["tomli"]
 testing = [
   "pytest",
   "pytest-xdist",
