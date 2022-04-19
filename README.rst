@@ -391,6 +391,7 @@ History
 - Add section with ``Known limitations / FAQ`` to the README (#97)
 - Accumulate all errors in rst source instead of only one (#83)
 - Fix Malformed tables because of substitutions (#82)
+- Fix: remove ``include`` directive from ignore list when sphinx is active (#70)
 
 
 .. _beaking_changes_v6:
