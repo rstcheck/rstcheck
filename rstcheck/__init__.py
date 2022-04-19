@@ -295,7 +295,7 @@ def _check_file(
     ignore_directives_and_roles(args.ignore_directives, args.ignore_roles)
 
     for substitution in args.ignore_substitutions:
-        input_file_contents = input_file_contents.replace(f"|{substitution}|", "None")
+        input_file_contents = input_file_contents.replace(f"|{substitution}|", f"x{substitution}x")
 
     ignore: IgnoreDict = {
         "languages": args.ignore_language,
