@@ -421,6 +421,8 @@ def _get_directives_and_roles_from_sphinx() -> typing.Tuple[typing.List[str], ty
         sphinx_directives.remove("code")
     if "code-block" in sphinx_directives:
         sphinx_directives.remove("code-block")
+    if "include" in sphinx_directives:
+        sphinx_directives.remove("include")
 
     return (sphinx_directives, sphinx_roles)
 
