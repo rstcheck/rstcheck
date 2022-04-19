@@ -9,7 +9,5 @@ ignore_roles = [
 ignore_messages = [
 	"(Document or section may not begin with a transition\\.$)"
 ]
-ignore_language = [
-	"cpp"
-]
+ignore_language = "cpp"
 report = "warning"

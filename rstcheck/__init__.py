@@ -75,6 +75,7 @@ if SPHINX_INSTALLED:
     import sphinx.domains.std
     import sphinx.roles
 
+
 __version__ = "5.0.0"
 
 
@@ -86,7 +87,9 @@ RSTCHECK_COMMENT_RE = re.compile(r"\.\. rstcheck:")
 
 # This is for the cases where code in a readme uses includes in that directory.
 INCLUDE_FLAGS = ["-I.", "-I.."]
-CONFIG_FILES = [".rstcheck.cfg", "setup.cfg", "pyproject.toml"]
+CONFIG_FILES = [".rstcheck.cfg", "setup.cfg"]
+if TOMLI_INSTALLED:
+    CONFIG_FILES = [".rstcheck.cfg", "pyproject.toml", "setup.cfg"]
 
 
 class IgnoreDict(typing_extensions.TypedDict, total=False):
@@ -456,9 +459,7 @@ def load_ignore_sphinx() -> None:
     ignore_directives_and_roles(directives, roles)
 
 
-def find_config(  # noqa: CCR001
-    directory_or_file: str, debug: bool = False
-) -> typing.Optional[str]:
+def find_config(directory_or_file: str, debug: bool = False) -> str:  # noqa: CCR001
     """Return configuration filename.
 
     If `directory_or_file` is a file, return the real-path of that file. If it
@@ -485,7 +486,7 @@ def find_config(  # noqa: CCR001
             break
         directory = parent_directory
 
-    return None
+    return ""
 
 
 def load_configuration_from_file(directory: str, args: argparse.Namespace) -> argparse.Namespace:
@@ -522,23 +523,23 @@ def load_configuration_from_file(directory: str, args: argparse.Namespace) -> ar
 
 
 def _get_options(directory_or_file: str, debug: bool = False) -> typing.Dict[str, str]:
+    options = {}
+
     config_path = find_config(directory_or_file, debug=debug)
-    if not config_path:  # pylint: disable=no-else-return
-        return {}
-    else:
+    if config_path:
         config_file = os.path.basename(config_path)
 
-    if config_file == "pyproject.toml" and TOMLI_INSTALLED:  # pylint: disable=no-else-return
-        return _get_pyproject_options(config_path)
+    if config_file == "pyproject.toml":
+        options = _get_pyproject_options(config_path)
     else:
         parser = configparser.ConfigParser()
         parser.read(config_path)
         try:
             options = dict(parser.items("rstcheck"))
         except configparser.NoSectionError:
-            return {}
-        else:
-            return options
+            options = {}
+
+    return options
 
 
 def _get_pyproject_options(config_path: str) -> typing.Dict[str, str]:
@@ -550,9 +551,15 @@ def _get_pyproject_options(config_path: str) -> typing.Dict[str, str]:
     # separated string.  This makes the options from pyproject.toml consistent
     # with the options read from other configuration files.  The try block
     # accounts for pyproject files without a rstcheck section.
-    for _ignore in ["ignore_directives", "ignore_roles", "ignore_messages", "ignore_language"]:
+    for _ignore in [
+        "ignore_directives",
+        "ignore_roles",
+        "ignore_messages",
+        "ignore_language",
+        "report",
+    ]:
         try:
-            if options[_ignore] != "":
+            if isinstance(options[_ignore], list):
                 options[_ignore] = ",".join(options.get(_ignore, ""))
         except KeyError:
             continue
