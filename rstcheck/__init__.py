@@ -33,6 +33,7 @@ import json
 import locale
 import multiprocessing
 import os
+import pathlib
 import re
 import shlex
 import shutil
@@ -461,7 +462,9 @@ def load_ignore_sphinx() -> None:
     ignore_directives_and_roles(directives, roles)
 
 
-def find_config(directory_or_file: str, debug: bool = False) -> str:  # noqa: CCR001
+def find_config(  # noqa: CCR001
+    directory_or_file: str, debug: bool = False
+) -> typing.Optional[str]:
     """Return configuration filename.
 
     If `directory_or_file` is a file, return the real-path of that file. If it
@@ -488,7 +491,7 @@ def find_config(directory_or_file: str, debug: bool = False) -> str:  # noqa: CC
             break
         directory = parent_directory
 
-    return ""
+    return None
 
 
 def load_configuration_from_file(directory: str, args: argparse.Namespace) -> argparse.Namespace:
@@ -525,46 +528,57 @@ def load_configuration_from_file(directory: str, args: argparse.Namespace) -> ar
 
 
 def _get_options(directory_or_file: str, debug: bool = False) -> typing.Dict[str, str]:
-    options = {}
-
     config_path = find_config(directory_or_file, debug=debug)
-    if config_path:
-        config_file = os.path.basename(config_path)
+    if not config_path:
+        return {}
 
-    if config_file == "pyproject.toml":
-        options = _get_pyproject_options(config_path)
-    else:
-        parser = configparser.ConfigParser()
-        parser.read(config_path)
-        try:
-            options = dict(parser.items("rstcheck"))
-        except configparser.NoSectionError:
-            options = {}
+    if pathlib.Path(config_path).name == "pyproject.toml":
+        return _get_pyproject_options(config_path)
 
-    return options
+    parser = configparser.ConfigParser()
+    parser.read(config_path)
+    try:
+        return dict(parser.items("rstcheck"))
+    except configparser.NoSectionError:
+        return {}
+
+
+RSTCHECK_TOML_CONFIG = typing.Dict[str, typing.Union[str, typing.List[str]]]
 
 
 def _get_pyproject_options(config_path: str) -> typing.Dict[str, str]:
+
     with open(config_path, "rb") as conf_file:
         config = tomli.load(conf_file)
-        options: typing.Dict[str, str] = config.get("tool", {}).get("rstcheck", {})
+
+    options_from_file: typing.Optional[RSTCHECK_TOML_CONFIG] = config.get("tool", {}).get(
+        "rstcheck", None
+    )
+
+    if options_from_file is None:
+        return {}
+
+    options = {}
 
     # tomli returns a list of strings and ConfigParser returns a comma
     # separated string.  This makes the options from pyproject.toml consistent
     # with the options read from other configuration files.  The try block
     # accounts for pyproject files without a rstcheck section.
-    for _ignore in [
+    for option in [
         "ignore_directives",
         "ignore_roles",
         "ignore_messages",
         "ignore_language",
         "report",
     ]:
-        try:
-            if isinstance(options[_ignore], list):
-                options[_ignore] = ",".join(options.get(_ignore, ""))
-        except KeyError:
+        option_value = options_from_file.get(option, None)
+        if option_value is None:
             continue
+
+        if isinstance(option_value, list):
+            option_value = ",".join(option_value)
+
+        options[option] = option_value
 
     return options
 
