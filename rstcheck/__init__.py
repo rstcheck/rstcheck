@@ -543,7 +543,7 @@ def _get_options(directory_or_file: str, debug: bool = False) -> typing.Dict[str
         return {}
 
 
-RSTCHECK_TOML_CONFIG = typing.Dict[str, typing.Union[str, typing.List[str]]]
+RstcheckTOMLConfig = typing.Dict[str, typing.Union[str, typing.List[str]]]
 
 
 def _get_pyproject_options(config_path: str) -> typing.Dict[str, str]:
@@ -551,7 +551,7 @@ def _get_pyproject_options(config_path: str) -> typing.Dict[str, str]:
     with open(config_path, "rb") as conf_file:
         config = tomli.load(conf_file)
 
-    options_from_file: typing.Optional[RSTCHECK_TOML_CONFIG] = config.get("tool", {}).get(
+    options_from_file: typing.Optional[RstcheckTOMLConfig] = config.get("tool", {}).get(
         "rstcheck", None
     )
 
