@@ -36,6 +36,7 @@ pytest-xdist = { version = ">=2.5", extras = ["psutil"], optional = true }
 pytest-sugar = { git = "https://github.com/Teemu/pytest-sugar.git", rev = "ee02ada200026f4bfabf2252c6c59b08f5564255", optional = true }
 pytest-randomly = { version = ">=3", optional = true }
 tomli = { version = "^2.0.1", optional = true }
+pydantic = "^1.9.0"
 
 [tool.poetry.dev-dependencies]
 pre-commit = ">=2.17"
