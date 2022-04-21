@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # pylint: disable=too-many-lines
 
 # Copyright (C) 2013-2022 Steven Myint
