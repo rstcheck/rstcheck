@@ -33,6 +33,7 @@ import json
 import locale
 import multiprocessing
 import os
+import pathlib
 import re
 import shlex
 import shutil
@@ -50,6 +51,13 @@ import docutils.utils
 import docutils.writers
 import typing_extensions
 
+
+try:
+    import tomli
+
+    TOMLI_INSTALLED = True
+except ImportError:
+    TOMLI_INSTALLED = False
 
 try:
     import sphinx
@@ -81,6 +89,8 @@ RSTCHECK_COMMENT_RE = re.compile(r"\.\. rstcheck:")
 # This is for the cases where code in a readme uses includes in that directory.
 INCLUDE_FLAGS = ["-I.", "-I.."]
 CONFIG_FILES = [".rstcheck.cfg", "setup.cfg"]
+if TOMLI_INSTALLED:
+    CONFIG_FILES = [".rstcheck.cfg", "pyproject.toml", "setup.cfg"]
 
 
 class IgnoreDict(typing_extensions.TypedDict, total=False):
@@ -522,14 +532,55 @@ def _get_options(directory_or_file: str, debug: bool = False) -> typing.Dict[str
     if not config_path:
         return {}
 
+    if pathlib.Path(config_path).name == "pyproject.toml":
+        return _get_pyproject_options(config_path)
+
     parser = configparser.ConfigParser()
     parser.read(config_path)
     try:
-        options = dict(parser.items("rstcheck"))
+        return dict(parser.items("rstcheck"))
     except configparser.NoSectionError:
         return {}
-    else:
-        return options
+
+
+RstcheckTOMLConfig = typing.Dict[str, typing.Union[str, typing.List[str]]]
+
+
+def _get_pyproject_options(config_path: str) -> typing.Dict[str, str]:
+
+    with open(config_path, "rb") as conf_file:
+        config = tomli.load(conf_file)
+
+    options_from_file: typing.Optional[RstcheckTOMLConfig] = config.get("tool", {}).get(
+        "rstcheck", None
+    )
+
+    if options_from_file is None:
+        return {}
+
+    options = {}
+
+    # tomli returns a list of strings and ConfigParser returns a comma
+    # separated string.  This makes the options from pyproject.toml consistent
+    # with the options read from other configuration files.  The try block
+    # accounts for pyproject files without a rstcheck section.
+    for option in [
+        "ignore_directives",
+        "ignore_roles",
+        "ignore_messages",
+        "ignore_language",
+        "report",
+    ]:
+        option_value = options_from_file.get(option, None)
+        if option_value is None:
+            continue
+
+        if isinstance(option_value, list):
+            option_value = ",".join(option_value)
+
+        options[option] = option_value
+
+    return options
 
 
 def ignore_directives_and_roles(directives: typing.List[str], roles: typing.List[str]) -> None:
