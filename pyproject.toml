@@ -30,6 +30,8 @@ types-docutils = ">=0.18,<0.19"
 typing-extensions = ">=4.1,<5"
 sphinx = {version = ">=4,<5", optional = true}
 pytest = { version = ">=6", optional = true }
+pytest-cov = {version = ">=3.0", optional = true}
+coverage = {extras = ["toml"], version = ">=6.0", optional = true}
 pytest-xdist = { version = ">=2.5", extras = ["psutil"], optional = true }
 # TODO:#i# wait for new release
 # pytest-sugar = { version = ">=0.9.5", optional = true }
@@ -51,6 +53,7 @@ sphinx = ["sphinx"]
 toml = ["tomli"]
 testing = [
   "pytest",
+  "pytest-cov",
   "pytest-xdist",
   "pytest-sugar",
   "pytest-randomly",
@@ -125,6 +128,51 @@ disable = [
   "W1203",  # Use % format in logger funcs | https://github.com/PyCQA/pylint/issues/2354
 ]
 
+
 # -- PYTEST CONFIG --------------------------------------------------------------------
 [tool.pytest.ini_options]
 addopts = "-ra --showlocals"
+
+
+# -- COVERAGE CONFIG ------------------------------------------------------------------
+[tool.coverage]
+  [tool.coverage.run]
+  branch = true
+  parallel = true
+  context = "static-context"
+  omit = [
+    "tests/*",
+  ]
+
+  [tool.coverage.paths]
+  tox_combine = [
+    "src/rstcheck",
+    "*/.tox/*/lib/python*/site-packages/rstcheck",
+    "*/.tox/pypy*/site-packages/rstcheck",
+    "*/.tox\\*\\Lib\\site-packages\\rstcheck",
+  ]
+  local_combine = [
+    "src/rstcheck",
+    "*/.venv/lib/python*/site-packages/rstcheck",
+    "*/.venv\\*\\Lib\\site-packages\\rstcheck",
+    "*/src/rstcheck",
+    "*\\src\\rstcheck",
+  ]
+
+  [tool.coverage.report]
+  show_missing = true
+  exclude_lines = [
+    "# pragma: no cover",
+    "if __name__ == ['\"]__main__['\"]:",
+    "def __str__",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "if 0:",
+    "if False:",
+    "if TYPE_CHECKING:",
+    "if MYPY:",
+  ]
+
+  [tool.coverage.html]
+  show_contexts = true
