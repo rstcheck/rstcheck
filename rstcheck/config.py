@@ -38,7 +38,7 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
     recursive: typing.Optional[bool]
     report: typing.Optional[ReportLevel]
     ignore_languages: typing.Optional[typing.List[str]]
-    ignore_messages: typing.Optional[str]
+    ignore_messages: typing.Optional[typing.Pattern]
     ignore_directives: typing.Optional[typing.List[str]]
     ignore_roles: typing.Optional[typing.List[str]]
     ignore_substitutions: typing.Optional[typing.List[str]]
@@ -52,7 +52,7 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
         :raises ValueError: If ``Value`` is not a valid docutils report level
         :return: Instance of ``ReportLevel`` or None if emptry string.
         """
-        if value == "":
+        if value == "" or value is None:
             return None
 
         if isinstance(value, str):
@@ -71,7 +71,7 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
         "ignore_languages", "ignore_directives", "ignore_roles", "ignore_substitutions", pre=True
     )
     @classmethod
-    def split_str(cls, value: typing.Any) -> typing.List[str]:  # noqa: ANN401
+    def split_str(cls, value: typing.Any) -> typing.Optional[typing.List[str]]:  # noqa: ANN401
         """Validate and parse the following ignore_* settings.
 
         - ignore_languages
@@ -85,6 +85,8 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
         :raises ValueError: If not a ``str`` or ``List[str]``
         :return: List of things to ignore in the respective category
         """
+        if value is None:
+            return None
         if isinstance(value, str):
             return value.split(",")
         if isinstance(value, list) and all(isinstance(v, str) for v in value):
@@ -93,7 +95,7 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
 
     @pydantic.validator("ignore_messages", pre=True)
     @classmethod
-    def join_regex_str(cls, value: typing.Any) -> typing.Pattern:  # noqa: ANN401
+    def join_regex_str(cls, value: typing.Any) -> typing.Optional[typing.Pattern]:  # noqa: ANN401
         """Validate and parse the ignore_messages setting to a RegEx.
 
         If a list ist given, the entries are concatenated with "|" to create an or RegEx.
@@ -102,6 +104,8 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
         :raises ValueError: If not a ``str`` or ``List[str]``
         :return: A RegEx with messages to ignore
         """
+        if value is None:
+            return None
         if isinstance(value, list) and all(isinstance(v, str) for v in value):
             return re.compile(r"|".join(value))
         if isinstance(value, str):
