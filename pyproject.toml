@@ -40,9 +40,10 @@ pytest-xdist = { version = ">=2.5", extras = ["psutil"], optional = true }
 pytest-sugar = { git = "https://github.com/Teemu/pytest-sugar.git", rev = "ee02ada200026f4bfabf2252c6c59b08f5564255", optional = true }
 pytest-randomly = { version = ">=3", optional = true }
 # MAIN DEPENDENCIES
+importlib-metadata = {version = ">=1.6, <5.0", python = "<3.8"}
+typing-extensions = {version = ">=3.7.4, <5.0", python = "<3.8"}
 docutils = ">=0.7,<0.19"
 types-docutils = ">=0.18,<0.19"
-typing-extensions = ">=4.1,<5"
 pydantic = "^1.9.0"
 
 [tool.poetry.dev-dependencies]
@@ -88,7 +89,7 @@ warn_unused_ignores = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_unreachable = true
-python_version = 3.7  # CHANGE ME
+python_version = "3.10"  # CHANGE ME
 
 
 # -- FLAKEHEAVEN CONFIG ----------------------------------------------------------------
@@ -186,3 +187,4 @@ show_contexts = true
 [tool.coverage.coverage_conditional_plugin.rules]
 # use with: # pragma: <KEY>
 py-gte-38 = "sys_version_info >= (3, 8)"
+py-gte-310 = "sys_version_info >= (3, 10)"
