@@ -55,6 +55,9 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
         if value == "" or value is None:
             return None
 
+        if isinstance(value, bool):
+            raise ValueError("Invalid report level")
+
         if isinstance(value, str):
             if value.casefold() in set(ReportLevelMap):
                 return ReportLevel(ReportLevelMap[value.casefold()])
@@ -65,7 +68,7 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
         if isinstance(value, int) and 1 <= value <= 5:
             return ReportLevel(value)
 
-        raise ValueError("Invalid report level.")
+        raise ValueError("Invalid report level")
 
     @pydantic.validator(
         "ignore_languages", "ignore_directives", "ignore_roles", "ignore_substitutions", pre=True
