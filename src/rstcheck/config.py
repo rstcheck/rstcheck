@@ -2,12 +2,17 @@
 import configparser
 import contextlib
 import enum
-import importlib
 import pathlib
 import re
 import typing
 
 import pydantic
+
+from . import _extras
+
+
+if _extras.TOMLI_INSTALLED:
+    import tomli
 
 
 class ReportLevel(enum.Enum):
@@ -145,6 +150,10 @@ RstcheckTOMLConfig = typing.Dict[str, typing.Union[str, typing.List[str]]]
 def load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[RstcheckConfig]:
     """Load rstcheck config from a TOML file.
 
+    .. note::
+
+        Needs tomli installed. Use toml extra.
+
     :param toml_file: TOML file to load config from
     :raises ModuleNotFoundError: If ``tomli`` is not installed
     :raises ValueError: If the file is not a TOML file
@@ -152,7 +161,7 @@ def load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[Rstch
     :return: ``None`` if no config section is found in the file;
         instance of ``RstcheckConfig`` otherwise
     """
-    tomli = importlib.import_module("tomli")
+    _extras.install_guard("tomli")
 
     if toml_file.suffix.casefold() != ".toml":
         ValueError("File is not a TOML file.")
