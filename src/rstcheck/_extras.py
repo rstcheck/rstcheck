@@ -6,12 +6,13 @@ extra packages installed.
 
 Example usage:
 
-.. code-block: python
+.. code-block:: python
 
     from rstcheck import _extras
 
     if _extras.SPHINX_INSTALLED:
         import sphinx
+
 
     def print_sphinx_version():
         _extras.install_guard("sphinx")
