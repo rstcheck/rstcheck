@@ -176,7 +176,7 @@ class RstcheckConfigTOMLFile(
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    report: typing.Optional[typing.Union[str, int]] = None
+    report: typing.Optional[typing.Union[int, str]] = None
     ignore_directives: typing.Optional[typing.List[str]] = None
     ignore_roles: typing.Optional[typing.List[str]] = None
     ignore_substitutions: typing.Optional[typing.List[str]] = None
