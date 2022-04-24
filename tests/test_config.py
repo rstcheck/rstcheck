@@ -30,24 +30,24 @@ def test_report_level_map_matches_names() -> None:  # noqa: AAA01
 class TestReportLevelValidator:
     """Test ``valid_report_level`` validator method of the ``RstcheckConfig`` class.
 
-    It validates the ``report`` setting.
+    It validates the ``report_level`` setting.
     """
 
     @staticmethod
     def test_none_means_unset() -> None:
         """Test ``None`` results in unset report level."""
-        result = config.RstcheckConfig(files=[pathlib.Path()], report=None)
+        result = config.RstcheckConfig(check_paths=[pathlib.Path()], report_level=None)
 
         assert result is not None
-        assert result.report is None
+        assert result.report_level is None
 
     @staticmethod
     def test_empty_string_means_unset() -> None:
         """Test empty string results in unset report level."""
-        result = config.RstcheckConfig(files=[pathlib.Path()], report="")
+        result = config.RstcheckConfig(check_paths=[pathlib.Path()], report_level="")
 
         assert result is not None
-        assert result.report is None
+        assert result.report_level is None
 
     @staticmethod
     @pytest.mark.parametrize(
@@ -56,10 +56,10 @@ class TestReportLevelValidator:
     )
     def test_valid_report_levels(level: typing.Any) -> None:  # noqa: ANN401
         """Test valid report levels accepted by docutils."""
-        result = config.RstcheckConfig(files=[pathlib.Path()], report=level)
+        result = config.RstcheckConfig(check_paths=[pathlib.Path()], report_level=level)
 
         assert result is not None
-        assert result.report is not None
+        assert result.report_level is not None
 
     @staticmethod
     @pytest.mark.parametrize(
@@ -69,7 +69,7 @@ class TestReportLevelValidator:
     def test_invalid_report_levels(level: typing.Any) -> None:  # noqa: ANN401
         """Test invalid report levels not accepted by docutils."""
         with pytest.raises(ValueError, match="Invalid report level"):
-            config.RstcheckConfig(files=[pathlib.Path()], report=level)
+            config.RstcheckConfig(check_paths=[pathlib.Path()], report_level=level)
 
 
 class TestSplitStrValidator:
@@ -89,7 +89,7 @@ class TestSplitStrValidator:
     def test_none_means_unset() -> None:
         """Test ``None`` results in unset ignore_messages."""
         result = config.RstcheckConfig(
-            files=[pathlib.Path()],
+            check_paths=[pathlib.Path()],
             ignore_languages=None,
             ignore_directives=None,
             ignore_roles=None,
@@ -116,7 +116,7 @@ class TestSplitStrValidator:
     def test_strings_are_transformed_to_lists(string: str, split_list: typing.List[str]) -> None:
         """Test strings are split at the ","."""
         result = config.RstcheckConfig(
-            files=[pathlib.Path()],
+            check_paths=[pathlib.Path()],
             ignore_languages=string,
             ignore_directives=string,
             ignore_roles=string,
@@ -143,7 +143,7 @@ class TestSplitStrValidator:
     def test_string_lists_are_kept_the_same(string_list: typing.List[str]) -> None:
         """Test lists of strings are untouched."""
         result = config.RstcheckConfig(
-            files=[pathlib.Path()],
+            check_paths=[pathlib.Path()],
             ignore_languages=string_list,
             ignore_directives=string_list,
             ignore_roles=string_list,
@@ -175,7 +175,7 @@ class TestSplitStrValidator:
         """Test invalid settings."""
         with pytest.raises(ValueError, match="Not a string or list of strings"):
             config.RstcheckConfig(
-                files=[pathlib.Path()],
+                check_paths=[pathlib.Path()],
                 ignore_languages=value,
                 ignore_directives=value,
                 ignore_roles=value,
@@ -192,7 +192,7 @@ class TestJoinRegexStrValidator:
     @staticmethod
     def test_none_means_unset() -> None:
         """Test ``None`` results in unset ignore_messages."""
-        result = config.RstcheckConfig(files=[pathlib.Path()], ignore_messages=None)
+        result = config.RstcheckConfig(check_paths=[pathlib.Path()], ignore_messages=None)
 
         assert result is not None
         assert result.ignore_messages is None
@@ -203,7 +203,7 @@ class TestJoinRegexStrValidator:
         string = r"\d{4}\.[A-Z]+Test$"
         regex = re.compile(string)
 
-        result = config.RstcheckConfig(files=[pathlib.Path()], ignore_messages=string)
+        result = config.RstcheckConfig(check_paths=[pathlib.Path()], ignore_messages=string)
 
         assert result is not None
         assert result.ignore_messages == regex
@@ -214,7 +214,7 @@ class TestJoinRegexStrValidator:
         string = ""
         regex = re.compile(string)
 
-        result = config.RstcheckConfig(files=[pathlib.Path()], ignore_messages=string)
+        result = config.RstcheckConfig(check_paths=[pathlib.Path()], ignore_messages=string)
 
         assert result is not None
         assert result.ignore_messages == regex
@@ -226,7 +226,7 @@ class TestJoinRegexStrValidator:
         full_string = r"\d{4}\.[A-Z]+Test$|\d{4}\.[A-Z]+Test2$|\d{4}\.[A-Z]+Test3$"
         regex = re.compile(full_string)
 
-        result = config.RstcheckConfig(files=[pathlib.Path()], ignore_messages=string_list)
+        result = config.RstcheckConfig(check_paths=[pathlib.Path()], ignore_messages=string_list)
 
         assert result is not None
         assert result.ignore_messages == regex
@@ -239,7 +239,7 @@ class TestJoinRegexStrValidator:
         """Test list with empty contents are parsed as regex too."""
         regex = re.compile(full_string)
 
-        result = config.RstcheckConfig(files=[pathlib.Path()], ignore_messages=string_list)
+        result = config.RstcheckConfig(check_paths=[pathlib.Path()], ignore_messages=string_list)
 
         assert result is not None
         assert result.ignore_messages == regex
@@ -262,7 +262,7 @@ class TestJoinRegexStrValidator:
     def test_invalid_settings(value: str) -> None:
         """Test invalid ignore_messages settings."""
         with pytest.raises(ValueError, match="Not a string or list of strings"):
-            config.RstcheckConfig(files=[pathlib.Path()], ignore_messages=value)
+            config.RstcheckConfig(check_paths=[pathlib.Path()], ignore_messages=value)
 
 
 class TestIniFileLoader:
@@ -313,7 +313,7 @@ class TestIniFileLoader:
         """Test supported settings are loaded."""
         conf_file = tmp_path / "config.ini"
         file_content = """[rstcheck]
-        report=1
+        report_level=1
         ignore_directives=directive
         ignore_roles=role
         ignore_substitutions=substitution
@@ -325,7 +325,7 @@ class TestIniFileLoader:
         result = config.load_config_from_ini_file(conf_file)
 
         assert result is not None
-        assert result.report == "1"
+        assert result.report_level == "1"
         assert result.ignore_directives == "directive"
         assert result.ignore_roles == "role"
         assert result.ignore_substitutions == "substitution"
@@ -337,7 +337,7 @@ class TestIniFileLoader:
         """Test mix of supported and unsupported settings."""
         conf_file = tmp_path / "config.ini"
         file_content = """[rstcheck]
-        report=1
+        report_level=1
         ignore_directives=directive
         unsupported_feature=True
         """
@@ -346,7 +346,7 @@ class TestIniFileLoader:
         result = config.load_config_from_ini_file(conf_file)
 
         assert result is not None
-        assert result.report == "1"
+        assert result.report_level == "1"
         assert result.ignore_directives == "directive"
 
     @staticmethod
@@ -354,12 +354,12 @@ class TestIniFileLoader:
         """Test mix of rstcheck and other section."""
         conf_file = tmp_path / "config.ini"
         file_content = """[rstcheck]
-        report=1
+        report_level=1
         ignore_directives=directive
         unsupported_feature=True
 
         [not-rstcheck]
-        report=2
+        report_level=2
         ignore_directives=not-directive
         unsupported_feature=False
         """
@@ -368,7 +368,7 @@ class TestIniFileLoader:
         result = config.load_config_from_ini_file(conf_file)
 
         assert result is not None
-        assert result.report == "1"
+        assert result.report_level == "1"
         assert result.ignore_directives == "directive"
 
 
@@ -431,7 +431,7 @@ class TestTomlFileLoader:
         """Test supported settings are loaded."""
         conf_file = tmp_path / "config.toml"
         file_content = """[tool.rstcheck]
-        report = 1
+        report_level = 1
         ignore_directives = ["directive"]
         ignore_roles = ["role"]
         ignore_substitutions = ["substitution"]
@@ -443,7 +443,7 @@ class TestTomlFileLoader:
         result = config.load_config_from_toml_file(conf_file)
 
         assert result is not None
-        assert result.report == 1
+        assert result.report_level == 1
         assert result.ignore_directives == ["directive"]
         assert result.ignore_roles == ["role"]
         assert result.ignore_substitutions == ["substitution"]
@@ -455,7 +455,7 @@ class TestTomlFileLoader:
         """Test mix of supported and unsupported settings."""
         conf_file = tmp_path / "config.toml"
         file_content = """[tool.rstcheck]
-        report = 1
+        report_level = 1
         ignore_directives = ["directive"]
         unsupported_feature = true
         """
@@ -464,7 +464,7 @@ class TestTomlFileLoader:
         result = config.load_config_from_toml_file(conf_file)
 
         assert result is not None
-        assert result.report == 1
+        assert result.report_level == 1
         assert result.ignore_directives == ["directive"]
 
     @staticmethod
@@ -472,12 +472,12 @@ class TestTomlFileLoader:
         """Test mix of rstcheck and other section."""
         conf_file = tmp_path / "config.toml"
         file_content = """[tool.rstcheck]
-        report = 1
+        report_level = 1
         ignore_directives = ["directive"]
         unsupported_feature = true
 
         [tool.not-rstcheck]
-        report = 2
+        report_level = 2
         ignore_directives = "not-directive"
         unsupported_feature = false
         """
@@ -486,7 +486,7 @@ class TestTomlFileLoader:
         result = config.load_config_from_toml_file(conf_file)
 
         assert result is not None
-        assert result.report == 1
+        assert result.report_level == 1
         assert result.ignore_directives == ["directive"]
 
     @staticmethod
@@ -507,14 +507,14 @@ class TestTomlFileLoader:
         """
         conf_file = tmp_path / "config.toml"
         file_content = f"""[tool.rstcheck]
-        report = "{value}"
+        report_level = "{value}"
         """
         conf_file.write_text(file_content)
 
         result = config.load_config_from_toml_file(conf_file)
 
         assert result is not None
-        assert result.report == parsed_value
+        assert result.report_level == parsed_value
 
     @staticmethod
     @pytest.mark.parametrize("value", [-1, 0, 1, 6, 32])
@@ -525,14 +525,14 @@ class TestTomlFileLoader:
         """
         conf_file = tmp_path / "config.toml"
         file_content = f"""[tool.rstcheck]
-        report = {value}
+        report_level = {value}
         """
         conf_file.write_text(file_content)
 
         result = config.load_config_from_toml_file(conf_file)
 
         assert result is not None
-        assert result.report == value
+        assert result.report_level == value
 
     @staticmethod
     def test_ignore_messages_as_str(tmp_path: pathlib.Path) -> None:

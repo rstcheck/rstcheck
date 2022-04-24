@@ -41,10 +41,10 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    files: typing.List[pathlib.Path]
-    config: typing.Optional[pathlib.Path]
+    check_paths: typing.List[pathlib.Path]
+    config_path: typing.Optional[pathlib.Path]
     recursive: typing.Optional[bool]
-    report: typing.Optional[ReportLevel]
+    report_level: typing.Optional[ReportLevel]
     ignore_directives: typing.Optional[typing.List[str]]
     ignore_roles: typing.Optional[typing.List[str]]
     ignore_substitutions: typing.Optional[typing.List[str]]
@@ -52,10 +52,10 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
     # NOTE: Pattern type-arg errors pydanic: https://github.com/samuelcolvin/pydantic/issues/2636
     ignore_messages: typing.Optional[typing.Pattern]  # type: ignore[type-arg]
 
-    @pydantic.validator("report", pre=True)
+    @pydantic.validator("report_level", pre=True)
     @classmethod
     def valid_report_level(cls, value: typing.Any) -> typing.Optional[ReportLevel]:  # noqa: ANN401
-        """Validate the report level setting.
+        """Validate the report_level setting.
 
         :param value: Value to validate
         :raises ValueError: If ``Value`` is not a valid docutils report level
@@ -133,7 +133,7 @@ class RstcheckConfigINIFile(pydantic.BaseModel):  # pylint: disable=no-member,to
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    report: pydantic.NoneStr = None  # pylint: disable=no-member
+    report_level: pydantic.NoneStr = None  # pylint: disable=no-member
     ignore_directives: pydantic.NoneStr = None  # pylint: disable=no-member
     ignore_roles: pydantic.NoneStr = None  # pylint: disable=no-member
     ignore_substitutions: pydantic.NoneStr = None  # pylint: disable=no-member
@@ -176,7 +176,7 @@ class RstcheckConfigTOMLFile(
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    report: typing.Optional[typing.Union[int, str]] = None
+    report_level: typing.Optional[typing.Union[int, str]] = None
     ignore_directives: typing.Optional[typing.List[str]] = None
     ignore_roles: typing.Optional[typing.List[str]] = None
     ignore_substitutions: typing.Optional[typing.List[str]] = None
