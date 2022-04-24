@@ -644,7 +644,7 @@ class TestConfigFileLoader:
 
 
 class TestConfigDirLoader:
-    """Test ``load_config_file_from_dir``."""
+    """Test ``load_config_file_from_dir`` and ``load_config_file_from_dir_tree``."""
 
     @staticmethod
     @pytest.mark.parametrize("ini_file", [".rstcheck.cfg", "setup.cfg"])
@@ -784,3 +784,36 @@ class TestConfigDirLoader:
 
         assert result is not None
         assert result.report_level == config.ReportLevel.ERROR
+
+    @staticmethod
+    def test_parent_searching(tmp_path: pathlib.Path) -> None:
+        """Test option to search up the dir tree."""
+        nested_dir = tmp_path / "nested"
+        nested_dir.mkdir()
+        unsupported_file = nested_dir / "config.cfg"
+        unsupported_file_content = """[rstcheck]
+        report_level = 2
+        """
+        unsupported_file.write_text(unsupported_file_content)
+        supported_file = tmp_path / "setup.cfg"
+        supported_file_content = """[rstcheck]
+        report_level = 3
+        """
+        supported_file.write_text(supported_file_content)
+
+        result = config.load_config_file_from_dir_tree(nested_dir)
+
+        assert result is not None
+        assert result.report_level == config.ReportLevel.ERROR
+
+    @staticmethod
+    def test_no_file_up_to_root(monkeypatch: pytest.MonkeyPatch, tmp_path: pathlib.Path) -> None:
+        """Test option to search up the dir tree with no file up to root dir."""
+        root_dir = tmp_path
+        nested_dir = tmp_path / "nested"
+        nested_dir.mkdir()
+        monkeypatch.setattr(pathlib.Path, "parent", root_dir)
+
+        result = config.load_config_file_from_dir_tree(nested_dir)
+
+        assert result is None

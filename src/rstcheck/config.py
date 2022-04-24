@@ -284,3 +284,32 @@ def load_config_file_from_dir(dir_path: pathlib.Path) -> typing.Optional[Rstchec
                 break
 
     return config
+
+
+def load_config_file_from_dir_tree(dir_path: pathlib.Path) -> typing.Optional[RstcheckConfigFile]:
+    """Search, load, parse and validate rstcheck config from a directory tree.
+
+    Searches files from ``CONFIG_FILES`` in the directory. If a file is found, try to load the
+    config from it. If is has no config, search further. If no config is found in the directory
+    search its parents one by one.
+
+    :param dir_path: Directory to search
+    :return: instance of ``RstcheckConfigFile`` or
+        ``None`` if no file is found or no file has a rstcheck section
+    """
+    config = None
+
+    search_dir = dir_path.resolve()
+
+    while True:
+        config = load_config_file_from_dir(search_dir)
+
+        if config is not None:
+            break
+
+        parent_dir = search_dir.parent.resolve()
+        if parent_dir == search_dir:
+            break
+        search_dir = parent_dir
+
+    return config
