@@ -204,7 +204,7 @@ def load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[Rstch
     _extras.install_guard("tomli")
 
     if toml_file.suffix.casefold() != ".toml":
-        ValueError("File is not a TOML file")
+        raise ValueError("File is not a TOML file")
 
     if not toml_file.is_file():
         raise FileNotFoundError(f"{toml_file}")
