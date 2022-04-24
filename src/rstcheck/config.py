@@ -10,7 +10,7 @@ import pydantic
 from . import _extras
 
 
-if _extras.TOMLI_INSTALLED:
+if _extras.TOMLI_INSTALLED:  # pragma: no cover
     import tomli
 
 
