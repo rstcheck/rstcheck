@@ -123,13 +123,30 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
         raise ValueError("Not a string or list of strings")
 
 
-def load_config_from_ini_file(ini_file: pathlib.Path) -> typing.Optional[RstcheckConfig]:
+class RstcheckConfigINIFile(pydantic.BaseModel):  # pylint: disable=no-member,too-few-public-methods
+    """Type for [rstcheck] section in INI file.
+
+    The types apply to the file's data before the parsing by ``RstcheckConfig`` is done.
+    """
+
+    report: pydantic.NoneStr = None  # pylint: disable=no-member
+    ignore_directives: pydantic.NoneStr = None  # pylint: disable=no-member
+    ignore_roles: pydantic.NoneStr = None  # pylint: disable=no-member
+    ignore_substitutions: pydantic.NoneStr = None  # pylint: disable=no-member
+    ignore_languages: pydantic.NoneStr = None  # pylint: disable=no-member
+    ignore_messages: pydantic.NoneStr = None  # pylint: disable=no-member
+
+
+def load_config_from_ini_file(ini_file: pathlib.Path) -> typing.Optional[RstcheckConfigINIFile]:
     """Load rstcheck config from a ini file.
+
+    .. caution::
+
+        This function only does type and **no** value validation!
 
     :param ini_file: INI file to load config from
     :raises FileNotFoundError: If the file is not found
-    :return: ``None`` if no config section is found in the file;
-        instance of ``RstcheckConfig`` otherwise
+    :return: instance of ``RstcheckConfigINIFile`` or ``None`` on missing config section
     """
     if not ini_file.is_file():
         raise FileNotFoundError(f"{ini_file}")
@@ -142,26 +159,42 @@ def load_config_from_ini_file(ini_file: pathlib.Path) -> typing.Optional[Rstchec
 
     config_values = dict(parser.items("rstcheck"))
 
-    return RstcheckConfig(**config_values)
+    return RstcheckConfigINIFile(**config_values)
 
 
-RstcheckTOMLConfig = typing.Dict[str, typing.Union[str, typing.List[str]]]
-"""Type for [tool.rstcheck] section in pyproject.toml file."""
+class RstcheckConfigTOMLFile(
+    pydantic.BaseModel  # pylint: disable=no-member,
+):  # pylint: disable=too-few-public-methods
+    """Type for [tool.rstcheck] section in TOML file.
+
+    The types apply to the file's data before the parsing by ``RstcheckConfig`` is done.
+    """
+
+    report: typing.Optional[typing.Union[str, int]] = None
+    ignore_directives: typing.Optional[typing.List[str]] = None
+    ignore_roles: typing.Optional[typing.List[str]] = None
+    ignore_substitutions: typing.Optional[typing.List[str]] = None
+    ignore_languages: typing.Optional[typing.List[str]] = None
+    ignore_messages: typing.Optional[typing.Union[str, typing.List[str]]] = None
 
 
-def load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[RstcheckConfig]:
+def load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[RstcheckConfigTOMLFile]:
     """Load rstcheck config from a TOML file.
 
-    .. note::
+    .. caution::
 
-        Needs tomli installed. Use toml extra.
+        This function only does type and **no** value validation!
+
+    .. warning::
+
+        Needs tomli installed!
+        Use toml extra.
 
     :param toml_file: TOML file to load config from
     :raises ModuleNotFoundError: If ``tomli`` is not installed
     :raises ValueError: If the file is not a TOML file
     :raises FileNotFoundError: If the file is not found
-    :return: ``None`` if no config section is found in the file;
-        instance of ``RstcheckConfig`` otherwise
+    :return: instance of ``RstcheckConfigTOMLFile`` or ``None`` on missing config section
     """
     _extras.install_guard("tomli")
 
@@ -171,14 +204,13 @@ def load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[Rstch
     if not toml_file.is_file():
         raise FileNotFoundError(f"{toml_file}")
 
-    with open(toml_file, "rb") as conf_file:
-        config = tomli.load(conf_file)
+    with open(toml_file, "rb") as toml_file_handle:
+        toml_dict = tomli.load(toml_file_handle)
 
-    config_values: typing.Optional[RstcheckTOMLConfig] = config.get("tool", {}).get(
-        "rstcheck", None
-    )
+    optional_rstcheck_section = typing.Optional[typing.Dict[str, typing.Any]]
+    rstcheck_section: optional_rstcheck_section = toml_dict.get("tool", {}).get("rstcheck")
 
-    if config_values is None:
+    if rstcheck_section is None:
         return None
 
-    return RstcheckConfig(**config_values)
+    return RstcheckConfigTOMLFile(**rstcheck_section)
