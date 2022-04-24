@@ -644,7 +644,7 @@ class TestConfigFileLoader:
 
 
 class TestConfigDirLoader:
-    """Test ``load_config_file_from_dir`` and ``load_config_file_from_dir_tree``."""
+    """Test ``load_config_file_from_dir``."""
 
     @staticmethod
     @pytest.mark.parametrize("ini_file", [".rstcheck.cfg", "setup.cfg"])
@@ -785,6 +785,10 @@ class TestConfigDirLoader:
         assert result is not None
         assert result.report_level == config.ReportLevel.ERROR
 
+
+class TestConfigDirTreeLoader:
+    """Test ``load_config_file_from_dir_tree``."""
+
     @staticmethod
     def test_parent_searching(tmp_path: pathlib.Path) -> None:
         """Test option to search up the dir tree."""
@@ -817,3 +821,95 @@ class TestConfigDirLoader:
         result = config.load_config_file_from_dir_tree(nested_dir)
 
         assert result is None
+
+
+class TestConfigPathLoader:
+    """Test ``load_config_file_from_path``."""
+
+    @staticmethod
+    def test_with_file(tmp_path: pathlib.Path) -> None:
+        """Test with INI file."""
+        conf_file = tmp_path / ".rstcheck.cfg"
+        file_content = """[rstcheck]
+        report_level = 3
+        """
+        conf_file.write_text(file_content)
+
+        result = config.load_config_file_from_path(conf_file)
+
+        assert result is not None
+        assert result.report_level == config.ReportLevel.ERROR
+
+    @staticmethod
+    def test_with_dir(tmp_path: pathlib.Path) -> None:
+        """Test with directory."""
+        conf_file = tmp_path / ".rstcheck.cfg"
+        file_content = """[rstcheck]
+        report_level = 3
+        """
+        conf_file.write_text(file_content)
+
+        result = config.load_config_file_from_path(tmp_path)
+
+        assert result is not None
+        assert result.report_level == config.ReportLevel.ERROR
+
+    @staticmethod
+    def test_with_nested_dir(tmp_path: pathlib.Path) -> None:
+        """Test with nested dir tree."""
+        nested_dir = tmp_path / "nested"
+        nested_dir.mkdir()
+        conf_file = tmp_path / "setup.cfg"
+        file_content = """[rstcheck]
+        report_level = 3
+        """
+        conf_file.write_text(file_content)
+
+        result = config.load_config_file_from_path(nested_dir, search_dir_tree=True)
+
+        assert result is not None
+        assert result.report_level == config.ReportLevel.ERROR
+
+
+class TestConfigMerger:
+    """Test ``merge_configs``."""
+
+    @staticmethod
+    def test_default_merge_with_full_config() -> None:
+        """Test config merging with full config."""
+        config_base = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.SEVERE)
+        config_add = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.ERROR)
+
+        result = config.merge_configs(config_base, config_add)
+
+        assert result.report_level == config.ReportLevel.ERROR
+
+    @staticmethod
+    def test_default_merge_with_file_config() -> None:
+        """Test config merging with file config."""
+        config_base = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.SEVERE)
+        config_add = config.RstcheckConfigFile(report_level=config.ReportLevel.ERROR)
+
+        result = config.merge_configs(config_base, config_add)
+
+        assert result.report_level == config.ReportLevel.ERROR
+
+    @staticmethod
+    def test_default_merge_with_full_config_and_changed_dominance() -> None:
+        """Test config merging with full config and changed dominance."""
+        config_base = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.SEVERE)
+        config_add = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.ERROR)
+
+        result = config.merge_configs(config_base, config_add, config_add_is_dominant=False)
+
+        assert result.report_level == config.ReportLevel.SEVERE
+
+    @staticmethod
+    def test_default_merge_with_file_config_and_changed_dominance() -> None:
+        """Test config merging with file config and changed dominance."""
+        config_base = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.SEVERE)
+        config_add = config.RstcheckConfigFile(report_level=config.ReportLevel.ERROR)
+
+        result = config.merge_configs(config_base, config_add, config_add_is_dominant=False)
+
+        assert result.report_level == config.ReportLevel.SEVERE

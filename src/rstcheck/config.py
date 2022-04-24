@@ -313,3 +313,53 @@ def load_config_file_from_dir_tree(dir_path: pathlib.Path) -> typing.Optional[Rs
         search_dir = parent_dir
 
     return config
+
+
+def load_config_file_from_path(
+    path: pathlib.Path, *, search_dir_tree: bool = False
+) -> typing.Optional[RstcheckConfigFile]:
+    """Analyse the path and call the correct config file loader.
+
+    :param path: Path to load config file from; can be a file or directory
+    :param search_dir_tree: If the directory tree should be searched;
+        only applies if ``path`` is a directory;
+        defaults to False
+    :return: instance of ``RstcheckConfigFile`` or
+        ``None`` if no file is found or no file has a rstcheck section
+    """
+    resolved_path = path.resolve()
+
+    if resolved_path.is_file():
+        return load_config_file(resolved_path)
+
+    if resolved_path.is_dir():
+        if search_dir_tree:
+            return load_config_file_from_dir_tree(resolved_path)
+        return load_config_file_from_dir(resolved_path)
+
+    return None
+
+
+def merge_configs(
+    config_base: RstcheckConfig,
+    config_add: typing.Union[RstcheckConfig, RstcheckConfigFile],
+    *,
+    config_add_is_dominant: bool = True,
+) -> RstcheckConfig:
+    """Merge two configs into a new one.
+
+    :param config_base: The base config to merge into
+    :param config_add: The config that is merged into the ``config_base``
+    :param config_add_is_dominant: If the ``config_add`` overwrites values of ``config_base``;
+        defaults to True
+    :return: New merged config
+    """
+    sub_config: typing.Union[RstcheckConfig, RstcheckConfigFile] = config_base
+    dom_config: typing.Union[RstcheckConfig, RstcheckConfigFile] = config_add
+
+    if config_add_is_dominant is False:
+        sub_config, dom_config = dom_config, sub_config
+
+    merged_config = {**sub_config.dict(), **dom_config.dict()}
+
+    return RstcheckConfig(**merged_config)
