@@ -42,11 +42,11 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
     config: typing.Optional[pathlib.Path]
     recursive: typing.Optional[bool]
     report: typing.Optional[ReportLevel]
-    ignore_languages: typing.Optional[typing.List[str]]
-    ignore_messages: typing.Optional[typing.Pattern]
     ignore_directives: typing.Optional[typing.List[str]]
     ignore_roles: typing.Optional[typing.List[str]]
     ignore_substitutions: typing.Optional[typing.List[str]]
+    ignore_languages: typing.Optional[typing.List[str]]
+    ignore_messages: typing.Optional[typing.Pattern[str]]
 
     @pydantic.validator("report", pre=True)
     @classmethod
@@ -76,16 +76,16 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
         raise ValueError("Invalid report level")
 
     @pydantic.validator(
-        "ignore_languages", "ignore_directives", "ignore_roles", "ignore_substitutions", pre=True
+        "ignore_directives", "ignore_roles", "ignore_substitutions", "ignore_languages", pre=True
     )
     @classmethod
     def split_str(cls, value: typing.Any) -> typing.Optional[typing.List[str]]:  # noqa: ANN401
         """Validate and parse the following ignore_* settings.
 
-        - ignore_languages
         - ignore_directives
         - ignore_roles
         - ignore_substitutions
+        - ignore_languages
 
         Comma separated strings are split into a list.
 
@@ -103,7 +103,9 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
 
     @pydantic.validator("ignore_messages", pre=True)
     @classmethod
-    def join_regex_str(cls, value: typing.Any) -> typing.Optional[typing.Pattern]:  # noqa: ANN401
+    def join_regex_str(
+        cls, value: typing.Any  # noqa: ANN401
+    ) -> typing.Optional[typing.Pattern[str]]:
         """Validate and parse the ignore_messages setting to a RegEx.
 
         If a list ist given, the entries are concatenated with "|" to create an or RegEx.
