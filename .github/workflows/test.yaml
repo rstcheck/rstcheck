@@ -1,6 +1,10 @@
 ---
 name: Test code
 
+env:
+  CI_FORCE_COLORS_POETRY: --ansi
+  CI_FORCE_COLORS_PYTEST: --color yes
+
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
 
