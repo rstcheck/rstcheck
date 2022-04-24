@@ -35,7 +35,11 @@ ReportLevelMap = {
 
 
 class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
-    """Rstcheck config."""
+    """Rstcheck config.
+
+    :raises ValueError:: If setting has incorrect value or type
+    :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
+    """
 
     files: typing.Optional[typing.List[pathlib.Path]]
     config: typing.Optional[pathlib.Path]
@@ -125,6 +129,8 @@ class RstcheckConfigINIFile(pydantic.BaseModel):  # pylint: disable=no-member,to
     """Type for [rstcheck] section in INI file.
 
     The types apply to the file's data before the parsing by ``RstcheckConfig`` is done.
+
+    :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
     report: pydantic.NoneStr = None  # pylint: disable=no-member
@@ -166,6 +172,8 @@ class RstcheckConfigTOMLFile(
     """Type for [tool.rstcheck] section in TOML file.
 
     The types apply to the file's data before the parsing by ``RstcheckConfig`` is done.
+
+    :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
     report: typing.Optional[typing.Union[str, int]] = None
@@ -189,7 +197,6 @@ def load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[Rstch
         Use toml extra.
 
     :param toml_file: TOML file to load config from
-    :raises ModuleNotFoundError: If ``tomli`` is not installed
     :raises ValueError: If the file is not a TOML file
     :raises FileNotFoundError: If the file is not found
     :return: instance of ``RstcheckConfigTOMLFile`` or ``None`` on missing config section
