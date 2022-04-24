@@ -46,7 +46,8 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
     ignore_roles: typing.Optional[typing.List[str]]
     ignore_substitutions: typing.Optional[typing.List[str]]
     ignore_languages: typing.Optional[typing.List[str]]
-    ignore_messages: typing.Optional[typing.Pattern[str]]
+    # NOTE: Pattern type-arg errors pydanic: https://github.com/samuelcolvin/pydantic/issues/2636
+    ignore_messages: typing.Optional[typing.Pattern]  # type: ignore[type-arg]
 
     @pydantic.validator("report", pre=True)
     @classmethod
