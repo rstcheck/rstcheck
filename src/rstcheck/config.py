@@ -15,7 +15,7 @@ if _extras.TOMLI_INSTALLED:  # pragma: no cover
 
 
 CONFIG_FILES = [".rstcheck.cfg", "setup.cfg"]
-if _extras.TOMLI_INSTALLED:
+if _extras.TOMLI_INSTALLED:  # pragma: no cover
     CONFIG_FILES = [".rstcheck.cfg", "pyproject.toml", "setup.cfg"]
 
 
@@ -46,11 +46,11 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    report_level: typing.Optional[ReportLevel]
-    ignore_directives: typing.Optional[typing.List[str]]
-    ignore_roles: typing.Optional[typing.List[str]]
-    ignore_substitutions: typing.Optional[typing.List[str]]
-    ignore_languages: typing.Optional[typing.List[str]]
+    report_level: ReportLevel = ReportLevel.INFO
+    ignore_directives: typing.List[str] = pydantic.Field(default_factory=list)
+    ignore_roles: typing.List[str] = pydantic.Field(default_factory=list)
+    ignore_substitutions: typing.List[str] = pydantic.Field(default_factory=list)
+    ignore_languages: typing.List[str] = pydantic.Field(default_factory=list)
     # NOTE: Pattern type-arg errors pydanic: https://github.com/samuelcolvin/pydantic/issues/2636
     ignore_messages: typing.Optional[typing.Pattern]  # type: ignore[type-arg]
 
@@ -63,8 +63,11 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         :raises ValueError: If ``Value`` is not a valid docutils report level
         :return: Instance of ``ReportLevel`` or None if emptry string.
         """
+        if isinstance(value, ReportLevel):
+            return value
+
         if value == "" or value is None:
-            return None
+            return ReportLevel.INFO
 
         if isinstance(value, bool):
             raise ValueError("Invalid report level")
@@ -100,7 +103,7 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         :return: List of things to ignore in the respective category
         """
         if value is None:
-            return None
+            return []
         if isinstance(value, str):
             return value.split(",")
         if isinstance(value, list) and all(isinstance(v, str) for v in value):
@@ -136,7 +139,13 @@ class RstcheckConfig(RstcheckConfigFile):  # pylint: disable=too-few-public-meth
 
     check_paths: typing.List[pathlib.Path]
     config_path: typing.Optional[pathlib.Path]
-    recursive: typing.Optional[bool]
+    recursive: bool = False
+
+    @pydantic.validator("recursive", pre=True)
+    @classmethod
+    def none_is_false(cls, value: typing.Any) -> typing.Any:  # noqa: ANN401
+        """Allow ``None`` and change it to the default: ``False``."""
+        return False if value is None else value
 
 
 class _RstcheckConfigINIFile(
@@ -164,11 +173,13 @@ def _load_config_from_ini_file(ini_file: pathlib.Path) -> typing.Optional[Rstche
     :raises FileNotFoundError: If the file is not found
     :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
     """
-    if not ini_file.is_file():
-        raise FileNotFoundError(f"{ini_file}")
+    resolved_file = ini_file.resolve()
+
+    if not resolved_file.is_file():
+        raise FileNotFoundError(f"{resolved_file}")
 
     parser = configparser.ConfigParser()
-    parser.read(ini_file)
+    parser.read(resolved_file)
 
     if not parser.has_section("rstcheck"):
         return None
@@ -213,13 +224,15 @@ def _load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[Rstc
     """
     _extras.install_guard("tomli")
 
-    if toml_file.suffix.casefold() != ".toml":
+    resolved_file = toml_file.resolve()
+
+    if resolved_file.suffix.casefold() != ".toml":
         raise ValueError("File is not a TOML file")
 
-    if not toml_file.is_file():
-        raise FileNotFoundError(f"{toml_file}")
+    if not resolved_file.is_file():
+        raise FileNotFoundError(f"{resolved_file}")
 
-    with open(toml_file, "rb") as toml_file_handle:
+    with open(resolved_file, "rb") as toml_file_handle:
         toml_dict = tomli.load(toml_file_handle)
 
     optional_rstcheck_section = typing.Optional[typing.Dict[str, typing.Any]]
@@ -264,7 +277,7 @@ def load_config_file_from_dir(dir_path: pathlib.Path) -> typing.Optional[Rstchec
     config = None
 
     for file_name in CONFIG_FILES:
-        file_path = dir_path / file_name
+        file_path = (dir_path / file_name).resolve()
         if file_path.is_file():
             config = load_config_file(file_path)
             if config is not None:

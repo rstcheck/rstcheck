@@ -27,6 +27,39 @@ def test_report_level_map_matches_names() -> None:  # noqa: AAA01
     assert enum_names == map_keys
 
 
+def test_default_values_for_config_file() -> None:
+    """Test default values of  ``RstcheckConfigFile``."""
+    result = config.RstcheckConfigFile()
+
+    assert result.report_level is config.ReportLevel.INFO
+    assert result.ignore_directives == []
+    assert result.ignore_roles == []
+    assert result.ignore_substitutions == []
+    assert result.ignore_languages == []
+    assert result.ignore_messages is None
+
+
+def test_default_values_for_config() -> None:
+    """Test default values of  ``RstcheckConfig``."""
+    result = config.RstcheckConfig(check_paths=[])
+
+    assert result.report_level is config.ReportLevel.INFO
+    assert result.ignore_directives == []
+    assert result.ignore_roles == []
+    assert result.ignore_substitutions == []
+    assert result.ignore_languages == []
+    assert result.ignore_messages is None
+    assert result.config_path is None
+    assert result.recursive is False
+
+
+def test_recursive_none_means_false() -> None:
+    """Test recursive set to ``None`` for ``RstcheckConfig`` means ``False``."""
+    result = config.RstcheckConfig(check_paths=[], recursive=None)
+
+    assert result.recursive is False
+
+
 class TestReportLevelValidator:
     """Test ``valid_report_level`` validator method of the ``RstcheckConfig`` class.
 
@@ -34,20 +67,28 @@ class TestReportLevelValidator:
     """
 
     @staticmethod
-    def test_none_means_unset() -> None:
-        """Test ``None`` results in unset report level."""
+    def test_set_level_stays() -> None:
+        """Test set level results in same level."""
+        result = config.RstcheckConfigFile(report_level=config.ReportLevel.SEVERE)
+
+        assert result is not None
+        assert result.report_level is config.ReportLevel.SEVERE
+
+    @staticmethod
+    def test_none_means_default() -> None:
+        """Test ``None`` results in default report level."""
         result = config.RstcheckConfigFile(report_level=None)
 
         assert result is not None
-        assert result.report_level is None
+        assert result.report_level is config.ReportLevel.INFO
 
     @staticmethod
-    def test_empty_string_means_unset() -> None:
-        """Test empty string results in unset report level."""
+    def test_empty_string_means_default() -> None:
+        """Test empty string results in default report level."""
         result = config.RstcheckConfigFile(report_level="")
 
         assert result is not None
-        assert result.report_level is None
+        assert result.report_level is config.ReportLevel.INFO
 
     @staticmethod
     @pytest.mark.parametrize(
@@ -86,10 +127,9 @@ class TestSplitStrValidator:
     """
 
     @staticmethod
-    def test_none_means_unset() -> None:
+    def test_none_means_default() -> None:
         """Test ``None`` results in unset ignore_messages."""
-        result = config.RstcheckConfig(
-            check_paths=[pathlib.Path()],
+        result = config.RstcheckConfigFile(
             ignore_languages=None,
             ignore_directives=None,
             ignore_roles=None,
@@ -97,10 +137,10 @@ class TestSplitStrValidator:
         )
 
         assert result is not None
-        assert result.ignore_languages is None
-        assert result.ignore_directives is None
-        assert result.ignore_roles is None
-        assert result.ignore_substitutions is None
+        assert result.ignore_languages == []
+        assert result.ignore_directives == []
+        assert result.ignore_roles == []
+        assert result.ignore_substitutions == []
 
     @staticmethod
     @pytest.mark.parametrize(
@@ -115,8 +155,7 @@ class TestSplitStrValidator:
     )
     def test_strings_are_transformed_to_lists(string: str, split_list: typing.List[str]) -> None:
         """Test strings are split at the ","."""
-        result = config.RstcheckConfig(
-            check_paths=[pathlib.Path()],
+        result = config.RstcheckConfigFile(
             ignore_languages=string,
             ignore_directives=string,
             ignore_roles=string,
@@ -142,8 +181,7 @@ class TestSplitStrValidator:
     )
     def test_string_lists_are_kept_the_same(string_list: typing.List[str]) -> None:
         """Test lists of strings are untouched."""
-        result = config.RstcheckConfig(
-            check_paths=[pathlib.Path()],
+        result = config.RstcheckConfigFile(
             ignore_languages=string_list,
             ignore_directives=string_list,
             ignore_roles=string_list,
@@ -174,8 +212,7 @@ class TestSplitStrValidator:
     def test_invalid_settings(value: str) -> None:
         """Test invalid settings."""
         with pytest.raises(ValueError, match="Not a string or list of strings"):
-            config.RstcheckConfig(
-                check_paths=[pathlib.Path()],
+            config.RstcheckConfigFile(
                 ignore_languages=value,
                 ignore_directives=value,
                 ignore_roles=value,
@@ -313,7 +350,7 @@ class TestIniFileLoader:
         """Test supported settings are loaded."""
         conf_file = tmp_path / "config.ini"
         file_content = """[rstcheck]
-        report_level=1
+        report_level=3
         ignore_directives=directive
         ignore_roles=role
         ignore_substitutions=substitution
@@ -326,7 +363,7 @@ class TestIniFileLoader:
         result = config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
         assert result.ignore_directives == ["directive"]
         assert result.ignore_roles == ["role"]
         assert result.ignore_substitutions == ["substitution"]
@@ -338,7 +375,7 @@ class TestIniFileLoader:
         """Test mix of supported and unsupported settings."""
         conf_file = tmp_path / "config.ini"
         file_content = """[rstcheck]
-        report_level=1
+        report_level=3
         ignore_directives=directive
         unsupported_feature=True
         """
@@ -347,7 +384,7 @@ class TestIniFileLoader:
         result = config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
         assert result.ignore_directives == ["directive"]
 
     @staticmethod
@@ -355,7 +392,7 @@ class TestIniFileLoader:
         """Test mix of rstcheck and other section."""
         conf_file = tmp_path / "config.ini"
         file_content = """[rstcheck]
-        report_level=1
+        report_level=3
         ignore_directives=directive
         unsupported_feature=True
 
@@ -369,7 +406,7 @@ class TestIniFileLoader:
         result = config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
         assert result.ignore_directives == ["directive"]
 
 
@@ -432,7 +469,7 @@ class TestTomlFileLoader:
         """Test supported settings are loaded."""
         conf_file = tmp_path / "config.toml"
         file_content = """[tool.rstcheck]
-        report_level = 1
+        report_level = 3
         ignore_directives = ["directive"]
         ignore_roles = ["role"]
         ignore_substitutions = ["substitution"]
@@ -445,7 +482,7 @@ class TestTomlFileLoader:
         result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
         assert result.ignore_directives == ["directive"]
         assert result.ignore_roles == ["role"]
         assert result.ignore_substitutions == ["substitution"]
@@ -457,7 +494,7 @@ class TestTomlFileLoader:
         """Test mix of supported and unsupported settings."""
         conf_file = tmp_path / "config.toml"
         file_content = """[tool.rstcheck]
-        report_level = 1
+        report_level = 3
         ignore_directives = ["directive"]
         unsupported_feature = true
         """
@@ -466,7 +503,7 @@ class TestTomlFileLoader:
         result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
         assert result.ignore_directives == ["directive"]
 
     @staticmethod
@@ -474,7 +511,7 @@ class TestTomlFileLoader:
         """Test mix of rstcheck and other section."""
         conf_file = tmp_path / "config.toml"
         file_content = """[tool.rstcheck]
-        report_level = 1
+        report_level = 3
         ignore_directives = ["directive"]
         unsupported_feature = true
 
@@ -488,7 +525,7 @@ class TestTomlFileLoader:
         result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
         assert result.ignore_directives == ["directive"]
 
     @staticmethod
@@ -496,7 +533,9 @@ class TestTomlFileLoader:
         ("value", "parsed_value"),
         [
             ("none", config.ReportLevel.NONE),
+            ("ERROR", config.ReportLevel.ERROR),
             ("1", config.ReportLevel.INFO),
+            ("3", config.ReportLevel.ERROR),
         ],
     )
     def test_report_level_as_strings(
@@ -519,6 +558,7 @@ class TestTomlFileLoader:
         ("value", "parsed_value"),
         [
             (1, config.ReportLevel.INFO),
+            (3, config.ReportLevel.ERROR),
             (5, config.ReportLevel.NONE),
         ],
     )
@@ -577,14 +617,14 @@ class TestConfigFileLoader:
         """Test with INI files."""
         conf_file = tmp_path / ini_file
         file_content = """[rstcheck]
-        report_level = 1
+        report_level = 3
         """
         conf_file.write_text(file_content)
 
         result = config.load_config_file(conf_file)
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
 
     @staticmethod
     @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
@@ -593,14 +633,14 @@ class TestConfigFileLoader:
         """Test with TOML files."""
         conf_file = tmp_path / toml_file
         file_content = """[tool.rstcheck]
-        report_level = 1
+        report_level = 3
         """
         conf_file.write_text(file_content)
 
         result = config.load_config_file(conf_file)
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
 
 
 class TestConfigDirLoader:
@@ -612,14 +652,14 @@ class TestConfigDirLoader:
         """Test with supported INI files."""
         conf_file = tmp_path / ini_file
         file_content = """[rstcheck]
-        report_level = 1
+        report_level = 3
         """
         conf_file.write_text(file_content)
 
         result = config.load_config_file_from_dir(tmp_path)
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
 
     @staticmethod
     @pytest.mark.parametrize("ini_file", ["config.ini", "config.cfg"])
@@ -627,7 +667,7 @@ class TestConfigDirLoader:
         """Test with unsupported INI files."""
         conf_file = tmp_path / ini_file
         file_content = """[rstcheck]
-        report_level = 1
+        report_level = 3
         """
         conf_file.write_text(file_content)
 
@@ -641,14 +681,14 @@ class TestConfigDirLoader:
         """Test with supported TOML files."""
         conf_file = tmp_path / toml_file
         file_content = """[tool.rstcheck]
-        report_level = 1
+        report_level = 3
         """
         conf_file.write_text(file_content)
 
         result = config.load_config_file_from_dir(tmp_path)
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
 
     @staticmethod
     @pytest.mark.parametrize("toml_file", [".rstcheck.toml", "setup.toml", "config.toml"])
@@ -656,7 +696,7 @@ class TestConfigDirLoader:
         """Test with unsupported TOML files."""
         conf_file = tmp_path / toml_file
         file_content = """[tool.rstcheck]
-        report_level = 1
+        report_level = 3
         """
         conf_file.write_text(file_content)
 
@@ -674,14 +714,14 @@ class TestConfigDirLoader:
         setup_conf_file.write_text(setup_file_content)
         rstcheck_conf_file = tmp_path / ".rstcheck.cfg"
         rstcheck_file_content = """[rstcheck]
-        report_level = 1
+        report_level = 3
         """
         rstcheck_conf_file.write_text(rstcheck_file_content)
 
         result = config.load_config_file_from_dir(tmp_path)
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
 
     @staticmethod
     @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
@@ -694,14 +734,14 @@ class TestConfigDirLoader:
         pyproject_conf_file.write_text(pyproject_file_content)
         rstcheck_conf_file = tmp_path / ".rstcheck.cfg"
         rstcheck_file_content = """[rstcheck]
-        report_level = 1
+        report_level = 3
         """
         rstcheck_conf_file.write_text(rstcheck_file_content)
 
         result = config.load_config_file_from_dir(tmp_path)
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
 
     @staticmethod
     @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
@@ -714,11 +754,31 @@ class TestConfigDirLoader:
         setup_conf_file.write_text(setup_file_content)
         pyproject_conf_file = tmp_path / "pyproject.toml"
         pyproject_file_content = """[tool.rstcheck]
-        report_level = 1
+        report_level = 3
         """
         pyproject_conf_file.write_text(pyproject_file_content)
 
         result = config.load_config_file_from_dir(tmp_path)
 
         assert result is not None
-        assert result.report_level == config.ReportLevel.INFO
+        assert result.report_level == config.ReportLevel.ERROR
+
+    @staticmethod
+    @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
+    def test_missing_config_means_next_file_is_checked(tmp_path: pathlib.Path) -> None:
+        """Test missing config in file results in checking of next file."""
+        setup_conf_file = tmp_path / "setup.cfg"
+        setup_file_content = """[rstcheck]
+        report_level = 3
+        """
+        setup_conf_file.write_text(setup_file_content)
+        rstcheck_conf_file = tmp_path / ".rstcheck.cfg"
+        rstcheck_file_content = """[not-rstcheck]
+        report_level = 2
+        """
+        rstcheck_conf_file.write_text(rstcheck_file_content)
+
+        result = config.load_config_file_from_dir(tmp_path)
+
+        assert result is not None
+        assert result.report_level == config.ReportLevel.ERROR
