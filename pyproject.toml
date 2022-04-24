@@ -60,6 +60,8 @@ toml = ["tomli"]
 testing = [
   "pytest",
   "pytest-cov",
+  "coverage",
+  "coverage-conditional-plugin",
   "pytest-xdist",
   "pytest-sugar",
   "pytest-randomly",
