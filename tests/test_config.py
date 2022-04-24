@@ -36,7 +36,7 @@ class TestReportLevelValidator:
     @staticmethod
     def test_none_means_unset() -> None:
         """Test ``None`` results in unset report level."""
-        result = config.RstcheckConfig(check_paths=[pathlib.Path()], report_level=None)
+        result = config.RstcheckConfigFile(report_level=None)
 
         assert result is not None
         assert result.report_level is None
@@ -44,7 +44,7 @@ class TestReportLevelValidator:
     @staticmethod
     def test_empty_string_means_unset() -> None:
         """Test empty string results in unset report level."""
-        result = config.RstcheckConfig(check_paths=[pathlib.Path()], report_level="")
+        result = config.RstcheckConfigFile(report_level="")
 
         assert result is not None
         assert result.report_level is None
@@ -56,7 +56,7 @@ class TestReportLevelValidator:
     )
     def test_valid_report_levels(level: typing.Any) -> None:  # noqa: ANN401
         """Test valid report levels accepted by docutils."""
-        result = config.RstcheckConfig(check_paths=[pathlib.Path()], report_level=level)
+        result = config.RstcheckConfigFile(report_level=level)
 
         assert result is not None
         assert result.report_level is not None
@@ -69,7 +69,7 @@ class TestReportLevelValidator:
     def test_invalid_report_levels(level: typing.Any) -> None:  # noqa: ANN401
         """Test invalid report levels not accepted by docutils."""
         with pytest.raises(ValueError, match="Invalid report level"):
-            config.RstcheckConfig(check_paths=[pathlib.Path()], report_level=level)
+            config.RstcheckConfigFile(report_level=level)
 
 
 class TestSplitStrValidator:
@@ -192,7 +192,7 @@ class TestJoinRegexStrValidator:
     @staticmethod
     def test_none_means_unset() -> None:
         """Test ``None`` results in unset ignore_messages."""
-        result = config.RstcheckConfig(check_paths=[pathlib.Path()], ignore_messages=None)
+        result = config.RstcheckConfigFile(ignore_messages=None)
 
         assert result is not None
         assert result.ignore_messages is None
@@ -203,7 +203,7 @@ class TestJoinRegexStrValidator:
         string = r"\d{4}\.[A-Z]+Test$"
         regex = re.compile(string)
 
-        result = config.RstcheckConfig(check_paths=[pathlib.Path()], ignore_messages=string)
+        result = config.RstcheckConfigFile(ignore_messages=string)
 
         assert result is not None
         assert result.ignore_messages == regex
@@ -214,7 +214,7 @@ class TestJoinRegexStrValidator:
         string = ""
         regex = re.compile(string)
 
-        result = config.RstcheckConfig(check_paths=[pathlib.Path()], ignore_messages=string)
+        result = config.RstcheckConfigFile(ignore_messages=string)
 
         assert result is not None
         assert result.ignore_messages == regex
@@ -226,7 +226,7 @@ class TestJoinRegexStrValidator:
         full_string = r"\d{4}\.[A-Z]+Test$|\d{4}\.[A-Z]+Test2$|\d{4}\.[A-Z]+Test3$"
         regex = re.compile(full_string)
 
-        result = config.RstcheckConfig(check_paths=[pathlib.Path()], ignore_messages=string_list)
+        result = config.RstcheckConfigFile(ignore_messages=string_list)
 
         assert result is not None
         assert result.ignore_messages == regex
@@ -239,7 +239,7 @@ class TestJoinRegexStrValidator:
         """Test list with empty contents are parsed as regex too."""
         regex = re.compile(full_string)
 
-        result = config.RstcheckConfig(check_paths=[pathlib.Path()], ignore_messages=string_list)
+        result = config.RstcheckConfigFile(ignore_messages=string_list)
 
         assert result is not None
         assert result.ignore_messages == regex
@@ -262,7 +262,7 @@ class TestJoinRegexStrValidator:
     def test_invalid_settings(value: str) -> None:
         """Test invalid ignore_messages settings."""
         with pytest.raises(ValueError, match="Not a string or list of strings"):
-            config.RstcheckConfig(check_paths=[pathlib.Path()], ignore_messages=value)
+            config.RstcheckConfigFile(ignore_messages=value)
 
 
 class TestIniFileLoader:
@@ -274,7 +274,7 @@ class TestIniFileLoader:
         conf_file = tmp_path / "config.ini"
 
         with pytest.raises(FileNotFoundError):
-            config.load_config_from_ini_file(conf_file)
+            config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
 
     @staticmethod
     def test_not_a_file_errors(tmp_path: pathlib.Path) -> None:
@@ -282,7 +282,7 @@ class TestIniFileLoader:
         conf_file = tmp_path
 
         with pytest.raises(FileNotFoundError):
-            config.load_config_from_ini_file(conf_file)
+            config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
 
     @staticmethod
     def test_returns_none_on_missing_section(tmp_path: pathlib.Path) -> None:
@@ -291,7 +291,7 @@ class TestIniFileLoader:
         file_content = "[not-rstcheck]"
         conf_file.write_text(file_content)
 
-        result = config.load_config_from_ini_file(conf_file)
+        result = config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
 
         assert result is None
 
@@ -304,7 +304,7 @@ class TestIniFileLoader:
         """
         conf_file.write_text(file_content)
 
-        result = config.load_config_from_ini_file(conf_file)
+        result = config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
 
@@ -321,16 +321,17 @@ class TestIniFileLoader:
         ignore_messages=message
         """
         conf_file.write_text(file_content)
+        regex = re.compile("message")
 
-        result = config.load_config_from_ini_file(conf_file)
+        result = config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == "1"
-        assert result.ignore_directives == "directive"
-        assert result.ignore_roles == "role"
-        assert result.ignore_substitutions == "substitution"
-        assert result.ignore_languages == "language"
-        assert result.ignore_messages == "message"
+        assert result.report_level == config.ReportLevel.INFO
+        assert result.ignore_directives == ["directive"]
+        assert result.ignore_roles == ["role"]
+        assert result.ignore_substitutions == ["substitution"]
+        assert result.ignore_languages == ["language"]
+        assert result.ignore_messages == regex
 
     @staticmethod
     def test_file_with_mixed_supported_settings(tmp_path: pathlib.Path) -> None:
@@ -343,11 +344,11 @@ class TestIniFileLoader:
         """
         conf_file.write_text(file_content)
 
-        result = config.load_config_from_ini_file(conf_file)
+        result = config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == "1"
-        assert result.ignore_directives == "directive"
+        assert result.report_level == config.ReportLevel.INFO
+        assert result.ignore_directives == ["directive"]
 
     @staticmethod
     def test_file_with_mixed_supported_sections(tmp_path: pathlib.Path) -> None:
@@ -365,11 +366,11 @@ class TestIniFileLoader:
         """
         conf_file.write_text(file_content)
 
-        result = config.load_config_from_ini_file(conf_file)
+        result = config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == "1"
-        assert result.ignore_directives == "directive"
+        assert result.report_level == config.ReportLevel.INFO
+        assert result.ignore_directives == ["directive"]
 
 
 @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
@@ -383,7 +384,7 @@ class TestTomlFileLoader:
         conf_file.touch()
 
         with pytest.raises(ValueError, match="File is not a TOML file"):
-            config.load_config_from_toml_file(conf_file)
+            config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
     @staticmethod
     def test_missing_file_errors(tmp_path: pathlib.Path) -> None:
@@ -391,7 +392,7 @@ class TestTomlFileLoader:
         conf_file = tmp_path / "config.toml"
 
         with pytest.raises(FileNotFoundError):
-            config.load_config_from_toml_file(conf_file)
+            config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
     @staticmethod
     def test_not_a_file_errors(tmp_path: pathlib.Path) -> None:
@@ -400,7 +401,7 @@ class TestTomlFileLoader:
         conf_file.mkdir()
 
         with pytest.raises(FileNotFoundError):
-            config.load_config_from_toml_file(conf_file)
+            config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
     @staticmethod
     @pytest.mark.parametrize("invalid_section", ["[tool.not-rstcheck]", "[rstcheck]"])
@@ -409,7 +410,7 @@ class TestTomlFileLoader:
         conf_file = tmp_path / "config.toml"
         conf_file.write_text(invalid_section)
 
-        result = config.load_config_from_toml_file(conf_file)
+        result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is None
 
@@ -422,7 +423,7 @@ class TestTomlFileLoader:
         """
         conf_file.write_text(file_content)
 
-        result = config.load_config_from_toml_file(conf_file)
+        result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
 
@@ -439,16 +440,17 @@ class TestTomlFileLoader:
         ignore_messages = "message"
         """
         conf_file.write_text(file_content)
+        regex = re.compile("message")
 
-        result = config.load_config_from_toml_file(conf_file)
+        result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == 1
+        assert result.report_level == config.ReportLevel.INFO
         assert result.ignore_directives == ["directive"]
         assert result.ignore_roles == ["role"]
         assert result.ignore_substitutions == ["substitution"]
         assert result.ignore_languages == ["language"]
-        assert result.ignore_messages == "message"
+        assert result.ignore_messages == regex
 
     @staticmethod
     def test_file_with_mixed_supported_settings(tmp_path: pathlib.Path) -> None:
@@ -461,10 +463,10 @@ class TestTomlFileLoader:
         """
         conf_file.write_text(file_content)
 
-        result = config.load_config_from_toml_file(conf_file)
+        result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == 1
+        assert result.report_level == config.ReportLevel.INFO
         assert result.ignore_directives == ["directive"]
 
     @staticmethod
@@ -483,56 +485,57 @@ class TestTomlFileLoader:
         """
         conf_file.write_text(file_content)
 
-        result = config.load_config_from_toml_file(conf_file)
+        result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == 1
+        assert result.report_level == config.ReportLevel.INFO
         assert result.ignore_directives == ["directive"]
 
     @staticmethod
     @pytest.mark.parametrize(
         ("value", "parsed_value"),
         [
-            ("none", "none"),
-            ("1", 1),
-            ("6", 6),
-            ("true", "true"),
-            ("non-supported-but-string", "non-supported-but-string"),
+            ("none", config.ReportLevel.NONE),
+            ("1", config.ReportLevel.INFO),
         ],
     )
-    def test_report_level_as_strings(tmp_path: pathlib.Path, value: str, parsed_value: str) -> None:
-        """Test report setting with string values.
-
-        The function does no value validation therfore unsupported values should not error.
-        """
+    def test_report_level_as_strings(
+        tmp_path: pathlib.Path, value: str, parsed_value: config.ReportLevel
+    ) -> None:
+        """Test report setting with string values."""
         conf_file = tmp_path / "config.toml"
         file_content = f"""[tool.rstcheck]
         report_level = "{value}"
         """
         conf_file.write_text(file_content)
 
-        result = config.load_config_from_toml_file(conf_file)
+        result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
         assert result.report_level == parsed_value
 
     @staticmethod
-    @pytest.mark.parametrize("value", [-1, 0, 1, 6, 32])
-    def test_report_level_as_int(tmp_path: pathlib.Path, value: int) -> None:
-        """Test report setting with integer values.
-
-        The function does no value validation therfore unsupported values should not error.
-        """
+    @pytest.mark.parametrize(
+        ("value", "parsed_value"),
+        [
+            (1, config.ReportLevel.INFO),
+            (5, config.ReportLevel.NONE),
+        ],
+    )
+    def test_report_level_as_int(
+        tmp_path: pathlib.Path, value: int, parsed_value: config.ReportLevel
+    ) -> None:
+        """Test report setting with integer values."""
         conf_file = tmp_path / "config.toml"
         file_content = f"""[tool.rstcheck]
         report_level = {value}
         """
         conf_file.write_text(file_content)
 
-        result = config.load_config_from_toml_file(conf_file)
+        result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.report_level == value
+        assert result.report_level == parsed_value
 
     @staticmethod
     def test_ignore_messages_as_str(tmp_path: pathlib.Path) -> None:
@@ -542,22 +545,24 @@ class TestTomlFileLoader:
         ignore_messages = "some-regex"
         """
         conf_file.write_text(file_content)
+        regex = re.compile("some-regex")
 
-        result = config.load_config_from_toml_file(conf_file)
+        result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.ignore_messages == "some-regex"
+        assert result.ignore_messages == regex
 
     @staticmethod
     def test_ignore_messages_as_list(tmp_path: pathlib.Path) -> None:
         """Test ignore_messages setting with list of strings value."""
         conf_file = tmp_path / "config.toml"
         file_content = """[tool.rstcheck]
-        ignore_messages = ["some-regex"]
+        ignore_messages = ["some-regex", "another-regex"]
         """
         conf_file.write_text(file_content)
+        regex = re.compile(r"some-regex|another-regex")
 
-        result = config.load_config_from_toml_file(conf_file)
+        result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is not None
-        assert result.ignore_messages == ["some-regex"]
+        assert result.ignore_messages == regex

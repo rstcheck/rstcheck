@@ -39,16 +39,13 @@ ReportLevelMap = {
 """Map docutils report levels in text form to numbers."""
 
 
-class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
-    """Rstcheck config.
+class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
+    """Rstcheck config file.
 
     :raises ValueError:: If setting has incorrect value or type
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    check_paths: typing.List[pathlib.Path]
-    config_path: typing.Optional[pathlib.Path]
-    recursive: typing.Optional[bool]
     report_level: typing.Optional[ReportLevel]
     ignore_directives: typing.Optional[typing.List[str]]
     ignore_roles: typing.Optional[typing.List[str]]
@@ -130,7 +127,21 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
         raise ValueError("Not a string or list of strings")
 
 
-class RstcheckConfigINIFile(pydantic.BaseModel):  # pylint: disable=no-member,too-few-public-methods
+class RstcheckConfig(RstcheckConfigFile):  # pylint: disable=too-few-public-methods
+    """Rstcheck config.
+
+    :raises ValueError:: If setting has incorrect value or type
+    :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
+    """
+
+    check_paths: typing.List[pathlib.Path]
+    config_path: typing.Optional[pathlib.Path]
+    recursive: typing.Optional[bool]
+
+
+class _RstcheckConfigINIFile(
+    pydantic.BaseModel  # pylint: disable=no-member
+):  # pylint: disable=too-few-public-methods
     """Type for [rstcheck] section in INI file.
 
     The types apply to the file's data before the parsing by ``RstcheckConfig`` is done.
@@ -146,16 +157,12 @@ class RstcheckConfigINIFile(pydantic.BaseModel):  # pylint: disable=no-member,to
     ignore_messages: pydantic.NoneStr = None  # pylint: disable=no-member
 
 
-def load_config_from_ini_file(ini_file: pathlib.Path) -> typing.Optional[RstcheckConfigINIFile]:
-    """Load rstcheck config from a ini file.
-
-    .. caution::
-
-        This function only does type and **no** value validation!
+def _load_config_from_ini_file(ini_file: pathlib.Path) -> typing.Optional[RstcheckConfigFile]:
+    """Load, parse and validate rstcheck config from a ini file.
 
     :param ini_file: INI file to load config from
     :raises FileNotFoundError: If the file is not found
-    :return: instance of ``RstcheckConfigINIFile`` or ``None`` on missing config section
+    :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
     """
     if not ini_file.is_file():
         raise FileNotFoundError(f"{ini_file}")
@@ -166,12 +173,14 @@ def load_config_from_ini_file(ini_file: pathlib.Path) -> typing.Optional[Rstchec
     if not parser.has_section("rstcheck"):
         return None
 
-    config_values = dict(parser.items("rstcheck"))
+    config_values_raw = dict(parser.items("rstcheck"))
+    config_values_checked = _RstcheckConfigINIFile(**config_values_raw)
+    config_values_parsed = RstcheckConfigFile(**config_values_checked.dict())
 
-    return RstcheckConfigINIFile(**config_values)
+    return config_values_parsed
 
 
-class RstcheckConfigTOMLFile(
+class _RstcheckConfigTOMLFile(
     pydantic.BaseModel  # pylint: disable=no-member,
 ):  # pylint: disable=too-few-public-methods
     """Type for [tool.rstcheck] section in TOML file.
@@ -189,12 +198,8 @@ class RstcheckConfigTOMLFile(
     ignore_messages: typing.Optional[typing.Union[str, typing.List[str]]] = None
 
 
-def load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[RstcheckConfigTOMLFile]:
-    """Load rstcheck config from a TOML file.
-
-    .. caution::
-
-        This function only does type and **no** value validation!
+def _load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[RstcheckConfigFile]:
+    """Load, parse and validate rstcheck config from a TOML file.
 
     .. warning::
 
@@ -204,7 +209,7 @@ def load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[Rstch
     :param toml_file: TOML file to load config from
     :raises ValueError: If the file is not a TOML file
     :raises FileNotFoundError: If the file is not found
-    :return: instance of ``RstcheckConfigTOMLFile`` or ``None`` on missing config section
+    :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
     """
     _extras.install_guard("tomli")
 
@@ -223,4 +228,7 @@ def load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[Rstch
     if rstcheck_section is None:
         return None
 
-    return RstcheckConfigTOMLFile(**rstcheck_section)
+    config_values_checked = _RstcheckConfigTOMLFile(**rstcheck_section)
+    config_values_parsed = RstcheckConfigFile(**config_values_checked.dict())
+
+    return config_values_parsed
