@@ -31,6 +31,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Fetch origin/main
+        #: https://github.com/Bachmann1234/diff_cover#troubleshooting
+        run: git fetch --no-tags origin master:refs/remotes/origin/master
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v3
         with:
