@@ -232,3 +232,42 @@ def _load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[Rstc
     config_values_parsed = RstcheckConfigFile(**config_values_checked.dict())
 
     return config_values_parsed
+
+
+def load_config_file(file_path: pathlib.Path) -> typing.Optional[RstcheckConfigFile]:
+    """Load, parse and validate rstcheck config from a file.
+
+    .. caution::
+
+        If a TOML file is passed this function need tomli installed!
+        Use toml extra or install manally.
+
+    :param file_path: File to load config from
+    :raises FileNotFoundError: If the file is not found
+    :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
+    """
+    if file_path.suffix.casefold() == ".toml":
+        return _load_config_from_toml_file(file_path)
+    return _load_config_from_ini_file(file_path)
+
+
+def load_config_file_from_dir(dir_path: pathlib.Path) -> typing.Optional[RstcheckConfigFile]:
+    """Search, load, parse and validate rstcheck config from a directory.
+
+    Searches files from ``CONFIG_FILES`` in the directory. If a file is found, try to load the
+    config from it. If is has no config, search further.
+
+    :param dir_path: Directory to search
+    :return: instance of ``RstcheckConfigFile`` or
+        ``None`` if no file is found or no file has a rstcheck section
+    """
+    config = None
+
+    for file_name in CONFIG_FILES:
+        file_path = dir_path / file_name
+        if file_path.is_file():
+            config = load_config_file(file_path)
+            if config is not None:
+                break
+
+    return config

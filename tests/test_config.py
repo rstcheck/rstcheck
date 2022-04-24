@@ -566,3 +566,159 @@ class TestTomlFileLoader:
 
         assert result is not None
         assert result.ignore_messages == regex
+
+
+class TestConfigFileLoader:
+    """Test ``load_config_file``."""
+
+    @staticmethod
+    @pytest.mark.parametrize("ini_file", [".rstcheck.cfg", "setup.cfg", "config.ini", "config.cfg"])
+    def test_ini_files(tmp_path: pathlib.Path, ini_file: str) -> None:
+        """Test with INI files."""
+        conf_file = tmp_path / ini_file
+        file_content = """[rstcheck]
+        report_level = 1
+        """
+        conf_file.write_text(file_content)
+
+        result = config.load_config_file(conf_file)
+
+        assert result is not None
+        assert result.report_level == config.ReportLevel.INFO
+
+    @staticmethod
+    @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
+    @pytest.mark.parametrize("toml_file", [".rstcheck.toml", "setup.toml", "config.toml"])
+    def test_toml_files(tmp_path: pathlib.Path, toml_file: str) -> None:
+        """Test with TOML files."""
+        conf_file = tmp_path / toml_file
+        file_content = """[tool.rstcheck]
+        report_level = 1
+        """
+        conf_file.write_text(file_content)
+
+        result = config.load_config_file(conf_file)
+
+        assert result is not None
+        assert result.report_level == config.ReportLevel.INFO
+
+
+class TestConfigDirLoader:
+    """Test ``load_config_file_from_dir``."""
+
+    @staticmethod
+    @pytest.mark.parametrize("ini_file", [".rstcheck.cfg", "setup.cfg"])
+    def test_supported_ini_files(tmp_path: pathlib.Path, ini_file: str) -> None:
+        """Test with supported INI files."""
+        conf_file = tmp_path / ini_file
+        file_content = """[rstcheck]
+        report_level = 1
+        """
+        conf_file.write_text(file_content)
+
+        result = config.load_config_file_from_dir(tmp_path)
+
+        assert result is not None
+        assert result.report_level == config.ReportLevel.INFO
+
+    @staticmethod
+    @pytest.mark.parametrize("ini_file", ["config.ini", "config.cfg"])
+    def test_unsupported_ini_files(tmp_path: pathlib.Path, ini_file: str) -> None:
+        """Test with unsupported INI files."""
+        conf_file = tmp_path / ini_file
+        file_content = """[rstcheck]
+        report_level = 1
+        """
+        conf_file.write_text(file_content)
+
+        result = config.load_config_file_from_dir(tmp_path)
+
+        assert result is None
+
+    @staticmethod
+    @pytest.mark.parametrize("toml_file", ["pyproject.toml"])
+    def test_supported_toml_files(tmp_path: pathlib.Path, toml_file: str) -> None:
+        """Test with supported TOML files."""
+        conf_file = tmp_path / toml_file
+        file_content = """[tool.rstcheck]
+        report_level = 1
+        """
+        conf_file.write_text(file_content)
+
+        result = config.load_config_file_from_dir(tmp_path)
+
+        assert result is not None
+        assert result.report_level == config.ReportLevel.INFO
+
+    @staticmethod
+    @pytest.mark.parametrize("toml_file", [".rstcheck.toml", "setup.toml", "config.toml"])
+    def test_unsupported_toml_files(tmp_path: pathlib.Path, toml_file: str) -> None:
+        """Test with unsupported TOML files."""
+        conf_file = tmp_path / toml_file
+        file_content = """[tool.rstcheck]
+        report_level = 1
+        """
+        conf_file.write_text(file_content)
+
+        result = config.load_config_file_from_dir(tmp_path)
+
+        assert result is None
+
+    @staticmethod
+    def test_rstcheck_over_setup(tmp_path: pathlib.Path) -> None:
+        """Test .rstcheck.cfg takes precedence over setup.cfg."""
+        setup_conf_file = tmp_path / "setup.cfg"
+        setup_file_content = """[rstcheck]
+        report_level = 2
+        """
+        setup_conf_file.write_text(setup_file_content)
+        rstcheck_conf_file = tmp_path / ".rstcheck.cfg"
+        rstcheck_file_content = """[rstcheck]
+        report_level = 1
+        """
+        rstcheck_conf_file.write_text(rstcheck_file_content)
+
+        result = config.load_config_file_from_dir(tmp_path)
+
+        assert result is not None
+        assert result.report_level == config.ReportLevel.INFO
+
+    @staticmethod
+    @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
+    def test_rstcheck_over_pyproject(tmp_path: pathlib.Path) -> None:
+        """Test .rstcheck.cfg takes precedence over pyproject.toml."""
+        pyproject_conf_file = tmp_path / "pyproject.toml"
+        pyproject_file_content = """[tool.rstcheck]
+        report_level = 2
+        """
+        pyproject_conf_file.write_text(pyproject_file_content)
+        rstcheck_conf_file = tmp_path / ".rstcheck.cfg"
+        rstcheck_file_content = """[rstcheck]
+        report_level = 1
+        """
+        rstcheck_conf_file.write_text(rstcheck_file_content)
+
+        result = config.load_config_file_from_dir(tmp_path)
+
+        assert result is not None
+        assert result.report_level == config.ReportLevel.INFO
+
+    @staticmethod
+    @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
+    def test_pyproject_over_setup(tmp_path: pathlib.Path) -> None:
+        """Test pyproject.toml takes precedence over setup.cfg."""
+        setup_conf_file = tmp_path / "setup.cfg"
+        setup_file_content = """[rstcheck]
+        report_level = 2
+        """
+        setup_conf_file.write_text(setup_file_content)
+        pyproject_conf_file = tmp_path / "pyproject.toml"
+        pyproject_file_content = """[tool.rstcheck]
+        report_level = 1
+        """
+        pyproject_conf_file.write_text(pyproject_file_content)
+
+        result = config.load_config_file_from_dir(tmp_path)
+
+        assert result is not None
+        assert result.report_level == config.ReportLevel.INFO
