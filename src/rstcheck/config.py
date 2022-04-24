@@ -14,6 +14,11 @@ if _extras.TOMLI_INSTALLED:  # pragma: no cover
     import tomli
 
 
+CONFIG_FILES = [".rstcheck.cfg", "setup.cfg"]
+if _extras.TOMLI_INSTALLED:
+    CONFIG_FILES = [".rstcheck.cfg", "pyproject.toml", "setup.cfg"]
+
+
 class ReportLevel(enum.Enum):
     """Report levels supported by docutils."""
 
