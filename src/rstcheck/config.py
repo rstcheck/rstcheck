@@ -41,7 +41,7 @@ class RstcheckConfig(pydantic.BaseModel):  # pylint: disable=no-member
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    files: typing.Optional[typing.List[pathlib.Path]]
+    files: typing.List[pathlib.Path]
     config: typing.Optional[pathlib.Path]
     recursive: typing.Optional[bool]
     report: typing.Optional[ReportLevel]

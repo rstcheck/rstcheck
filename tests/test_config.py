@@ -36,7 +36,7 @@ class TestReportLevelValidator:
     @staticmethod
     def test_none_means_unset() -> None:
         """Test ``None`` results in unset report level."""
-        result = config.RstcheckConfig(report=None)
+        result = config.RstcheckConfig(files=[pathlib.Path()], report=None)
 
         assert result is not None
         assert result.report is None
@@ -44,7 +44,7 @@ class TestReportLevelValidator:
     @staticmethod
     def test_empty_string_means_unset() -> None:
         """Test empty string results in unset report level."""
-        result = config.RstcheckConfig(report="")
+        result = config.RstcheckConfig(files=[pathlib.Path()], report="")
 
         assert result is not None
         assert result.report is None
@@ -56,7 +56,7 @@ class TestReportLevelValidator:
     )
     def test_valid_report_levels(level: typing.Any) -> None:  # noqa: ANN401
         """Test valid report levels accepted by docutils."""
-        result = config.RstcheckConfig(report=level)
+        result = config.RstcheckConfig(files=[pathlib.Path()], report=level)
 
         assert result is not None
         assert result.report is not None
@@ -69,7 +69,7 @@ class TestReportLevelValidator:
     def test_invalid_report_levels(level: typing.Any) -> None:  # noqa: ANN401
         """Test invalid report levels not accepted by docutils."""
         with pytest.raises(ValueError, match="Invalid report level"):
-            config.RstcheckConfig(report=level)
+            config.RstcheckConfig(files=[pathlib.Path()], report=level)
 
 
 class TestSplitStrValidator:
@@ -89,6 +89,7 @@ class TestSplitStrValidator:
     def test_none_means_unset() -> None:
         """Test ``None`` results in unset ignore_messages."""
         result = config.RstcheckConfig(
+            files=[pathlib.Path()],
             ignore_languages=None,
             ignore_directives=None,
             ignore_roles=None,
@@ -115,6 +116,7 @@ class TestSplitStrValidator:
     def test_strings_are_transformed_to_lists(string: str, split_list: typing.List[str]) -> None:
         """Test strings are split at the ","."""
         result = config.RstcheckConfig(
+            files=[pathlib.Path()],
             ignore_languages=string,
             ignore_directives=string,
             ignore_roles=string,
@@ -141,6 +143,7 @@ class TestSplitStrValidator:
     def test_string_lists_are_kept_the_same(string_list: typing.List[str]) -> None:
         """Test lists of strings are untouched."""
         result = config.RstcheckConfig(
+            files=[pathlib.Path()],
             ignore_languages=string_list,
             ignore_directives=string_list,
             ignore_roles=string_list,
@@ -172,6 +175,7 @@ class TestSplitStrValidator:
         """Test invalid settings."""
         with pytest.raises(ValueError, match="Not a string or list of strings"):
             config.RstcheckConfig(
+                files=[pathlib.Path()],
                 ignore_languages=value,
                 ignore_directives=value,
                 ignore_roles=value,
@@ -188,7 +192,7 @@ class TestJoinRegexStrValidator:
     @staticmethod
     def test_none_means_unset() -> None:
         """Test ``None`` results in unset ignore_messages."""
-        result = config.RstcheckConfig(ignore_messages=None)
+        result = config.RstcheckConfig(files=[pathlib.Path()], ignore_messages=None)
 
         assert result is not None
         assert result.ignore_messages is None
@@ -199,7 +203,7 @@ class TestJoinRegexStrValidator:
         string = r"\d{4}\.[A-Z]+Test$"
         regex = re.compile(string)
 
-        result = config.RstcheckConfig(ignore_messages=string)
+        result = config.RstcheckConfig(files=[pathlib.Path()], ignore_messages=string)
 
         assert result is not None
         assert result.ignore_messages == regex
@@ -210,7 +214,7 @@ class TestJoinRegexStrValidator:
         string = ""
         regex = re.compile(string)
 
-        result = config.RstcheckConfig(ignore_messages=string)
+        result = config.RstcheckConfig(files=[pathlib.Path()], ignore_messages=string)
 
         assert result is not None
         assert result.ignore_messages == regex
@@ -222,7 +226,7 @@ class TestJoinRegexStrValidator:
         full_string = r"\d{4}\.[A-Z]+Test$|\d{4}\.[A-Z]+Test2$|\d{4}\.[A-Z]+Test3$"
         regex = re.compile(full_string)
 
-        result = config.RstcheckConfig(ignore_messages=string_list)
+        result = config.RstcheckConfig(files=[pathlib.Path()], ignore_messages=string_list)
 
         assert result is not None
         assert result.ignore_messages == regex
@@ -235,7 +239,7 @@ class TestJoinRegexStrValidator:
         """Test list with empty contents are parsed as regex too."""
         regex = re.compile(full_string)
 
-        result = config.RstcheckConfig(ignore_messages=string_list)
+        result = config.RstcheckConfig(files=[pathlib.Path()], ignore_messages=string_list)
 
         assert result is not None
         assert result.ignore_messages == regex
@@ -258,7 +262,7 @@ class TestJoinRegexStrValidator:
     def test_invalid_settings(value: str) -> None:
         """Test invalid ignore_messages settings."""
         with pytest.raises(ValueError, match="Not a string or list of strings"):
-            config.RstcheckConfig(ignore_messages=value)
+            config.RstcheckConfig(files=[pathlib.Path()], ignore_messages=value)
 
 
 class TestIniFileLoader:
