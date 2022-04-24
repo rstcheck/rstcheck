@@ -676,6 +676,7 @@ class TestConfigDirLoader:
         assert result is None
 
     @staticmethod
+    @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
     @pytest.mark.parametrize("toml_file", ["pyproject.toml"])
     def test_supported_toml_files(tmp_path: pathlib.Path, toml_file: str) -> None:
         """Test with supported TOML files."""
@@ -691,6 +692,7 @@ class TestConfigDirLoader:
         assert result.report_level == config.ReportLevel.ERROR
 
     @staticmethod
+    @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
     @pytest.mark.parametrize("toml_file", [".rstcheck.toml", "setup.toml", "config.toml"])
     def test_unsupported_toml_files(tmp_path: pathlib.Path, toml_file: str) -> None:
         """Test with unsupported TOML files."""
