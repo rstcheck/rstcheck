@@ -73,9 +73,7 @@ class RstcheckMainRunner:
                         for f in children
                         if checkable_rst_file((root_path / f).resolve())
                     ]
-                    directories[:] = [
-                        d for d in directories if not (root_path / d).resolve().name.startswith(".")
-                    ]
+                    directories[:] = [d for d in directories if not d.startswith(".")]
                 continue
 
             if checkable_rst_file(resolved_path):
