@@ -55,11 +55,11 @@ class RstcheckMainRunner:
         Clear the current file list. Then get the file and directory paths specified with the init
         base config and search them for rst files to check. Add those files to the file list.
         """
-        paths = self.config.check_paths
+        paths = list(self.config.check_paths)
         self.files_to_check = []
 
         checkable_rst_file: typing.Callable[[pathlib.Path], bool] = (
-            lambda f: not f.name.startswith(".") and f.suffix.casefold() == ".rst"
+            lambda f: f.is_file() and not f.name.startswith(".") and f.suffix.casefold() == ".rst"
         )
 
         while paths:
@@ -75,7 +75,9 @@ class RstcheckMainRunner:
                     directories[:] = [
                         d for d in directories if not (root_path / d).resolve().name.startswith(".")
                     ]
-            else:
+                continue
+
+            if checkable_rst_file(path):
                 self.files_to_check.append(path)
 
     def _run_checks_sync(self) -> typing.List[typing.List[_types.LintError]]:
