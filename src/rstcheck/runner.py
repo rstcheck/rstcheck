@@ -112,8 +112,7 @@ class RstcheckMainRunner:
         """
         self.errors = []
         for errors in results:
-            if len(errors) > 0:
-                self.errors += errors
+            self.errors += errors
 
     def check(self) -> None:
         """Check all files in the file list and save the errors.
