@@ -49,7 +49,7 @@ class RstcheckMainRunner:
             self.config, file_config, config_add_is_dominant=self.overwrite_config
         )
 
-    def update_file_list(self) -> None:
+    def update_file_list(self) -> None:  # noqa: CCR001
         """Update file path list with paths specified on initialization.
 
         Clear the current file list. Then get the file and directory paths specified with the init
@@ -57,6 +57,10 @@ class RstcheckMainRunner:
         """
         paths = list(self.config.check_paths)
         self.files_to_check = []
+
+        if len(paths) == 1 and paths[0].name == "-":
+            self.files_to_check.append(paths[0])
+            return
 
         checkable_rst_file: typing.Callable[[pathlib.Path], bool] = (
             lambda f: f.is_file() and not f.name.startswith(".") and f.suffix.casefold() == ".rst"
@@ -76,7 +80,7 @@ class RstcheckMainRunner:
                     directories[:] = [d for d in directories if not d.startswith(".")]
                 continue
 
-            if checkable_rst_file(resolved_path):
+            if checkable_rst_file(resolved_path) and resolved_path.name != "-":
                 self.files_to_check.append(path)
 
     def _run_checks_sync(self) -> typing.List[typing.List[_types.LintError]]:

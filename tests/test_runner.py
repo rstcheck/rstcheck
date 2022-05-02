@@ -156,6 +156,29 @@ class TestRstcheckMainRunnerFileListUpdater:
         assert len(_runner.files_to_check) == 5
         assert EXAMPLES_DIR / "good" / "good.rst" in _runner.files_to_check
 
+    @staticmethod
+    def test_dash_as_file() -> None:
+        """Test dash as file."""
+        file_list = [pathlib.Path("-")]
+        init_config = config.RstcheckConfig(check_paths=file_list)
+        _runner = runner.RstcheckMainRunner(init_config)
+
+        _runner.update_file_list()  # act
+
+        assert file_list == _runner.files_to_check
+
+    @staticmethod
+    def test_dash_as_file_with_others() -> None:
+        """Test dash as file with other files gets ignored."""
+        file_list = [pathlib.Path("-"), EXAMPLES_DIR / "good" / "good.rst"]
+        init_config = config.RstcheckConfig(check_paths=file_list)
+        _runner = runner.RstcheckMainRunner(init_config)
+
+        _runner.update_file_list()  # act
+
+        assert len(_runner.files_to_check) == 1
+        assert EXAMPLES_DIR / "good" / "good.rst" in _runner.files_to_check
+
 
 @pytest.mark.parametrize(
     "lint_errors", [[], [types.LintError(filename="<string>", line_number=0, message="message")]]
