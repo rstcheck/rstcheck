@@ -70,6 +70,10 @@ def get_sphinx_directives_and_roles() -> typing.Tuple[typing.List[str], typing.L
     return (sphinx_directives, sphinx_roles)
 
 
+_DIRECTIVE_WHITELIST = ["code", "code-block", "include"]
+_ROLE_WHITELIST: typing.List[str] = []
+
+
 def filter_whitelisted_directives_and_roles(
     directives: typing.List[str], roles: typing.List[str]
 ) -> typing.Tuple[typing.List[str], typing.List[str]]:
@@ -79,11 +83,8 @@ def filter_whitelisted_directives_and_roles(
     :param roles: Roles to filter
     :return: Tuple of fitlered directives and roles
     """
-    directive_whitelist = ["code", "code-block", "include"]
-    role_whitelist: typing.List[str] = []
-
-    directives = list(filter(lambda d: d not in directive_whitelist, directives))
-    roles = list(filter(lambda r: r not in role_whitelist, roles))
+    directives = list(filter(lambda d: d not in _DIRECTIVE_WHITELIST, directives))
+    roles = list(filter(lambda r: r not in _ROLE_WHITELIST, roles))
 
     return (directives, roles)
 
