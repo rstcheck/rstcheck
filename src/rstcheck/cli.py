@@ -87,5 +87,10 @@ def cli(  # pylint: disable=too-many-arguments
     raise typer.Exit(code=exit_code)
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Run CLI."""
     typer.run(cli)
+
+
+if __name__ == "__main__":
+    main()

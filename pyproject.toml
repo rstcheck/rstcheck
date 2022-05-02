@@ -21,7 +21,7 @@ packages = [
 include = ["examples"]
 
 [tool.poetry.scripts]
-rstcheck = "rstcheck:main"
+rstcheck = "rstcheck.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.7"
