@@ -13,6 +13,7 @@ class TestIgnoreDirectivesAndRoles:
     """Test ``ignore_directives_and_roles`` function."""
 
     @staticmethod
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_with_empty_lists() -> None:
         """Test with empty lists."""
         directives: typing.List[str] = []
@@ -24,6 +25,7 @@ class TestIgnoreDirectivesAndRoles:
         assert not docutils_roles._roles
 
     @staticmethod
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_with_only_roles() -> None:
         """Test with only roles to add."""
         directives: typing.List[str] = []
@@ -35,6 +37,7 @@ class TestIgnoreDirectivesAndRoles:
         assert "test_role" in docutils_roles._roles
 
     @staticmethod
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_with_only_directives() -> None:
         """Test with only directives to add."""
         directives = ["test_directive"]
@@ -46,6 +49,7 @@ class TestIgnoreDirectivesAndRoles:
         assert not docutils_roles._roles
 
     @staticmethod
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_with_both() -> None:
         """Test with both."""
         directives = ["test_directive"]
@@ -65,6 +69,7 @@ class TestRegisterCodeRirective:
         not _extras.SPHINX_INSTALLED,
         reason="Test-function tests for no action when sphinx is installed.",
     )
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_does_nothing_when_sphinx_installed() -> None:
         """Test function does nothing when sphinx is installed."""
         _docutils.register_code_directive()  # act
@@ -78,6 +83,7 @@ class TestRegisterCodeRirective:
         _extras.SPHINX_INSTALLED,
         reason="Tested function only does things without sphinx installed.",
     )
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_registers_all_when_sphinx_is_missing() -> None:
         """Test function registers all directives when sphinx is missing."""
         _docutils.register_code_directive()  # act
@@ -91,6 +97,7 @@ class TestRegisterCodeRirective:
         _extras.SPHINX_INSTALLED,
         reason="Tested function only does things without sphinx installed.",
     )
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_does_nothing_when_sphinx_is_missing_and_all_ignored() -> None:
         """Test function does nothing when sphinx is missing, but all ignores are ``True``."""
         _docutils.register_code_directive(  # act
@@ -108,6 +115,7 @@ class TestRegisterCodeRirective:
         _extras.SPHINX_INSTALLED,
         reason="Tested function only does things without sphinx installed.",
     )
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_install_only_code_when_others_are_ignored() -> None:
         """Test function installes only code directive when others are ignored."""
         _docutils.register_code_directive(  # act
@@ -123,6 +131,7 @@ class TestRegisterCodeRirective:
         _extras.SPHINX_INSTALLED,
         reason="Tested function only does things without sphinx installed.",
     )
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_install_only_code_block_when_others_are_ignored() -> None:
         """Test function installes only code-block directive when others are ignored."""
         _docutils.register_code_directive(  # act
@@ -138,6 +147,7 @@ class TestRegisterCodeRirective:
         _extras.SPHINX_INSTALLED,
         reason="Tested function only does things without sphinx installed.",
     )
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_install_only_sourcecode_when_others_are_ignored() -> None:
         """Test function installes only sourcecode directive when others are ignored."""
         _docutils.register_code_directive(  # act
