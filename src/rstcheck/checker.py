@@ -42,7 +42,7 @@ def check_file(
     file_to_check = file_to_check.resolve()
     run_config = _load_run_config(file_to_check.parent, main_config, overwrite_config)
 
-    if file_to_check == "-":
+    if file_to_check == "-":  # TODO: check with cli how this works out
         input_file_contents = sys.stdin.read()
     else:
         with contextlib.closing(docutils.io.FileInput(source_path=file_to_check)) as input_file:
