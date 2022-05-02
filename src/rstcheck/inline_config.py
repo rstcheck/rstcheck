@@ -50,6 +50,6 @@ def find_ignored_languages(source: str) -> typing.Generator[str, None, None]:  #
                     'Expected "key=value" syntax', line_number=index + 1
                 )
 
-            if key_and_value[0] == "ignore-languages":
-                for language in key_and_value[1].split(","):
+            if key_and_value[0].strip() == "ignore-languages":
+                for language in key_and_value[1].strip().split(","):
                     yield language.strip()
