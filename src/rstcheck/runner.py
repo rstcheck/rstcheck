@@ -66,10 +66,10 @@ class RstcheckMainRunner:
             path = paths.pop(0)
             resolved_path = path.resolve()
             if self.config.recursive and resolved_path.is_dir():
-                for root, directories, children in os.walk(resolved_path):
-                    root_path = pathlib.Path(root).resolve()
+                for root, directories, children in os.walk(path):
+                    root_path = pathlib.Path(root)
                     paths += [
-                        (root_path / f).resolve()
+                        root_path / f
                         for f in children
                         if checkable_rst_file((root_path / f).resolve())
                     ]
@@ -143,8 +143,6 @@ class RstcheckMainRunner:
             err_msg = error["message"]
             if not err_msg_regex.match(err_msg):
                 err_msg = "(ERROR/3) " + err_msg
-
-            # TODO: shorten filename to relative paths
 
             message = f"{error['filename']}:{error['line_number']}: {err_msg}"
 
