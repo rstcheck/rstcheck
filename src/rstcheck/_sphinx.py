@@ -89,7 +89,7 @@ def filter_whitelisted_directives_and_roles(
     return (directives, roles)
 
 
-def load_sphinx_ignores() -> None:
+def load_sphinx_ignores() -> None:  # pragma: no cover
     """Register Sphinx directives and roles to ignore."""
     _extras.install_guard("sphinx")
 
