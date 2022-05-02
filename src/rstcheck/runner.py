@@ -126,14 +126,17 @@ class RstcheckMainRunner:
         )
         self._update_results(results)
 
-    def get_result(self, output_file: typing.TextIO = sys.stderr) -> int:
+    def get_result(self, output_file: typing.Optional[typing.TextIO] = None) -> int:
         """Print all cached error messages and return exit code.
 
-        :param output_file: file to print to; defaults to sys.stderr
+        :param output_file: file to print to; defaults to sys.stderr (if ``None``)
         :return: exit code 0 if no error is printed; 1 if any error is printed
         """
         if len(self.errors) == 0:
             return 0
+
+        if output_file is None:
+            output_file = sys.stderr
 
         err_msg_regex = re.compile(r"\([A-Z]+/[0-9]+\)")
 
