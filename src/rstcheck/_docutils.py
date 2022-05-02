@@ -9,7 +9,7 @@ import docutils.writers
 from . import _extras
 
 
-class IgnoredDirective(docutils.parsers.rst.Directive):
+class IgnoredDirective(docutils.parsers.rst.Directive):  # pragma: no cover
     """Stub for unknown directives."""
 
     has_content = True
@@ -27,7 +27,7 @@ def ignore_role(
     inliner: docutils.parsers.rst.states.Inliner,
     options: typing.Optional[typing.Dict[str, typing.Any]] = None,
     content: typing.Optional[typing.List[str]] = None,
-) -> typing.Tuple[typing.List, typing.List]:  # type: ignore[type-arg]
+) -> typing.Tuple[typing.List, typing.List]:  # type: ignore[type-arg] # pragma: no cover
     """Stub for unknown roles."""
     # pylint: disable=unused-argument,too-many-arguments
     return ([], [])
