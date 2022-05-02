@@ -63,9 +63,10 @@ class RstcheckMainRunner:
         )
 
         while paths:
-            path = paths.pop(0).resolve()
-            if self.config.recursive and path.is_dir():
-                for root, directories, children in os.walk(path):
+            path = paths.pop(0)
+            resolved_path = path.resolve()
+            if self.config.recursive and resolved_path.is_dir():
+                for root, directories, children in os.walk(resolved_path):
                     root_path = pathlib.Path(root).resolve()
                     paths += [
                         (root_path / f).resolve()
@@ -77,7 +78,7 @@ class RstcheckMainRunner:
                     ]
                 continue
 
-            if checkable_rst_file(path):
+            if checkable_rst_file(resolved_path):
                 self.files_to_check.append(path)
 
     def _run_checks_sync(self) -> typing.List[typing.List[_types.LintError]]:
