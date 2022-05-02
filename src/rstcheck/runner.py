@@ -153,7 +153,7 @@ class RstcheckMainRunner:
 
         return 1
 
-    def run(self) -> int:
+    def run(self) -> int:  # pragma: no cover
         """Run checks, print error messages and return the result.
 
         :return: exit code 0 if no error is printed; 1 if any error is printed
