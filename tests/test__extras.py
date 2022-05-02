@@ -27,7 +27,7 @@ class TestInstallChecker:
     @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Test for presence of sphinx.")
     def test_false_on_installed_sphinx_package_too_old(monkeypatch: pytest.MonkeyPatch) -> None:
         """Test install-checker returns ``False`` when ``sphinx`` is installed with bad version."""
-        monkeypatch.setattr(_compat, "metadata", lambda _: {"Version": "0.0"})
+        monkeypatch.setattr(_compat, "version", lambda _: "0.0")
 
         result = _extras.is_installed_with_supported_version("sphinx")
 

@@ -53,7 +53,7 @@ def is_installed_with_supported_version(package: ExtraDependencies) -> bool:
     except ImportError:
         return False
 
-    version: str = _compat.metadata(package).get("Version", "")
+    version: str = _compat.version(package)
     version_tuple = tuple(int(v) for v in version.split(".")[:3])
 
     return version_tuple >= ExtraDependenciesInfos[package]["min_version"]
