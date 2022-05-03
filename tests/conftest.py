@@ -12,7 +12,7 @@ if _extras.SPHINX_INSTALLED:
 
 
 @pytest.fixture(name="patch_docutils_directives_and_roles_dict")
-def _patch_docutils_directives_and_roles_dict(monkeypatch: pytest.MonkeyPatch) -> None:
+def _patch_docutils_directives_and_roles_dict_fixture(monkeypatch: pytest.MonkeyPatch) -> None:
     """Monkeypatch docutils' directives and roles state dicts.
 
     This patch is required when tests are run in parallel (default), because they would
