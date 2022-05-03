@@ -88,13 +88,17 @@ def _load_run_config(
         defaults to True
     :return: Merged config
     """
-    run_config = copy.copy(main_config)
-    if run_config.config_path is not None:
-        file_config = config.load_config_file_from_dir_tree(file_to_check_dir)
-        if file_config is not None:
-            run_config = config.merge_configs(
-                run_config, file_config, config_add_is_dominant=overwrite_config
-            )
+    if main_config.config_path is not None:
+        return main_config
+
+    file_config = config.load_config_file_from_dir_tree(file_to_check_dir)
+
+    if file_config is None:
+        return main_config
+
+    run_config = config.merge_configs(
+        copy.copy(main_config), file_config, config_add_is_dominant=overwrite_config
+    )
     return run_config
 
 
