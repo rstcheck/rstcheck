@@ -20,7 +20,14 @@ import docutils.io
 import docutils.nodes
 import docutils.utils
 
-from . import _docutils, _extras, _sphinx, config, inline_config, types as _types
+from . import (
+    _docutils,
+    _extras,
+    _sphinx,
+    config as _config,
+    inline_config,
+    types as _types,
+)
 
 
 EXCEPTION_LINE_NO_REGEX = re.compile(r": line\s+([0-9]+)[^:]*$")
@@ -29,7 +36,7 @@ MARKDOWN_LINK_REGEX = re.compile(r"\[[^\]]+\]\([^\)]+\)")
 
 
 def check_file(
-    file_to_check: pathlib.Path, main_config: config.RstcheckConfig, overwrite_config: bool = True
+    file_to_check: pathlib.Path, main_config: _config.RstcheckConfig, overwrite_config: bool = True
 ) -> typing.List[_types.LintError]:
     """Check the given file for issues.
 
@@ -39,30 +46,16 @@ def check_file(
         defaults to True
     :return: A list of found issues
     """
-    resolved_file_to_check = file_to_check.resolve()
     run_config = _load_run_config(file_to_check.parent, main_config, overwrite_config)
-    if file_to_check.name == "-":
-        input_file_contents = sys.stdin.read()
-    else:
-        with contextlib.closing(
-            docutils.io.FileInput(source_path=resolved_file_to_check)
-        ) as input_file:
-            input_file_contents = input_file.read()
-
+    ignore_dict = _create_ignore_dict_from_config(run_config)
     _docutils.ignore_directives_and_roles(run_config.ignore_directives, run_config.ignore_roles)
 
-    for substitution in run_config.ignore_substitutions:
-        input_file_contents = input_file_contents.replace(f"|{substitution}|", f"x{substitution}x")
-
-    ignore_dict = _types.IgnoreDict(
-        messages=run_config.ignore_messages,
-        languages=run_config.ignore_languages,
-        directives=run_config.ignore_directives,
-    )
+    source = _get_source(file_to_check)
+    source = _replace_ignored_substitutions(source, run_config.ignore_substitutions)
 
     all_errors = []
     for error in check_source(
-        input_file_contents,
+        source,
         source_file=file_to_check,
         ignores=ignore_dict,
         report_level=run_config.report_level,
@@ -73,9 +66,9 @@ def check_file(
 
 def _load_run_config(
     file_to_check_dir: pathlib.Path,
-    main_config: config.RstcheckConfig,
+    main_config: _config.RstcheckConfig,
     overwrite_config: bool = True,
-) -> config.RstcheckConfig:
+) -> _config.RstcheckConfig:
     """Load file specific config file and create run config.
 
     If the ``main_config`` does not contain a ``config_path`` the ``file_to_check_dir`` directory
@@ -91,22 +84,63 @@ def _load_run_config(
     if main_config.config_path is not None:
         return main_config
 
-    file_config = config.load_config_file_from_dir_tree(file_to_check_dir)
+    file_config = _config.load_config_file_from_dir_tree(file_to_check_dir)
 
     if file_config is None:
         return main_config
 
-    run_config = config.merge_configs(
+    run_config = _config.merge_configs(
         copy.copy(main_config), file_config, config_add_is_dominant=overwrite_config
     )
     return run_config
+
+
+def _get_source(file_to_check: pathlib.Path) -> str:
+    """Get source from file or stdin.
+
+    If the file name is "-" then stdin is read for input instead of a file.
+
+    :param file_to_check: File path to read contents from
+    :return: Loaded content
+    """
+    if file_to_check.name == "-":
+        return sys.stdin.read()
+
+    resolved_file_path = file_to_check.resolve()
+    with contextlib.closing(docutils.io.FileInput(source_path=resolved_file_path)) as input_file:
+        return typing.cast(str, input_file.read())
+
+
+def _replace_ignored_substitutions(source: str, ignore_substitutions: typing.List[str]) -> str:
+    """Replace rst substitutions from the ignore list with a dummy.
+
+    :param source: Source to replace substitutions in
+    :param ignore_substitutions: Substitutions to replace with dummy
+    :return: Cleaned source
+    """
+    for substitution in ignore_substitutions:
+        source = source.replace(f"|{substitution}|", f"x{substitution}x")
+    return source
+
+
+def _create_ignore_dict_from_config(config: _config.RstcheckConfig) -> _types.IgnoreDict:
+    """Extract ignore settings from config and create a ``IgnoreDict``.
+
+    :param config: Config to extract ignore settings from
+    :return: ``IgnoreDict``
+    """
+    return _types.IgnoreDict(
+        messages=config.ignore_messages,
+        languages=config.ignore_languages,
+        directives=config.ignore_directives,
+    )
 
 
 def check_source(
     source: str,
     source_file: typing.Optional[pathlib.Path] = None,
     ignores: typing.Optional[_types.IgnoreDict] = None,
-    report_level: config.ReportLevel = config.ReportLevel.INFO,
+    report_level: _config.ReportLevel = _config.ReportLevel.INFO,
 ) -> _types.YieldedLintError:
     """Check the given rst source for issues.
 
@@ -184,7 +218,7 @@ class _CheckWriter(docutils.writers.Writer):
         source: str,
         source_file: pathlib.Path,
         ignores: typing.Optional[_types.IgnoreDict] = None,
-        report_level: config.ReportLevel = config.ReportLevel.INFO,
+        report_level: _config.ReportLevel = _config.ReportLevel.INFO,
     ) -> None:
         """Inititalize _CheckWriter.
 
@@ -222,7 +256,7 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         source: str,
         source_file: pathlib.Path,
         ignores: typing.Optional[_types.IgnoreDict] = None,
-        report_level: config.ReportLevel = config.ReportLevel.INFO,
+        report_level: _config.ReportLevel = _config.ReportLevel.INFO,
     ) -> None:
         """Inititalize _CheckTranslator.
 
@@ -391,7 +425,7 @@ class CodeBlockChecker:
         self,
         source_file: pathlib.Path,
         ignores: typing.Optional[_types.IgnoreDict] = None,
-        report_level: config.ReportLevel = config.ReportLevel.INFO,
+        report_level: _config.ReportLevel = _config.ReportLevel.INFO,
     ) -> None:
         """Inititalize CodeBlockChecker.
 
