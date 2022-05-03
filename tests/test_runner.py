@@ -267,9 +267,7 @@ def test__update_results_method(
     assert len(_runner.errors) == error_count
 
 
-def test_check_method_sync_with_1_file(
-    monkeypatch: pytest.MonkeyPatch, mocker: pytest_mock.MockerFixture
-) -> None:
+def test_check_method_sync_with_1_file(mocker: pytest_mock.MockerFixture) -> None:
     """Test ``RstcheckMainRunner.check`` method.
 
     Test checks are run in sync for 1 file.
@@ -278,7 +276,7 @@ def test_check_method_sync_with_1_file(
     mocked_parallel_runner = mocker.patch.object(runner.RstcheckMainRunner, "_run_checks_parallel")
     init_config = config.RstcheckConfig(check_paths=[])
     _runner = runner.RstcheckMainRunner(init_config)
-    monkeypatch.setattr(_runner, "files_to_check", ["file"])
+    _runner.files_to_check = [pathlib.Path("file")]
 
     _runner.check()  # act
 
@@ -286,9 +284,7 @@ def test_check_method_sync_with_1_file(
     mocked_parallel_runner.assert_not_called()
 
 
-def test_check_method_parallel_with_more_files(
-    monkeypatch: pytest.MonkeyPatch, mocker: pytest_mock.MockerFixture
-) -> None:
+def test_check_method_parallel_with_more_files(mocker: pytest_mock.MockerFixture) -> None:
     """Test ``RstcheckMainRunner.check`` method.
 
     Test checks are run in parallel for more file.
@@ -297,7 +293,7 @@ def test_check_method_parallel_with_more_files(
     mocked_parallel_runner = mocker.patch.object(runner.RstcheckMainRunner, "_run_checks_parallel")
     init_config = config.RstcheckConfig(check_paths=[])
     _runner = runner.RstcheckMainRunner(init_config)
-    monkeypatch.setattr(_runner, "files_to_check", ["file", "file2"])
+    _runner.files_to_check = [pathlib.Path("file"), pathlib.Path("file2")]
 
     _runner.check()  # act
 
@@ -319,15 +315,11 @@ class TestRstcheckMainRunnerResultPrinter:
         assert result == 0
 
     @staticmethod
-    def test_exit_code_on_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_exit_code_on_error() -> None:
         """Test exit code 1 is returned when erros were found."""
         init_config = config.RstcheckConfig(check_paths=[])
         _runner = runner.RstcheckMainRunner(init_config)
-        monkeypatch.setattr(
-            _runner,
-            "errors",
-            [types.LintError(filename="<string>", line_number=0, message="message")],
-        )
+        _runner.errors = [types.LintError(filename="<string>", line_number=0, message="message")]
 
         result = _runner.get_result()
 
