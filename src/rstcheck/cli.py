@@ -87,6 +87,18 @@ def cli(  # pylint: disable=too-many-arguments
     raise typer.Exit(code=exit_code)
 
 
+enabled_features = []
+if _extras.SPHINX_INSTALLED:
+    enabled_features.append("Sphinx")
+if _extras.TOMLI_INSTALLED:
+    enabled_features.append("Toml")
+
+cli.__doc__ = f"""CLI of rstcheck.
+
+Enabled features: {enabled_features}
+"""
+
+
 def main() -> None:
     """Run CLI."""
     typer.run(cli)
