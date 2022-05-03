@@ -12,7 +12,7 @@ import pytest_mock
 from rstcheck import checker, config, runner, types
 
 
-EXAMPLES_DIR = pathlib.Path(__file__).parents[1] / "examples"
+TESTING_DIR = pathlib.Path(__file__).parents[1] / "testing" / "examples"
 
 
 class TestRstcheckMainRunnerInit:
@@ -96,7 +96,7 @@ class TestRstcheckMainRunnerFileListUpdater:
     @staticmethod
     def test_single_file_in_list() -> None:
         """Test single file in list results in only this file in the list."""
-        file_list = [EXAMPLES_DIR / "good" / "good.rst"]
+        file_list = [TESTING_DIR / "good" / "good.rst"]
         init_config = config.RstcheckConfig(check_paths=file_list)
         _runner = runner.RstcheckMainRunner(init_config)
 
@@ -108,8 +108,8 @@ class TestRstcheckMainRunnerFileListUpdater:
     def test_multiple_files_in_list() -> None:
         """Test multiple files in list results in only these files in the list."""
         file_list = [
-            EXAMPLES_DIR / "good" / "good.rst",
-            EXAMPLES_DIR / "bad" / "bad_rst.rst",
+            TESTING_DIR / "good" / "good.rst",
+            TESTING_DIR / "bad" / "bad_rst.rst",
         ]
         init_config = config.RstcheckConfig(check_paths=file_list)
         _runner = runner.RstcheckMainRunner(init_config)
@@ -122,9 +122,9 @@ class TestRstcheckMainRunnerFileListUpdater:
     def test_non_rst_files() -> None:
         """Test non rst files are filtered out."""
         file_list = [
-            EXAMPLES_DIR / "good" / "good.rst",
-            EXAMPLES_DIR / "good" / "foo.h",
-            EXAMPLES_DIR / "bad" / "bad_rst.rst",
+            TESTING_DIR / "good" / "good.rst",
+            TESTING_DIR / "good" / "foo.h",
+            TESTING_DIR / "bad" / "bad_rst.rst",
         ]
         init_config = config.RstcheckConfig(check_paths=file_list)
         _runner = runner.RstcheckMainRunner(init_config)
@@ -136,7 +136,7 @@ class TestRstcheckMainRunnerFileListUpdater:
     @staticmethod
     def test_directory_without_recursive() -> None:
         """Test directory without recusrive results in empty file list."""
-        file_list = [EXAMPLES_DIR / "good"]
+        file_list = [TESTING_DIR / "good"]
         init_config = config.RstcheckConfig(check_paths=file_list)
         _runner = runner.RstcheckMainRunner(init_config)
 
@@ -147,14 +147,14 @@ class TestRstcheckMainRunnerFileListUpdater:
     @staticmethod
     def test_directory_with_recursive() -> None:
         """Test directory with recusrive results in directories files in file list."""
-        file_list = [EXAMPLES_DIR / "good"]
+        file_list = [TESTING_DIR / "good"]
         init_config = config.RstcheckConfig(check_paths=file_list, recursive=True)
         _runner = runner.RstcheckMainRunner(init_config)
 
         _runner.update_file_list()  # act
 
         assert len(_runner.files_to_check) == 5
-        assert EXAMPLES_DIR / "good" / "good.rst" in _runner.files_to_check
+        assert TESTING_DIR / "good" / "good.rst" in _runner.files_to_check
 
     @staticmethod
     def test_dash_as_file() -> None:
@@ -170,14 +170,14 @@ class TestRstcheckMainRunnerFileListUpdater:
     @staticmethod
     def test_dash_as_file_with_others() -> None:
         """Test dash as file with other files gets ignored."""
-        file_list = [pathlib.Path("-"), EXAMPLES_DIR / "good" / "good.rst"]
+        file_list = [pathlib.Path("-"), TESTING_DIR / "good" / "good.rst"]
         init_config = config.RstcheckConfig(check_paths=file_list)
         _runner = runner.RstcheckMainRunner(init_config)
 
         _runner.update_file_list()  # act
 
         assert len(_runner.files_to_check) == 1
-        assert EXAMPLES_DIR / "good" / "good.rst" in _runner.files_to_check
+        assert TESTING_DIR / "good" / "good.rst" in _runner.files_to_check
 
 
 @pytest.mark.parametrize(
@@ -192,8 +192,8 @@ def test__run_checks_sync_method(
     """
     monkeypatch.setattr(checker, "check_file", lambda _0, _1, _2: lint_errors)
     file_list = [
-        EXAMPLES_DIR / "good" / "good.rst",
-        EXAMPLES_DIR / "bad" / "bad_rst.rst",
+        TESTING_DIR / "good" / "good.rst",
+        TESTING_DIR / "bad" / "bad_rst.rst",
     ]
     init_config = config.RstcheckConfig(check_paths=file_list)
     _runner = runner.RstcheckMainRunner(init_config)
@@ -235,8 +235,8 @@ def test__run_checks_parallel_method(
     # noqa: AAA05
     monkeypatch.setattr(multiprocessing, "Pool", mock_pool)
     file_list = [
-        EXAMPLES_DIR / "good" / "good.rst",
-        EXAMPLES_DIR / "bad" / "bad_rst.rst",
+        TESTING_DIR / "good" / "good.rst",
+        TESTING_DIR / "bad" / "bad_rst.rst",
     ]
     init_config = config.RstcheckConfig(check_paths=file_list)
     _runner = runner.RstcheckMainRunner(init_config)

@@ -41,7 +41,7 @@ repos:
       - id: python-safety-dependencies-check
         args: ["--full-report"]
         files: pyproject.toml
-        exclude: examples
+        exclude: testing
 
   # ####################################################################################
   #
@@ -78,7 +78,7 @@ repos:
     rev: 7ae9389351f4090e3993de28015a05a18ca6b8a7 # frozen: v1.12.1
     hooks:
       - id: blacken-docs
-        exclude: examples|tests
+        exclude: testing|tests
 
   # ----------------------------------------------
   # JS / TS / HTML / CSS / MD / JSON / YAML
@@ -215,7 +215,7 @@ repos:
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
-        exclude: examples
+        exclude: testing
         args: ["--config", ".rstcheck.project.cfg"]
 
   # ----------------------------------------------
