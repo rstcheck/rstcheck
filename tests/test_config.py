@@ -827,6 +827,15 @@ class TestConfigPathLoader:
     """Test ``load_config_file_from_path``."""
 
     @staticmethod
+    def test_with_nonexisting_path() -> None:
+        """Test with INI file."""
+        conf_file = pathlib.Path("does-not-exist-cfg")
+
+        result = config.load_config_file_from_path(conf_file)
+
+        assert result is None
+
+    @staticmethod
     def test_with_file(tmp_path: pathlib.Path) -> None:
         """Test with INI file."""
         conf_file = tmp_path / ".rstcheck.cfg"
