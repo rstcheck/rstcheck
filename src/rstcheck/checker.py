@@ -98,7 +98,7 @@ def _load_run_config(
     return run_config
 
 
-def check_source(  # TODO: simplify function
+def check_source(
     source: str,
     source_file: typing.Optional[pathlib.Path] = None,
     ignores: typing.Optional[_types.IgnoreDict] = None,
@@ -121,6 +121,7 @@ def check_source(  # TODO: simplify function
         ignore_codeblock_directive="code-block" in ignores["directives"],
         ignore_sourcecode_directive="sourcecode" in ignores["directives"],
     )
+
     if _extras.SPHINX_INSTALLED:
         _sphinx.load_sphinx_ignores()
 
@@ -141,7 +142,10 @@ def check_source(  # TODO: simplify function
     with contextlib.suppress(UnicodeError):
         source = source.encode("utf-8").decode("utf-8-sig")
 
-    try:
+    with contextlib.suppress(docutils.utils.SystemMessage, AttributeError):
+        # Sphinx will sometimes throw an `AttributeError` trying to access
+        # "self.state.document.settings.env". Ignore this for now until we
+        # figure out a better approach.
         docutils.core.publish_string(
             source,
             writer=writer,
@@ -152,30 +156,20 @@ def check_source(  # TODO: simplify function
                 "warning_stream": string_io,
             },
         )
-    except docutils.utils.SystemMessage:
-        pass
-    except AttributeError:
-        # Sphinx will sometimes throw an exception trying to access
-        # "self.state.document.settings.env". Ignore this for now until we
-        # figure out a better approach.
-        # if debug:
-        #     raise
-        pass
 
     for checker in writer.checkers:
         yield from checker()
 
     rst_errors = string_io.getvalue().strip()
-    if rst_errors:
-        for message in rst_errors.splitlines():
-            try:
-                if ignores["messages"] and ignores["messages"].search(message):
-                    continue
-                yield _parse_gcc_style_error_message(
-                    message, filename=source_file, has_column=False
-                )
-            except ValueError:
+
+    if not rst_errors:
+        return
+
+    for message in rst_errors.splitlines():
+        with contextlib.suppress(ValueError):
+            if ignores["messages"] and ignores["messages"].search(message):
                 continue
+            yield _parse_gcc_style_error_message(message, filename=source_file, has_column=False)
 
 
 class _CheckWriter(docutils.writers.Writer):
