@@ -122,7 +122,7 @@ def check_source(  # TODO: simplify function
         ignore_sourcecode_directive="sourcecode" in ignores["directives"],
     )
     if _extras.SPHINX_INSTALLED:
-        _sphinx.load_sphinx_ignores()  # TODO: check: ignore_dir = code -> error?
+        _sphinx.load_sphinx_ignores()
 
     try:
         ignores["languages"].extend(inline_config.find_ignored_languages(source))
