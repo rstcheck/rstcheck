@@ -12,7 +12,7 @@ SourceFileOrString = typing.Union[pathlib.Path, _compat.Literal["<string>"]]
 class LintError(_compat.TypedDict):
     """Dict with information about an linting error."""
 
-    filename: SourceFileOrString
+    source_origin: SourceFileOrString
     line_number: int
     message: str
 

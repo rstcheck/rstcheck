@@ -181,7 +181,8 @@ class TestRstcheckMainRunnerFileListUpdater:
 
 
 @pytest.mark.parametrize(
-    "lint_errors", [[], [types.LintError(filename="<string>", line_number=0, message="message")]]
+    "lint_errors",
+    [[], [types.LintError(source_origin="<string>", line_number=0, message="message")]],
 )
 def test__run_checks_sync_method(
     lint_errors: typing.List[types.LintError], monkeypatch: pytest.MonkeyPatch
@@ -206,7 +207,8 @@ def test__run_checks_sync_method(
 
 
 @pytest.mark.parametrize(
-    "lint_errors", [[], [types.LintError(filename="<string>", line_number=0, message="message")]]
+    "lint_errors",
+    [[], [types.LintError(source_origin="<string>", line_number=0, message="message")]],
 )
 def test__run_checks_parallel_method(
     lint_errors: typing.List[types.LintError], monkeypatch: pytest.MonkeyPatch
@@ -250,7 +252,7 @@ def test__run_checks_parallel_method(
 
 @pytest.mark.parametrize(
     ("results", "error_count"),
-    [([], 0), ([[types.LintError(filename="<string>", line_number=0, message="message")]], 1)],
+    [([], 0), ([[types.LintError(source_origin="<string>", line_number=0, message="message")]], 1)],
 )
 def test__update_results_method(
     results: typing.List[typing.List[types.LintError]], error_count: int
@@ -319,7 +321,9 @@ class TestRstcheckMainRunnerResultPrinter:
         """Test exit code 1 is returned when erros were found."""
         init_config = config.RstcheckConfig(check_paths=[])
         _runner = runner.RstcheckMainRunner(init_config)
-        _runner.errors = [types.LintError(filename="<string>", line_number=0, message="message")]
+        _runner.errors = [
+            types.LintError(source_origin="<string>", line_number=0, message="message")
+        ]
 
         result = _runner.get_result()
 
@@ -331,7 +335,7 @@ class TestRstcheckMainRunnerResultPrinter:
         init_config = config.RstcheckConfig(check_paths=[])
         _runner = runner.RstcheckMainRunner(init_config)
         _runner._update_results(
-            [[types.LintError(filename="<string>", line_number=0, message="Some error.")]]
+            [[types.LintError(source_origin="<string>", line_number=0, message="Some error.")]]
         )
 
         exit_code = _runner.get_result()  # act
@@ -345,7 +349,13 @@ class TestRstcheckMainRunnerResultPrinter:
         init_config = config.RstcheckConfig(check_paths=[])
         _runner = runner.RstcheckMainRunner(init_config)
         _runner._update_results(
-            [[types.LintError(filename="<string>", line_number=0, message="(ERROR/3) Some error.")]]
+            [
+                [
+                    types.LintError(
+                        source_origin="<string>", line_number=0, message="(ERROR/3) Some error."
+                    )
+                ]
+            ]
         )
 
         exit_code = _runner.get_result()  # act

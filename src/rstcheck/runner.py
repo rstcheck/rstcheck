@@ -148,7 +148,7 @@ class RstcheckMainRunner:
             if not err_msg_regex.match(err_msg):
                 err_msg = "(ERROR/3) " + err_msg
 
-            message = f"{error['filename']}:{error['line_number']}: {err_msg}"
+            message = f"{error['source_origin']}:{error['line_number']}: {err_msg}"
 
             print(message, file=output_file)
 
