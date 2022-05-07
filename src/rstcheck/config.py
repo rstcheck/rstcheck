@@ -138,7 +138,7 @@ class RstcheckConfig(RstcheckConfigFile):  # pylint: disable=too-few-public-meth
     """
 
     config_path: typing.Optional[pathlib.Path]
-    recursive: bool = False
+    recursive: bool = pydantic.Field(False)
 
     @pydantic.validator("recursive", pre=True)
     @classmethod
