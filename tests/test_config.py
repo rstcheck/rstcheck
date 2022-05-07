@@ -41,7 +41,7 @@ def test_default_values_for_config_file() -> None:
 
 def test_default_values_for_config() -> None:
     """Test default values of  ``RstcheckConfig``."""
-    result = config.RstcheckConfig(check_paths=[])
+    result = config.RstcheckConfig()
 
     assert result.report_level is config.ReportLevel.INFO
     assert result.ignore_directives == []
@@ -55,7 +55,7 @@ def test_default_values_for_config() -> None:
 
 def test_recursive_none_means_false() -> None:
     """Test recursive set to ``None`` for ``RstcheckConfig`` means ``False``."""
-    result = config.RstcheckConfig(check_paths=[], recursive=None)
+    result = config.RstcheckConfig(recursive=None)
 
     assert result.recursive is False
 
@@ -886,8 +886,8 @@ class TestConfigMerger:
     @staticmethod
     def test_default_merge_with_full_config() -> None:
         """Test config merging with full config."""
-        config_base = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.SEVERE)
-        config_add = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.ERROR)
+        config_base = config.RstcheckConfig(report_level=config.ReportLevel.SEVERE)
+        config_add = config.RstcheckConfig(report_level=config.ReportLevel.ERROR)
 
         result = config.merge_configs(config_base, config_add)
 
@@ -896,7 +896,7 @@ class TestConfigMerger:
     @staticmethod
     def test_default_merge_with_file_config() -> None:
         """Test config merging with file config."""
-        config_base = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.SEVERE)
+        config_base = config.RstcheckConfig(report_level=config.ReportLevel.SEVERE)
         config_add = config.RstcheckConfigFile(report_level=config.ReportLevel.ERROR)
 
         result = config.merge_configs(config_base, config_add)
@@ -906,8 +906,8 @@ class TestConfigMerger:
     @staticmethod
     def test_default_merge_with_full_config_and_changed_dominance() -> None:
         """Test config merging with full config and changed dominance."""
-        config_base = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.SEVERE)
-        config_add = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.ERROR)
+        config_base = config.RstcheckConfig(report_level=config.ReportLevel.SEVERE)
+        config_add = config.RstcheckConfig(report_level=config.ReportLevel.ERROR)
 
         result = config.merge_configs(config_base, config_add, config_add_is_dominant=False)
 
@@ -916,7 +916,7 @@ class TestConfigMerger:
     @staticmethod
     def test_default_merge_with_file_config_and_changed_dominance() -> None:
         """Test config merging with file config and changed dominance."""
-        config_base = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.SEVERE)
+        config_base = config.RstcheckConfig(report_level=config.ReportLevel.SEVERE)
         config_add = config.RstcheckConfigFile(report_level=config.ReportLevel.ERROR)
 
         result = config.merge_configs(config_base, config_add, config_add_is_dominant=False)

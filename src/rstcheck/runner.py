@@ -13,10 +13,14 @@ class RstcheckMainRunner:
     """Main runner of rstcheck."""
 
     def __init__(
-        self, rstcheck_config: config.RstcheckConfig, overwrite_config: bool = True
+        self,
+        check_paths: typing.List[pathlib.Path],
+        rstcheck_config: config.RstcheckConfig,
+        overwrite_config: bool = True,
     ) -> None:
         """Initialize the ``RstcheckMainRunner`` with a base config.
 
+        :param check_paths: Files to check.
         :param rstcheck_config: Base configuration config from e.g. the CLI.
         :param overwrite_config: If file config overwrites current config; defaults to True
         """
@@ -25,6 +29,7 @@ class RstcheckMainRunner:
         if rstcheck_config.config_path:
             self.load_config_file(rstcheck_config.config_path)
 
+        self.check_paths = check_paths
         self.files_to_check: typing.List[pathlib.Path] = []
         self.update_file_list()
 
@@ -54,10 +59,11 @@ class RstcheckMainRunner:
     def update_file_list(self) -> None:  # noqa: CCR001
         """Update file path list with paths specified on initialization.
 
-        Clear the current file list. Then get the file and directory paths specified with the init
-        base config and search them for rst files to check. Add those files to the file list.
+        Clear the current file list. Then get the file and directory paths specified with
+        ``self.check_paths`` and search them for rst files to check. Add those files to the file
+        list.
         """
-        paths = list(self.config.check_paths)
+        paths = list(self.check_paths)
         self.files_to_check = []
 
         if len(paths) == 1 and paths[0].name == "-":

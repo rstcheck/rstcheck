@@ -137,7 +137,6 @@ class RstcheckConfig(RstcheckConfigFile):  # pylint: disable=too-few-public-meth
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    check_paths: typing.List[pathlib.Path]
     config_path: typing.Optional[pathlib.Path]
     recursive: bool = False
 

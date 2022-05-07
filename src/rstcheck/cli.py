@@ -71,7 +71,6 @@ def cli(  # pylint: disable=too-many-arguments
 ) -> int:
     """CLI of rstcheck."""
     rstcheck_config = config_mod.RstcheckConfig(
-        check_paths=files,
         config_path=config,
         recursive=recursive,
         report_level=report_level,
@@ -81,7 +80,9 @@ def cli(  # pylint: disable=too-many-arguments
         ignore_languages=ignore_languages,
         ignore_messages=ignore_messages,
     )
-    _runner = runner.RstcheckMainRunner(rstcheck_config=rstcheck_config, overwrite_config=False)
+    _runner = runner.RstcheckMainRunner(
+        check_paths=files, rstcheck_config=rstcheck_config, overwrite_config=False
+    )
     _runner.check()
     exit_code = _runner.get_result()
     raise typer.Exit(code=exit_code)

@@ -23,9 +23,9 @@ class TestRstcheckMainRunnerInit:
         """Test config file is loaded if set."""
         mocked_loader = mocker.patch.object(runner.RstcheckMainRunner, "load_config_file")
         config_file_path = pathlib.Path("some-file")
-        init_config = config.RstcheckConfig(check_paths=[], config_path=config_file_path)
+        init_config = config.RstcheckConfig(config_path=config_file_path)
 
-        runner.RstcheckMainRunner(init_config)  # act
+        runner.RstcheckMainRunner([], init_config)  # act
 
         mocked_loader.assert_called_once_with(config_file_path)
 
@@ -33,9 +33,9 @@ class TestRstcheckMainRunnerInit:
     def test_no_load_config_file_if_unset(mocker: pytest_mock.MockerFixture) -> None:
         """Test no config file is loaded if unset."""
         mocked_loader = mocker.patch.object(runner.RstcheckMainRunner, "load_config_file")
-        init_config = config.RstcheckConfig(check_paths=[])
+        init_config = config.RstcheckConfig()
 
-        runner.RstcheckMainRunner(init_config)  # act
+        runner.RstcheckMainRunner([], init_config)  # act
 
         mocked_loader.assert_not_called()
 
@@ -45,9 +45,9 @@ class TestRstcheckMainRunnerInit:
     def test_max_pool_size_on_windows(pool_size: int, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test pool size is 61 at max on windows."""
         monkeypatch.setattr(multiprocessing, "cpu_count", lambda: pool_size)
-        init_config = config.RstcheckConfig(check_paths=[])
+        init_config = config.RstcheckConfig()
 
-        result = runner.RstcheckMainRunner(init_config)._pool_size
+        result = runner.RstcheckMainRunner([], init_config)._pool_size
 
         assert result <= 61
 
@@ -59,8 +59,8 @@ class TestRstcheckMainRunnerConfigFileLoader:
     def test_no_config_update_on_no_file_config(monkeypatch: pytest.MonkeyPatch) -> None:
         """Test config is not updated when no file config is found."""
         monkeypatch.setattr(config, "load_config_file_from_path", lambda _: None)
-        init_config = config.RstcheckConfig(check_paths=[])
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner([], init_config)
 
         _runner.load_config_file(pathlib.Path())  # act
 
@@ -71,8 +71,8 @@ class TestRstcheckMainRunnerConfigFileLoader:
         """Test config is updated when file config is found."""
         file_config = config.RstcheckConfigFile(report_level=config.ReportLevel.SEVERE)
         monkeypatch.setattr(config, "load_config_file_from_path", lambda _: file_config)
-        init_config = config.RstcheckConfig(check_paths=[], report_level=config.ReportLevel.INFO)
-        _runner = runner.RstcheckMainRunner(init_config, overwrite_config=True)
+        init_config = config.RstcheckConfig(report_level=config.ReportLevel.INFO)
+        _runner = runner.RstcheckMainRunner([], init_config, overwrite_config=True)
 
         _runner.load_config_file(pathlib.Path())  # act
 
@@ -86,8 +86,8 @@ class TestRstcheckMainRunnerFileListUpdater:
     def test_empty_file_list() -> None:
         """Test empty file list results in no changes."""
         file_list: typing.List[pathlib.Path] = []
-        init_config = config.RstcheckConfig(check_paths=file_list)
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner(file_list, init_config)
 
         _runner.update_file_list()  # act
 
@@ -97,8 +97,8 @@ class TestRstcheckMainRunnerFileListUpdater:
     def test_single_file_in_list() -> None:
         """Test single file in list results in only this file in the list."""
         file_list = [TESTING_DIR / "good" / "good.rst"]
-        init_config = config.RstcheckConfig(check_paths=file_list)
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner(file_list, init_config)
 
         _runner.update_file_list()  # act
 
@@ -111,8 +111,8 @@ class TestRstcheckMainRunnerFileListUpdater:
             TESTING_DIR / "good" / "good.rst",
             TESTING_DIR / "bad" / "bad_rst.rst",
         ]
-        init_config = config.RstcheckConfig(check_paths=file_list)
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner(file_list, init_config)
 
         _runner.update_file_list()  # act
 
@@ -126,8 +126,8 @@ class TestRstcheckMainRunnerFileListUpdater:
             TESTING_DIR / "good" / "foo.h",
             TESTING_DIR / "bad" / "bad_rst.rst",
         ]
-        init_config = config.RstcheckConfig(check_paths=file_list)
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner(file_list, init_config)
 
         _runner.update_file_list()  # act
 
@@ -137,8 +137,8 @@ class TestRstcheckMainRunnerFileListUpdater:
     def test_directory_without_recursive() -> None:
         """Test directory without recusrive results in empty file list."""
         file_list = [TESTING_DIR / "good"]
-        init_config = config.RstcheckConfig(check_paths=file_list)
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner(file_list, init_config)
 
         _runner.update_file_list()  # act
 
@@ -148,8 +148,8 @@ class TestRstcheckMainRunnerFileListUpdater:
     def test_directory_with_recursive() -> None:
         """Test directory with recusrive results in directories files in file list."""
         file_list = [TESTING_DIR / "good"]
-        init_config = config.RstcheckConfig(check_paths=file_list, recursive=True)
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig(recursive=True)
+        _runner = runner.RstcheckMainRunner(file_list, init_config)
 
         _runner.update_file_list()  # act
 
@@ -160,8 +160,8 @@ class TestRstcheckMainRunnerFileListUpdater:
     def test_dash_as_file() -> None:
         """Test dash as file."""
         file_list = [pathlib.Path("-")]
-        init_config = config.RstcheckConfig(check_paths=file_list)
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner(file_list, init_config)
 
         _runner.update_file_list()  # act
 
@@ -171,8 +171,8 @@ class TestRstcheckMainRunnerFileListUpdater:
     def test_dash_as_file_with_others() -> None:
         """Test dash as file with other files gets ignored."""
         file_list = [pathlib.Path("-"), TESTING_DIR / "good" / "good.rst"]
-        init_config = config.RstcheckConfig(check_paths=file_list)
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner(file_list, init_config)
 
         _runner.update_file_list()  # act
 
@@ -196,8 +196,8 @@ def test__run_checks_sync_method(
         TESTING_DIR / "good" / "good.rst",
         TESTING_DIR / "bad" / "bad_rst.rst",
     ]
-    init_config = config.RstcheckConfig(check_paths=file_list)
-    _runner = runner.RstcheckMainRunner(init_config)
+    init_config = config.RstcheckConfig()
+    _runner = runner.RstcheckMainRunner(file_list, init_config)
 
     result = _runner._run_checks_sync()
 
@@ -240,8 +240,8 @@ def test__run_checks_parallel_method(
         TESTING_DIR / "good" / "good.rst",
         TESTING_DIR / "bad" / "bad_rst.rst",
     ]
-    init_config = config.RstcheckConfig(check_paths=file_list)
-    _runner = runner.RstcheckMainRunner(init_config)
+    init_config = config.RstcheckConfig()
+    _runner = runner.RstcheckMainRunner(file_list, init_config)
 
     result = _runner._run_checks_parallel()  # act
 
@@ -261,8 +261,8 @@ def test__update_results_method(
 
     Test results are set.
     """
-    init_config = config.RstcheckConfig(check_paths=[])
-    _runner = runner.RstcheckMainRunner(init_config)
+    init_config = config.RstcheckConfig()
+    _runner = runner.RstcheckMainRunner([], init_config)
 
     _runner._update_results(results)  # act
 
@@ -276,8 +276,8 @@ def test_check_method_sync_with_1_file(mocker: pytest_mock.MockerFixture) -> Non
     """
     mocked_sync_runner = mocker.patch.object(runner.RstcheckMainRunner, "_run_checks_sync")
     mocked_parallel_runner = mocker.patch.object(runner.RstcheckMainRunner, "_run_checks_parallel")
-    init_config = config.RstcheckConfig(check_paths=[])
-    _runner = runner.RstcheckMainRunner(init_config)
+    init_config = config.RstcheckConfig()
+    _runner = runner.RstcheckMainRunner([], init_config)
     _runner.files_to_check = [pathlib.Path("file")]
 
     _runner.check()  # act
@@ -293,8 +293,8 @@ def test_check_method_parallel_with_more_files(mocker: pytest_mock.MockerFixture
     """
     mocked_sync_runner = mocker.patch.object(runner.RstcheckMainRunner, "_run_checks_sync")
     mocked_parallel_runner = mocker.patch.object(runner.RstcheckMainRunner, "_run_checks_parallel")
-    init_config = config.RstcheckConfig(check_paths=[])
-    _runner = runner.RstcheckMainRunner(init_config)
+    init_config = config.RstcheckConfig()
+    _runner = runner.RstcheckMainRunner([], init_config)
     _runner.files_to_check = [pathlib.Path("file"), pathlib.Path("file2")]
 
     _runner.check()  # act
@@ -309,8 +309,8 @@ class TestRstcheckMainRunnerResultPrinter:
     @staticmethod
     def test_exit_code_on_success() -> None:
         """Test exit code 0 is returned on no erros."""
-        init_config = config.RstcheckConfig(check_paths=[])
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner([], init_config)
 
         result = _runner.get_result()
 
@@ -319,8 +319,8 @@ class TestRstcheckMainRunnerResultPrinter:
     @staticmethod
     def test_exit_code_on_error() -> None:
         """Test exit code 1 is returned when erros were found."""
-        init_config = config.RstcheckConfig(check_paths=[])
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner([], init_config)
         _runner.errors = [
             types.LintError(source_origin="<string>", line_number=0, message="message")
         ]
@@ -332,8 +332,8 @@ class TestRstcheckMainRunnerResultPrinter:
     @staticmethod
     def test_error_category_prepend(capsys: pytest.CaptureFixture[str]) -> None:
         """Test ``(ERROR/3)`` is prepended when no category is present."""
-        init_config = config.RstcheckConfig(check_paths=[])
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner([], init_config)
         _runner._update_results(
             [[types.LintError(source_origin="<string>", line_number=0, message="Some error.")]]
         )
@@ -346,8 +346,8 @@ class TestRstcheckMainRunnerResultPrinter:
     @staticmethod
     def test_error_message_format(capsys: pytest.CaptureFixture[str]) -> None:
         """Test error message format."""
-        init_config = config.RstcheckConfig(check_paths=[])
-        _runner = runner.RstcheckMainRunner(init_config)
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner([], init_config)
         _runner._update_results(
             [
                 [
