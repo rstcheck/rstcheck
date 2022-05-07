@@ -678,7 +678,6 @@ def _parse_gcc_style_error_message(
     :raises ValueError: If the message cannot be parsed
     :return: Parsed message
     """
-    print(message)
     colons = 2 if has_column else 1
     prefix = str(source_origin) + ":"
     if not message.startswith(prefix):
