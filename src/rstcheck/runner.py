@@ -12,16 +12,18 @@ from . import _sphinx, checker, config, types
 class RstcheckMainRunner:
     """Main runner of rstcheck."""
 
-    def __init__(self, main_config: config.RstcheckConfig, overwrite_config: bool = True) -> None:
+    def __init__(
+        self, rstcheck_config: config.RstcheckConfig, overwrite_config: bool = True
+    ) -> None:
         """Initialize the ``RstcheckMainRunner`` with a base config.
 
-        :param main_config: Base configuration config from e.g. the CLI.
+        :param rstcheck_config: Base configuration config from e.g. the CLI.
         :param overwrite_config: If file config overwrites current config; defaults to True
         """
-        self.config = main_config
+        self.config = rstcheck_config
         self.overwrite_config = overwrite_config
-        if main_config.config_path:
-            self.load_config_file(main_config.config_path)
+        if rstcheck_config.config_path:
+            self.load_config_file(rstcheck_config.config_path)
 
         self.files_to_check: typing.List[pathlib.Path] = []
         self.update_file_list()
