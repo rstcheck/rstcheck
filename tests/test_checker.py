@@ -237,10 +237,7 @@ Test
         assert 'Expected "key=value" syntax' in result[0]["message"]
 
     @staticmethod
-    @pytest.mark.skipif(
-        _extras.SPHINX_INSTALLED,
-        reason="Test when sphinx is missing.",
-    )
+    @pytest.mark.skipif(_extras.SPHINX_INSTALLED, reason="Test when sphinx is missing.")
     def test_sphinx_directive_errors_without_sphinx() -> None:
         """Test error on sphinx directive when sphinx is missing."""
         source = """
@@ -252,10 +249,7 @@ Test
         assert 'No directive entry for "py:function"' in result[0]["message"]
 
     @staticmethod
-    @pytest.mark.skipif(
-        not _extras.SPHINX_INSTALLED,
-        reason="Test when sphinx is installed.",
-    )
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Test when sphinx is installed.")
     def test_sphinx_directive_does_not_error_with_sphinx() -> None:
         """Test no error on sphinx directive when sphinx is installed."""
         source = """
