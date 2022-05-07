@@ -157,12 +157,12 @@ class _RstcheckConfigINIFile(
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    report_level: pydantic.NoneStr = None  # pylint: disable=no-member
-    ignore_directives: pydantic.NoneStr = None  # pylint: disable=no-member
-    ignore_roles: pydantic.NoneStr = None  # pylint: disable=no-member
-    ignore_substitutions: pydantic.NoneStr = None  # pylint: disable=no-member
-    ignore_languages: pydantic.NoneStr = None  # pylint: disable=no-member
-    ignore_messages: pydantic.NoneStr = None  # pylint: disable=no-member
+    report_level: pydantic.NoneStr = pydantic.Field(None)  # pylint: disable=no-member
+    ignore_directives: pydantic.NoneStr = pydantic.Field(None)  # pylint: disable=no-member
+    ignore_roles: pydantic.NoneStr = pydantic.Field(None)  # pylint: disable=no-member
+    ignore_substitutions: pydantic.NoneStr = pydantic.Field(None)  # pylint: disable=no-member
+    ignore_languages: pydantic.NoneStr = pydantic.Field(None)  # pylint: disable=no-member
+    ignore_messages: pydantic.NoneStr = pydantic.Field(None)  # pylint: disable=no-member
 
 
 def _load_config_from_ini_file(ini_file: pathlib.Path) -> typing.Optional[RstcheckConfigFile]:
@@ -200,12 +200,12 @@ class _RstcheckConfigTOMLFile(
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    report_level: typing.Optional[typing.Union[int, str]] = None
-    ignore_directives: typing.Optional[typing.List[str]] = None
-    ignore_roles: typing.Optional[typing.List[str]] = None
-    ignore_substitutions: typing.Optional[typing.List[str]] = None
-    ignore_languages: typing.Optional[typing.List[str]] = None
-    ignore_messages: typing.Optional[typing.Union[str, typing.List[str]]] = None
+    report_level: typing.Optional[typing.Union[int, str]] = pydantic.Field(None)
+    ignore_directives: typing.Optional[typing.List[str]] = pydantic.Field(None)
+    ignore_roles: typing.Optional[typing.List[str]] = pydantic.Field(None)
+    ignore_substitutions: typing.Optional[typing.List[str]] = pydantic.Field(None)
+    ignore_languages: typing.Optional[typing.List[str]] = pydantic.Field(None)
+    ignore_messages: typing.Optional[typing.Union[str, typing.List[str]]] = pydantic.Field(None)
 
 
 def _load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[RstcheckConfigFile]:
