@@ -447,7 +447,7 @@ class CodeBlockChecker:
         return lambda: self.check(source_code, language)
 
     def check(self, source_code: str, language: str) -> types.YieldedLintError:
-        """Call the apropiate checker function for the given langauge to check given source.
+        """Call the appropiate checker function for the given langauge to check given source.
 
         :param source: Source code to check
         :param language: Language of the source code
