@@ -13,7 +13,7 @@ HELP_FILES = "RST files to check. Can be files or directories if --recursive is 
 HELP_CONFIG = """Config file to load. Can be a INI file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | setup.cfg.
 """
-if _extras.TOMLI_INSTALLED:
+if _extras.TOMLI_INSTALLED:  # pragma: no cover
     HELP_CONFIG = """Config file to load. Can be a INI or TOML file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | pyproject.toml | setup.cfg.
 """
@@ -91,7 +91,7 @@ def cli(  # pylint: disable=too-many-arguments
 enabled_features = []
 if _extras.SPHINX_INSTALLED:
     enabled_features.append("Sphinx")
-if _extras.TOMLI_INSTALLED:
+if _extras.TOMLI_INSTALLED:  # pragma: no cover
     enabled_features.append("Toml")
 
 cli.__doc__ = f"""CLI of rstcheck.
@@ -100,7 +100,7 @@ Enabled features: {enabled_features}
 """
 
 
-def main() -> None:
+def main() -> None:  # pragma: no cover
     """Run CLI."""
     typer.run(cli)
 
