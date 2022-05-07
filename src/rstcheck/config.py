@@ -46,7 +46,7 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    report_level: ReportLevel = ReportLevel.INFO
+    report_level: ReportLevel = pydantic.Field(ReportLevel.INFO)
     ignore_directives: typing.List[str] = pydantic.Field(default_factory=list)
     ignore_roles: typing.List[str] = pydantic.Field(default_factory=list)
     ignore_substitutions: typing.List[str] = pydantic.Field(default_factory=list)
