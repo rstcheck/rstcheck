@@ -20,14 +20,7 @@ import docutils.io
 import docutils.nodes
 import docutils.utils
 
-from . import (
-    _docutils,
-    _extras,
-    _sphinx,
-    config as _config,
-    inline_config,
-    types as _types,
-)
+from . import _docutils, _extras, _sphinx, config, inline_config, types
 
 
 EXCEPTION_LINE_NO_REGEX = re.compile(r": line\s+([0-9]+)[^:]*$")
@@ -36,8 +29,8 @@ MARKDOWN_LINK_REGEX = re.compile(r"\[[^\]]+\]\([^\)]+\)")
 
 
 def check_file(
-    file_to_check: pathlib.Path, main_config: _config.RstcheckConfig, overwrite_config: bool = True
-) -> typing.List[_types.LintError]:
+    file_to_check: pathlib.Path, main_config: config.RstcheckConfig, overwrite_config: bool = True
+) -> typing.List[types.LintError]:
     """Check the given file for issues.
 
     :param file_to_check: Path to file to check
@@ -66,9 +59,9 @@ def check_file(
 
 def _load_run_config(
     file_to_check_dir: pathlib.Path,
-    main_config: _config.RstcheckConfig,
+    main_config: config.RstcheckConfig,
     overwrite_config: bool = True,
-) -> _config.RstcheckConfig:
+) -> config.RstcheckConfig:
     """Load file specific config file and create run config.
 
     If the ``main_config`` does not contain a ``config_path`` the ``file_to_check_dir`` directory
@@ -84,12 +77,12 @@ def _load_run_config(
     if main_config.config_path is not None:
         return main_config
 
-    file_config = _config.load_config_file_from_dir_tree(file_to_check_dir)
+    file_config = config.load_config_file_from_dir_tree(file_to_check_dir)
 
     if file_config is None:
         return main_config
 
-    run_config = _config.merge_configs(
+    run_config = config.merge_configs(
         copy.copy(main_config), file_config, config_add_is_dominant=overwrite_config
     )
     return run_config
@@ -123,25 +116,25 @@ def _replace_ignored_substitutions(source: str, ignore_substitutions: typing.Lis
     return source
 
 
-def _create_ignore_dict_from_config(config: _config.RstcheckConfig) -> _types.IgnoreDict:
+def _create_ignore_dict_from_config(rstcheck_config: config.RstcheckConfig) -> types.IgnoreDict:
     """Extract ignore settings from config and create a ``IgnoreDict``.
 
-    :param config: Config to extract ignore settings from
+    :param rstcheck_config: Config to extract ignore settings from
     :return: ``IgnoreDict``
     """
-    return _types.IgnoreDict(
-        messages=config.ignore_messages,
-        languages=config.ignore_languages,
-        directives=config.ignore_directives,
+    return types.IgnoreDict(
+        messages=rstcheck_config.ignore_messages,
+        languages=rstcheck_config.ignore_languages,
+        directives=rstcheck_config.ignore_directives,
     )
 
 
 def check_source(
     source: str,
     source_file: typing.Optional[pathlib.Path] = None,
-    ignores: typing.Optional[_types.IgnoreDict] = None,
-    report_level: _config.ReportLevel = _config.ReportLevel.INFO,
-) -> _types.YieldedLintError:
+    ignores: typing.Optional[types.IgnoreDict] = None,
+    report_level: config.ReportLevel = config.ReportLevel.INFO,
+) -> types.YieldedLintError:
     """Check the given rst source for issues.
 
     :param source_file: Path to file the source comes from if it comes from a file;
@@ -152,7 +145,7 @@ def check_source(
     :yield: Found issues
     """
     source_file = source_file or pathlib.Path("<string>")
-    ignores = ignores or _types.IgnoreDict(messages=None, languages=[], directives=[])
+    ignores = ignores or types.IgnoreDict(messages=None, languages=[], directives=[])
 
     _docutils.register_code_directive(
         ignore_code_directive="code" in ignores["directives"],
@@ -166,7 +159,7 @@ def check_source(
     try:
         ignores["languages"].extend(inline_config.find_ignored_languages(source))
     except inline_config.RstcheckCommentSyntaxError as error:
-        yield _types.LintError(
+        yield types.LintError(
             filename=source_file, line_number=error.line_number, message=f"{error}"
         )
 
@@ -217,8 +210,8 @@ class _CheckWriter(docutils.writers.Writer):
         self,
         source: str,
         source_file: pathlib.Path,
-        ignores: typing.Optional[_types.IgnoreDict] = None,
-        report_level: _config.ReportLevel = _config.ReportLevel.INFO,
+        ignores: typing.Optional[types.IgnoreDict] = None,
+        report_level: config.ReportLevel = config.ReportLevel.INFO,
     ) -> None:
         """Inititalize _CheckWriter.
 
@@ -228,7 +221,7 @@ class _CheckWriter(docutils.writers.Writer):
         :param report_level: Report level; defaults to config.ReportLevel.INFO
         """
         docutils.writers.Writer.__init__(self)
-        self.checkers: typing.List[_types.CheckerRunFunction] = []
+        self.checkers: typing.List[types.CheckerRunFunction] = []
         self.source = source
         self.source_file = source_file
         self.ignores = ignores
@@ -255,8 +248,8 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         document: docutils.nodes.document,
         source: str,
         source_file: pathlib.Path,
-        ignores: typing.Optional[_types.IgnoreDict] = None,
-        report_level: _config.ReportLevel = _config.ReportLevel.INFO,
+        ignores: typing.Optional[types.IgnoreDict] = None,
+        report_level: config.ReportLevel = config.ReportLevel.INFO,
     ) -> None:
         """Inititalize _CheckTranslator.
 
@@ -267,10 +260,10 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         :param report_level: Report level; defaults to config.ReportLevel.INFO
         """
         docutils.nodes.NodeVisitor.__init__(self, document)
-        self.checkers: typing.List[_types.CheckerRunFunction] = []
+        self.checkers: typing.List[types.CheckerRunFunction] = []
         self.source = source
         self.source_file = source_file
-        self.ignores = ignores or _types.IgnoreDict(messages=None, languages=[], directives=[])
+        self.ignores = ignores or types.IgnoreDict(messages=None, languages=[], directives=[])
         self.report_level = report_level
         self.code_block_checker = CodeBlockChecker(source_file, ignores, report_level)
 
@@ -336,7 +329,7 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
     def _add_check(  # noqa: CCR001
         self,
         node: docutils.nodes.Element,
-        run: _types.CheckerRunFunction,
+        run: types.CheckerRunFunction,
         language: str,
         is_code_node: bool,
     ) -> None:
@@ -348,7 +341,7 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         :param is_code_node: If it is a code block node
         """
 
-        def run_check() -> _types.YieldedLintError:  # noqa: CCR001
+        def run_check() -> types.YieldedLintError:  # noqa: CCR001
             """Yield found issues."""
             all_results = run()
             if all_results is not None:
@@ -358,7 +351,7 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
 
                         line_number = getattr(node, "line", None)
                         if line_number is not None:
-                            yield _types.LintError(
+                            yield types.LintError(
                                 filename=result["filename"],
                                 line_number=_beginning_of_code_block(
                                     node=node,
@@ -370,7 +363,7 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
                                 message=f"({language}) {result['message']}",
                             )
                 else:
-                    yield _types.LintError(
+                    yield types.LintError(
                         filename=self.source_file, line_number=0, message="unknown error"
                     )
 
@@ -424,8 +417,8 @@ class CodeBlockChecker:
     def __init__(
         self,
         source_file: pathlib.Path,
-        ignores: typing.Optional[_types.IgnoreDict] = None,
-        report_level: _config.ReportLevel = _config.ReportLevel.INFO,
+        ignores: typing.Optional[types.IgnoreDict] = None,
+        report_level: config.ReportLevel = config.ReportLevel.INFO,
     ) -> None:
         """Inititalize CodeBlockChecker.
 
@@ -445,7 +438,7 @@ class CodeBlockChecker:
         """
         return getattr(self, f"check_{language}", None) is not None
 
-    def create_checker(self, source_code: str, language: str) -> _types.CheckerRunFunction:
+    def create_checker(self, source_code: str, language: str) -> types.CheckerRunFunction:
         """Create a checker function for the given source and language.
 
         :param source: Source code to check
@@ -454,7 +447,7 @@ class CodeBlockChecker:
         """
         return lambda: self.check(source_code, language)
 
-    def check(self, source_code: str, language: str) -> _types.YieldedLintError:
+    def check(self, source_code: str, language: str) -> types.YieldedLintError:
         """Call the apropiate checker function for the given langauge to check given source.
 
         :param source: Source code to check
@@ -462,7 +455,7 @@ class CodeBlockChecker:
         :return: None if language is not supported
         :yield: Found issues
         """
-        checker_function = typing.Callable[[str], _types.YieldedLintError]
+        checker_function = typing.Callable[[str], types.YieldedLintError]
         checker: typing.Optional[checker_function] = getattr(self, f"check_{language}", None)
         if checker is None:
             return None
@@ -470,7 +463,7 @@ class CodeBlockChecker:
         yield from checker(source_code)
         return None
 
-    def check_python(self, source_code: str) -> _types.YieldedLintError:
+    def check_python(self, source_code: str) -> types.YieldedLintError:
         """Check python source for syntax errors.
 
         :param source: Python source code to check
@@ -480,13 +473,13 @@ class CodeBlockChecker:
         try:
             compile(source_code, "<string>", "exec")
         except SyntaxError as exception:
-            yield _types.LintError(
+            yield types.LintError(
                 filename=self.source_file,
                 line_number=int(exception.lineno or 0),
                 message=exception.msg,
             )
 
-    def check_json(self, source_code: str) -> _types.YieldedLintError:
+    def check_json(self, source_code: str) -> types.YieldedLintError:
         """Check JSON source for syntax errors.
 
         :param source: JSON source code to check
@@ -500,11 +493,11 @@ class CodeBlockChecker:
             found = EXCEPTION_LINE_NO_REGEX.search(message)
             line_number = int(found.group(1)) if found else 0
 
-            yield _types.LintError(
+            yield types.LintError(
                 filename=self.source_file, line_number=int(line_number), message=message
             )
 
-    def check_xml(self, source_code: str) -> _types.YieldedLintError:
+    def check_xml(self, source_code: str) -> types.YieldedLintError:
         """Check XML source for syntax errors.
 
         :param source: XML source code to check
@@ -518,11 +511,11 @@ class CodeBlockChecker:
             found = EXCEPTION_LINE_NO_REGEX.search(message)
             line_number = int(found.group(1)) if found else 0
 
-            yield _types.LintError(
+            yield types.LintError(
                 filename=self.source_file, line_number=int(line_number), message=message
             )
 
-    def check_rst(self, source_code: str) -> _types.YieldedLintError:
+    def check_rst(self, source_code: str) -> types.YieldedLintError:
         """Check nested rst source for syntax errors.
 
         :param source: rst source code to check
@@ -536,7 +529,7 @@ class CodeBlockChecker:
             report_level=self.report_level,
         )
 
-    def check_doctest(self, source_code: str) -> _types.YieldedLintError:
+    def check_doctest(self, source_code: str) -> types.YieldedLintError:
         """Check doctest source for syntax errors.
 
         This does not run the test as that would be unsafe. Nor does this
@@ -554,11 +547,11 @@ class CodeBlockChecker:
             message = f"{exception}"
             match = DOCTEST_LINE_NO_REGEX.match(message)
             if match:
-                yield _types.LintError(
+                yield types.LintError(
                     filename=self.source_file, line_number=int(match.group(1)), message=message
                 )
 
-    def check_bash(self, source_code: str) -> _types.YieldedLintError:
+    def check_bash(self, source_code: str) -> types.YieldedLintError:
         """Check bash source for syntax errors.
 
         :param source: bash source code to check
@@ -575,13 +568,13 @@ class CodeBlockChecker:
                     continue
                 message = line[len(prefix) :]
                 split_message = message.split(":", 1)
-                yield _types.LintError(
+                yield types.LintError(
                     filename=self.source_file,
                     line_number=int(split_message[0]) - 1,
                     message=split_message[1].strip(),
                 )
 
-    def check_c(self, source_code: str) -> _types.YieldedLintError:
+    def check_c(self, source_code: str) -> types.YieldedLintError:
         """Check C source for syntax errors.
 
         :param source: C source code to check
@@ -597,7 +590,7 @@ class CodeBlockChecker:
             + ["-I.", "-I.."],
         )
 
-    def check_cpp(self, source_code: str) -> _types.YieldedLintError:
+    def check_cpp(self, source_code: str) -> types.YieldedLintError:
         """Check C++ source for syntax errors.
 
         :param source: C++ source code to check
@@ -615,7 +608,7 @@ class CodeBlockChecker:
 
     def _gcc_checker(
         self, source_code: str, filename_suffix: str, arguments: typing.List[str]
-    ) -> _types.YieldedLintError:
+    ) -> types.YieldedLintError:
         """Check code blockes using gcc (Helper function).
 
         :param source_code: Source code to check
@@ -668,7 +661,7 @@ class CodeBlockChecker:
 
 def _parse_gcc_style_error_message(
     message: str, filename: pathlib.Path, has_column: bool = True
-) -> _types.LintError:
+) -> types.LintError:
     """Parse GCC-style error message.
 
     Return (line_number, message). Raise ValueError if message cannot be
@@ -687,6 +680,6 @@ def _parse_gcc_style_error_message(
     message = message[len(prefix) :]
     split_message = message.split(":", colons)
     line_number = int(split_message[0])
-    return _types.LintError(
+    return types.LintError(
         filename=filename, line_number=line_number, message=split_message[colons].strip()
     )

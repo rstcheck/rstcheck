@@ -6,7 +6,7 @@ import re
 import sys
 import typing
 
-from . import _sphinx, checker, config, types as _types
+from . import _sphinx, checker, config, types
 
 
 class RstcheckMainRunner:
@@ -30,7 +30,7 @@ class RstcheckMainRunner:
         # NOTE: Work around https://bugs.python.org/issue45077
         self._pool_size = pool_size if sys.platform != "win32" else min(pool_size, 61)
 
-        self.errors: typing.List[_types.LintError] = []
+        self.errors: typing.List[types.LintError] = []
 
     def load_config_file(self, config_path: pathlib.Path) -> None:
         """Load config from file and merge with current config.
@@ -83,7 +83,7 @@ class RstcheckMainRunner:
             if checkable_rst_file(resolved_path) and resolved_path.name != "-":
                 self.files_to_check.append(path)
 
-    def _run_checks_sync(self) -> typing.List[typing.List[_types.LintError]]:
+    def _run_checks_sync(self) -> typing.List[typing.List[types.LintError]]:
         """Check all files from the file list syncronously and return the errors.
 
         :return: List of lists of errors found per file
@@ -95,7 +95,7 @@ class RstcheckMainRunner:
             ]
         return results
 
-    def _run_checks_parallel(self) -> typing.List[typing.List[_types.LintError]]:
+    def _run_checks_parallel(self) -> typing.List[typing.List[types.LintError]]:
         """Check all files from the file list in parallel and return the errors.
 
         :return: List of lists of errors found per file
@@ -107,7 +107,7 @@ class RstcheckMainRunner:
             )
         return results
 
-    def _update_results(self, results: typing.List[typing.List[_types.LintError]]) -> None:
+    def _update_results(self, results: typing.List[typing.List[types.LintError]]) -> None:
         """Take results and update error cache.
 
         Result normally come from ``self._run_checks_sync`` or ``self._run_checks_parallel``.
