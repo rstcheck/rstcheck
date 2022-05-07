@@ -1,3 +1,4 @@
+# pylint: disable=too-many-lines
 """Tests for ``checker`` module."""
 import os
 import pathlib
@@ -689,6 +690,22 @@ int main()
         assert "error: use of undeclared identifier 'x'" in result[0]["message"]
 
     @staticmethod
+    @pytest.mark.skipif(sys.platform != "win32", reason="Windows specific error message")
+    def test_check_c_returns_error_on_bad_code_block_windows() -> None:
+        """Test ``check_c`` returns error on bad code block."""
+        source = """
+int main()
+{
+    return x;
+}
+"""
+        cb_checker = checker.CodeBlockChecker("<string>")
+
+        result = list(cb_checker.check_c(source))
+
+        assert "ERROR" in result[0]["message"]
+
+    @staticmethod
     def test_check_cpp_returns_none_on_ok_code_block() -> None:
         """Test ``check_cpp`` returns ``None`` on ok code block."""
         source = """
@@ -737,6 +754,22 @@ int main()
         result = list(cb_checker.check_cpp(source))
 
         assert "error: use of undeclared identifier 'x'" in result[0]["message"]
+
+    @staticmethod
+    @pytest.mark.skipif(sys.platform != "win32", reason="Windows specific error message")
+    def test_check_cpp_returns_error_on_bad_code_block_windows() -> None:
+        """Test ``check_cpp`` returns error on bad code block."""
+        source = """
+int main()
+{
+    return x;
+}
+"""
+        cb_checker = checker.CodeBlockChecker("<string>")
+
+        result = list(cb_checker.check_cpp(source))
+
+        assert "ERROR: \u2018x\u2019 was not declared in this scope" in result[0]["message"]
 
     @staticmethod
     def test__gcc_checker_returns_none_on_ok_cpp_code_block() -> None:
@@ -801,6 +834,26 @@ int main()
         assert "error: use of undeclared identifier 'x'" in result[0]["message"]
 
     @staticmethod
+    @pytest.mark.skipif(sys.platform != "win32", reason="Windows specific error message")
+    def test__gcc_checker_returns_error_on_bad_cpp_code_block_windows() -> None:
+        """Test ``_gcc_checker`` returns error on bad c++ code block."""
+        source = """
+int main()
+{
+    return x;
+}
+"""
+        cb_checker = checker.CodeBlockChecker("<string>")
+
+        result = list(
+            cb_checker._gcc_checker(  # pylint: disable=protected-access
+                source, ".cpp", [os.getenv("CXX", "g++")]
+            )
+        )
+
+        assert "ERROR" in result[0]["message"]
+
+    @staticmethod
     def test__run_in_subprocess_returns_none_on_ok_cpp_code_block() -> None:
         """Test ``_run_in_subprocess`` returns ``None`` on ok c++ code block."""
         source = """
@@ -861,6 +914,26 @@ int main()
         assert result[1].suffix == ".cpp"
 
     @staticmethod
+    @pytest.mark.skipif(sys.platform != "win32", reason="Windows specific error message")
+    def test__run_in_subprocess_returns_error_on_bad_cpp_code_block_windows() -> None:
+        """Test ``_run_in_subprocess`` returns error on bad c++ code block."""
+        source = """
+int main()
+{
+    return x;
+}
+"""
+        cb_checker = checker.CodeBlockChecker("<string>")
+
+        result = cb_checker._run_in_subprocess(  # pylint: disable=protected-access
+            source, ".cpp", [os.getenv("CXX", "g++")]
+        )
+
+        assert result is not None
+        assert "ERROR" in result[0]
+        assert result[1].suffix == ".cpp"
+
+    @staticmethod
     @pytest.mark.skipif(sys.platform != "linux", reason="Linux specific error message")
     def test__run_in_subprocess_returns_error_on_bad_cpp_code_block_with_filename_linux() -> None:
         """Test ``_run_in_subprocess`` returns error on bad c++ code block from filename."""
@@ -898,6 +971,26 @@ int main()
 
         assert result is not None
         assert "error: use of undeclared identifier 'x'" in result[0]
+        assert result[1].suffix == ".cpp"
+
+    @staticmethod
+    @pytest.mark.skipif(sys.platform != "win32", reason="Windows specific error message")
+    def test__run_in_subprocess_returns_error_on_bad_cpp_code_block_with_filename_windows() -> None:
+        """Test ``_run_in_subprocess`` returns error on bad c++ code block from filename."""
+        source = """
+int main()
+{
+    return x;
+}
+"""
+        cb_checker = checker.CodeBlockChecker(pathlib.Path("filename.cpp"))
+
+        result = cb_checker._run_in_subprocess(  # pylint: disable=protected-access
+            source, ".cpp", [os.getenv("CXX", "g++")]
+        )
+
+        assert result is not None
+        assert "ERROR" in result[0]
         assert result[1].suffix == ".cpp"
 
     @staticmethod
