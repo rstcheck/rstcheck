@@ -360,11 +360,20 @@ def merge_configs(
     :return: New merged config
     """
     sub_config: typing.Union[RstcheckConfig, RstcheckConfigFile] = config_base
+    sub_config_dict = sub_config.dict()
+    for setting in dict(sub_config_dict):
+        if sub_config_dict[setting] is None:
+            del sub_config_dict[setting]
+
     dom_config: typing.Union[RstcheckConfig, RstcheckConfigFile] = config_add
+    dom_config_dict = dom_config.dict()
+    for setting in dict(dom_config_dict):
+        if dom_config_dict[setting] is None:
+            del dom_config_dict[setting]
 
     if config_add_is_dominant is False:
-        sub_config, dom_config = dom_config, sub_config
+        sub_config_dict, dom_config_dict = dom_config_dict, sub_config_dict
 
-    merged_config = {**sub_config.dict(), **dom_config.dict()}
+    merged_config_dict = {**sub_config_dict, **dom_config_dict}
 
-    return RstcheckConfig(**merged_config)
+    return RstcheckConfig(**merged_config_dict)

@@ -897,6 +897,26 @@ class TestConfigMerger:
         assert result.report_level == config.ReportLevel.ERROR
 
     @staticmethod
+    def test_default_merge_with_full_config_and_empty_base_config() -> None:
+        """Test config merging with full config and empty base config."""
+        config_base = config.RstcheckConfig()
+        config_add = config.RstcheckConfig(report_level=config.ReportLevel.ERROR)
+
+        result = config.merge_configs(config_base, config_add)
+
+        assert result.report_level == config.ReportLevel.ERROR
+
+    @staticmethod
+    def test_default_merge_with_file_config_and_empty_base_config() -> None:
+        """Test config merging with file config and empty base config."""
+        config_base = config.RstcheckConfig()
+        config_add = config.RstcheckConfigFile(report_level=config.ReportLevel.ERROR)
+
+        result = config.merge_configs(config_base, config_add)
+
+        assert result.report_level == config.ReportLevel.ERROR
+
+    @staticmethod
     def test_default_merge_with_full_config_and_changed_dominance() -> None:
         """Test config merging with full config and changed dominance."""
         config_base = config.RstcheckConfig(report_level=config.ReportLevel.SEVERE)
@@ -915,3 +935,29 @@ class TestConfigMerger:
         result = config.merge_configs(config_base, config_add, config_add_is_dominant=False)
 
         assert result.report_level == config.ReportLevel.SEVERE
+
+    @staticmethod
+    def test_default_merge_with_full_config_and_changed_dominance_and_empty_base_config() -> None:
+        """Test config merging with full config, changed dominance and empty base config.
+
+        Test ``None`` gets overwritten by set value.
+        """
+        config_base = config.RstcheckConfig()
+        config_add = config.RstcheckConfig(report_level=config.ReportLevel.ERROR)
+
+        result = config.merge_configs(config_base, config_add, config_add_is_dominant=False)
+
+        assert result.report_level == config.ReportLevel.ERROR
+
+    @staticmethod
+    def test_default_merge_with_file_config_and_changed_dominance_and_empty_base_config() -> None:
+        """Test config merging with file config, changed dominance and empty base config.
+
+        Test ``None`` gets overwritten by set value.
+        """
+        config_base = config.RstcheckConfig()
+        config_add = config.RstcheckConfigFile(report_level=config.ReportLevel.ERROR)
+
+        result = config.merge_configs(config_base, config_add, config_add_is_dominant=False)
+
+        assert result.report_level == config.ReportLevel.ERROR
