@@ -188,6 +188,18 @@ def test_non_matching_ignore_msg_errors(
     assert result.exit_code != 0
 
 
+def test_table_substitution_error_fixed_by_ignore(
+    cli_app: typer.Typer,
+    cli_runner: typer.testing.CliRunner,
+) -> None:
+    """Test that ignored substitutions in tables are correctly handled."""
+    test_file = EXAMPLES_DIR / "bad" / "table_substitutions.rst"
+
+    result = cli_runner.invoke(cli_app, [str(test_file), "--ignore-substitutions", "FOO_ID,BAR_ID"])
+
+    assert result.exit_code == 0
+
+
 def test_custom_directive_and_role(
     cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
 ) -> None:
