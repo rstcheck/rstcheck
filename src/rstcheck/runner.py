@@ -144,10 +144,8 @@ class RstcheckMainRunner:
         :return: exit code 0 if no error is printed; 1 if any error is printed
         """
         if len(self.errors) == 0:
+            print("Success! No issues detected.", file=output_file or sys.stdout)
             return 0
-
-        if output_file is None:
-            output_file = sys.stderr
 
         err_msg_regex = re.compile(r"\([A-Z]+/[0-9]+\)")
 
@@ -158,7 +156,7 @@ class RstcheckMainRunner:
 
             message = f"{error['source_origin']}:{error['line_number']}: {err_msg}"
 
-            print(message, file=output_file)
+            print(message, file=output_file or sys.stderr)
 
         return 1
 

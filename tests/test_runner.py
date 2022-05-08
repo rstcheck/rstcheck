@@ -317,6 +317,16 @@ class TestRstcheckMainRunnerResultPrinter:
         assert result == 0
 
     @staticmethod
+    def test_success_message_on_success(capsys: pytest.CaptureFixture[str]) -> None:
+        """Test succes message is printed on no erros."""
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner([], init_config)
+
+        _runner.get_result()  # act
+
+        assert "Success! No issues detected." in capsys.readouterr().out
+
+    @staticmethod
     def test_exit_code_on_error() -> None:
         """Test exit code 1 is returned when erros were found."""
         init_config = config.RstcheckConfig()
