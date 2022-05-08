@@ -39,6 +39,9 @@ ReportLevelMap = {
 """Map docutils report levels in text form to numbers."""
 
 
+DEFAULT_REPORT_LEVEL = ReportLevel.INFO
+
+
 class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
     """Rstcheck config file.
 
@@ -46,11 +49,11 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    report_level: ReportLevel = pydantic.Field(ReportLevel.INFO)
-    ignore_directives: typing.List[str] = pydantic.Field(default_factory=list)
-    ignore_roles: typing.List[str] = pydantic.Field(default_factory=list)
-    ignore_substitutions: typing.List[str] = pydantic.Field(default_factory=list)
-    ignore_languages: typing.List[str] = pydantic.Field(default_factory=list)
+    report_level: typing.Optional[ReportLevel]
+    ignore_directives: typing.Optional[typing.List[str]]
+    ignore_roles: typing.Optional[typing.List[str]]
+    ignore_substitutions: typing.Optional[typing.List[str]]
+    ignore_languages: typing.Optional[typing.List[str]]
     # NOTE: Pattern type-arg errors pydanic: https://github.com/samuelcolvin/pydantic/issues/2636
     ignore_messages: typing.Optional[typing.Pattern]  # type: ignore[type-arg]
 
@@ -63,11 +66,14 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         :raises ValueError: If ``Value`` is not a valid docutils report level
         :return: Instance of ``ReportLevel`` or None if emptry string.
         """
+        if value is None:
+            return None
+
         if isinstance(value, ReportLevel):
             return value
 
-        if value == "" or value is None:
-            return ReportLevel.INFO
+        if value == "":
+            return DEFAULT_REPORT_LEVEL
 
         if isinstance(value, bool):
             raise ValueError("Invalid report level")
@@ -103,11 +109,14 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         :return: List of things to ignore in the respective category
         """
         if value is None:
-            return []
+            return None
+
         if isinstance(value, str):
             return value.split(",")
+
         if isinstance(value, list) and all(isinstance(v, str) for v in value):
             return value
+
         raise ValueError("Not a string or list of strings")
 
     @pydantic.validator("ignore_messages", pre=True)
@@ -123,10 +132,13 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         """
         if value is None:
             return None
+
         if isinstance(value, list) and all(isinstance(v, str) for v in value):
             return r"|".join(value)
+
         if isinstance(value, str):
             return value
+
         raise ValueError("Not a string or list of strings")
 
 
@@ -138,13 +150,7 @@ class RstcheckConfig(RstcheckConfigFile):  # pylint: disable=too-few-public-meth
     """
 
     config_path: typing.Optional[pathlib.Path]
-    recursive: bool = pydantic.Field(False)
-
-    @pydantic.validator("recursive", pre=True)
-    @classmethod
-    def none_is_false(cls, value: typing.Any) -> typing.Any:  # noqa: ANN401
-        """Allow ``None`` and change it to the default: ``False``."""
-        return False if value is None else value
+    recursive: typing.Optional[bool]
 
 
 class _RstcheckConfigINIFile(
@@ -200,7 +206,7 @@ class _RstcheckConfigTOMLFile(
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    report_level: typing.Optional[typing.Union[int, str]] = pydantic.Field(None)
+    report_level: typing.Optional[str] = pydantic.Field(None)
     ignore_directives: typing.Optional[typing.List[str]] = pydantic.Field(None)
     ignore_roles: typing.Optional[typing.List[str]] = pydantic.Field(None)
     ignore_substitutions: typing.Optional[typing.List[str]] = pydantic.Field(None)

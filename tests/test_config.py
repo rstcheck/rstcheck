@@ -31,11 +31,11 @@ def test_default_values_for_config_file() -> None:
     """Test default values of  ``RstcheckConfigFile``."""
     result = config.RstcheckConfigFile()
 
-    assert result.report_level is config.ReportLevel.INFO
-    assert result.ignore_directives == []
-    assert result.ignore_roles == []
-    assert result.ignore_substitutions == []
-    assert result.ignore_languages == []
+    assert result.report_level is None
+    assert result.ignore_directives is None
+    assert result.ignore_roles is None
+    assert result.ignore_substitutions is None
+    assert result.ignore_languages is None
     assert result.ignore_messages is None
 
 
@@ -43,21 +43,14 @@ def test_default_values_for_config() -> None:
     """Test default values of  ``RstcheckConfig``."""
     result = config.RstcheckConfig()
 
-    assert result.report_level is config.ReportLevel.INFO
-    assert result.ignore_directives == []
-    assert result.ignore_roles == []
-    assert result.ignore_substitutions == []
-    assert result.ignore_languages == []
+    assert result.report_level is None
+    assert result.ignore_directives is None
+    assert result.ignore_roles is None
+    assert result.ignore_substitutions is None
+    assert result.ignore_languages is None
     assert result.ignore_messages is None
     assert result.config_path is None
-    assert result.recursive is False
-
-
-def test_recursive_none_means_false() -> None:
-    """Test recursive set to ``None`` for ``RstcheckConfig`` means ``False``."""
-    result = config.RstcheckConfig(recursive=None)
-
-    assert result.recursive is False
+    assert result.recursive is None
 
 
 class TestReportLevelValidator:
@@ -67,20 +60,20 @@ class TestReportLevelValidator:
     """
 
     @staticmethod
+    def test_none_means_none() -> None:
+        """Test ``None`` results in no report level."""
+        result = config.RstcheckConfigFile(report_level=None)
+
+        assert result is not None
+        assert result.report_level is None
+
+    @staticmethod
     def test_set_level_stays() -> None:
         """Test set level results in same level."""
         result = config.RstcheckConfigFile(report_level=config.ReportLevel.SEVERE)
 
         assert result is not None
         assert result.report_level is config.ReportLevel.SEVERE
-
-    @staticmethod
-    def test_none_means_default() -> None:
-        """Test ``None`` results in default report level."""
-        result = config.RstcheckConfigFile(report_level=None)
-
-        assert result is not None
-        assert result.report_level is config.ReportLevel.INFO
 
     @staticmethod
     def test_empty_string_means_default() -> None:
@@ -137,10 +130,10 @@ class TestSplitStrValidator:
         )
 
         assert result is not None
-        assert result.ignore_languages == []
-        assert result.ignore_directives == []
-        assert result.ignore_roles == []
-        assert result.ignore_substitutions == []
+        assert result.ignore_languages is None
+        assert result.ignore_directives is None
+        assert result.ignore_roles is None
+        assert result.ignore_substitutions is None
 
     @staticmethod
     @pytest.mark.parametrize(

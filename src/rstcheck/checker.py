@@ -44,17 +44,19 @@ def check_file(
     """
     run_config = _load_run_config(source_file.parent, rstcheck_config, overwrite_with_file_config)
     ignore_dict = _create_ignore_dict_from_config(run_config)
-    _docutils.ignore_directives_and_roles(run_config.ignore_directives, run_config.ignore_roles)
+    _docutils.ignore_directives_and_roles(
+        run_config.ignore_directives or [], run_config.ignore_roles or []
+    )
 
     source = _get_source(source_file)
-    source = _replace_ignored_substitutions(source, run_config.ignore_substitutions)
+    source = _replace_ignored_substitutions(source, run_config.ignore_substitutions or [])
 
     all_errors = []
     for error in check_source(
         source,
         source_file=source_file,
         ignores=ignore_dict,
-        report_level=run_config.report_level,
+        report_level=run_config.report_level or config.DEFAULT_REPORT_LEVEL,
     ):
         all_errors.append(error)
     return all_errors
@@ -127,8 +129,8 @@ def _create_ignore_dict_from_config(rstcheck_config: config.RstcheckConfig) -> t
     """
     return types.IgnoreDict(
         messages=rstcheck_config.ignore_messages,
-        languages=rstcheck_config.ignore_languages,
-        directives=rstcheck_config.ignore_directives,
+        languages=rstcheck_config.ignore_languages or [],
+        directives=rstcheck_config.ignore_directives or [],
     )
 
 
@@ -136,14 +138,14 @@ def check_source(
     source: str,
     source_file: typing.Optional[pathlib.Path] = None,
     ignores: typing.Optional[types.IgnoreDict] = None,
-    report_level: config.ReportLevel = config.ReportLevel.INFO,
+    report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
 ) -> types.YieldedLintError:
     """Check the given rst source for issues.
 
     :param source_file: Path to file the source comes from if it comes from a file;
         defaults to None
     :param ignores: Ignore information; defaults to None
-    :param report_level: Report level; defaults to config.ReportLevel.INFO
+    :param report_level: Report level; defaults to config.DEFAULT_REPORT_LEVEL
     :return: None
     :yield: Found issues
     """
@@ -216,14 +218,14 @@ class _CheckWriter(docutils.writers.Writer):
         source: str,
         source_origin: types.SourceFileOrString,
         ignores: typing.Optional[types.IgnoreDict] = None,
-        report_level: config.ReportLevel = config.ReportLevel.INFO,
+        report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
     ) -> None:
         """Inititalize _CheckWriter.
 
         :param source: Rst source to check
         :param source_origin: Path to file the source comes from
         :param ignores: Ignore information; defaults to None
-        :param report_level: Report level; defaults to config.ReportLevel.INFO
+        :param report_level: Report level; defaults to config.DEFAULT_REPORT_LEVEL
         """
         docutils.writers.Writer.__init__(self)
         self.checkers: typing.List[types.CheckerRunFunction] = []
@@ -254,7 +256,7 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         source: str,
         source_origin: types.SourceFileOrString,
         ignores: typing.Optional[types.IgnoreDict] = None,
-        report_level: config.ReportLevel = config.ReportLevel.INFO,
+        report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
     ) -> None:
         """Inititalize _CheckTranslator.
 
@@ -262,7 +264,7 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         :param source: Rst source to check
         :param source_origin: Path to file the source comes from
         :param ignores: Ignore information; defaults to None
-        :param report_level: Report level; defaults to config.ReportLevel.INFO
+        :param report_level: Report level; defaults to config.DEFAULT_REPORT_LEVEL
         """
         docutils.nodes.NodeVisitor.__init__(self, document)
         self.checkers: typing.List[types.CheckerRunFunction] = []
@@ -423,13 +425,13 @@ class CodeBlockChecker:
         self,
         source_origin: types.SourceFileOrString,
         ignores: typing.Optional[types.IgnoreDict] = None,
-        report_level: config.ReportLevel = config.ReportLevel.INFO,
+        report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
     ) -> None:
         """Inititalize CodeBlockChecker.
 
         :param source_origin: Path to file the source comes from
         :param ignores: Ignore information; defaults to None
-        :param report_level: Report level; defaults to config.ReportLevel.INFO
+        :param report_level: Report level; defaults to config.DEFAULT_REPORT_LEVEL
         """
         self.source_origin = source_origin
         self.ignores = ignores
