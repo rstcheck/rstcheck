@@ -18,9 +18,10 @@ if _extras.TOMLI_INSTALLED:  # pragma: no cover
 If a directory is passed it will be searched for .rstcheck.cfg | pyproject.toml | setup.cfg.
 """
 HELP_RECURSIVE = "Recursively search passed directories for RST files to check."
-HELP_REPORT_LEVEL = """The report level of the linting issues found.
-Can be set in config file.
+HELP_REPORT_LEVEL = f"""The report level of the linting issues found.
 Valid levels are: INFO | WARNING | ERROR | SEVERE | NONE.
+Defauls to {config_mod.DEFAULT_REPORT_LEVEL.name}.
+Can be set in config file.
 """
 HELP_IGNORE_DIRECTIVES = """Comma-separated-list of directives to add to the ignore list.
 Can be set in config file.
@@ -47,11 +48,11 @@ def cli(  # pylint: disable=too-many-arguments
     config: typing.Optional[pathlib.Path] = typer.Option(  # noqa: M511,B008
         None, "--config", help=HELP_CONFIG
     ),
-    recursive: bool = typer.Option(  # noqa: M511,B008
-        False, "--recursive", "-r", help=HELP_RECURSIVE
+    recursive: typing.Optional[bool] = typer.Option(  # noqa: M511,B008
+        None, "--recursive", "-r", help=HELP_RECURSIVE
     ),
-    report_level: str = typer.Option(  # noqa: M511,B008
-        "INFO", metavar="LEVEL", help=HELP_REPORT_LEVEL
+    report_level: typing.Optional[str] = typer.Option(  # noqa: M511,B008
+        None, metavar="LEVEL", help=HELP_REPORT_LEVEL
     ),
     ignore_directives: typing.Optional[str] = typer.Option(  # noqa: M511,B008
         None, help=HELP_IGNORE_DIRECTIVES
