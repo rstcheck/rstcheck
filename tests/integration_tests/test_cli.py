@@ -150,6 +150,44 @@ def test_piping_is_not_allowed_with_additional_files(cli_app: typer.Typer) -> No
     assert "Aborted!" in result.stderr
 
 
+def test_without_report_exits_zero(
+    cli_app: typer.Typer,
+    cli_runner: typer.testing.CliRunner,
+) -> None:
+    """Test bad example without report is ok."""
+    test_file = EXAMPLES_DIR / "bad" / "rst.rst"
+
+    result = cli_runner.invoke(cli_app, [str(test_file), "--report-level", "none"])
+
+    assert result.exit_code == 0
+
+
+def test_matching_ignore_msg_exits_zero(
+    cli_app: typer.Typer,
+    cli_runner: typer.testing.CliRunner,
+) -> None:
+    """Test matching ignore message."""
+    test_file = EXAMPLES_DIR / "bad" / "rst.rst"
+
+    result = cli_runner.invoke(
+        cli_app, [str(test_file), "--ignore-messages", r"(Title .verline & underline mismatch\.$)"]
+    )
+
+    assert result.exit_code == 0
+
+
+def test_non_matching_ignore_msg_errors(
+    cli_app: typer.Typer,
+    cli_runner: typer.testing.CliRunner,
+) -> None:
+    """Test non matching ignore message."""
+    test_file = EXAMPLES_DIR / "bad" / "rst.rst"
+
+    result = cli_runner.invoke(cli_app, [str(test_file), "--ignore-messages", r"(No match\.$)"])
+
+    assert result.exit_code != 0
+
+
 def test_custom_directive_and_role(
     cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
 ) -> None:
