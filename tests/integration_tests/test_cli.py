@@ -98,6 +98,20 @@ def test_bad_example_with_piping(
     assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 1
 
 
+def test_piping_is_not_allowed_with_additional_files(cli_app: typer.Typer) -> None:
+    """Test piping into rstcheck is not allowed with additional files.
+
+    Test cli prints error to stderr.
+    """
+    cli_runner_divided_output = typer.testing.CliRunner(mix_stderr=False)
+
+    result = cli_runner_divided_output.invoke(cli_app, ["-", "foo"])
+
+    assert result.exit_code == 1
+    assert "'-' is only allowed without additional files." in result.stderr
+    assert "Aborted!" in result.stderr
+
+
 def test_custom_directive_and_role(
     cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
 ) -> None:
