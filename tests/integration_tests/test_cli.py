@@ -243,7 +243,7 @@ def test_sphinx_role_erros_without_sphinx(
 
     result = cli_runner.invoke(cli_app, str(test_file))
 
-    assert result.exit_code == 0
+    assert result.exit_code != 0
 
 
 @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
