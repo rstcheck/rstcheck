@@ -229,7 +229,7 @@ def test_custom_directive_and_role_with_config_file(
     config_file = EXAMPLES_DIR / "custom" / "rstcheck.custom.ini"
 
     result = cli_runner.invoke(
-        cli_app, ["--recursive", "--config", str(config_file), str(test_file)]
+        cli_app, ["--config", str(config_file), str(test_file)]
     )
 
     assert "Success! No issues detected." in result.stdout
