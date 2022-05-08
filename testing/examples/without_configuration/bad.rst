@@ -1,3 +1,8 @@
+.. copy of with_configuration/bad.rst
+
+Subtitle
+-------
+
 .. my-directive::
 
 

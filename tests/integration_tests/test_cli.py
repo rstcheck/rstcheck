@@ -227,6 +227,137 @@ class TestIgnoreOptions:
         assert result.exit_code == 0
 
 
+class TestWithoutConfigFile:
+    """Test without config file in dir tree."""
+
+    @staticmethod
+    def test_error_without_config_file(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test bad example without set config file and implicit config file shows errors."""
+        test_file = EXAMPLES_DIR / "without_configuration" / "bad.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code != 0
+        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 6
+
+    @staticmethod
+    def test_no_error_with_set_ini_config_file(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test bad example with set INI config file does not error."""
+        test_file = EXAMPLES_DIR / "without_configuration" / "bad.rst"
+        config_file = EXAMPLES_DIR / "with_configuration" / "rstcheck.ini"
+
+        result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
+
+        assert result.exit_code == 0
+
+    @staticmethod
+    def test_no_error_with_set_config_dir(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test bad example with set config dir does not error."""
+        test_file = EXAMPLES_DIR / "without_configuration" / "bad.rst"
+        config_dir = EXAMPLES_DIR / "with_configuration"
+
+        result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_dir)])
+
+        assert result.exit_code == 0
+
+    @staticmethod
+    @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
+    def test_no_error_with_set_toml_config_file(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test bad example with set TOML config file does not error."""
+        test_file = EXAMPLES_DIR / "without_configuration" / "bad.rst"
+        config_file = EXAMPLES_DIR / "with_configuration" / "pyproject.toml"
+
+        result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
+
+        assert result.exit_code == 0
+
+
+class TestWithConfigFile:
+    """Test with config file in dir tree."""
+
+    @staticmethod
+    def test_file_1_is_bad_without_config(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test bad file ``bad.rst`` without config file is not ok."""
+        test_file = EXAMPLES_DIR / "with_configuration" / "bad.rst"
+        config_file = "no-config-file"
+
+        result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
+
+        assert result.exit_code != 0
+        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 6
+
+    @staticmethod
+    def test_file_2_is_bad_without_config(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test bad file ``bad_rst.rst`` without config file not ok."""
+        test_file = EXAMPLES_DIR / "with_configuration" / "bad_rst.rst"
+        config_file = "no-config-file"
+
+        result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
+
+        assert result.exit_code != 0
+        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 2
+
+    @staticmethod
+    def test_bad_file_1_with_implicit_config_no_errors(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test bad file ``bad.rst`` with implicit config file is ok."""
+        test_file = EXAMPLES_DIR / "with_configuration" / "bad.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code == 0
+
+    @staticmethod
+    def test_bad_file_2_with_implicit_config_some_errors(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test bad file ``bad_rst.rst`` with implicit config file partially ok."""
+        test_file = EXAMPLES_DIR / "with_configuration" / "bad_rst.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code != 0
+        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 1
+
+    @staticmethod
+    def test_bad_file_1_with_explicit_config_no_errors(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test bad file ``bad.rst`` with explicit config file is ok."""
+        test_file = EXAMPLES_DIR / "with_configuration" / "bad.rst"
+        config_file = EXAMPLES_DIR / "with_configuration" / "rstcheck.ini"
+
+        result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
+
+        assert result.exit_code == 0
+
+    @staticmethod
+    def test_bad_file_2_with_explicit_config_some_errors(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test bad file ``bad_rst.rst`` with explicit config file partially ok."""
+        test_file = EXAMPLES_DIR / "with_configuration" / "bad_rst.rst"
+        config_file = EXAMPLES_DIR / "with_configuration" / "rstcheck.ini"
+
+        result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
+
+        assert result.exit_code != 0
+        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 1
+
+
 class TestCustomDirectivesAndRoles:
     """Test custom directives and roles."""
 

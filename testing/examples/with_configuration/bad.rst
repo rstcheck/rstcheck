@@ -1,4 +1,7 @@
-.. my-custom-directive::
+Subtitle
+-------
+
+.. my-directive::
 
 
 :some-custom-thing:`testing`
