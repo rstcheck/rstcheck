@@ -340,6 +340,19 @@ class TestRstcheckMainRunnerResultPrinter:
         assert result == 1
 
     @staticmethod
+    def test_no_success_message_on_error(capsys: pytest.CaptureFixture[str]) -> None:
+        """Test no succuess message is printed when erros were found."""
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner([], init_config)
+        _runner.errors = [
+            types.LintError(source_origin="<string>", line_number=0, message="message")
+        ]
+
+        _runner.get_result()  # act
+
+        assert "Success! No issues detected." not in capsys.readouterr()
+
+    @staticmethod
     def test_error_category_prepend(capsys: pytest.CaptureFixture[str]) -> None:
         """Test ``(ERROR/3)`` is prepended when no category is present."""
         init_config = config.RstcheckConfig()
