@@ -22,4 +22,4 @@ def cli_app_fixture() -> typer.Typer:
 @pytest.fixture(name="cli_runner")
 def cli_runner_fixture() -> typer.testing.CliRunner:
     """Create CLI Test Runner."""
-    return typer.testing.CliRunner()
+    return typer.testing.CliRunner(mix_stderr=False)

@@ -314,13 +314,26 @@ class TestRstcheckMainRunnerResultPrinter:
 
     @staticmethod
     def test_success_message_on_success(capsys: pytest.CaptureFixture[str]) -> None:
-        """Test succes message is printed on no erros."""
+        """Test success message is printed to stdout by default if no errors."""
         init_config = config.RstcheckConfig()
         _runner = runner.RstcheckMainRunner([], init_config)
 
         _runner.get_result()  # act
 
         assert "Success! No issues detected." in capsys.readouterr().out
+
+    @staticmethod
+    def test_success_message_print_to_file(tmp_path: pathlib.Path) -> None:
+        """Test success message is printed to given file."""
+        out_file = tmp_path / "outfile.txt"
+        out_file.touch()
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner([], init_config)
+        with open(out_file, encoding="utf-8", mode="w") as out_file_handle:
+
+            _runner.get_result(output_file=out_file_handle)  # act
+
+        assert "Success! No issues detected." in out_file.read_text()
 
     @staticmethod
     def test_exit_code_on_error() -> None:
@@ -349,6 +362,35 @@ class TestRstcheckMainRunnerResultPrinter:
         assert "Success! No issues detected." not in capsys.readouterr()
 
     @staticmethod
+    def test_error_printed_to_stderr_by_default(capsys: pytest.CaptureFixture[str]) -> None:
+        """Test errors are printed to stderr."""
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner([], init_config)
+        _runner._update_results(
+            [[types.LintError(source_origin="<string>", line_number=0, message="Some error.")]]
+        )
+
+        _runner.get_result()  # act
+
+        assert "(ERROR/3) Some error" in capsys.readouterr().err
+
+    @staticmethod
+    def test_error_printed_to_file(tmp_path: pathlib.Path) -> None:
+        """Test errors are printed to stderr."""
+        out_file = tmp_path / "outfile.txt"
+        out_file.touch()
+        init_config = config.RstcheckConfig()
+        _runner = runner.RstcheckMainRunner([], init_config)
+        _runner._update_results(
+            [[types.LintError(source_origin="<string>", line_number=0, message="Some error.")]]
+        )
+        with open(out_file, encoding="utf-8", mode="w") as out_file_handle:
+
+            _runner.get_result(output_file=out_file_handle)  # act
+
+        assert "(ERROR/3) Some error" in out_file.read_text()
+
+    @staticmethod
     def test_error_category_prepend(capsys: pytest.CaptureFixture[str]) -> None:
         """Test ``(ERROR/3)`` is prepended when no category is present."""
         init_config = config.RstcheckConfig()
@@ -357,9 +399,8 @@ class TestRstcheckMainRunnerResultPrinter:
             [[types.LintError(source_origin="<string>", line_number=0, message="Some error.")]]
         )
 
-        exit_code = _runner.get_result()  # act
+        _runner.get_result()  # act
 
-        assert exit_code == 1
         assert "(ERROR/3) Some error." in capsys.readouterr().err
 
     @staticmethod
@@ -377,7 +418,6 @@ class TestRstcheckMainRunnerResultPrinter:
             ]
         )
 
-        exit_code = _runner.get_result()  # act
+        _runner.get_result()  # act
 
-        assert exit_code == 1
         assert "<string>:0: (ERROR/3) Some error." in capsys.readouterr().err
