@@ -56,6 +56,19 @@ def test_all_good_examples(
     assert "Success! No issues detected." in result.stdout
 
 
+def test_all_good_examples_recurively(
+    cli_app: typer.Typer,
+    cli_runner: typer.testing.CliRunner,
+) -> None:
+    """Test all files in ``testing/examples/good`` recursively."""
+    test_dir = EXAMPLES_DIR / "good"
+
+    result = cli_runner.invoke(cli_app, [str(test_dir), "--recursive"])
+
+    assert result.exit_code == 0
+    assert "Success! No issues detected." in result.stdout
+
+
 @pytest.mark.parametrize("test_file", list(TESTING_DIR.glob("examples/bad/*.rst")))
 def test_all_bad_examples(
     test_file: pathlib.Path,
@@ -67,6 +80,33 @@ def test_all_bad_examples(
 
     assert result.exit_code != 0
     assert ERROR_CODE_REGEX.search(result.stdout) is not None
+
+
+def test_all_bad_examples_recurively(
+    cli_app: typer.Typer,
+    cli_runner: typer.testing.CliRunner,
+) -> None:
+    """Test all files in ``testing/examples/bad`` recursively."""
+    test_dir = EXAMPLES_DIR / "bad"
+
+    result = cli_runner.invoke(cli_app, [str(test_dir), "--recursive"])
+
+    assert result.exit_code != 0
+    assert ERROR_CODE_REGEX.search(result.stdout) is not None
+
+
+def test_mix_of_good_and_bad_examples(
+    cli_app: typer.Typer,
+    cli_runner: typer.testing.CliRunner,
+) -> None:
+    """Test mix of good and bad examples."""
+    test_file_good = EXAMPLES_DIR / "good" / "code_blocks.rst"
+    test_file_bad = EXAMPLES_DIR / "bad" / "rst.rst"
+
+    result = cli_runner.invoke(cli_app, [str(test_file_good), str(test_file_bad)])
+
+    assert result.exit_code != 0
+    assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 1
 
 
 def test_good_example_with_piping(
