@@ -71,6 +71,10 @@ def cli(  # pylint: disable=too-many-arguments
     ),
 ) -> int:
     """CLI of rstcheck."""
+    if pathlib.Path("-") in files and len(files) > 1:
+        typer.echo("'-' is only allowed without additional files.", err=True)
+        raise typer.Abort()
+
     rstcheck_config = config_mod.RstcheckConfig(
         config_path=config,
         recursive=recursive,
