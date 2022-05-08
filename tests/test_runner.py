@@ -94,7 +94,7 @@ class TestRstcheckMainRunnerFileListUpdater:
     @staticmethod
     def test_single_file_in_list() -> None:
         """Test single file in list results in only this file in the list."""
-        file_list = [EXAMPLES_DIR / "good" / "code_blocks.rst"]
+        file_list = [EXAMPLES_DIR / "good" / "rst.rst"]
         init_config = config.RstcheckConfig()
         _runner = runner.RstcheckMainRunner(file_list, init_config)
 
@@ -106,7 +106,7 @@ class TestRstcheckMainRunnerFileListUpdater:
     def test_multiple_files_in_list() -> None:
         """Test multiple files in list results in only these files in the list."""
         file_list = [
-            EXAMPLES_DIR / "good" / "code_blocks.rst",
+            EXAMPLES_DIR / "good" / "rst.rst",
             EXAMPLES_DIR / "bad" / "rst.rst",
         ]
         init_config = config.RstcheckConfig()
@@ -120,7 +120,7 @@ class TestRstcheckMainRunnerFileListUpdater:
     def test_non_rst_files() -> None:
         """Test non rst files are filtered out."""
         file_list = [
-            EXAMPLES_DIR / "good" / "code_blocks.rst",
+            EXAMPLES_DIR / "good" / "rst.rst",
             EXAMPLES_DIR / "good" / "foo.h",
             EXAMPLES_DIR / "bad" / "rst.rst",
         ]
@@ -152,7 +152,7 @@ class TestRstcheckMainRunnerFileListUpdater:
         _runner.update_file_list()  # act
 
         assert len(_runner.files_to_check) == 5
-        assert EXAMPLES_DIR / "good" / "code_blocks.rst" in _runner.files_to_check
+        assert EXAMPLES_DIR / "good" / "rst.rst" in _runner.files_to_check
 
     @staticmethod
     def test_dash_as_file() -> None:
@@ -168,14 +168,14 @@ class TestRstcheckMainRunnerFileListUpdater:
     @staticmethod
     def test_dash_as_file_with_others() -> None:
         """Test dash as file with other files gets ignored."""
-        file_list = [pathlib.Path("-"), EXAMPLES_DIR / "good" / "code_blocks.rst"]
+        file_list = [pathlib.Path("-"), EXAMPLES_DIR / "good" / "rst.rst"]
         init_config = config.RstcheckConfig()
         _runner = runner.RstcheckMainRunner(file_list, init_config)
 
         _runner.update_file_list()  # act
 
         assert len(_runner.files_to_check) == 1
-        assert EXAMPLES_DIR / "good" / "code_blocks.rst" in _runner.files_to_check
+        assert EXAMPLES_DIR / "good" / "rst.rst" in _runner.files_to_check
 
 
 @pytest.mark.parametrize(
@@ -191,7 +191,7 @@ def test__run_checks_sync_method(
     """
     monkeypatch.setattr(checker, "check_file", lambda _0, _1, _2: lint_errors)
     file_list = [
-        EXAMPLES_DIR / "good" / "code_blocks.rst",
+        EXAMPLES_DIR / "good" / "rst.rst",
         EXAMPLES_DIR / "bad" / "rst.rst",
     ]
     init_config = config.RstcheckConfig()
@@ -235,7 +235,7 @@ def test__run_checks_parallel_method(
     # noqa: AAA05
     monkeypatch.setattr(multiprocessing, "Pool", mock_pool)
     file_list = [
-        EXAMPLES_DIR / "good" / "code_blocks.rst",
+        EXAMPLES_DIR / "good" / "rst.rst",
         EXAMPLES_DIR / "bad" / "rst.rst",
     ]
     init_config = config.RstcheckConfig()

@@ -100,7 +100,7 @@ def test_mix_of_good_and_bad_examples(
     cli_runner: typer.testing.CliRunner,
 ) -> None:
     """Test mix of good and bad examples."""
-    test_file_good = EXAMPLES_DIR / "good" / "code_blocks.rst"
+    test_file_good = EXAMPLES_DIR / "good" / "rst.rst"
     test_file_bad = EXAMPLES_DIR / "bad" / "rst.rst"
 
     result = cli_runner.invoke(cli_app, [str(test_file_good), str(test_file_bad)])
@@ -114,7 +114,7 @@ def test_good_example_with_piping(
     cli_runner: typer.testing.CliRunner,
 ) -> None:
     """Test good example file piped into rstcheck."""
-    test_file = EXAMPLES_DIR / "good" / "code_blocks.rst"
+    test_file = EXAMPLES_DIR / "good" / "rst.rst"
     test_file_content = test_file.read_text("utf-8")
 
     result = cli_runner.invoke(cli_app, "-", input=test_file_content)
