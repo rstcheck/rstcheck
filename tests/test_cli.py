@@ -25,7 +25,7 @@ def test_cli_help_message() -> None:
     assert "Enabled features:" in result.stdout
 
 
-@pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Test when sphinx is installed.")
+@pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
 def test_cli_help_message_with_sphinx() -> None:
     """Test help message when sphinx is installed."""
     result = cli_runner.invoke(app, ["--help"])
@@ -35,7 +35,7 @@ def test_cli_help_message_with_sphinx() -> None:
     assert "Sphinx" in result.stdout
 
 
-@pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Test when tomli is installed.")
+@pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
 def test_cli_help_message_with_tomli() -> None:
     """Test help message when toml is installed."""
     result = cli_runner.invoke(app, ["--help"])

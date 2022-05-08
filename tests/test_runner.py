@@ -38,7 +38,7 @@ class TestRstcheckMainRunnerInit:
         mocked_loader.assert_not_called()
 
     @staticmethod
-    @pytest.mark.skipif(sys.platform != "win32", reason="Windows specific test.")
+    @pytest.mark.skipif(sys.platform != "win32", reason="Windows specific.")
     @pytest.mark.parametrize("pool_size", [0, 1, 60, 61, 62, 100])
     def test_max_pool_size_on_windows(pool_size: int, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test pool size is 61 at max on windows."""

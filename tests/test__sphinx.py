@@ -17,10 +17,7 @@ class TestContextManager:
     """Test ``load_sphinx_if_available`` context manager."""
 
     @staticmethod  # noqa: AAA01
-    @pytest.mark.skipif(
-        _extras.SPHINX_INSTALLED,
-        reason="Test when sphinx is missing.",
-    )
+    @pytest.mark.skipif(_extras.SPHINX_INSTALLED, reason="Test without sphinx extra.")
     @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_yield_nothing_with_sphinx_missing() -> None:
         """Test for ``None`` yield and no action when sphinx is missing."""
@@ -31,10 +28,7 @@ class TestContextManager:
             assert not docutils_roles._roles
 
     @staticmethod  # noqa: AAA01
-    @pytest.mark.skipif(
-        not _extras.SPHINX_INSTALLED,
-        reason="Test when sphinx is installed.",
-    )
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
     @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_yield_nothing_with_sphinx_installed() -> None:
         """Test for ``None`` yield but action when sphinx is installed."""
@@ -49,17 +43,14 @@ class TestSphinxDirectiveAndRoleGetter:
     """Test ``get_sphinx_directives_and_roles`` function."""
 
     @staticmethod
-    @pytest.mark.skipif(
-        _extras.SPHINX_INSTALLED,
-        reason="Test for exception when sphinx is missing.",
-    )
+    @pytest.mark.skipif(_extras.SPHINX_INSTALLED, reason="Test without sphinx extra.")
     def test_exception_on_missing_sphinx() -> None:
         """Test that the install guard triggers."""
         with pytest.raises(ModuleNotFoundError):
             _sphinx.get_sphinx_directives_and_roles()
 
     @staticmethod
-    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Test sphinx related functionality.")
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
     @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_c_domain_is_loaded() -> None:
         """Test C domain is loaded."""
@@ -71,7 +62,7 @@ class TestSphinxDirectiveAndRoleGetter:
         assert "c:member" in result_roles
 
     @staticmethod
-    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Test sphinx related functionality.")
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
     @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_cpp_domain_is_loaded() -> None:
         """Test C++ domain is loaded."""
@@ -83,7 +74,7 @@ class TestSphinxDirectiveAndRoleGetter:
         assert "cpp:member" in result_roles
 
     @staticmethod
-    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Test sphinx related functionality.")
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
     @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_javascript_domain_is_loaded() -> None:
         """Test JavaScript domain is loaded."""
@@ -95,7 +86,7 @@ class TestSphinxDirectiveAndRoleGetter:
         assert "js:func" in result_roles
 
     @staticmethod
-    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Test sphinx related functionality.")
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
     @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_python_domain_is_loaded() -> None:
         """Test Python domain is loaded."""
@@ -107,7 +98,7 @@ class TestSphinxDirectiveAndRoleGetter:
         assert "py:func" in result_roles
 
     @staticmethod
-    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Test sphinx related functionality.")
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
     def test_docutils_state_dict_is_loaded(monkeypatch: pytest.MonkeyPatch) -> None:
         """Test docutils' state is loaded."""
         test_dict_directives: typing.Dict[str, typing.Any] = {"test-directive": "test-directive"}
@@ -127,7 +118,7 @@ class TestDirectiveAndRoleFilter:
     """Test ``filter_whitelisted_directives_and_roles`` function."""
 
     @staticmethod
-    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Test sphinx related functionality.")
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
     def test_directives_are_filtered(monkeypatch: pytest.MonkeyPatch) -> None:
         """Test directives are filtered."""
         monkeypatch.setattr(_sphinx, "_DIRECTIVE_WHITELIST", ["test-directive"])
@@ -141,7 +132,7 @@ class TestDirectiveAndRoleFilter:
         assert "test-directive2" in result_directives
 
     @staticmethod
-    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Test sphinx related functionality.")
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
     def test_roles_are_filtered(monkeypatch: pytest.MonkeyPatch) -> None:
         """Test roles are filtered."""
         monkeypatch.setattr(_sphinx, "_ROLE_WHITELIST", ["test-role"])

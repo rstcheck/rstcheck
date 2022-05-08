@@ -235,7 +235,7 @@ Test
         assert 'Expected "key=value" syntax' in result[0]["message"]
 
     @staticmethod
-    @pytest.mark.skipif(_extras.SPHINX_INSTALLED, reason="Test when sphinx is missing.")
+    @pytest.mark.skipif(_extras.SPHINX_INSTALLED, reason="Test without sphinx extra.")
     def test_sphinx_directive_errors_without_sphinx() -> None:
         """Test error on sphinx directive when sphinx is missing."""
         source = """
@@ -247,7 +247,7 @@ Test
         assert 'No directive entry for "py:function"' in result[0]["message"]
 
     @staticmethod
-    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Test when sphinx is installed.")
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
     def test_sphinx_directive_does_not_error_with_sphinx() -> None:
         """Test no error on sphinx directive when sphinx is installed."""
         source = """
@@ -259,7 +259,7 @@ Test
         assert not result
 
     @staticmethod
-    @pytest.mark.skipif(sys.version_info > (3, 10), reason="Requires python version before 3.10")
+    @pytest.mark.skipif(sys.version_info > (3, 9), reason="Requires python3.9 or lower")
     def test_code_block_lint_error_returned_on_default_ignore_pre310() -> None:
         """Test code lint error is returned with default ignores.
 
@@ -276,7 +276,7 @@ Test
         assert "unexpected EOF while parsing" in result[0]["message"]
 
     @staticmethod
-    @pytest.mark.skipif(sys.version_info > (3, 10), reason="Requires python version before 3.10")
+    @pytest.mark.skipif(sys.version_info > (3, 9), reason="Requires python3.9 or lower")
     def test_code_block_lint_error_on_set_ignore_not_ignored_pre310() -> None:
         """Test code lint error is not skipped with set ignores.
 
@@ -411,7 +411,7 @@ print("rstcheck")
         assert not result
 
     @staticmethod
-    @pytest.mark.skipif(sys.version_info > (3, 10), reason="Requires python version before 3.10")
+    @pytest.mark.skipif(sys.version_info > (3, 9), reason="Requires python3.9 or lower")
     def test_check_returns_error_on_bad_code_block_for_supported_lang_pre310() -> None:
         """Test ``check`` returns error on bad code block for supported language.
 
@@ -452,7 +452,7 @@ print("rstcheck")
         assert not result
 
     @staticmethod
-    @pytest.mark.skipif(sys.version_info > (3, 10), reason="Requires python version before 3.10")
+    @pytest.mark.skipif(sys.version_info > (3, 9), reason="Requires python3.9 or lower")
     def test_check_python_returns_error_on_bad_code_block_pre310() -> None:
         """Test ``check_python`` returns error on bad code block.
 
