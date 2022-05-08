@@ -384,9 +384,9 @@ class TestCustomDirectivesAndRoles:
             cli_app,
             [
                 "--ignore-directives",
-                "my-directive",
+                "custom-directive",
                 "--ignore-roles",
-                "some-custom-thing",
+                "custom-role",
                 str(test_file),
             ],
         )
