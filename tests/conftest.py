@@ -1,4 +1,5 @@
 """Fixtures for tests."""
+import pathlib
 import typing
 
 import docutils.parsers.rst
@@ -9,6 +10,11 @@ from rstcheck import _extras
 
 if _extras.SPHINX_INSTALLED:
     import sphinx.application
+
+
+REPO_DIR = pathlib.Path(__file__).resolve().parents[1].resolve()
+TESTING_DIR = REPO_DIR / "testing"
+EXAMPLES_DIR = TESTING_DIR / "examples"
 
 
 @pytest.fixture(name="patch_docutils_directives_and_roles_dict")

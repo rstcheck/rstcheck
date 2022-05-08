@@ -14,9 +14,6 @@ import pytest
 from rstcheck import _extras, checker, config, types
 
 
-TESTING_DIR = pathlib.Path(__file__).parents[1] / "testing" / "examples"
-
-
 def test_check_file(monkeypatch: pytest.MonkeyPatch) -> None:
     """Test ``check_file`` returns accumulated errors from ``check_source``."""
     errors = [

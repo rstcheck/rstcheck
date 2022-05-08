@@ -1,9 +1,14 @@
 """Fixtures for integration tests."""
+import re
+
 import pytest
 import typer
 import typer.testing
 
 from rstcheck import cli
+
+
+ERROR_CODE_REGEX = re.compile(r"\([A-Z]*?/\d\)")
 
 
 @pytest.fixture(name="cli_app")

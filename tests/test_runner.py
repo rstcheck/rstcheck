@@ -10,9 +10,7 @@ import pytest
 import pytest_mock
 
 from rstcheck import checker, config, runner, types
-
-
-EXAMPLES_DIR = pathlib.Path(__file__).parents[1] / "testing" / "examples"
+from tests.conftest import EXAMPLES_DIR
 
 
 class TestRstcheckMainRunnerInit:
