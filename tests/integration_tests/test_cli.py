@@ -232,3 +232,27 @@ def test_custom_directive_and_role_with_config_file(
 
     assert result.exit_code == 0
     assert "Success! No issues detected." in result.stdout
+
+
+@pytest.mark.skipif(_extras.SPHINX_INSTALLED, reason="Test without sphinx extra.")
+def test_sphinx_role_erros_without_sphinx(
+    cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+) -> None:
+    """Test sphinx example errors without sphinx."""
+    test_file = EXAMPLES_DIR / "sphinx" / "good.rst"
+
+    result = cli_runner.invoke(cli_app, str(test_file))
+
+    assert result.exit_code == 0
+
+
+@pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
+def test_sphinx_role_exits_zero_with_sphinx(
+    cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+) -> None:
+    """Test sphinx example does not error with sphinx."""
+    test_file = EXAMPLES_DIR / "sphinx" / "good.rst"
+
+    result = cli_runner.invoke(cli_app, str(test_file))
+
+    assert result.exit_code == 0
