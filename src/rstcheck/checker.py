@@ -197,17 +197,54 @@ def check_source(
             },
         )
 
-    for checker in writer.checkers:
-        yield from checker()
+    yield from _run_code_checker_and_filter_errors(writer.checkers, ignores["messages"])
 
     rst_errors = string_io.getvalue().strip()
 
     if not rst_errors:
         return
 
+    yield from _parse_and_filter_rst_errors(rst_errors, source_origin, ignores["messages"])
+
+
+def _run_code_checker_and_filter_errors(
+    checker_list: t.List[types.CheckerRunFunction],
+    # NOTE: Pattern type-arg errors pydanic: https://github.com/samuelcolvin/pydantic/issues/2636
+    ignore_messages: t.Optional[t.Pattern] = None,  # type: ignore[type-arg]
+) -> types.YieldedLintError:
+    """Run each code block checker function and yield filtered ``LintError``.
+
+    :param checker_list: List of code block checker functions
+    :param ignore_messages: Regex for ignoring error messages;
+        defaults to None
+    :return: None
+    :yield: Filtered LintErrors from run checker function
+    """
+    for checker in checker_list:
+        for lint_error in checker():
+            if ignore_messages and ignore_messages.search(lint_error["message"]):
+                continue
+            yield lint_error
+
+
+def _parse_and_filter_rst_errors(
+    rst_errors: str,
+    # NOTE: Pattern type-arg errors pydanic: https://github.com/samuelcolvin/pydantic/issues/2636
+    source_origin: types.SourceFileOrString,
+    ignore_messages: t.Optional[t.Pattern] = None,  # type: ignore[type-arg]
+) -> types.YieldedLintError:
+    """Parse rst errors and yield filtered ``LintError``.
+
+    :param rst_errors: String with rst errors
+    :param source_origin: Origin of the source with the errors
+    :param ignore_messages: Regex for ignoring error messages;
+        defaults to None
+    :return: None
+    :yield: Parsed and filtered LintErrors
+    """
     for message in rst_errors.splitlines():
         with contextlib.suppress(ValueError):
-            if ignores["messages"] and ignores["messages"].search(message):
+            if ignore_messages and ignore_messages.search(message):
                 continue
             yield _parse_gcc_style_error_message(
                 message, source_origin=source_origin, has_column=False

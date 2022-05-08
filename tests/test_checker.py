@@ -342,6 +342,76 @@ Test
         assert "'(' was never closed" in result[0]["message"]
 
 
+class TestCodeCheckRunner:
+    """Test ``_run_code_checker_and_filter_errors`` function."""
+
+    @staticmethod
+    def test_without_ignore() -> None:
+        """Test both checkers return error without ignore."""
+        cb_checker = checker.CodeBlockChecker("<string>")
+        checker_list = [
+            cb_checker.create_checker("print(", "python"),
+            cb_checker.create_checker("{", "json"),
+        ]
+
+        result = list(
+            checker._run_code_checker_and_filter_errors(  # pylint: disable=protected-access
+                checker_list, None
+            )
+        )
+
+        assert len(result) == 2
+
+    @staticmethod
+    def test_with_ignore() -> None:
+        """Test only one checker return error with ignore."""
+        cb_checker = checker.CodeBlockChecker("<string>")
+        checker_list = [
+            cb_checker.create_checker("print(", "python"),
+            cb_checker.create_checker("{", "json"),
+        ]
+        ignore_messages = re.compile(r"Expecting property name enclosed in double quotes")
+
+        result = list(
+            checker._run_code_checker_and_filter_errors(  # pylint: disable=protected-access
+                checker_list, ignore_messages
+            )
+        )
+
+        assert len(result) == 1
+
+
+class TestRstErrorParseFilter:
+    """Test ``_parse_and_filter_rst_errors`` function."""
+
+    @staticmethod
+    def test_without_ignore() -> None:
+        """Test both error messages are parsed and returned."""
+        error_str = "<string>:1:1: Error message 1\n<string>:1:2: Error message 2"
+
+        result = list(
+            checker._parse_and_filter_rst_errors(  # pylint: disable=protected-access
+                error_str, "<string>", None
+            )
+        )
+
+        assert len(result) == 2
+
+    @staticmethod
+    def test_with_ignore() -> None:
+        """Test only one error message is parsed and returned."""
+        error_str = "<string>:1:1: Error message 1\n<string>:1:2: Error message 2"
+        ignore_messages = re.compile(r"Error message 1")
+
+        result = list(
+            checker._parse_and_filter_rst_errors(  # pylint: disable=protected-access
+                error_str, "<string>", ignore_messages
+            )
+        )
+
+        assert len(result) == 1
+
+
 class TestCheckTranslator:  # pylint: disable=too-few-public-methods
     """Test ``_CheckTranslator`` class."""
 
