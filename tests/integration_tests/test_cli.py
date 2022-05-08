@@ -5,8 +5,42 @@ import pytest
 import typer
 import typer.testing
 
+from rstcheck import _extras
 from tests.conftest import EXAMPLES_DIR, TESTING_DIR
 from tests.integration_tests.conftest import ERROR_CODE_REGEX
+
+
+def test_cli_help_message(cli_app: typer.Typer, cli_runner: typer.testing.CliRunner) -> None:
+    """Test help message."""
+    result = cli_runner.invoke(cli_app, "--help")
+
+    assert result.exit_code == 0
+    assert "Enabled features:" in result.stdout
+
+
+@pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
+def test_cli_help_message_with_sphinx(
+    cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+) -> None:
+    """Test help message when sphinx is installed."""
+    result = cli_runner.invoke(cli_app, "--help")
+
+    assert result.exit_code == 0
+    assert "Enabled features:" in result.stdout
+    assert "Sphinx" in result.stdout
+
+
+@pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
+def test_cli_help_message_with_tomli(
+    cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+) -> None:
+    """Test help message when toml is installed."""
+    result = cli_runner.invoke(cli_app, "--help")
+
+    assert result.exit_code == 0
+    assert "pyproject.toml" in result.stdout
+    assert "Enabled features:" in result.stdout
+    assert "Toml" in result.stdout
 
 
 @pytest.mark.parametrize("test_file", list(TESTING_DIR.glob("examples/good/*.rst")))
