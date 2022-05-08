@@ -214,7 +214,7 @@ class TestSplitStrValidator:
 
 
 class TestJoinRegexStrValidator:
-    """Test ``valid_report_level`` validator method of the ``RstcheckConfig`` class.
+    """Test ``join_regex_str`` validator method of the ``RstcheckConfig`` class.
 
     It validates the ``ignore_messages`` setting.
     """
