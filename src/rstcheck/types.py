@@ -1,11 +1,11 @@
 """Helper types."""
 import pathlib
-import typing
+import typing as t
 
 from . import _compat
 
 
-SourceFileOrString = typing.Union[pathlib.Path, _compat.Literal["<string>"]]
+SourceFileOrString = t.Union[pathlib.Path, _compat.Literal["<string>"]]
 """Path to source file or if it is a string then '<string>'."""
 
 
@@ -17,7 +17,7 @@ class LintError(_compat.TypedDict):
     message: str
 
 
-YieldedLintError = typing.Generator[LintError, None, None]
+YieldedLintError = t.Generator[LintError, None, None]
 """Yielded version of type ``LintError``."""
 
 
@@ -25,12 +25,12 @@ class IgnoreDict(_compat.TypedDict):
     """Dict with ignore information."""
 
     # NOTE: Pattern type-arg errors pydanic: https://github.com/samuelcolvin/pydantic/issues/2636
-    messages: typing.Optional[typing.Pattern]  # type: ignore[type-arg]
-    languages: typing.List[str]
-    directives: typing.List[str]
+    messages: t.Optional[t.Pattern]  # type: ignore[type-arg]
+    languages: t.List[str]
+    directives: t.List[str]
 
 
-CheckerRunFunction = typing.Callable[..., YieldedLintError]
+CheckerRunFunction = t.Callable[..., YieldedLintError]
 """Function to run checks.
 
 Returned by ``CodeBlockChecker.create_checker``.

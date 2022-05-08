@@ -4,7 +4,7 @@ import contextlib
 import multiprocessing
 import pathlib
 import sys
-import typing
+import typing as t
 
 import pytest
 import pytest_mock
@@ -83,7 +83,7 @@ class TestRstcheckMainRunnerFileListUpdater:
     @staticmethod
     def test_empty_file_list() -> None:
         """Test empty file list results in no changes."""
-        file_list: typing.List[pathlib.Path] = []
+        file_list: t.List[pathlib.Path] = []
         init_config = config.RstcheckConfig()
         _runner = runner.RstcheckMainRunner(file_list, init_config)
 
@@ -183,7 +183,7 @@ class TestRstcheckMainRunnerFileListUpdater:
     [[], [types.LintError(source_origin="<string>", line_number=0, message="message")]],
 )
 def test__run_checks_sync_method(
-    lint_errors: typing.List[types.LintError], monkeypatch: pytest.MonkeyPatch
+    lint_errors: t.List[types.LintError], monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Test ``RstcheckMainRunner._run_checks_sync`` method.
 
@@ -209,7 +209,7 @@ def test__run_checks_sync_method(
     [[], [types.LintError(source_origin="<string>", line_number=0, message="message")]],
 )
 def test__run_checks_parallel_method(
-    lint_errors: typing.List[types.LintError], monkeypatch: pytest.MonkeyPatch
+    lint_errors: t.List[types.LintError], monkeypatch: pytest.MonkeyPatch
 ) -> None:  # noqa: AAA05
     """Test ``RstcheckMainRunner._run_checks_parallel`` method.
 
@@ -222,13 +222,13 @@ def test__run_checks_parallel_method(
 
         # noqa: AAA05
         @staticmethod
-        def starmap(_0, _1) -> typing.List[typing.List[types.LintError]]:  # noqa: ANN001
+        def starmap(_0, _1) -> t.List[t.List[types.LintError]]:  # noqa: ANN001
             """Mock for ``multiprocessing.Pool.starmap`` method."""
             return [lint_errors, lint_errors]
 
     # noqa: AAA05
     @contextlib.contextmanager
-    def mock_pool(_) -> typing.Generator[MockedPool, None, None]:  # noqa: ANN001
+    def mock_pool(_) -> t.Generator[MockedPool, None, None]:  # noqa: ANN001
         """Mock context manager for ``multiprocessing.Pool``."""
         yield MockedPool()
 
@@ -252,9 +252,7 @@ def test__run_checks_parallel_method(
     ("results", "error_count"),
     [([], 0), ([[types.LintError(source_origin="<string>", line_number=0, message="message")]], 1)],
 )
-def test__update_results_method(
-    results: typing.List[typing.List[types.LintError]], error_count: int
-) -> None:
+def test__update_results_method(results: t.List[t.List[types.LintError]], error_count: int) -> None:
     """Test ``RstcheckMainRunner._update_results`` method.
 
     Test results are set.

@@ -1,6 +1,6 @@
 """Fixtures for tests."""
 import pathlib
-import typing
+import typing as t
 
 import docutils.parsers.rst
 import pytest
@@ -24,8 +24,8 @@ def _patch_docutils_directives_and_roles_dict_fixture(monkeypatch: pytest.Monkey
     This patch is required when tests are run in parallel (default), because they would
     under the hood all write to the same state dicts otherwise and influence each other.
     """
-    test_dict_directives: typing.Dict[str, typing.Any] = {}
-    test_dict_roles: typing.Dict[str, typing.Any] = {}
+    test_dict_directives: t.Dict[str, t.Any] = {}
+    test_dict_roles: t.Dict[str, t.Any] = {}
 
     if _extras.SPHINX_INSTALLED:
         monkeypatch.setattr(

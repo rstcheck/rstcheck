@@ -19,7 +19,7 @@ Example usage:
         print(sphinx.version_info)
 """
 import importlib
-import typing
+import typing as t
 
 from . import _compat
 
@@ -31,11 +31,11 @@ ExtraDependencies = _compat.Literal["sphinx", "tomli"]
 class DependencyInfos(_compat.TypedDict):
     """Information about a dependency."""
 
-    min_version: typing.Tuple[int, ...]
+    min_version: t.Tuple[int, ...]
     extra: str
 
 
-ExtraDependenciesInfos: typing.Dict[ExtraDependencies, DependencyInfos] = {
+ExtraDependenciesInfos: t.Dict[ExtraDependencies, DependencyInfos] = {
     "sphinx": DependencyInfos(min_version=(2, 0), extra="sphinx"),
     "tomli": DependencyInfos(min_version=(2, 0), extra="toml"),
 }
@@ -63,7 +63,7 @@ SPHINX_INSTALLED = is_installed_with_supported_version("sphinx")
 TOMLI_INSTALLED = is_installed_with_supported_version("tomli")
 
 
-ExtraDependenciesInstalled: typing.Dict[ExtraDependencies, bool] = {
+ExtraDependenciesInstalled: t.Dict[ExtraDependencies, bool] = {
     "sphinx": SPHINX_INSTALLED,
     "tomli": TOMLI_INSTALLED,
 }

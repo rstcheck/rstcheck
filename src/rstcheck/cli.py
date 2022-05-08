@@ -1,6 +1,6 @@
 """CLI for rstcheck."""
 import pathlib
-import typing
+import typing as t
 
 import typer
 
@@ -42,31 +42,29 @@ Can be set in config file.
 
 
 def cli(  # pylint: disable=too-many-arguments
-    files: typing.List[pathlib.Path] = typer.Argument(  # noqa: M511,B008
+    files: t.List[pathlib.Path] = typer.Argument(  # noqa: M511,B008
         ..., help=HELP_FILES, allow_dash=True
     ),
-    config: typing.Optional[pathlib.Path] = typer.Option(  # noqa: M511,B008
+    config: t.Optional[pathlib.Path] = typer.Option(  # noqa: M511,B008
         None, "--config", help=HELP_CONFIG
     ),
-    recursive: typing.Optional[bool] = typer.Option(  # noqa: M511,B008
+    recursive: t.Optional[bool] = typer.Option(  # noqa: M511,B008
         None, "--recursive", "-r", help=HELP_RECURSIVE
     ),
-    report_level: typing.Optional[str] = typer.Option(  # noqa: M511,B008
+    report_level: t.Optional[str] = typer.Option(  # noqa: M511,B008
         None, metavar="LEVEL", help=HELP_REPORT_LEVEL
     ),
-    ignore_directives: typing.Optional[str] = typer.Option(  # noqa: M511,B008
+    ignore_directives: t.Optional[str] = typer.Option(  # noqa: M511,B008
         None, help=HELP_IGNORE_DIRECTIVES
     ),
-    ignore_roles: typing.Optional[str] = typer.Option(  # noqa: M511,B008
-        None, help=HELP_IGNORE_ROLES
-    ),
-    ignore_substitutions: typing.Optional[str] = typer.Option(  # noqa: M511,B008
+    ignore_roles: t.Optional[str] = typer.Option(None, help=HELP_IGNORE_ROLES),  # noqa: M511,B008
+    ignore_substitutions: t.Optional[str] = typer.Option(  # noqa: M511,B008
         None, help=HELP_IGNORE_SUBSTITUTIONS
     ),
-    ignore_languages: typing.Optional[str] = typer.Option(  # noqa: M511,B008
+    ignore_languages: t.Optional[str] = typer.Option(  # noqa: M511,B008
         None, help=HELP_IGNORE_LANGUAGES
     ),
-    ignore_messages: typing.Optional[str] = typer.Option(  # noqa: M511,B008
+    ignore_messages: t.Optional[str] = typer.Option(  # noqa: M511,B008
         None, metavar="REGEX", help=HELP_IGNORE_MESSAGES
     ),
 ) -> int:

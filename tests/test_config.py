@@ -1,7 +1,7 @@
 """Tests for ``config`` module."""
 import pathlib
 import re
-import typing
+import typing as t
 
 import pytest
 
@@ -88,7 +88,7 @@ class TestReportLevelValidator:
         "level",
         [1, 2, 3, 4, 5, "info", "warning", "error", "severe", "none", "NONE", "None", "NoNe"],
     )
-    def test_valid_report_levels(level: typing.Any) -> None:  # noqa: ANN401
+    def test_valid_report_levels(level: t.Any) -> None:  # noqa: ANN401
         """Test valid report levels accepted by docutils."""
         result = config.RstcheckConfigFile(report_level=level)
 
@@ -100,7 +100,7 @@ class TestReportLevelValidator:
         "level",
         [-1, 0, 1.5, 6, 32, False, True, "information", "warn", "err", "critical", "fatal"],
     )
-    def test_invalid_report_levels(level: typing.Any) -> None:  # noqa: ANN401
+    def test_invalid_report_levels(level: t.Any) -> None:  # noqa: ANN401
         """Test invalid report levels not accepted by docutils."""
         with pytest.raises(ValueError, match="Invalid report level"):
             config.RstcheckConfigFile(report_level=level)
@@ -146,7 +146,7 @@ class TestSplitStrValidator:
             ("value1 , value2", ["value1 ", " value2"]),
         ],
     )
-    def test_strings_are_transformed_to_lists(string: str, split_list: typing.List[str]) -> None:
+    def test_strings_are_transformed_to_lists(string: str, split_list: t.List[str]) -> None:
         """Test strings are split at the ","."""
         result = config.RstcheckConfigFile(
             ignore_languages=string,
@@ -172,7 +172,7 @@ class TestSplitStrValidator:
             ["value1 ", " value2"],
         ],
     )
-    def test_string_lists_are_kept_the_same(string_list: typing.List[str]) -> None:
+    def test_string_lists_are_kept_the_same(string_list: t.List[str]) -> None:
         """Test lists of strings are untouched."""
         result = config.RstcheckConfigFile(
             ignore_languages=string_list,
@@ -265,7 +265,7 @@ class TestJoinRegexStrValidator:
     @pytest.mark.parametrize(
         ("string_list", "full_string"), [([""], ""), (["", ""], "|"), ([], "")]
     )
-    def test_list_with_empty_contents(string_list: typing.List[str], full_string: str) -> None:
+    def test_list_with_empty_contents(string_list: t.List[str], full_string: str) -> None:
         """Test list with empty contents are parsed as regex too."""
         regex = re.compile(full_string)
 

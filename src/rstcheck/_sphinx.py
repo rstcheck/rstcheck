@@ -2,7 +2,7 @@
 import contextlib
 import pathlib
 import tempfile
-import typing
+import typing as t
 
 from . import _docutils, _extras
 
@@ -17,7 +17,7 @@ if _extras.SPHINX_INSTALLED:
 
 
 @contextlib.contextmanager
-def load_sphinx_if_available() -> typing.Generator[None, None, None]:
+def load_sphinx_if_available() -> t.Generator[None, None, None]:
     """Contextmanager to register Sphinx directives and roles if sphinx is available."""
     if _extras.SPHINX_INSTALLED:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -35,7 +35,7 @@ def load_sphinx_if_available() -> typing.Generator[None, None, None]:
         yield
 
 
-def get_sphinx_directives_and_roles() -> typing.Tuple[typing.List[str], typing.List[str]]:
+def get_sphinx_directives_and_roles() -> t.Tuple[t.List[str], t.List[str]]:
     """Return Sphinx directives and roles loaded from sphinx.
 
     :return: Tuple of directives and roles
@@ -71,12 +71,12 @@ def get_sphinx_directives_and_roles() -> typing.Tuple[typing.List[str], typing.L
 
 
 _DIRECTIVE_WHITELIST = ["code", "code-block", "include"]
-_ROLE_WHITELIST: typing.List[str] = []
+_ROLE_WHITELIST: t.List[str] = []
 
 
 def filter_whitelisted_directives_and_roles(
-    directives: typing.List[str], roles: typing.List[str]
-) -> typing.Tuple[typing.List[str], typing.List[str]]:
+    directives: t.List[str], roles: t.List[str]
+) -> t.Tuple[t.List[str], t.List[str]]:
     """Filter whitelisted directives and roles out of input.
 
     :param directives: Directives to filter

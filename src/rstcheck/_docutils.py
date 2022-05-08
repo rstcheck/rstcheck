@@ -1,5 +1,5 @@
 """Docutils helper functions."""
-import typing
+import typing as t
 
 import docutils.nodes
 import docutils.parsers.rst.directives
@@ -14,7 +14,7 @@ class IgnoredDirective(docutils.parsers.rst.Directive):  # pragma: no cover
 
     has_content = True
 
-    def run(self) -> typing.List:  # type: ignore[type-arg]
+    def run(self) -> t.List:  # type: ignore[type-arg]
         """Do nothing."""
         return []
 
@@ -25,15 +25,15 @@ def ignore_role(
     text: str,
     lineno: int,
     inliner: docutils.parsers.rst.states.Inliner,
-    options: typing.Optional[typing.Dict[str, typing.Any]] = None,
-    content: typing.Optional[typing.List[str]] = None,
-) -> typing.Tuple[typing.List, typing.List]:  # type: ignore[type-arg] # pragma: no cover
+    options: t.Optional[t.Dict[str, t.Any]] = None,
+    content: t.Optional[t.List[str]] = None,
+) -> t.Tuple[t.List, t.List]:  # type: ignore[type-arg] # pragma: no cover
     """Stub for unknown roles."""
     # pylint: disable=unused-argument,too-many-arguments
     return ([], [])
 
 
-def ignore_directives_and_roles(directives: typing.List[str], roles: typing.List[str]) -> None:
+def ignore_directives_and_roles(directives: t.List[str], roles: t.List[str]) -> None:
     """Ignore directives and roles in docutils.
 
     :param directives: Directives to ignore
@@ -52,7 +52,7 @@ class CodeBlockDirective(docutils.parsers.rst.Directive):
     has_content = True
     optional_arguments = 1
 
-    def run(self) -> typing.List[docutils.nodes.literal_block]:
+    def run(self) -> t.List[docutils.nodes.literal_block]:
         """Run directive.
 
         :return: Literal block

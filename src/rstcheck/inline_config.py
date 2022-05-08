@@ -1,6 +1,6 @@
 """Inline config comment functionality."""
 import re
-import typing
+import typing as t
 
 
 RSTCHECK_COMMENT_REGEX = re.compile(r"\.\. rstcheck:")
@@ -19,7 +19,7 @@ class RstcheckCommentSyntaxError(Exception):
         Exception.__init__(self, message)
 
 
-def find_ignored_languages(source: str) -> typing.Generator[str, None, None]:  # noqa: CCR001
+def find_ignored_languages(source: str) -> t.Generator[str, None, None]:  # noqa: CCR001
     """Search the rst source for rstcheck inline ignore-languages comments.
 
     Languages are ignored via comment.

@@ -3,7 +3,7 @@ import configparser
 import contextlib
 import enum
 import pathlib
-import typing
+import typing as t
 
 import pydantic
 
@@ -49,17 +49,17 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    report_level: typing.Optional[ReportLevel]
-    ignore_directives: typing.Optional[typing.List[str]]
-    ignore_roles: typing.Optional[typing.List[str]]
-    ignore_substitutions: typing.Optional[typing.List[str]]
-    ignore_languages: typing.Optional[typing.List[str]]
+    report_level: t.Optional[ReportLevel]
+    ignore_directives: t.Optional[t.List[str]]
+    ignore_roles: t.Optional[t.List[str]]
+    ignore_substitutions: t.Optional[t.List[str]]
+    ignore_languages: t.Optional[t.List[str]]
     # NOTE: Pattern type-arg errors pydanic: https://github.com/samuelcolvin/pydantic/issues/2636
-    ignore_messages: typing.Optional[typing.Pattern]  # type: ignore[type-arg]
+    ignore_messages: t.Optional[t.Pattern]  # type: ignore[type-arg]
 
     @pydantic.validator("report_level", pre=True)
     @classmethod
-    def valid_report_level(cls, value: typing.Any) -> typing.Optional[ReportLevel]:  # noqa: ANN401
+    def valid_report_level(cls, value: t.Any) -> t.Optional[ReportLevel]:  # noqa: ANN401
         """Validate the report_level setting.
 
         :param value: Value to validate
@@ -94,7 +94,7 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         "ignore_directives", "ignore_roles", "ignore_substitutions", "ignore_languages", pre=True
     )
     @classmethod
-    def split_str(cls, value: typing.Any) -> typing.Optional[typing.List[str]]:  # noqa: ANN401
+    def split_str(cls, value: t.Any) -> t.Optional[t.List[str]]:  # noqa: ANN401
         """Validate and parse the following ignore_* settings.
 
         - ignore_directives
@@ -121,7 +121,7 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
 
     @pydantic.validator("ignore_messages", pre=True)
     @classmethod
-    def join_regex_str(cls, value: typing.Any) -> typing.Optional[str]:  # noqa: ANN401
+    def join_regex_str(cls, value: t.Any) -> t.Optional[str]:  # noqa: ANN401
         """Validate and concatenate the ignore_messages setting to a RegEx string.
 
         If a list ist given, the entries are concatenated with "|" to create an or RegEx.
@@ -149,8 +149,8 @@ class RstcheckConfig(RstcheckConfigFile):  # pylint: disable=too-few-public-meth
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    config_path: typing.Optional[pathlib.Path]
-    recursive: typing.Optional[bool]
+    config_path: t.Optional[pathlib.Path]
+    recursive: t.Optional[bool]
 
 
 class _RstcheckConfigINIFile(
@@ -171,7 +171,7 @@ class _RstcheckConfigINIFile(
     ignore_messages: pydantic.NoneStr = pydantic.Field(None)  # pylint: disable=no-member
 
 
-def _load_config_from_ini_file(ini_file: pathlib.Path) -> typing.Optional[RstcheckConfigFile]:
+def _load_config_from_ini_file(ini_file: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
     """Load, parse and validate rstcheck config from a ini file.
 
     :param ini_file: INI file to load config from
@@ -206,15 +206,15 @@ class _RstcheckConfigTOMLFile(
     :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
     """
 
-    report_level: typing.Optional[str] = pydantic.Field(None)
-    ignore_directives: typing.Optional[typing.List[str]] = pydantic.Field(None)
-    ignore_roles: typing.Optional[typing.List[str]] = pydantic.Field(None)
-    ignore_substitutions: typing.Optional[typing.List[str]] = pydantic.Field(None)
-    ignore_languages: typing.Optional[typing.List[str]] = pydantic.Field(None)
-    ignore_messages: typing.Optional[typing.Union[str, typing.List[str]]] = pydantic.Field(None)
+    report_level: t.Optional[str] = pydantic.Field(None)
+    ignore_directives: t.Optional[t.List[str]] = pydantic.Field(None)
+    ignore_roles: t.Optional[t.List[str]] = pydantic.Field(None)
+    ignore_substitutions: t.Optional[t.List[str]] = pydantic.Field(None)
+    ignore_languages: t.Optional[t.List[str]] = pydantic.Field(None)
+    ignore_messages: t.Optional[t.Union[str, t.List[str]]] = pydantic.Field(None)
 
 
-def _load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[RstcheckConfigFile]:
+def _load_config_from_toml_file(toml_file: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
     """Load, parse and validate rstcheck config from a TOML file.
 
     .. warning::
@@ -240,7 +240,7 @@ def _load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[Rstc
     with open(resolved_file, "rb") as toml_file_handle:
         toml_dict = tomli.load(toml_file_handle)
 
-    optional_rstcheck_section = typing.Optional[typing.Dict[str, typing.Any]]
+    optional_rstcheck_section = t.Optional[t.Dict[str, t.Any]]
     rstcheck_section: optional_rstcheck_section = toml_dict.get("tool", {}).get("rstcheck")
 
     if rstcheck_section is None:
@@ -252,7 +252,7 @@ def _load_config_from_toml_file(toml_file: pathlib.Path) -> typing.Optional[Rstc
     return config_values_parsed
 
 
-def load_config_file(file_path: pathlib.Path) -> typing.Optional[RstcheckConfigFile]:
+def load_config_file(file_path: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
     """Load, parse and validate rstcheck config from a file.
 
     .. caution::
@@ -269,7 +269,7 @@ def load_config_file(file_path: pathlib.Path) -> typing.Optional[RstcheckConfigF
     return _load_config_from_ini_file(file_path)
 
 
-def load_config_file_from_dir(dir_path: pathlib.Path) -> typing.Optional[RstcheckConfigFile]:
+def load_config_file_from_dir(dir_path: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
     """Search, load, parse and validate rstcheck config from a directory.
 
     Searches files from ``CONFIG_FILES`` in the directory. If a file is found, try to load the
@@ -291,7 +291,7 @@ def load_config_file_from_dir(dir_path: pathlib.Path) -> typing.Optional[Rstchec
     return config
 
 
-def load_config_file_from_dir_tree(dir_path: pathlib.Path) -> typing.Optional[RstcheckConfigFile]:
+def load_config_file_from_dir_tree(dir_path: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
     """Search, load, parse and validate rstcheck config from a directory tree.
 
     Searches files from ``CONFIG_FILES`` in the directory. If a file is found, try to load the
@@ -322,7 +322,7 @@ def load_config_file_from_dir_tree(dir_path: pathlib.Path) -> typing.Optional[Rs
 
 def load_config_file_from_path(
     path: pathlib.Path, *, search_dir_tree: bool = False
-) -> typing.Optional[RstcheckConfigFile]:
+) -> t.Optional[RstcheckConfigFile]:
     """Analyse the path and call the correct config file loader.
 
     :param path: Path to load config file from; can be a file or directory
@@ -347,7 +347,7 @@ def load_config_file_from_path(
 
 def merge_configs(
     config_base: RstcheckConfig,
-    config_add: typing.Union[RstcheckConfig, RstcheckConfigFile],
+    config_add: t.Union[RstcheckConfig, RstcheckConfigFile],
     *,
     config_add_is_dominant: bool = True,
 ) -> RstcheckConfig:
@@ -359,13 +359,13 @@ def merge_configs(
         defaults to True
     :return: New merged config
     """
-    sub_config: typing.Union[RstcheckConfig, RstcheckConfigFile] = config_base
+    sub_config: t.Union[RstcheckConfig, RstcheckConfigFile] = config_base
     sub_config_dict = sub_config.dict()
     for setting in dict(sub_config_dict):
         if sub_config_dict[setting] is None:
             del sub_config_dict[setting]
 
-    dom_config: typing.Union[RstcheckConfig, RstcheckConfigFile] = config_add
+    dom_config: t.Union[RstcheckConfig, RstcheckConfigFile] = config_add
     dom_config_dict = dom_config.dict()
     for setting in dict(dom_config_dict):
         if dom_config_dict[setting] is None:

@@ -12,7 +12,7 @@ import shlex
 import subprocess  # noqa: S404
 import sys
 import tempfile
-import typing
+import typing as t
 import xml.etree.ElementTree  # noqa: S405
 
 import docutils.core
@@ -32,7 +32,7 @@ def check_file(
     source_file: pathlib.Path,
     rstcheck_config: config.RstcheckConfig,
     overwrite_with_file_config: bool = True,
-) -> typing.List[types.LintError]:
+) -> t.List[types.LintError]:
     """Check the given file for issues.
 
     :param source_file: Path to file to check
@@ -106,10 +106,10 @@ def _get_source(source_file: pathlib.Path) -> str:
 
     resolved_file_path = source_file.resolve()
     with contextlib.closing(docutils.io.FileInput(source_path=resolved_file_path)) as input_file:
-        return typing.cast(str, input_file.read())
+        return t.cast(str, input_file.read())
 
 
-def _replace_ignored_substitutions(source: str, ignore_substitutions: typing.List[str]) -> str:
+def _replace_ignored_substitutions(source: str, ignore_substitutions: t.List[str]) -> str:
     """Replace rst substitutions from the ignore list with a dummy.
 
     :param source: Source to replace substitutions in
@@ -136,8 +136,8 @@ def _create_ignore_dict_from_config(rstcheck_config: config.RstcheckConfig) -> t
 
 def check_source(
     source: str,
-    source_file: typing.Optional[pathlib.Path] = None,
-    ignores: typing.Optional[types.IgnoreDict] = None,
+    source_file: t.Optional[pathlib.Path] = None,
+    ignores: t.Optional[types.IgnoreDict] = None,
     report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
 ) -> types.YieldedLintError:
     """Check the given rst source for issues.
@@ -217,7 +217,7 @@ class _CheckWriter(docutils.writers.Writer):
         self,
         source: str,
         source_origin: types.SourceFileOrString,
-        ignores: typing.Optional[types.IgnoreDict] = None,
+        ignores: t.Optional[types.IgnoreDict] = None,
         report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
     ) -> None:
         """Inititalize _CheckWriter.
@@ -228,7 +228,7 @@ class _CheckWriter(docutils.writers.Writer):
         :param report_level: Report level; defaults to config.DEFAULT_REPORT_LEVEL
         """
         docutils.writers.Writer.__init__(self)
-        self.checkers: typing.List[types.CheckerRunFunction] = []
+        self.checkers: t.List[types.CheckerRunFunction] = []
         self.source = source
         self.source_origin = source_origin
         self.ignores = ignores
@@ -255,7 +255,7 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         document: docutils.nodes.document,
         source: str,
         source_origin: types.SourceFileOrString,
-        ignores: typing.Optional[types.IgnoreDict] = None,
+        ignores: t.Optional[types.IgnoreDict] = None,
         report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
     ) -> None:
         """Inititalize _CheckTranslator.
@@ -267,7 +267,7 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         :param report_level: Report level; defaults to config.DEFAULT_REPORT_LEVEL
         """
         docutils.nodes.NodeVisitor.__init__(self, document)
-        self.checkers: typing.List[types.CheckerRunFunction] = []
+        self.checkers: t.List[types.CheckerRunFunction] = []
         self.source = source
         self.source_origin = source_origin
         self.ignores = ignores or types.IgnoreDict(messages=None, languages=[], directives=[])
@@ -424,7 +424,7 @@ class CodeBlockChecker:
     def __init__(
         self,
         source_origin: types.SourceFileOrString,
-        ignores: typing.Optional[types.IgnoreDict] = None,
+        ignores: t.Optional[types.IgnoreDict] = None,
         report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
     ) -> None:
         """Inititalize CodeBlockChecker.
@@ -462,8 +462,8 @@ class CodeBlockChecker:
         :return: None if language is not supported
         :yield: Found issues
         """
-        checker_function = typing.Callable[[str], types.YieldedLintError]
-        checker: typing.Optional[checker_function] = getattr(self, f"check_{language}", None)
+        checker_function = t.Callable[[str], types.YieldedLintError]
+        checker: t.Optional[checker_function] = getattr(self, f"check_{language}", None)
         if checker is None:
             return None
 
@@ -616,7 +616,7 @@ class CodeBlockChecker:
         )
 
     def _gcc_checker(
-        self, source_code: str, filename_suffix: str, arguments: typing.List[str]
+        self, source_code: str, filename_suffix: str, arguments: t.List[str]
     ) -> types.YieldedLintError:
         """Check code blockes using gcc (Helper function).
 
@@ -642,8 +642,8 @@ class CodeBlockChecker:
         self,
         code: str,
         filename_suffix: str,
-        arguments: typing.List[str],
-    ) -> typing.Optional[typing.Tuple[str, pathlib.Path]]:
+        arguments: t.List[str],
+    ) -> t.Optional[t.Tuple[str, pathlib.Path]]:
         """Run checker in a subprocess (Helper function).
 
         :param source_code: Source code to check
