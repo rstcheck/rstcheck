@@ -49,7 +49,6 @@ def check_file(
     )
 
     source = _get_source(source_file)
-    source = _replace_ignored_substitutions(source, run_config.ignore_substitutions or [])
 
     all_errors = []
     for error in check_source(
@@ -131,6 +130,7 @@ def _create_ignore_dict_from_config(rstcheck_config: config.RstcheckConfig) -> t
         messages=rstcheck_config.ignore_messages,
         languages=rstcheck_config.ignore_languages or [],
         directives=rstcheck_config.ignore_directives or [],
+        substitutions=rstcheck_config.ignore_substitutions or [],
     )
 
 
@@ -150,7 +150,11 @@ def check_source(
     :yield: Found issues
     """
     source_origin: types.SourceFileOrString = source_file or "<string>"
-    ignores = ignores or types.IgnoreDict(messages=None, languages=[], directives=[])
+    ignores = ignores or types.IgnoreDict(
+        messages=None, languages=[], directives=[], substitutions=[]
+    )
+
+    source = _replace_ignored_substitutions(source, ignores["substitutions"])
 
     _docutils.register_code_directive(
         ignore_code_directive="code" in ignores["directives"],
@@ -270,7 +274,9 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         self.checkers: t.List[types.CheckerRunFunction] = []
         self.source = source
         self.source_origin = source_origin
-        self.ignores = ignores or types.IgnoreDict(messages=None, languages=[], directives=[])
+        self.ignores = ignores or types.IgnoreDict(
+            messages=None, languages=[], directives=[], substitutions=[]
+        )
         self.report_level = report_level
         self.code_block_checker = CodeBlockChecker(source_origin, ignores, report_level)
 

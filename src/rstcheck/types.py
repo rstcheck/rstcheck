@@ -28,6 +28,7 @@ class IgnoreDict(_compat.TypedDict):
     messages: t.Optional[t.Pattern]  # type: ignore[type-arg]
     languages: t.List[str]
     directives: t.List[str]
+    substitutions: t.List[str]
 
 
 CheckerRunFunction = t.Callable[..., YieldedLintError]

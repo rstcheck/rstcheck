@@ -128,10 +128,12 @@ def test__create_ignore_dict_from_config() -> None:
     ignore_languages = ["python", "cpp"]
     ignore_messages = r"foo/bar"
     ignore_messages_re = re.compile(ignore_messages)
+    ignore_substitutions = ["substi"]
     test_config = config.RstcheckConfig(
         ignore_directives=ignore_directives,
         ignore_languages=ignore_languages,
         ignore_messages=ignore_messages,
+        ignore_substitutions=ignore_substitutions,
     )
 
     result = checker._create_ignore_dict_from_config(  # pylint: disable=protected-access
@@ -139,7 +141,10 @@ def test__create_ignore_dict_from_config() -> None:
     )
 
     assert result == types.IgnoreDict(
-        directives=ignore_directives, languages=ignore_languages, messages=ignore_messages_re
+        directives=ignore_directives,
+        languages=ignore_languages,
+        messages=ignore_messages_re,
+        substitutions=ignore_substitutions,
     )
 
 
@@ -203,6 +208,7 @@ Test
             messages=re.compile(r"Possible title underline, too short for the title"),
             languages=[],
             directives=[],
+            substitutions=[],
         )
 
         result = list(checker.check_source(source, ignores=ignores))
@@ -227,7 +233,10 @@ Test
 .. rstcheck: ignore-languages python
 """
         ignores = types.IgnoreDict(
-            messages=re.compile(r'Expected "key=value" syntax'), languages=[], directives=[]
+            messages=re.compile(r'Expected "key=value" syntax'),
+            languages=[],
+            directives=[],
+            substitutions=[],
         )
 
         result = list(checker.check_source(source, ignores=ignores))
@@ -291,6 +300,7 @@ Test
             messages=re.compile(r"unexpected EOF while parsing"),
             languages=[],
             directives=[],
+            substitutions=[],
         )
 
         result = list(checker.check_source(source, ignores=ignores))
@@ -324,6 +334,7 @@ Test
             messages=re.compile(r"unexpected EOF while parsing"),
             languages=[],
             directives=[],
+            substitutions=[],
         )
 
         result = list(checker.check_source(source, ignores=ignores))
