@@ -308,7 +308,7 @@ class TestRstcheckMainRunnerResultPrinter:
         init_config = config.RstcheckConfig()
         _runner = runner.RstcheckMainRunner([], init_config)
 
-        result = _runner.get_result()
+        result = _runner.print_result()
 
         assert result == 0
 
@@ -318,7 +318,7 @@ class TestRstcheckMainRunnerResultPrinter:
         init_config = config.RstcheckConfig()
         _runner = runner.RstcheckMainRunner([], init_config)
 
-        _runner.get_result()  # act
+        _runner.print_result()  # act
 
         assert "Success! No issues detected." in capsys.readouterr().out
 
@@ -331,7 +331,7 @@ class TestRstcheckMainRunnerResultPrinter:
         _runner = runner.RstcheckMainRunner([], init_config)
         with open(out_file, encoding="utf-8", mode="w") as out_file_handle:
 
-            _runner.get_result(output_file=out_file_handle)  # act
+            _runner.print_result(output_file=out_file_handle)  # act
 
         assert "Success! No issues detected." in out_file.read_text()
 
@@ -344,7 +344,7 @@ class TestRstcheckMainRunnerResultPrinter:
             types.LintError(source_origin="<string>", line_number=0, message="message")
         ]
 
-        result = _runner.get_result()
+        result = _runner.print_result()
 
         assert result == 1
 
@@ -357,7 +357,7 @@ class TestRstcheckMainRunnerResultPrinter:
             types.LintError(source_origin="<string>", line_number=0, message="message")
         ]
 
-        _runner.get_result()  # act
+        _runner.print_result()  # act
 
         assert "Success! No issues detected." not in capsys.readouterr()
 
@@ -370,7 +370,7 @@ class TestRstcheckMainRunnerResultPrinter:
             [[types.LintError(source_origin="<string>", line_number=0, message="Some error.")]]
         )
 
-        _runner.get_result()  # act
+        _runner.print_result()  # act
 
         assert "(ERROR/3) Some error" in capsys.readouterr().err
 
@@ -386,7 +386,7 @@ class TestRstcheckMainRunnerResultPrinter:
         )
         with open(out_file, encoding="utf-8", mode="w") as out_file_handle:
 
-            _runner.get_result(output_file=out_file_handle)  # act
+            _runner.print_result(output_file=out_file_handle)  # act
 
         assert "(ERROR/3) Some error" in out_file.read_text()
 
@@ -399,7 +399,7 @@ class TestRstcheckMainRunnerResultPrinter:
             [[types.LintError(source_origin="<string>", line_number=0, message="Some error.")]]
         )
 
-        _runner.get_result()  # act
+        _runner.print_result()  # act
 
         assert "(ERROR/3) Some error." in capsys.readouterr().err
 
@@ -418,6 +418,6 @@ class TestRstcheckMainRunnerResultPrinter:
             ]
         )
 
-        _runner.get_result()  # act
+        _runner.print_result()  # act
 
         assert "<string>:0: (ERROR/3) Some error." in capsys.readouterr().err

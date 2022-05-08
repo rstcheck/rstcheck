@@ -137,7 +137,7 @@ class RstcheckMainRunner:
         )
         self._update_results(results)
 
-    def get_result(self, output_file: t.Optional[t.TextIO] = None) -> int:
+    def print_result(self, output_file: t.Optional[t.TextIO] = None) -> int:
         """Print all cached error messages and return exit code.
 
         :param output_file: file to print to; defaults to sys.stderr (if ``None``)
@@ -166,4 +166,4 @@ class RstcheckMainRunner:
         :return: exit code 0 if no error is printed; 1 if any error is printed
         """
         self.check()
-        return self.get_result()
+        return self.print_result()

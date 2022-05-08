@@ -87,7 +87,7 @@ def cli(  # pylint: disable=too-many-arguments
         check_paths=files, rstcheck_config=rstcheck_config, overwrite_config=False
     )
     _runner.check()
-    exit_code = _runner.get_result()
+    exit_code = _runner.print_result()
     raise typer.Exit(code=exit_code)
 
 
