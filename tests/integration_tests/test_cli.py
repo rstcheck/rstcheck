@@ -228,9 +228,7 @@ def test_custom_directive_and_role_with_config_file(
     test_file = EXAMPLES_DIR / "custom" / "custom_directive_and_role.rst"
     config_file = EXAMPLES_DIR / "custom" / "rstcheck.custom.ini"
 
-    result = cli_runner.invoke(
-        cli_app, ["--config", str(config_file), str(test_file)]
-    )
+    result = cli_runner.invoke(cli_app, ["--config", str(config_file), str(test_file)])
 
     assert result.exit_code == 0
     assert "Success! No issues detected." in result.stdout
