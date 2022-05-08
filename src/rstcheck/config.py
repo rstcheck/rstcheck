@@ -3,6 +3,7 @@ import configparser
 import contextlib
 import enum
 import pathlib
+import re
 import typing as t
 
 import pydantic
@@ -121,17 +122,22 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
 
     @pydantic.validator("ignore_messages", pre=True)
     @classmethod
-    def join_regex_str(cls, value: t.Any) -> t.Optional[str]:  # noqa: ANN401
+    def join_regex_str(
+        cls, value: t.Any  # noqa: ANN401
+    ) -> t.Optional[t.Union[str, t.Pattern[str]]]:
         """Validate and concatenate the ignore_messages setting to a RegEx string.
 
         If a list ist given, the entries are concatenated with "|" to create an or RegEx.
 
         :param value: Value to validate
         :raises ValueError: If not a ``str`` or ``List[str]``
-        :return: A RegEx string with messages to ignore
+        :return: A RegEx string with messages to ignore or Pattern if it is one already
         """
         if value is None:
             return None
+
+        if isinstance(value, re.Pattern):
+            return value
 
         if isinstance(value, list) and all(isinstance(v, str) for v in value):
             return r"|".join(value)

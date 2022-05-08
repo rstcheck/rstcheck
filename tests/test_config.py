@@ -228,6 +228,14 @@ class TestJoinRegexStrValidator:
         assert result.ignore_messages is None
 
     @staticmethod
+    def test_passed_regex_is_kept() -> None:
+        """Test passing a regex."""
+        result = config.RstcheckConfigFile(ignore_messages=re.compile(""))
+
+        assert result is not None
+        assert isinstance(result.ignore_messages, re.Pattern)
+
+    @staticmethod
     def test_strings_are_parsed_as_regex() -> None:
         """Test strings are parsed as regex."""
         string = r"\d{4}\.[A-Z]+Test$"
