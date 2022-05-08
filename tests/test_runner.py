@@ -151,7 +151,7 @@ class TestRstcheckMainRunnerFileListUpdater:
 
         _runner.update_file_list()  # act
 
-        assert len(_runner.files_to_check) == 5
+        assert len(_runner.files_to_check) == 6
         assert EXAMPLES_DIR / "good" / "rst.rst" in _runner.files_to_check
 
     @staticmethod
