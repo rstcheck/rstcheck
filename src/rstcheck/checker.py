@@ -44,9 +44,6 @@ def check_file(
     """
     run_config = _load_run_config(source_file.parent, rstcheck_config, overwrite_with_file_config)
     ignore_dict = _create_ignore_dict_from_config(run_config)
-    _docutils.ignore_directives_and_roles(
-        run_config.ignore_directives or [], run_config.ignore_roles or []
-    )
 
     source = _get_source(source_file)
 
@@ -130,6 +127,7 @@ def _create_ignore_dict_from_config(rstcheck_config: config.RstcheckConfig) -> t
         messages=rstcheck_config.ignore_messages,
         languages=rstcheck_config.ignore_languages or [],
         directives=rstcheck_config.ignore_directives or [],
+        roles=rstcheck_config.ignore_roles or [],
         substitutions=rstcheck_config.ignore_substitutions or [],
     )
 
@@ -151,7 +149,7 @@ def check_source(
     """
     source_origin: types.SourceFileOrString = source_file or "<string>"
     ignores = ignores or types.IgnoreDict(
-        messages=None, languages=[], directives=[], substitutions=[]
+        messages=None, languages=[], directives=[], roles=[], substitutions=[]
     )
 
     source = _replace_ignored_substitutions(source, ignores["substitutions"])
@@ -161,6 +159,8 @@ def check_source(
         ignore_codeblock_directive="code-block" in ignores["directives"],
         ignore_sourcecode_directive="sourcecode" in ignores["directives"],
     )
+
+    _docutils.ignore_directives_and_roles(ignores["directives"] or [], ignores["roles"] or [])
 
     if _extras.SPHINX_INSTALLED:
         _sphinx.load_sphinx_ignores()
@@ -312,7 +312,7 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         self.source = source
         self.source_origin = source_origin
         self.ignores = ignores or types.IgnoreDict(
-            messages=None, languages=[], directives=[], substitutions=[]
+            messages=None, languages=[], directives=[], roles=[], substitutions=[]
         )
         self.report_level = report_level
         self.code_block_checker = CodeBlockChecker(source_origin, ignores, report_level)

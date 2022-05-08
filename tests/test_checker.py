@@ -124,15 +124,17 @@ def test__replace_ignored_substitutions() -> None:
 
 def test__create_ignore_dict_from_config() -> None:
     """Test ``_create_ignore_dict_from_config`` fucntion creates ignore dict."""
-    ignore_directives = ["code"]
-    ignore_languages = ["python", "cpp"]
     ignore_messages = r"foo/bar"
     ignore_messages_re = re.compile(ignore_messages)
+    ignore_languages = ["python", "cpp"]
+    ignore_directives = ["code"]
+    ignore_roles = ["role"]
     ignore_substitutions = ["substi"]
     test_config = config.RstcheckConfig(
-        ignore_directives=ignore_directives,
-        ignore_languages=ignore_languages,
         ignore_messages=ignore_messages,
+        ignore_languages=ignore_languages,
+        ignore_directives=ignore_directives,
+        ignore_roles=ignore_roles,
         ignore_substitutions=ignore_substitutions,
     )
 
@@ -141,9 +143,10 @@ def test__create_ignore_dict_from_config() -> None:
     )
 
     assert result == types.IgnoreDict(
-        directives=ignore_directives,
-        languages=ignore_languages,
         messages=ignore_messages_re,
+        languages=ignore_languages,
+        directives=ignore_directives,
+        roles=ignore_roles,
         substitutions=ignore_substitutions,
     )
 
@@ -208,6 +211,7 @@ Test
             messages=re.compile(r"Possible title underline, too short for the title"),
             languages=[],
             directives=[],
+            roles=[],
             substitutions=[],
         )
 
@@ -236,6 +240,7 @@ Test
             messages=re.compile(r'Expected "key=value" syntax'),
             languages=[],
             directives=[],
+            roles=[],
             substitutions=[],
         )
 
@@ -300,6 +305,7 @@ Test
             messages=re.compile(r"unexpected EOF while parsing"),
             languages=[],
             directives=[],
+            roles=[],
             substitutions=[],
         )
 
@@ -334,6 +340,7 @@ Test
             messages=re.compile(r"unexpected EOF while parsing"),
             languages=[],
             directives=[],
+            roles=[],
             substitutions=[],
         )
 
