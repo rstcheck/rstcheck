@@ -232,5 +232,5 @@ def test_custom_directive_and_role_with_config_file(
         cli_app, ["--config", str(config_file), str(test_file)]
     )
 
-    assert "Success! No issues detected." in result.stdout
     assert result.exit_code == 0
+    assert "Success! No issues detected." in result.stdout
