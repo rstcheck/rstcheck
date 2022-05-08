@@ -170,6 +170,12 @@ def check_source(
 
     string_io = io.StringIO()
 
+    # This is a hack to avoid false positive from docutils (#23). docutils mistakes BOMs for actual
+    # visible letters. This results in the "underline too short" warning firing.
+    # This is tested in the CLI integration tests with the `testing/examples/good/bom.rst` file.
+    with contextlib.suppress(UnicodeError):
+        source = source.encode("utf-8").decode("utf-8-sig")
+
     with contextlib.suppress(docutils.utils.SystemMessage, AttributeError):
         # Sphinx will sometimes throw an `AttributeError` trying to access
         # "self.state.document.settings.env". Ignore this for now until we
