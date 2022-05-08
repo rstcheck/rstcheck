@@ -37,6 +37,33 @@ def test_all_bad_examples(
     assert "Success! No issues detected." not in result.stdout
 
 
+def test_good_example_with_piping(
+    cli_app: typer.Typer,
+    cli_runner: typer.testing.CliRunner,
+) -> None:
+    """Test good example file piped into rstcheck."""
+    test_file = EXAMPLES_DIR / "good" / "code_blocks.rst"
+    test_file_content = test_file.read_text("utf-8")
+
+    result = cli_runner.invoke(cli_app, "-", input=test_file_content)
+
+    assert result.exit_code == 0
+
+
+def test_bad_example_with_piping(
+    cli_app: typer.Typer,
+    cli_runner: typer.testing.CliRunner,
+) -> None:
+    """Test bad example file piped into rstcheck."""
+    test_file = EXAMPLES_DIR / "bad" / "rst.rst"
+    test_file_content = test_file.read_text("utf-8")
+
+    result = cli_runner.invoke(cli_app, "-", input=test_file_content)
+
+    assert result.exit_code != 0
+    assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 1
+
+
 def test_custom_directive_and_role(
     cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
 ) -> None:
