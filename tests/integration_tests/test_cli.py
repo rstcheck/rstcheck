@@ -54,7 +54,6 @@ def test_all_good_examples(
 
     assert result.exit_code == 0
     assert "Success! No issues detected." in result.stdout
-    assert ERROR_CODE_REGEX.search(result.stdout) is None
 
 
 @pytest.mark.parametrize("test_file", list(TESTING_DIR.glob("examples/bad/*.rst")))
@@ -68,7 +67,6 @@ def test_all_bad_examples(
 
     assert result.exit_code != 0
     assert ERROR_CODE_REGEX.search(result.stdout) is not None
-    assert "Success! No issues detected." not in result.stdout
 
 
 def test_good_example_with_piping(
