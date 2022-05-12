@@ -35,6 +35,8 @@ def check_file(
 ) -> t.List[types.LintError]:
     """Check the given file for issues.
 
+    On every call docutils' caches for roles and directives are cleared by reloading their modules.
+
     :param source_file: Path to file to check
     :param rstcheck_config: Main configuration of the application
     :param overwrite_with_file_config: If the loaded file config should overwrite the
