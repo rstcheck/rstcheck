@@ -1,4 +1,5 @@
 """Docutils helper functions."""
+import importlib
 import typing as t
 
 import docutils.nodes
@@ -31,6 +32,17 @@ def ignore_role(
     """Stub for unknown roles."""
     # pylint: disable=unused-argument,too-many-arguments
     return ([], [])
+
+
+def clean_docutils_directives_and_roles_cache() -> None:  # pragma: no cover
+    """Clean docutils' directives and roles cache by reloading their modules.
+
+    Reloads:
+    - docutils.parsers.rst.directives
+    - docutils.parsers.rst.roles
+    """
+    importlib.reload(docutils.parsers.rst.directives)
+    importlib.reload(docutils.parsers.rst.roles)
 
 
 def ignore_directives_and_roles(directives: t.List[str], roles: t.List[str]) -> None:

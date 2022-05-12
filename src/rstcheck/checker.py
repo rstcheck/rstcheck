@@ -47,14 +47,19 @@ def check_file(
 
     source = _get_source(source_file)
 
-    all_errors = []
-    for error in check_source(
-        source,
-        source_file=source_file,
-        ignores=ignore_dict,
-        report_level=run_config.report_level or config.DEFAULT_REPORT_LEVEL,
-    ):
-        all_errors.append(error)
+    _docutils.clean_docutils_directives_and_roles_cache()
+
+    with _sphinx.load_sphinx_if_available():
+
+        all_errors = []
+        for error in check_source(
+            source,
+            source_file=source_file,
+            ignores=ignore_dict,
+            report_level=run_config.report_level or config.DEFAULT_REPORT_LEVEL,
+        ):
+            all_errors.append(error)
+
     return all_errors
 
 

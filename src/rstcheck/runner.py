@@ -6,7 +6,7 @@ import re
 import sys
 import typing as t
 
-from . import _sphinx, checker, config, types
+from . import checker, config, types
 
 
 class RstcheckMainRunner:
@@ -96,11 +96,10 @@ class RstcheckMainRunner:
 
         :return: List of lists of errors found per file
         """
-        with _sphinx.load_sphinx_if_available():
-            results = [
-                checker.check_file(file, self.config, self.overwrite_config)
-                for file in self.files_to_check
-            ]
+        results = [
+            checker.check_file(file, self.config, self.overwrite_config)
+            for file in self.files_to_check
+        ]
         return results
 
     def _run_checks_parallel(self) -> t.List[t.List[types.LintError]]:
@@ -108,7 +107,7 @@ class RstcheckMainRunner:
 
         :return: List of lists of errors found per file
         """
-        with _sphinx.load_sphinx_if_available(), multiprocessing.Pool(self._pool_size) as pool:
+        with multiprocessing.Pool(self._pool_size) as pool:
             results = pool.starmap(
                 checker.check_file,
                 [(file, self.config, self.overwrite_config) for file in self.files_to_check],
