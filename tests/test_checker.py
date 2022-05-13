@@ -3,6 +3,7 @@
 import os
 import pathlib
 import re
+import shlex
 import sys
 from inspect import isfunction
 
@@ -872,7 +873,12 @@ int main()
 
         result = list(
             cb_checker._gcc_checker(  # pylint: disable=protected-access
-                source, ".cpp", [os.getenv("CXX", "g++")]
+                source,
+                ".cpp",
+                [os.getenv("CXX", "g++")]
+                + shlex.split(os.getenv("CXXFLAGS", ""))
+                + shlex.split(os.getenv("CPPFLAGS", ""))
+                + ["-I.", "-I..", "-pedantic", "-fsyntax-only"],
             )
         )
 
@@ -892,7 +898,12 @@ int main()
 
         result = list(
             cb_checker._gcc_checker(  # pylint: disable=protected-access
-                source, ".cpp", [os.getenv("CXX", "g++")]
+                source,
+                ".cpp",
+                [os.getenv("CXX", "g++")]
+                + shlex.split(os.getenv("CXXFLAGS", ""))
+                + shlex.split(os.getenv("CPPFLAGS", ""))
+                + ["-I.", "-I..", "-pedantic", "-fsyntax-only"],
             )
         )
 
@@ -912,7 +923,12 @@ int main()
 
         result = list(
             cb_checker._gcc_checker(  # pylint: disable=protected-access
-                source, ".cpp", [os.getenv("CXX", "g++")]
+                source,
+                ".cpp",
+                [os.getenv("CXX", "g++")]
+                + shlex.split(os.getenv("CXXFLAGS", ""))
+                + shlex.split(os.getenv("CPPFLAGS", ""))
+                + ["-I.", "-I..", "-pedantic", "-fsyntax-only"],
             )
         )
 
@@ -932,7 +948,12 @@ int main()
 
         result = list(
             cb_checker._gcc_checker(  # pylint: disable=protected-access
-                source, ".cpp", [os.getenv("CXX", "g++")]
+                source,
+                ".cpp",
+                [os.getenv("CXX", "g++")]
+                + shlex.split(os.getenv("CXXFLAGS", ""))
+                + shlex.split(os.getenv("CPPFLAGS", ""))
+                + ["-I.", "-I..", "-pedantic", "-fsyntax-only"],
             )
         )
 
@@ -953,7 +974,12 @@ int main()
         cb_checker = checker.CodeBlockChecker("<string>")
 
         result = cb_checker._run_in_subprocess(  # pylint: disable=protected-access
-            source, ".cpp", [os.getenv("CXX", "g++")]
+            source,
+            ".cpp",
+            [os.getenv("CXX", "g++")]
+            + shlex.split(os.getenv("CXXFLAGS", ""))
+            + shlex.split(os.getenv("CPPFLAGS", ""))
+            + ["-I.", "-I..", "-pedantic", "-fsyntax-only"],
         )
 
         assert not result
@@ -971,7 +997,12 @@ int main()
         cb_checker = checker.CodeBlockChecker("<string>")
 
         result = cb_checker._run_in_subprocess(  # pylint: disable=protected-access
-            source, ".cpp", [os.getenv("CXX", "g++")]
+            source,
+            ".cpp",
+            [os.getenv("CXX", "g++")]
+            + shlex.split(os.getenv("CXXFLAGS", ""))
+            + shlex.split(os.getenv("CPPFLAGS", ""))
+            + ["-I.", "-I..", "-pedantic", "-fsyntax-only"],
         )
 
         assert result is not None
@@ -991,7 +1022,12 @@ int main()
         cb_checker = checker.CodeBlockChecker("<string>")
 
         result = cb_checker._run_in_subprocess(  # pylint: disable=protected-access
-            source, ".cpp", [os.getenv("CXX", "g++")]
+            source,
+            ".cpp",
+            [os.getenv("CXX", "g++")]
+            + shlex.split(os.getenv("CXXFLAGS", ""))
+            + shlex.split(os.getenv("CPPFLAGS", ""))
+            + ["-I.", "-I..", "-pedantic", "-fsyntax-only"],
         )
 
         assert result is not None
@@ -1011,7 +1047,12 @@ int main()
         cb_checker = checker.CodeBlockChecker("<string>")
 
         result = cb_checker._run_in_subprocess(  # pylint: disable=protected-access
-            source, ".cpp", [os.getenv("CXX", "g++")]
+            source,
+            ".cpp",
+            [os.getenv("CXX", "g++")]
+            + shlex.split(os.getenv("CXXFLAGS", ""))
+            + shlex.split(os.getenv("CPPFLAGS", ""))
+            + ["-I.", "-I..", "-pedantic", "-fsyntax-only"],
         )
 
         assert result is not None
@@ -1031,7 +1072,12 @@ int main()
         cb_checker = checker.CodeBlockChecker(pathlib.Path("filename.cpp"))
 
         result = cb_checker._run_in_subprocess(  # pylint: disable=protected-access
-            source, ".cpp", [os.getenv("CXX", "g++")]
+            source,
+            ".cpp",
+            [os.getenv("CXX", "g++")]
+            + shlex.split(os.getenv("CXXFLAGS", ""))
+            + shlex.split(os.getenv("CPPFLAGS", ""))
+            + ["-I.", "-I..", "-pedantic", "-fsyntax-only"],
         )
 
         assert result is not None
@@ -1051,7 +1097,12 @@ int main()
         cb_checker = checker.CodeBlockChecker(pathlib.Path("filename.cpp"))
 
         result = cb_checker._run_in_subprocess(  # pylint: disable=protected-access
-            source, ".cpp", [os.getenv("CXX", "g++")]
+            source,
+            ".cpp",
+            [os.getenv("CXX", "g++")]
+            + shlex.split(os.getenv("CXXFLAGS", ""))
+            + shlex.split(os.getenv("CPPFLAGS", ""))
+            + ["-I.", "-I..", "-pedantic", "-fsyntax-only"],
         )
 
         assert result is not None
@@ -1071,7 +1122,12 @@ int main()
         cb_checker = checker.CodeBlockChecker(pathlib.Path("filename.cpp"))
 
         result = cb_checker._run_in_subprocess(  # pylint: disable=protected-access
-            source, ".cpp", [os.getenv("CXX", "g++")]
+            source,
+            ".cpp",
+            [os.getenv("CXX", "g++")]
+            + shlex.split(os.getenv("CXXFLAGS", ""))
+            + shlex.split(os.getenv("CPPFLAGS", ""))
+            + ["-I.", "-I..", "-pedantic", "-fsyntax-only"],
         )
 
         assert result is not None
