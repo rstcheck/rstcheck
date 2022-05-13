@@ -405,6 +405,7 @@ History
 - Accumulate all errors in rst source instead of only one (#83)
 - Fix Malformed tables because of substitutions (#82)
 - Fix: remove ``include`` directive from ignore list when sphinx is active (#70)
+- Allow errors in code blocks to be ignored via ignore_messages (#100)
 
 
 .. _beaking_changes_v6:
@@ -412,6 +413,18 @@ History
 BREAKING CHANGES
 ~~~~~~~~~~~~~~~~
 
+- Full restructuring of the code base (#100)
+- Rewrite of CLI with ``typer`` (#100)
+- Renamed config ``report`` to ``report_level`` (#100)
+- Renamed config ``ignore_language`` to ``ignore_languages`` (#100)
+- Renamed CLI option ``--ignore-language`` to ``--ignore-languages`` (#100)
+- Drop CLI option ``--ignore`` as alias to ``--ignore-languages`` (#100)
+- Drop CLI option ``--debug`` (#100)
+- Drop CLI option ``--version``; may be readded later (#100)
+- Don't support multiline strings in INI files (#100)
+- Allow a string or list of strings for ``ignore_messages`` in TOML config files (#100)
+- Prohibit numbers as report level (#100)
+- Non-existing files are skipped; ``rstcheck non-existing-file.rst`` exits 0; may be changed later (#100)
 - Drop support for sphinx < 2.0
 - Drop default values for directves and roles for sphinx (#65)
 - CLI options now take precedence over config file options (#96)
