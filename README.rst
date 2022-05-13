@@ -13,6 +13,9 @@ rstcheck
 Checks syntax of reStructuredText and code blocks nested within it.
 
 
+.. note:: Documentation will be updated soon.
+
+
 .. contents::
 
 
@@ -99,48 +102,59 @@ With bad syntax in the reStructuredText document itself:
 Options
 =======
 
+If ``sphinx`` and ``tomli`` are installed:
+
 .. code:: text
 
-    usage: rstcheck [-h] [--config CONFIG] [-r] [--report level]
-                    [--ignore-language language] [--ignore-messages messages]
-                    [--ignore-directives directives]
-                    [--ignore-substitutions substitutions] [--ignore-roles roles]
-                    [--debug] [--version]
-                    files [files ...]
+    Usage: rstcheck [OPTIONS] FILES...
 
-    Checks code blocks in reStructuredText. Sphinx is enabled.
+    CLI of rstcheck.
 
-    positional arguments:
-      files                 files to check
+    Enabled features: ['Sphinx', 'Toml']
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      --config CONFIG       location of config file
-      -r, --recursive       run recursively over directories
-      --report level        report system messages at or higher than level; info,
-                            warning, error, severe, none (default: info)
-      --ignore-language language, --ignore language
-                            comma-separated list of languages to ignore
-      --ignore-messages messages
-                            python regex that match the messages to ignore
-      --ignore-directives directives
-                            comma-separated list of directives to ignore
-      --ignore-substitutions substitutions
-                            comma-separated list of substitutions to ignore
-      --ignore-roles roles  comma-separated list of roles to ignore
-      --debug               show messages helpful for debugging
-      --version             show program's version number and exit
+    Arguments:
+    FILES...  RST files to check. Can be files or directories if --recursive is
+                passed too.  [required]
+
+    Options:
+    --config PATH                Config file to load. Can be a INI or TOML file
+                                or directory. If a directory is passed it will
+                                be searched for .rstcheck.cfg | pyproject.toml
+                                | setup.cfg.
+    -r, --recursive              Recursively search passed directories for RST
+                                files to check.
+    --report-level LEVEL         The report level of the linting issues found.
+                                Valid levels are: INFO | WARNING | ERROR |
+                                SEVERE | NONE. Defauls to INFO. Can be set in
+                                config file.
+    --ignore-directives TEXT     Comma-separated-list of directives to add to
+                                the ignore list. Can be set in config file.
+    --ignore-roles TEXT          Comma-separated-list of roles to add to the
+                                ignore list. Can be set in config file.
+    --ignore-substitutions TEXT  Comma-separated-list of substitutions to add to
+                                the ignore list. Can be set in config file.
+    --ignore-languages TEXT      Comma-separated-list of languages for code-
+                                blocks to add to the ignore list. The code in
+                                ignored code-blocks will not be checked for
+                                errors. Can be set in config file.
+    --ignore-messages REGEX      A regular expression to match linting issue
+                                messages against to ignore. Can be set in
+                                config file.
+    --install-completion         Install completion for the current shell.
+    --show-completion            Show completion for the current shell, to copy
+                                it or customize the installation.
+    --help                       Show this message and exit.
 
 
 Ignore specific languages
 =========================
 
 You can ignore checking of nested code blocks by language. Either use the
-command-line option ``--ignore`` or put a comment in the document:
+command-line option ``--ignore-languages`` or put a comment in the document:
 
 .. code:: rst
 
-    .. rstcheck: ignore-language=cpp,python,rst
+    .. rstcheck: ignore-languages=cpp,python,rst
 
 
 Ignore specific errors
@@ -187,7 +201,7 @@ For example, consider a project with the following directory structure
     ignore_directives=one,two,three
     ignore_roles=src,RFC
     ignore_messages=(Document or section may not begin with a transition\.$)
-    report=warning
+    report_level=warning
 
 ``bar.rst`` contains:
 
@@ -239,8 +253,6 @@ any of its ancestors for a file ``.rstcheck.cfg`` or ``setup.cfg``
 
 would use the project configuration in ``./foo/.rstcheck.cfg`` to check the
 unrelated file ``/tmp/bar.rst``.
-Calling ``rstcheck`` with the ``--debug`` option will show the location of the
-config file that is being used, if any.
 
 .. _distutils configuration file: https://docs.python.org/3/distutils/configfile.html
 
@@ -363,7 +375,7 @@ Unit tests are in ``tests/test_rstcheck.py``.
 System tests are in ``tests/test_as_cli_tool.py``.
 
 System tests are composed of example good/bad input. The test inputs are
-contained in the ``examples`` directory. For basic tests, adding a test should
+contained in the ``testing/examples`` directory. For basic tests, adding a test should
 just be a matter of adding files to ``examples/good`` or ``examples/bad``.
 
 To run all the tests you have three options
@@ -552,4 +564,4 @@ BREAKING CHANGES
 - Initial version.
 
 
-.. rstcheck: ignore-language=cpp,python,rst
+.. rstcheck: ignore-languages=cpp,python,rst
