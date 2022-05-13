@@ -273,7 +273,7 @@ Test
         assert not result
 
     @staticmethod
-    @pytest.mark.skipif(sys.version_info > (3, 9), reason="Requires python3.9 or lower")
+    @pytest.mark.skipif(sys.version_info[0:2] > (3, 9), reason="Requires python3.9 or lower")
     def test_code_block_lint_error_returned_on_default_ignore_pre310() -> None:
         """Test code lint error is returned with default ignores.
 
@@ -290,7 +290,7 @@ Test
         assert "unexpected EOF while parsing" in result[0]["message"]
 
     @staticmethod
-    @pytest.mark.skipif(sys.version_info > (3, 9), reason="Requires python3.9 or lower")
+    @pytest.mark.skipif(sys.version_info[0:2] > (3, 9), reason="Requires python3.9 or lower")
     def test_code_block_lint_error_on_set_ignore_not_ignored_pre310() -> None:
         """Test code lint error is not skipped with set ignores.
 
@@ -499,7 +499,7 @@ print("rstcheck")
         assert not result
 
     @staticmethod
-    @pytest.mark.skipif(sys.version_info > (3, 9), reason="Requires python3.9 or lower")
+    @pytest.mark.skipif(sys.version_info[0:2] > (3, 9), reason="Requires python3.9 or lower")
     def test_check_returns_error_on_bad_code_block_for_supported_lang_pre310() -> None:
         """Test ``check`` returns error on bad code block for supported language.
 
@@ -540,7 +540,7 @@ print("rstcheck")
         assert not result
 
     @staticmethod
-    @pytest.mark.skipif(sys.version_info > (3, 9), reason="Requires python3.9 or lower")
+    @pytest.mark.skipif(sys.version_info[0:2] > (3, 9), reason="Requires python3.9 or lower")
     def test_check_python_returns_error_on_bad_code_block_pre310() -> None:
         """Test ``check_python`` returns error on bad code block.
 
