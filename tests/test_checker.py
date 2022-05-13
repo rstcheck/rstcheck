@@ -337,7 +337,7 @@ Test
     print(
 """
         ignores = types.IgnoreDict(
-            messages=re.compile(r"unexpected EOF while parsing"),
+            messages=re.compile(r"'\(' was never closed"),
             languages=[],
             directives=[],
             roles=[],
