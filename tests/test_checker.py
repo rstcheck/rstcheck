@@ -743,7 +743,7 @@ float foo(int n)
 
     @staticmethod
     @pytest.mark.skipif(sys.platform != "linux", reason="Linux specific error message")
-    def test_check_c_returns_error_on_bad_code_block_linx() -> None:
+    def test_check_c_returns_error_on_bad_code_block_linux() -> None:
         """Test ``check_c`` returns error on bad code block."""
         source = """
 int main()
@@ -789,7 +789,7 @@ int main()
 
         result = list(cb_checker.check_c(source))
 
-        assert "ERROR" in result[0]["message"]
+        assert "error: 'x' undeclared (first use in this function)" in result[0]["message"]
 
     @staticmethod
     def test_check_cpp_returns_none_on_ok_code_block() -> None:
@@ -855,7 +855,7 @@ int main()
 
         result = list(cb_checker.check_cpp(source))
 
-        assert "ERROR: \u2018x\u2019 was not declared in this scope" in result[0]["message"]
+        assert "error: 'x' was not declared in this scope" in result[0]["message"]
 
     @staticmethod
     def test__gcc_checker_returns_none_on_ok_cpp_code_block() -> None:
@@ -886,7 +886,7 @@ int main()
 
     @staticmethod
     @pytest.mark.skipif(sys.platform != "linux", reason="Linux specific error message")
-    def test__gcc_checker_returns_error_on_bad_cpp_code_block_linx() -> None:
+    def test__gcc_checker_returns_error_on_bad_cpp_code_block_linux() -> None:
         """Test ``_gcc_checker`` returns error on bad c++ code block."""
         source = """
 int main()
@@ -957,7 +957,7 @@ int main()
             )
         )
 
-        assert "ERROR" in result[0]["message"]
+        assert "error: 'x' undeclared (first use in this function)" in result[0]["message"]
 
     @staticmethod
     def test__run_in_subprocess_returns_none_on_ok_cpp_code_block() -> None:
@@ -1056,7 +1056,7 @@ int main()
         )
 
         assert result is not None
-        assert "ERROR" in result[0]
+        assert "error: 'x' undeclared (first use in this function)" in result[0]
         assert result[1].suffix == ".cpp"
 
     @staticmethod
@@ -1131,7 +1131,7 @@ int main()
         )
 
         assert result is not None
-        assert "ERROR" in result[0]
+        assert "error: 'x' undeclared (first use in this function)" in result[0]
         assert result[1].suffix == ".cpp"
 
     @staticmethod
