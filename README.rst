@@ -13,7 +13,7 @@ rstcheck
 Checks syntax of reStructuredText and code blocks nested within it.
 
 
-.. note:: Documentation will be updated soon.
+***Documentation will be updated soon.***
 
 
 .. contents::
