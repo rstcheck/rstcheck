@@ -707,9 +707,16 @@ class CodeBlockChecker:
         if isinstance(source_origin_path, str):
             source_origin_path = pathlib.Path(source_origin_path)
 
-        with tempfile.NamedTemporaryFile(mode="wb", suffix=filename_suffix) as temporary_file:
+        # NOTE: On windows a file cannot be opened twice.
+        # Therefore close it before using it in subprocess.
+        temporary_file = tempfile.NamedTemporaryFile(  # pylint: disable=consider-using-with
+            mode="wb", suffix=filename_suffix, delete=False
+        )
+        temporary_file_path = pathlib.Path(temporary_file.name)
+        try:
             temporary_file.write(code.encode("utf-8"))
             temporary_file.flush()
+            temporary_file.close()
 
             result = subprocess.run(  # pylint: disable=subprocess-run-check # noqa: S603
                 arguments + [temporary_file.name],
@@ -718,8 +725,10 @@ class CodeBlockChecker:
             )
 
             if result.returncode != 0:
-                return (result.stderr.decode(get_encoding()), pathlib.Path(temporary_file.name))
+                return (result.stderr.decode(get_encoding()), temporary_file_path)
             return None
+        finally:
+            temporary_file_path.unlink()
 
 
 def _parse_gcc_style_error_message(
