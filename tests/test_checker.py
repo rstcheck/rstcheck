@@ -957,7 +957,7 @@ int main()
             )
         )
 
-        assert "error: 'x' undeclared (first use in this function)" in result[0]["message"]
+        assert "error: 'x' was not declared in this scope" in result[0]["message"]
 
     @staticmethod
     def test__run_in_subprocess_returns_none_on_ok_cpp_code_block() -> None:
@@ -1056,7 +1056,7 @@ int main()
         )
 
         assert result is not None
-        assert "error: 'x' undeclared (first use in this function)" in result[0]
+        assert "error: 'x' was not declared in this scope" in result[0]
         assert result[1].suffix == ".cpp"
 
     @staticmethod
@@ -1131,7 +1131,7 @@ int main()
         )
 
         assert result is not None
-        assert "error: 'x' undeclared (first use in this function)" in result[0]
+        assert "error: 'x' was not declared in this scope" in result[0]
         assert result[1].suffix == ".cpp"
 
     @staticmethod
