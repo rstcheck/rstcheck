@@ -1,5 +1,6 @@
 """Integration test for the CLI."""
 import pathlib
+import sys
 
 import pytest
 import typer
@@ -231,6 +232,7 @@ class TestWithoutConfigFile:
     """Test without config file in dir tree."""
 
     @staticmethod
+    @pytest.mark.skipif(sys.platform == "darwin", reason="MacOS specific variant exists")
     def test_error_without_config_file(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
     ) -> None:
@@ -241,6 +243,23 @@ class TestWithoutConfigFile:
 
         assert result.exit_code != 0
         assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 6
+
+    @staticmethod
+    @pytest.mark.skipif(sys.platform != "darwin", reason="MacOS specific error count")
+    def test_error_without_config_file_macos(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test bad example without set config file and implicit config file shows errors.
+
+        On MacOS the cpp code block generates an additional error compared to linux:
+        ``(ERROR/3) (cpp) warning: no newline at end of file [-Wnewline-eof]``
+        """
+        test_file = EXAMPLES_DIR / "without_configuration" / "bad.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code != 0
+        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 7
 
     @staticmethod
     def test_no_error_with_set_ini_config_file(
@@ -284,6 +303,7 @@ class TestWithConfigFile:
     """Test with config file in dir tree."""
 
     @staticmethod
+    @pytest.mark.skipif(sys.platform == "darwin", reason="MacOS specific variant exists")
     def test_file_1_is_bad_without_config(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
     ) -> None:
@@ -295,6 +315,24 @@ class TestWithConfigFile:
 
         assert result.exit_code != 0
         assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 6
+
+    @staticmethod
+    @pytest.mark.skipif(sys.platform != "darwin", reason="MacOS specific error count")
+    def test_file_1_is_bad_without_config_macos(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test bad file ``bad.rst`` without config file is not ok.
+
+        On MacOS the cpp code block generates an additional error compared to linux:
+        ``(ERROR/3) (cpp) warning: no newline at end of file [-Wnewline-eof]``
+        """
+        test_file = EXAMPLES_DIR / "with_configuration" / "bad.rst"
+        config_file = "no-config-file"
+
+        result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
+
+        assert result.exit_code != 0
+        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 7
 
     @staticmethod
     def test_file_2_is_bad_without_config(
