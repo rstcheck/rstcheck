@@ -291,8 +291,8 @@ Test
 
     @staticmethod
     @pytest.mark.skipif(sys.version_info[0:2] > (3, 9), reason="Requires python3.9 or lower")
-    def test_code_block_lint_error_on_set_ignore_not_ignored_pre310() -> None:
-        """Test code lint error is not skipped with set ignores.
+    def test_code_block_no_error_on_set_ignore_pre310() -> None:
+        """Test code lint error is skipped with set ignores.
 
         In Python version 3.10 the error messag changed.
         """
@@ -311,7 +311,7 @@ Test
 
         result = list(checker.check_source(source, ignores=ignores))
 
-        assert "unexpected EOF while parsing" in result[0]["message"]
+        assert not result
 
     @staticmethod
     @pytest.mark.skipif(sys.version_info < (3, 10), reason="Requires python3.10 or higher")
@@ -329,8 +329,8 @@ Test
 
     @staticmethod
     @pytest.mark.skipif(sys.version_info < (3, 10), reason="Requires python3.10 or higher")
-    def test_code_block_lint_error_on_set_ignore_not_ignored() -> None:
-        """Test code lint error is not skipped with set ignores."""
+    def test_code_block_no_error_on_set_ignore() -> None:
+        """Test code lint error is skipped with set ignores."""
         source = """
 .. code:: python
 
@@ -346,7 +346,7 @@ Test
 
         result = list(checker.check_source(source, ignores=ignores))
 
-        assert "'(' was never closed" in result[0]["message"]
+        assert not result
 
 
 class TestCodeCheckRunner:
