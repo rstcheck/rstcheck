@@ -14,28 +14,39 @@ readme = "README.rst"
 classifiers = ["Topic :: Software Development :: Quality Assurance"]
 keywords = ["restructuredtext", "rst", "linter", "static-analysis"]
 packages = [
-  { include = "rstcheck" },
+  { include = "rstcheck", from = "src" },
   { include = "tests", format = "sdist" },
   { include = "AUTHORS.rst", format = "sdist" },
 ]
-include = ["examples"]
+include = ["testing"]
 
 [tool.poetry.scripts]
-rstcheck = "rstcheck:main"
+rstcheck = "rstcheck.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-docutils = ">=0.7,<0.19"
-types-docutils = ">=0.18,<0.19"
-typing-extensions = ">=4.1,<5"
-sphinx = {version = ">=4,<5", optional = true}
-pytest = { version = ">=6", optional = true }
-pytest-xdist = { version = ">=2.5", extras = ["psutil"], optional = true }
+# EXTRA sphinx
+sphinx = {version = ">=4.0, <5.0", optional = true}
+# EXTRA toml
+tomli = { version = ">=2.0, <3.0", optional = true }
+# EXTRA testing
+pytest = { version = ">=6.0", optional = true }
+pytest-cov = {version = ">=3.0", optional = true}
+coverage = {extras = ["toml"], version = ">=6.0", optional = true}
+coverage-conditional-plugin = { version = ">=0.5", optional = true }
 # TODO:#i# wait for new release
 # pytest-sugar = { version = ">=0.9.5", optional = true }
 pytest-sugar = { git = "https://github.com/Teemu/pytest-sugar.git", rev = "ee02ada200026f4bfabf2252c6c59b08f5564255", optional = true }
-pytest-randomly = { version = ">=3", optional = true }
-tomli = { version = "^2.0.1", optional = true }
+pytest-randomly = { version = ">=3.0", optional = true }
+pytest-mock = {version = ">=3.7", optional = true}
+mock = {version = ">=4.0", optional = true}
+# MAIN DEPENDENCIES
+importlib-metadata = {version = ">=1.6, <5.0", python = "<3.8"}
+typing-extensions = {version = ">=3.7.4, <5.0", python = "<3.8"}
+docutils = ">=0.7, <0.19"
+types-docutils = ">=0.18, <0.19"
+pydantic = ">=1.2, <2.0"
+typer = {extras = ["all"], version = ">=0.3.2, <0.5"}
 
 [tool.poetry.dev-dependencies]
 pre-commit = ">=2.17"
@@ -43,16 +54,21 @@ tox = ">=3.15"
 my-flake8-plugins = { git = "https://github.com/cielquan/my-flake8-plugins.git", rev = "v1.2.2", extras= ["flakeheaven"], optional = true }
 pylint = ">=2.12"
 mypy = ">=0.931"
-pytest = ">=6"
+pytest = ">=6.0"
 
 [tool.poetry.extras]
 sphinx = ["sphinx"]
 toml = ["tomli"]
 testing = [
   "pytest",
+  "pytest-cov",
+  "coverage",
+  "coverage-conditional-plugin",
   "pytest-xdist",
   "pytest-sugar",
   "pytest-randomly",
+  "pytest-mock",
+  "mock",
 ]
 
 
@@ -79,7 +95,17 @@ warn_unused_ignores = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_unreachable = true
-python_version = 3.7  # CHANGE ME
+disallow_any_generics = true
+check_untyped_defs = true
+implicit_reexport = false
+python_version = "3.10"  # CHANGE ME
+plugins = "pydantic.mypy"
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = false
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
 
 
 # -- FLAKEHEAVEN CONFIG ----------------------------------------------------------------
@@ -124,6 +150,58 @@ disable = [
   "W1203",  # Use % format in logger funcs | https://github.com/PyCQA/pylint/issues/2354
 ]
 
+
 # -- PYTEST CONFIG --------------------------------------------------------------------
 [tool.pytest.ini_options]
 addopts = "-ra --showlocals"
+mock_use_standalone_module = true
+
+
+# -- COVERAGE CONFIG ------------------------------------------------------------------
+[tool.coverage]
+[tool.coverage.run]
+plugins = ["coverage_conditional_plugin"]
+branch = true
+parallel = true
+context = "static-context"
+omit = [
+  "tests/*",
+]
+
+[tool.coverage.paths]
+tox_combine = [
+  "src/rstcheck",
+  "*/.tox/*/lib/python*/site-packages/rstcheck",
+  "*/.tox/pypy*/site-packages/rstcheck",
+  "*/.tox\\*\\Lib\\site-packages\\rstcheck",
+]
+local_combine = [
+  "src/rstcheck",
+  "*/.venv/lib/python*/site-packages/rstcheck",
+  "*/.venv\\*\\Lib\\site-packages\\rstcheck",
+  "*/src/rstcheck",
+  "*\\src\\rstcheck",
+]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+  "# pragma: no cover",
+  "if __name__ == ['\"]__main__['\"]:",
+  "def __str__",
+  "def __repr__",
+  "if self.debug:",
+  "if settings.DEBUG",
+  "if 0:",
+  "if False:",
+  "if TYPE_CHECKING:",
+  "if MYPY:",
+]
+
+[tool.coverage.html]
+show_contexts = true
+
+[tool.coverage.coverage_conditional_plugin.rules]
+# use with: # pragma: <KEY>
+py-gte-38 = "sys_version_info >= (3, 8)"
+py-gte-310 = "sys_version_info >= (3, 10)"

@@ -1,7 +1,10 @@
-.. my-directive::
+Subtitle
+-------
+
+.. custom-directive::
 
 
-:some-custom-thing:`testing`
+:custom-role:`testing`
 
 .. code:: cpp
 

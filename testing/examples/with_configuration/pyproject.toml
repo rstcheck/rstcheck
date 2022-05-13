@@ -1,15 +1,15 @@
 [tool.rstcheck]
 ignore_directives = [
 	"foobar",
-	"my-directive"
+	"custom-directive"
 ]
 ignore_roles = [
-	"some-custom-thing"
+	"custom-role"
 ]
 ignore_messages = [
-	"(Document or section may not begin with a transition\\.$)"
+	"(Title underline too short\\.$)"
 ]
-ignore_language = [
+ignore_languages = [
 	"cpp"
 ]
 report = "warning"

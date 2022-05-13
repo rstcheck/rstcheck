@@ -1,6 +1,9 @@
 ---
 name: QA
 
+env:
+  CI_FORCE_COLORS_PRE_COMMIT: --color always
+
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
 

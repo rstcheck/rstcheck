@@ -1,6 +1,10 @@
 ---
 name: Test code
 
+env:
+  CI_FORCE_COLORS_POETRY: --ansi
+  CI_FORCE_COLORS_PYTEST: --color yes
+
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
 
@@ -30,6 +34,10 @@ jobs:
         python-version: ["3.7", "3.8", "3.9", "3.10"]
     steps:
       - uses: actions/checkout@v3
+
+      - name: Fetch origin/main
+        #: https://github.com/Bachmann1234/diff_cover#troubleshooting
+        run: git fetch --no-tags origin master:refs/remotes/origin/master
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v3
