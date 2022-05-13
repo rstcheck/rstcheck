@@ -411,6 +411,10 @@ History
 (next version)
 --------------
 
+
+6.0.0a1 (2022-05-13)
+--------------------
+
 - Fix inability to ignore ``code``, ``code-block`` and ``sourcecode`` directives (#79)
 - Fix ``code-block`` options recognition (#62)
 - Add section with ``Known limitations / FAQ`` to the README (#97)
@@ -420,7 +424,7 @@ History
 - Allow errors in code blocks to be ignored via ignore_messages (#100)
 
 
-.. _beaking_changes_v6:
+.. _beaking_changes_v6a1:
 
 BREAKING CHANGES
 ~~~~~~~~~~~~~~~~

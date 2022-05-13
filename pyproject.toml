@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "rstcheck"
-version = "5.0.0"
+version = "6.0.0a1"
 description = "Checks syntax of reStructuredText and code blocks nested within it"
 authors = ["Steven Myint <git@stevenmyint.com>"]
 maintainers = ["Christian Riedel <cielquan@protonmail.com>"]
