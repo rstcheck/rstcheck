@@ -25,7 +25,7 @@ Can be set in config file.
 """
 HELP_LOG_LEVEL = """The log level of the application for information that is not a linting issue.
 Valid levels are: DEBUG | INFO | WARNING | ERROR | CRITICAL.
-Defauls to ERROR.
+Defauls to WARNING.
 """
 HELP_IGNORE_DIRECTIVES = """Comma-separated-list of directives to add to the ignore list.
 Can be set in config file.
@@ -58,7 +58,9 @@ def cli(  # pylint: disable=too-many-arguments
     report_level: t.Optional[str] = typer.Option(  # noqa: M511,B008
         None, metavar="LEVEL", help=HELP_REPORT_LEVEL
     ),
-    log_level: str = typer.Option("ERROR", metavar="LEVEL", help=HELP_LOG_LEVEL),  # noqa: M511,B008
+    log_level: str = typer.Option(  # noqa: M511,B008
+        "WARNING", metavar="LEVEL", help=HELP_LOG_LEVEL
+    ),
     ignore_directives: t.Optional[str] = typer.Option(  # noqa: M511,B008
         None, help=HELP_IGNORE_DIRECTIVES
     ),
