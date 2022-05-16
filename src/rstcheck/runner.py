@@ -1,4 +1,5 @@
 """Runner of rstcheck."""
+import logging
 import multiprocessing
 import os
 import pathlib
@@ -7,6 +8,9 @@ import sys
 import typing as t
 
 from . import checker, config, types
+
+
+logger = logging.getLogger(__name__)
 
 
 class RstcheckMainRunner:
@@ -47,11 +51,17 @@ class RstcheckMainRunner:
 
         :param config_path: Path to config file; can be directory or file
         """
+        logger.info(f"Load config file for main runner: '{config_path}'.")
         file_config = config.load_config_file_from_path(config_path)
 
         if file_config is None:
+            logger.warning("Config file was empty or not found.")
             return
 
+        logger.debug(
+            "Merging config from file into main config. "
+            f"File config is dominant: {self.overwrite_config}"
+        )
         self.config = config.merge_configs(
             self.config, file_config, config_add_is_dominant=self.overwrite_config
         )
@@ -63,10 +73,12 @@ class RstcheckMainRunner:
         ``self.check_paths`` and search them for rst files to check. Add those files to the file
         list.
         """
+        logger.debug("Updating list of files to check.")
         paths = list(self.check_paths)
         self.files_to_check = []
 
         if len(paths) == 1 and paths[0].name == "-":
+            logger.info("'-' detected. Using stdin for input.'")
             self.files_to_check.append(paths[0])
             return
 
@@ -96,6 +108,7 @@ class RstcheckMainRunner:
 
         :return: List of lists of errors found per file
         """
+        logger.debug("Runnning checks synchronically.")
         results = [
             checker.check_file(file, self.config, self.overwrite_config)
             for file in self.files_to_check
@@ -107,6 +120,7 @@ class RstcheckMainRunner:
 
         :return: List of lists of errors found per file
         """
+        logger.debug(f"Runnning checks in parallel with pool size of {self._pool_size}.")
         with multiprocessing.Pool(self._pool_size) as pool:
             results = pool.starmap(
                 checker.check_file,
@@ -131,6 +145,7 @@ class RstcheckMainRunner:
 
         A new call overwrite the old cached errors.
         """
+        logger.info("Run checks for all files.")
         results = (
             self._run_checks_parallel() if len(self.files_to_check) > 1 else self._run_checks_sync()
         )
@@ -164,5 +179,6 @@ class RstcheckMainRunner:
 
         :return: exit code 0 if no error is printed; 1 if any error is printed
         """
+        logger.info("Run checks and print results.")
         self.check()
         return self.print_result()
