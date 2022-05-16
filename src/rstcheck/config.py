@@ -2,6 +2,7 @@
 import configparser
 import contextlib
 import enum
+import logging
 import pathlib
 import re
 import typing as t
@@ -13,6 +14,9 @@ from . import _extras
 
 if _extras.TOMLI_INSTALLED:  # pragma: no cover
     import tomli
+
+
+logger = logging.getLogger(__name__)
 
 
 CONFIG_FILES = [".rstcheck.cfg", "setup.cfg"]
@@ -177,13 +181,19 @@ class _RstcheckConfigINIFile(
     ignore_messages: pydantic.NoneStr = pydantic.Field(None)  # pylint: disable=no-member
 
 
-def _load_config_from_ini_file(ini_file: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
+def _load_config_from_ini_file(
+    ini_file: pathlib.Path, *, log_missing_section_as_warning: bool = True
+) -> t.Optional[RstcheckConfigFile]:
     """Load, parse and validate rstcheck config from a ini file.
 
     :param ini_file: INI file to load config from
+    :param log_missing_section_as_warning: If a missing [tool.rstcheck] section should be logged at
+        WARNING (``True``) or ``INFO`` (``False``) level;
+        defaults to ``True``
     :raises FileNotFoundError: If the file is not found
     :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
     """
+    logger.debug(f"Try loading config from INI file: '{ini_file}'")
     resolved_file = ini_file.resolve()
 
     if not resolved_file.is_file():
@@ -193,6 +203,10 @@ def _load_config_from_ini_file(ini_file: pathlib.Path) -> t.Optional[RstcheckCon
     parser.read(resolved_file)
 
     if not parser.has_section("rstcheck"):
+        if log_missing_section_as_warning:
+            logger.warning(f"Config file has no [rstcheck] section: '{ini_file}'.")
+            return None
+        logger.info(f"Config file has no [rstcheck] section: '{ini_file}'.")
         return None
 
     config_values_raw = dict(parser.items("rstcheck"))
@@ -220,7 +234,9 @@ class _RstcheckConfigTOMLFile(
     ignore_messages: t.Optional[t.Union[str, t.List[str]]] = pydantic.Field(None)
 
 
-def _load_config_from_toml_file(toml_file: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
+def _load_config_from_toml_file(
+    toml_file: pathlib.Path, *, log_missing_section_as_warning: bool = True
+) -> t.Optional[RstcheckConfigFile]:
     """Load, parse and validate rstcheck config from a TOML file.
 
     .. warning::
@@ -229,19 +245,25 @@ def _load_config_from_toml_file(toml_file: pathlib.Path) -> t.Optional[RstcheckC
         Use toml extra.
 
     :param toml_file: TOML file to load config from
+    :param log_missing_section_as_warning: If a missing [tool.rstcheck] section should be logged at
+        WARNING (``True``) or ``INFO`` (``False``) level;
+        defaults to ``True``
     :raises ValueError: If the file is not a TOML file
     :raises FileNotFoundError: If the file is not found
     :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
     """
     _extras.install_guard("tomli")
+    logger.debug(f"Try loading config from TOML file: '{toml_file}'.")
 
     resolved_file = toml_file.resolve()
 
-    if resolved_file.suffix.casefold() != ".toml":
-        raise ValueError("File is not a TOML file")
-
     if not resolved_file.is_file():
+        logging.error(f"Config file is not a file: '{toml_file}'.")
         raise FileNotFoundError(f"{resolved_file}")
+
+    if resolved_file.suffix.casefold() != ".toml":
+        logging.error(f"Config file is not a TOML file: '{toml_file}'.")
+        raise ValueError("File is not a TOML file")
 
     with open(resolved_file, "rb") as toml_file_handle:
         toml_dict = tomli.load(toml_file_handle)
@@ -250,6 +272,10 @@ def _load_config_from_toml_file(toml_file: pathlib.Path) -> t.Optional[RstcheckC
     rstcheck_section: optional_rstcheck_section = toml_dict.get("tool", {}).get("rstcheck")
 
     if rstcheck_section is None:
+        if log_missing_section_as_warning:
+            logger.warning(f"Config file has no [tool.rstcheck] section: '{toml_file}'.")
+            return None
+        logger.info(f"Config file has no [tool.rstcheck] section: '{toml_file}'.")
         return None
 
     config_values_checked = _RstcheckConfigTOMLFile(**rstcheck_section)
@@ -258,7 +284,9 @@ def _load_config_from_toml_file(toml_file: pathlib.Path) -> t.Optional[RstcheckC
     return config_values_parsed
 
 
-def load_config_file(file_path: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
+def load_config_file(
+    file_path: pathlib.Path, *, log_missing_section_as_warning: bool = True
+) -> t.Optional[RstcheckConfigFile]:
     """Load, parse and validate rstcheck config from a file.
 
     .. caution::
@@ -267,37 +295,61 @@ def load_config_file(file_path: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
         Use toml extra or install manally.
 
     :param file_path: File to load config from
+    :param log_missing_section_as_warning: If a missing config section should be logged at
+        WARNING (``True``) or ``INFO`` (``False``) level;
+        defaults to ``True``
     :raises FileNotFoundError: If the file is not found
     :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
     """
+    logger.debug("Try loading config file.")
     if file_path.suffix.casefold() == ".toml":
-        return _load_config_from_toml_file(file_path)
-    return _load_config_from_ini_file(file_path)
+        return _load_config_from_toml_file(
+            file_path, log_missing_section_as_warning=log_missing_section_as_warning
+        )
+    return _load_config_from_ini_file(
+        file_path, log_missing_section_as_warning=log_missing_section_as_warning
+    )
 
 
-def load_config_file_from_dir(dir_path: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
+def load_config_file_from_dir(
+    dir_path: pathlib.Path, *, log_missing_section_as_warning: bool = False
+) -> t.Optional[RstcheckConfigFile]:
     """Search, load, parse and validate rstcheck config from a directory.
 
     Searches files from ``CONFIG_FILES`` in the directory. If a file is found, try to load the
     config from it. If is has no config, search further.
 
     :param dir_path: Directory to search
+    :param log_missing_section_as_warning: If a missing config section in a config file should be
+        logged at WARNING (``True``) or ``INFO`` (``False``) level;
+        defaults to ``False``
     :return: instance of ``RstcheckConfigFile`` or
         ``None`` if no file is found or no file has a rstcheck section
     """
+    logger.debug(f"Try loading config file from directory: '{dir_path}'.")
     config = None
 
     for file_name in CONFIG_FILES:
         file_path = (dir_path / file_name).resolve()
         if file_path.is_file():
-            config = load_config_file(file_path)
+            config = load_config_file(
+                file_path,
+                log_missing_section_as_warning=(
+                    log_missing_section_as_warning or (file_name == ".rstcheck.cfg")
+                ),
+            )
             if config is not None:
                 break
+
+    if config is None:
+        logger.info("No config section in supported config files found.")
 
     return config
 
 
-def load_config_file_from_dir_tree(dir_path: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
+def load_config_file_from_dir_tree(
+    dir_path: pathlib.Path, *, log_missing_section_as_warning: bool = False
+) -> t.Optional[RstcheckConfigFile]:
     """Search, load, parse and validate rstcheck config from a directory tree.
 
     Searches files from ``CONFIG_FILES`` in the directory. If a file is found, try to load the
@@ -305,15 +357,21 @@ def load_config_file_from_dir_tree(dir_path: pathlib.Path) -> t.Optional[Rstchec
     search its parents one by one.
 
     :param dir_path: Directory to search
+    :param log_missing_section_as_warning: If a missing config section in a config file should be
+        logged at WARNING (``True``) or ``INFO`` (``False``) level;
+        defaults to ``False``
     :return: instance of ``RstcheckConfigFile`` or
         ``None`` if no file is found or no file has a rstcheck section
     """
+    logger.debug(f"Try loading config file from directory tree: '{dir_path}'.")
     config = None
 
     search_dir = dir_path.resolve()
 
     while True:
-        config = load_config_file_from_dir(search_dir)
+        config = load_config_file_from_dir(
+            search_dir, log_missing_section_as_warning=log_missing_section_as_warning
+        )
 
         if config is not None:
             break
@@ -323,11 +381,20 @@ def load_config_file_from_dir_tree(dir_path: pathlib.Path) -> t.Optional[Rstchec
             break
         search_dir = parent_dir
 
+    if config is None:
+        logger.info(
+            f"No config section in supported config files found in directory tree: '{dir_path}'."
+        )
+
     return config
 
 
 def load_config_file_from_path(
-    path: pathlib.Path, *, search_dir_tree: bool = False
+    path: pathlib.Path,
+    *,
+    search_dir_tree: bool = False,
+    log_missing_section_as_warning_for_file: bool = True,
+    log_missing_section_as_warning_for_dir: bool = False,
 ) -> t.Optional[RstcheckConfigFile]:
     """Analyse the path and call the correct config file loader.
 
@@ -335,19 +402,35 @@ def load_config_file_from_path(
     :param search_dir_tree: If the directory tree should be searched;
         only applies if ``path`` is a directory;
         defaults to False
+    :param log_missing_section_as_warning_for_file: If a missing config section in a config file
+        should be logged at WARNING (``True``) or ``INFO`` (``False``) level when the given path is
+        a file;
+        defaults to ``True``
+    :param log_missing_section_as_warning_for_dir: If a missing config section in a config file
+        should be logged at WARNING (``True``) or ``INFO`` (``False``) level when the given file is
+        a direcotry;
+        defaults to ``False``
     :return: instance of ``RstcheckConfigFile`` or
         ``None`` if no file is found or no file has a rstcheck section
     """
+    logger.debug(f"Try loading config file from path: '{path}'.")
     resolved_path = path.resolve()
 
     if resolved_path.is_file():
-        return load_config_file(resolved_path)
+        return load_config_file(
+            resolved_path, log_missing_section_as_warning=log_missing_section_as_warning_for_file
+        )
 
     if resolved_path.is_dir():
         if search_dir_tree:
-            return load_config_file_from_dir_tree(resolved_path)
-        return load_config_file_from_dir(resolved_path)
+            return load_config_file_from_dir_tree(
+                resolved_path, log_missing_section_as_warning=log_missing_section_as_warning_for_dir
+            )
+        return load_config_file_from_dir(
+            resolved_path, log_missing_section_as_warning=log_missing_section_as_warning_for_dir
+        )
 
+    logger.warning("Passed path is neither a file nor a directory: '{path}'.")
     return None
 
 
@@ -365,6 +448,7 @@ def merge_configs(
         defaults to True
     :return: New merged config
     """
+    logger.debug("Merging configs.")
     sub_config: t.Union[RstcheckConfig, RstcheckConfigFile] = config_base
     sub_config_dict = sub_config.dict()
     for setting in dict(sub_config_dict):
