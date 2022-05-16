@@ -131,6 +131,11 @@ If ``sphinx`` and ``tomli`` are installed:
                                 Valid levels are: INFO | WARNING | ERROR |
                                 SEVERE | NONE. Defauls to INFO. Can be set in
                                 config file.
+    --log-level LEVEL            The log level of the application for
+                                information that is not a linting issue. Valid
+                                levels are: DEBUG | INFO | WARNING | ERROR |
+                                CRITICAL. Defauls to WARNING.  [default:
+                                WARNING]
     --ignore-directives TEXT     Comma-separated-list of directives to add to
                                 the ignore list. Can be set in config file.
     --ignore-roles TEXT          Comma-separated-list of roles to add to the
