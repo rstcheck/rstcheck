@@ -415,6 +415,8 @@ History
 (next version)
 --------------
 
+- Add ``--log-level`` option to CLI (#108)
+
 
 6.0.0a1 (2022-05-13)
 --------------------
