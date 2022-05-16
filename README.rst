@@ -420,6 +420,14 @@ History
 - Setup logging to console for library (deactivated by default) (#108)
 
 
+.. _beaking_changes_v6:
+
+BREAKING CHANGES
+~~~~~~~~~~~~~~~~
+
+- ``find_ignored_languages`` no longer throws exception but loggs warning (#108)
+
+
 6.0.0a1 (2022-05-13)
 --------------------
 

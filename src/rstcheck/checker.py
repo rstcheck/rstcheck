@@ -172,12 +172,7 @@ def check_source(
     if _extras.SPHINX_INSTALLED:
         _sphinx.load_sphinx_ignores()
 
-    try:
-        ignores["languages"].extend(inline_config.find_ignored_languages(source))
-    except inline_config.RstcheckCommentSyntaxError as error:
-        yield types.LintError(
-            source_origin=source_origin, line_number=error.line_number, message=f"{error}"
-        )
+    ignores["languages"].extend(inline_config.find_ignored_languages(source, source_origin))
 
     writer = _CheckWriter(source, source_origin, ignores, report_level)
 
