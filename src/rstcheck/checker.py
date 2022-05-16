@@ -5,6 +5,7 @@ import doctest
 import io
 import json
 import locale
+import logging
 import os
 import pathlib
 import re
@@ -21,6 +22,9 @@ import docutils.nodes
 import docutils.utils
 
 from . import _docutils, _extras, _sphinx, config, inline_config, types
+
+
+logger = logging.getLogger(__name__)
 
 
 EXCEPTION_LINE_NO_REGEX = re.compile(r": line\s+([0-9]+)[^:]*$")
@@ -44,6 +48,7 @@ def check_file(
         defaults to True
     :return: A list of found issues
     """
+    logger.info(f"Check file'{source_file}'")
     run_config = _load_run_config(source_file.parent, rstcheck_config, overwrite_with_file_config)
     ignore_dict = _create_ignore_dict_from_config(run_config)
 
@@ -105,6 +110,7 @@ def _get_source(source_file: pathlib.Path) -> str:
     :return: Loaded content
     """
     if source_file.name == "-":
+        logger.info("Load source from stdin.")
         return sys.stdin.read()
 
     resolved_file_path = source_file.resolve()
@@ -155,6 +161,7 @@ def check_source(
     :yield: Found issues
     """
     source_origin: types.SourceFileOrString = source_file or "<string>"
+    logger.info(f"Check source from '{source_origin}'")
     ignores = ignores or types.IgnoreDict(
         messages=None, languages=[], directives=[], roles=[], substitutions=[]
     )
@@ -522,6 +529,7 @@ class CodeBlockChecker:
         :return: None
         :yield: Found issues
         """
+        logger.debug("Check python source.")
         try:
             compile(source_code, "<string>", "exec")
         except SyntaxError as exception:
@@ -538,6 +546,7 @@ class CodeBlockChecker:
         :return: None
         :yield: Found issues
         """
+        logger.debug("Check JSON source.")
         try:
             json.loads(source_code)
         except ValueError as exception:
@@ -556,6 +565,7 @@ class CodeBlockChecker:
         :return: None
         :yield: Found issues
         """
+        logger.debug("Check XML source.")
         try:
             xml.etree.ElementTree.fromstring(source_code)  # noqa: S314
         except xml.etree.ElementTree.ParseError as exception:
@@ -574,6 +584,7 @@ class CodeBlockChecker:
         :return: None
         :yield: Found issues
         """
+        logger.debug("Check RST source.")
         yield from check_source(
             source_code,
             source_file=None,
@@ -592,6 +603,7 @@ class CodeBlockChecker:
         :return: None
         :yield: Found issues
         """
+        logger.debug("Check doctest source.")
         parser = doctest.DocTestParser()
         try:
             parser.parse(source_code)
@@ -612,6 +624,7 @@ class CodeBlockChecker:
         :return: None
         :yield: Found issues
         """
+        logger.debug("Check bash source.")
         result = self._run_in_subprocess(source_code, ".bash", ["bash", "-n"])
 
         if result:
@@ -635,6 +648,7 @@ class CodeBlockChecker:
         :return: None
         :yield: Found issues
         """
+        logger.debug("Check C source.")
         return self._gcc_checker(
             source_code,
             ".c",
@@ -651,6 +665,7 @@ class CodeBlockChecker:
         :return: None
         :yield: Found issues
         """
+        logger.debug("Check C++ source.")
         yield from self._gcc_checker(
             source_code,
             ".cpp",
@@ -743,6 +758,7 @@ def _parse_gcc_style_error_message(
     colons = 2 if has_column else 1
     prefix = str(source_origin) + ":"
     if not message.startswith(prefix):
+        logger.warning(f"Skipping unparsable message: '{message}'.")
         raise ValueError("Message cannot be parsed.")
     message = message[len(prefix) :]
     split_message = message.split(":", colons)
