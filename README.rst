@@ -416,6 +416,8 @@ History
 --------------
 
 - Add ``--log-level`` option to CLI (#108)
+- Setup logging to console for CLI (#108)
+- Setup logging to console for library (deactivated by default) (#108)
 
 
 6.0.0a1 (2022-05-13)
