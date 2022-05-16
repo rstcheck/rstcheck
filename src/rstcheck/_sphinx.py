@@ -1,5 +1,6 @@
 """Sphinx helper functions."""
 import contextlib
+import logging
 import pathlib
 import tempfile
 import typing as t
@@ -16,10 +17,14 @@ if _extras.SPHINX_INSTALLED:
     import sphinx.domains.std
 
 
+logger = logging.getLogger(__name__)
+
+
 @contextlib.contextmanager
 def load_sphinx_if_available() -> t.Generator[None, None, None]:
     """Contextmanager to register Sphinx directives and roles if sphinx is available."""
     if _extras.SPHINX_INSTALLED:
+        logger.debug("Init dummy sphinx application.")
         with tempfile.TemporaryDirectory() as temp_dir:
             outdir = pathlib.Path(temp_dir) / "_build"
             sphinx.application.Sphinx(
@@ -92,6 +97,7 @@ def filter_whitelisted_directives_and_roles(
 def load_sphinx_ignores() -> None:  # pragma: no cover
     """Register Sphinx directives and roles to ignore."""
     _extras.install_guard("sphinx")
+    logger.debug("Load sphinx directives and roles.")
 
     (directives, roles) = get_sphinx_directives_and_roles()
     (directives, roles) = filter_whitelisted_directives_and_roles(directives, roles)
