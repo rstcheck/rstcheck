@@ -10,6 +10,10 @@ rstcheck
     :target: https://github.com/myint/rstcheck/actions/workflows/qa.yaml
     :alt: QA status
 
+.. image:: https://img.shields.io/pypi/dm/rstcheck?color=brightgreen&logo=pypi&logoColor=yellow
+    :target: https://pypi.org/project/rstcheck/
+    :alt: Downloads PyPI
+
 Checks syntax of reStructuredText and code blocks nested within it.
 
 
