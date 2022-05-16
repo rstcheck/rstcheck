@@ -1,4 +1,5 @@
 """CLI for rstcheck."""
+import logging
 import pathlib
 import typing as t
 
@@ -45,6 +46,19 @@ Can be set in config file.
 """
 
 
+def setup_logger(loglevel: str) -> None:
+    """Set up logging.
+
+    :param loglevel: Level to log at.
+    :raises ValueError: On invalid logging leveles.
+    """
+    numeric_level = getattr(logging, loglevel.upper(), None)
+    if not isinstance(numeric_level, int):
+        raise ValueError(f"Invalid log level: {loglevel}")
+
+    logging.basicConfig(level=numeric_level)
+
+
 def cli(  # pylint: disable=too-many-arguments
     files: t.List[pathlib.Path] = typer.Argument(  # noqa: M511,B008
         ..., help=HELP_FILES, allow_dash=True
@@ -76,10 +90,14 @@ def cli(  # pylint: disable=too-many-arguments
     ),
 ) -> int:
     """CLI of rstcheck."""
+    setup_logger(log_level)
+    logger = logging.getLogger(__name__)
+
     if pathlib.Path("-") in files and len(files) > 1:
         typer.echo("'-' is only allowed without additional files.", err=True)
         raise typer.Abort()
 
+    logger.info("Create main configuration from CLI options.")
     rstcheck_config = config_mod.RstcheckConfig(
         config_path=config,
         recursive=recursive,
@@ -90,9 +108,13 @@ def cli(  # pylint: disable=too-many-arguments
         ignore_languages=ignore_languages,
         ignore_messages=ignore_messages,
     )
+
+    logger.debug("Create main runner instance.")
     _runner = runner.RstcheckMainRunner(
         check_paths=files, rstcheck_config=rstcheck_config, overwrite_config=False
     )
+
+    logger.info("Run main runner instance.")
     _runner.check()
     exit_code = _runner.print_result()
     raise typer.Exit(code=exit_code)
