@@ -219,6 +219,16 @@ repos:
         args: ["--config", ".rstcheck.project.cfg"]
 
   # ----------------------------------------------
+  # Markdown
+  # ----------------------------------------------
+
+  # markdownlint - md file checker
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: 79c5e552066e7ad28aca449e7f2eed692a603abf # frozen: v0.4.0
+    hooks:
+      - id: markdownlint-cli2
+
+  # ----------------------------------------------
   # TOML / YAML
   # ----------------------------------------------
 

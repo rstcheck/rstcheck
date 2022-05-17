@@ -1,0 +1,35 @@
+// Rules: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+{
+  "config": {
+    "MD003": "atx", // heading-style
+    "MD004": {
+      // ul-style
+      "style": "dash"
+    },
+    "MD013": {
+      // line-length
+      "line_length": 100
+    },
+    "MD014": false, // commands-show-output
+    "MD024": {
+      // no-duplicate-heading
+      "siblings_only": true
+    },
+    "MD035": {
+      // hr-style
+      "style": "---"
+    },
+    "MD048": {
+      // code-fence-style
+      "style": "backtick"
+    },
+    "MD049": {
+      // emphasis-style
+      "style": "underscore"
+    },
+    "MD050": {
+      // strong-style
+      "style": "asterisk"
+    }
+  }
+}
