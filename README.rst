@@ -437,6 +437,7 @@ BREAKING CHANGES
 - Rewrite of CLI with ``typer`` (#100)
 - Renamed config ``report`` to ``report_level`` (#100)
 - Renamed config ``ignore_language`` to ``ignore_languages`` (#100)
+- Renamed CLI option ``--report`` to ``--report-level`` (#100)
 - Renamed CLI option ``--ignore-language`` to ``--ignore-languages`` (#100)
 - Drop CLI option ``--ignore`` as alias to ``--ignore-languages`` (#100)
 - Drop CLI option ``--debug`` (#100)
