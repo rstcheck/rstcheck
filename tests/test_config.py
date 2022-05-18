@@ -144,6 +144,8 @@ class TestSplitStrValidator:
             ("value1, value2", ["value1", "value2"]),
             ("value1 ,value2", ["value1", "value2"]),
             ("value1 , value2", ["value1", "value2"]),
+            ("value1 ,\n value2", ["value1", "value2"]),
+            ("value1 ,\n value2\n", ["value1", "value2"]),
             ("value1 , value2,", ["value1", "value2"]),
             ("value1 , value2 ,", ["value1", "value2"]),
             ("value1 , value2 , ", ["value1", "value2"]),
