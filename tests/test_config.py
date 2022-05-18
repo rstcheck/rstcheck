@@ -1,4 +1,5 @@
 """Tests for ``config`` module."""
+# pylint: disable=too-many-lines
 import pathlib
 import re
 import typing as t
