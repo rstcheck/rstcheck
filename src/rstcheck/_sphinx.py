@@ -1,6 +1,5 @@
 """Sphinx helper functions."""
 import contextlib
-import functools
 import pathlib
 import tempfile
 import typing as t
@@ -32,7 +31,7 @@ def load_sphinx_if_available() -> t.Generator[None, None, None]:
                 status=None,  # type: ignore[arg-type] # NOTE: sphinx type hint is incorrect
             )
             sphinx.application.builtin_extensions = [  # type: ignore[assignment]
-                e for e in sphinx.application.builtin_extensions if not e == "sphinx.addnodes"
+                e for e in sphinx.application.builtin_extensions if e != "sphinx.addnodes"
             ]
             yield
     else:
