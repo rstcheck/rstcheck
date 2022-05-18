@@ -415,6 +415,17 @@ History
 (next version)
 --------------
 
+- Add support for INI multi-line string back (#116)
+
+
+.. _beaking_changes_v6a2:
+
+BREAKING CHANGES
+~~~~~~~~~~~~~~~~
+
+- String lists for ``ignore_*`` configs are whitespace cleaned at string start and end.
+  Restores behavior of pre v6. (#116)
+
 
 6.0.0a1 (2022-05-13)
 --------------------
