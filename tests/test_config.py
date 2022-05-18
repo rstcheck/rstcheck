@@ -141,13 +141,16 @@ class TestSplitStrValidator:
         [
             ("value1", ["value1"]),
             ("value1,value2", ["value1", "value2"]),
-            ("value1, value2", ["value1", " value2"]),
-            ("value1 ,value2", ["value1 ", "value2"]),
-            ("value1 , value2", ["value1 ", " value2"]),
+            ("value1, value2", ["value1", "value2"]),
+            ("value1 ,value2", ["value1", "value2"]),
+            ("value1 , value2", ["value1", "value2"]),
+            ("value1 , value2,", ["value1", "value2"]),
+            ("value1 , value2 ,", ["value1", "value2"]),
+            ("value1 , value2 , ", ["value1", "value2"]),
         ],
     )
     def test_strings_are_transformed_to_lists(string: str, split_list: t.List[str]) -> None:
-        """Test strings are split at the ","."""
+        """Test strings are split at the ",", trailing commas are ignored and whitespace cleaned."""
         result = config.RstcheckConfigFile(
             ignore_languages=string,
             ignore_directives=string,
@@ -163,17 +166,19 @@ class TestSplitStrValidator:
 
     @staticmethod
     @pytest.mark.parametrize(
-        "string_list",
+        ("string_list", "string_list_cleaned"),
         [
-            ["value1"],
-            ["value1", "value2"],
-            ["value1", " value2"],
-            ["value1 ", "value2"],
-            ["value1 ", " value2"],
+            (["value1"], ["value1"]),
+            (["value1", "value2"], ["value1", "value2"]),
+            (["value1", " value2"], ["value1", "value2"]),
+            (["value1 ", "value2"], ["value1", "value2"]),
+            (["value1 ", " value2"], ["value1", "value2"]),
         ],
     )
-    def test_string_lists_are_kept_the_same(string_list: t.List[str]) -> None:
-        """Test lists of strings are untouched."""
+    def test_string_lists_are_whitespace_cleaned(
+        string_list: t.List[str], string_list_cleaned: t.List[str]
+    ) -> None:
+        """Test lists of strings are whitespace cleaned."""
         result = config.RstcheckConfigFile(
             ignore_languages=string_list,
             ignore_directives=string_list,
@@ -182,10 +187,10 @@ class TestSplitStrValidator:
         )
 
         assert result is not None
-        assert result.ignore_languages == string_list
-        assert result.ignore_directives == string_list
-        assert result.ignore_roles == string_list
-        assert result.ignore_substitutions == string_list
+        assert result.ignore_languages == string_list_cleaned
+        assert result.ignore_directives == string_list_cleaned
+        assert result.ignore_roles == string_list_cleaned
+        assert result.ignore_substitutions == string_list_cleaned
 
     @staticmethod
     @pytest.mark.parametrize(
