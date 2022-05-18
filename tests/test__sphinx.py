@@ -32,11 +32,13 @@ class TestContextManager:
     @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
     def test_yield_nothing_with_sphinx_installed() -> None:
         """Test for ``None`` yield but action when sphinx is installed."""
+        len_before = len(sphinx.application.builtin_extensions)
         with _sphinx.load_sphinx_if_available() as ctx_manager:
 
             assert ctx_manager is None
             assert docutils_directives._directives
             assert docutils_roles._roles
+            assert len_before - 1 == len(sphinx.application.builtin_extensions)
 
 
 class TestSphinxDirectiveAndRoleGetter:
