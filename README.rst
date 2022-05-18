@@ -416,6 +416,7 @@ History
 --------------
 
 - Add support for INI multi-line string back (#116)
+- Fix bug #113 - sphinx print warnings for overwriting registered nodes (#117)
 
 
 .. _beaking_changes_v6a2:
