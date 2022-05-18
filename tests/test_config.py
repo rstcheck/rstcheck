@@ -377,6 +377,44 @@ class TestIniFileLoader:
         assert result.ignore_messages == regex
 
     @staticmethod
+    def test_multiline_strings(tmp_path: pathlib.Path) -> None:
+        """Test multiline strings are parsed."""
+        conf_file = tmp_path / "config.ini"
+        file_content = """[rstcheck]
+        ignore_directives=directive
+        ignore_roles=
+            role1,
+            role2,
+            role3
+        """
+        conf_file.write_text(file_content)
+
+        result = config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
+
+        assert result is not None
+        assert result.ignore_directives == ["directive"]
+        assert result.ignore_roles == ["role1", "role2", "role3"]
+
+    @staticmethod
+    def test_multiline_strings_trailing_comma(tmp_path: pathlib.Path) -> None:
+        """Test multiline strings with trailing comma are parsed."""
+        conf_file = tmp_path / "config.ini"
+        file_content = """[rstcheck]
+        ignore_directives=directive
+        ignore_roles=
+            role1,
+            role2,
+            role3,
+        """
+        conf_file.write_text(file_content)
+
+        result = config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
+
+        assert result is not None
+        assert result.ignore_directives == ["directive"]
+        assert result.ignore_roles == ["role1", "role2", "role3"]
+
+    @staticmethod
     def test_file_with_mixed_supported_settings(tmp_path: pathlib.Path) -> None:
         """Test mix of supported and unsupported settings."""
         conf_file = tmp_path / "config.ini"

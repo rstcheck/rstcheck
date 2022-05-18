@@ -195,8 +195,11 @@ def _load_config_from_ini_file(ini_file: pathlib.Path) -> t.Optional[RstcheckCon
     if not parser.has_section("rstcheck"):
         return None
 
-    config_values_raw = dict(parser.items("rstcheck"))
-    config_values_checked = _RstcheckConfigINIFile(**config_values_raw)
+    config_values_cleaned = {}
+    for key, value in parser.items("rstcheck"):
+        config_values_cleaned[key] = value.strip()
+
+    config_values_checked = _RstcheckConfigINIFile(**config_values_cleaned)
     config_values_parsed = RstcheckConfigFile(**config_values_checked.dict())
 
     return config_values_parsed
