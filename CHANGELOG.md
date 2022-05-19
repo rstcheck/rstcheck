@@ -1,6 +1,22 @@
 # Changelog
 
-## (next version)
+This is the changelog of `rstcheck`. Releases and their respective
+changes are listed here. The order of releases is time and **not** version based!
+For a list of all available releases see the
+[tags section on Github](https://github.com/myint/rstcheck/tags).
+Links on the versions point to PyPI.
+
+<!-- Valid subcategories
+### BREAKING CHANGES
+### New features
+### Bugfixes
+### Documentation
+### Miscellaneous
+-->
+
+## Unreleased
+
+[diff v6.0.0a1...master](https://github.com/myint/rstcheck/compare/v6.0.0a1...master)
 
 ## [v6.0.0a1 (2022-05-13)](https://pypi.org/project/rstcheck/6.0.0a1/)
 
