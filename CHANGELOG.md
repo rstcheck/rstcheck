@@ -315,4 +315,6 @@ Links on the versions point to PyPI.
 
 ## v0.1 (2013-12-02)
 
+[diff a146c93...v0.1](https://github.com/myint/rstcheck/compare/a146c93...v0.1)
+
 - Initial version.
