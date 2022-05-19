@@ -2,7 +2,7 @@
 
 ## (next version)
 
-## 6.0.0a1 (2022-05-13)
+## [v6.0.0a1 (2022-05-13)](https://pypi.org/project/rstcheck/6.0.0a1/)
 
 - Fix inability to ignore `code`, `code-block` and `sourcecode` directives (#79)
 - Fix `code-block` options recognition (#62)
@@ -31,7 +31,7 @@
 - Drop default values for directves and roles for sphinx (#65)
 - CLI options now take precedence over config file options (#96)
 
-## 5.0.0 (2022-04-17)
+## [v5.0.0 (2022-04-17)](https://pypi.org/project/rstcheck/5.0.0/)
 
 - Add examples/ to sdist
 - Add `Development` section to README and update `Testing` section
@@ -43,7 +43,7 @@
 - Rewrite test.bash script in pytest test cases adn run them on linux in CI
 - Rewrite old test suite in pytest and AAA style
 
-## 4.1.0 (2022-04-16)
+## [v4.1.0 (2022-04-16)](https://pypi.org/project/rstcheck/4.1.0/)
 
 - Fix shebangs and scripts to use `python3` instead of `python` (#78)
 - Improve the gcc checker functions by removing restrictions and
@@ -51,7 +51,7 @@
 - Fix pool size on windows by setting max to 61 (#86)
 - Update test.bash script and makefile with new file location
 
-## 4.0.0 (2022-04-15)
+## [v4.0.0 (2022-04-15)](https://pypi.org/project/rstcheck/4.0.0/)
 
 - Add inline type annotations
 - Add `sphinx` as extra
@@ -64,55 +64,159 @@
 
 - Drop support for python versions prior 3.7
 
-## 3.5.0 (2022-04-14)
+## [v3.5.0 (2022-04-14)](https://pypi.org/project/rstcheck/3.5.0/)
 
 - Deprecate python versions prior 3.7
 
-## 3.4.0 (2022-04-12)
+## [v3.4.0 (2022-04-12)](https://pypi.org/project/rstcheck/3.4.0/)
 
 - Add `--config` option to change the location of the config file.
 - Add `pre-commit` hooks config.
 
-## 3.3.1 (2018-10-09)
+## [v3.3.1 (2018-11-09)](https://pypi.org/project/rstcheck/3.3.1/)
 
 - Make compatible with Sphinx >= 1.8.
 
-## 3.3 (2018-03-17)
+## [v3.3 (2018-03-17)](https://pypi.org/project/rstcheck/3.3/)
 
 - Parse more options from configuration file (thanks to Santos Gallegos).
 - Allow ignoring specific (info/warning/error) messages via
   `--ignore-messages` (thanks to Santos Gallegos).
 
-## 3.2 (2018-02-17)
+## [v3.2 (2018-02-17)](https://pypi.org/project/rstcheck/3.2/)
 
 - Check for invalid Markdown-style links (thanks to biscuitsnake).
 - Allow configuration to be stored in `setup.cfg` (thanks to Maël Pedretti).
 - Add `--recursive` option to recursively drill down directories to check for
   all `*.rst` files.
 
-## 3.1 (2017-03-08)
+## [v3.1 (2017-03-08)](https://pypi.org/project/rstcheck/3.1/)
 
 - Add support for checking XML code blocks (thanks to Sameer Singh).
 
-## 3.0.1 (2017-03-01)
+## [v3.0.1 (2017-03-02)](https://pypi.org/project/rstcheck/3.0.1/)
 
 - Support UTF-8 byte order marks (BOM). Previously, `docutils` would
   interpret the BOM as a visible character, which would lead to false positives
   about underlines being too short.
 
-## 3.0 (2016-12-19)
+## [v3.0 (2016-12-19)](https://pypi.org/project/rstcheck/3.0/)
 
 - Optionally support Sphinx 1.5. Sphinx support will be enabled if Sphinx is
   installed.
 
-## 2.0 (2015-07-27)
+## [v2.2 (2016-10-11)](https://pypi.org/project/rstcheck/2.2/)
+
+- Unknown
+
+## [v2.1 (2016-10-11)](https://pypi.org/project/rstcheck/2.1/)
+
+- Unknown
+
+## [v2.0 (2016-07-27)](https://pypi.org/project/rstcheck/2.0/)
 
 - Support loading settings from configuration files.
 
-## 1.0 (2015-03-14)
+## [v1.5.1 (2016-05-29)](https://pypi.org/project/rstcheck/1.5.1/)
+
+- Unknown
+
+## [v1.5 (2016-02-03)](https://pypi.org/project/rstcheck/1.5/)
+
+- Unknown
+
+## [v1.4.2 (2015-12-16)](https://pypi.org/project/rstcheck/1.4.2/)
+
+- Unknown
+
+## [v1.4.1 (2015-08-16)](https://pypi.org/project/rstcheck/1.4.1/)
+
+- Unknown
+
+## [v1.4 (2015-06-26)](https://pypi.org/project/rstcheck/1.4/)
+
+- Unknown
+
+## [v1.3.1 (2015-04-14)](https://pypi.org/project/rstcheck/1.3.1/)
+
+- Unknown
+
+## [v1.3 (2015-04-11)](https://pypi.org/project/rstcheck/1.3/)
+
+- Unknown
+
+## [v1.2.1 (2015-04-11)](https://pypi.org/project/rstcheck/1.2.1/)
+
+- Unknown
+
+## [v1.2 (2015-04-11)](https://pypi.org/project/rstcheck/1.2/)
+
+- Unknown
+
+## [v1.1.1 (2015-04-05)](https://pypi.org/project/rstcheck/1.1.1/)
+
+- Unknown
+
+## [v1.1 (2015-04-03)](https://pypi.org/project/rstcheck/1.1/)
+
+- Unknown
+
+## [v1.0 (2015-03-14)](https://pypi.org/project/rstcheck/1.0/)
 
 - Add Sphinx support.
 
-## 0.1 (2013-12-02)
+## [v0.6 (2014-09-25)](https://pypi.org/project/rstcheck/0.6/)
+
+- Unknown
+
+## [v0.5.1 (2014-08-23)](https://pypi.org/project/rstcheck/0.5.1/)
+
+- Unknown
+
+## [v0.5 (2014-06-01)](https://pypi.org/project/rstcheck/0.5/)
+
+- Unknown
+
+## [v0.4.1 (2014-05-31)](https://pypi.org/project/rstcheck/0.4.1/)
+
+- Unknown
+
+## [v0.4 (2014-05-24)](https://pypi.org/project/rstcheck/0.4/)
+
+- Unknown
+
+## [v0.3.6 (2014-04-12)](https://pypi.org/project/rstcheck/0.3.6/)
+
+- Unknown
+
+## [v0.3.5 (2014-01-25)](https://pypi.org/project/rstcheck/0.3.5/)
+
+- Unknown
+
+## [v0.3.4 (2013-12-29)](https://pypi.org/project/rstcheck/0.3.4/)
+
+- Unknown
+
+## [v0.3.3 (2013-12-28)](https://pypi.org/project/rstcheck/0.3.3/)
+
+- Unknown
+
+## [v0.3.2 (2013-12-27)](https://pypi.org/project/rstcheck/0.3.2/)
+
+- Unknown
+
+## v0.3.1
+
+- Unknown
+
+## v0.2
+
+- Unknown
+
+## v0.1.1
+
+- Unknown
+
+## v0.1 (2013-12-02)
 
 - Initial version.
