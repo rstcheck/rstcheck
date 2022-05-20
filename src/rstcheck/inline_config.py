@@ -10,7 +10,7 @@ class RstcheckCommentSyntaxError(Exception):
     """Syntax error for rstcheck inline config comments."""
 
     def __init__(self, message: str, line_number: int) -> None:
-        """Initialize the ``RstcheckCommentSyntaxError`` exception.
+        """Initialize the :py:class:`RstcheckCommentSyntaxError` exception.
 
         :param message: Error message
         :param line_number: Line number where the error occured

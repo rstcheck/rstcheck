@@ -41,7 +41,7 @@ def check_file(
     :param rstcheck_config: Main configuration of the application
     :param overwrite_with_file_config: If the loaded file config should overwrite the
         ``rstcheck_config``;
-        defaults to True
+        defaults to :py:obj:`True`
     :return: A list of found issues
     """
     run_config = _load_run_config(source_file.parent, rstcheck_config, overwrite_with_file_config)
@@ -79,7 +79,7 @@ def _load_run_config(
     :param source_file_dir: Directory of the current file to check
     :param rstcheck_config: Main configuration of the application
     :param overwrite_config: If the loaded config should overwrite the ``rstcheck_config``;
-        defaults to True
+        defaults to :py:obj:`True`
     :return: Merged config
     """
     if rstcheck_config.config_path is not None:
@@ -125,10 +125,10 @@ def _replace_ignored_substitutions(source: str, ignore_substitutions: t.List[str
 
 
 def _create_ignore_dict_from_config(rstcheck_config: config.RstcheckConfig) -> types.IgnoreDict:
-    """Extract ignore settings from config and create a ``IgnoreDict``.
+    """Extract ignore settings from config and create a :py:class:`rstcheck.types.IgnoreDict`.
 
     :param rstcheck_config: Config to extract ignore settings from
-    :return: ``IgnoreDict``
+    :return: :py:class:`rstcheck.types.IgnoreDict`
     """
     return types.IgnoreDict(
         messages=rstcheck_config.ignore_messages,
@@ -148,10 +148,10 @@ def check_source(
     """Check the given rst source for issues.
 
     :param source_file: Path to file the source comes from if it comes from a file;
-        defaults to None
-    :param ignores: Ignore information; defaults to None
-    :param report_level: Report level; defaults to config.DEFAULT_REPORT_LEVEL
-    :return: None
+        defaults to :py:obj:`None`
+    :param ignores: Ignore information; defaults to :py:obj:`None`
+    :param report_level: Report level; defaults to :py:data:`rstcheck.config.DEFAULT_REPORT_LEVEL`
+    :return: :py:obj:`None`
     :yield: Found issues
     """
     source_origin: types.SourceFileOrString = source_file or "<string>"
@@ -219,13 +219,13 @@ def _run_code_checker_and_filter_errors(
     # NOTE: Pattern type-arg errors pydanic: https://github.com/samuelcolvin/pydantic/issues/2636
     ignore_messages: t.Optional[t.Pattern] = None,  # type: ignore[type-arg]
 ) -> types.YieldedLintError:
-    """Run each code block checker function and yield filtered ``LintError``.
+    """Run each code block checker function and yield filtered :py:class:`rstcheck.types.LintError`.
 
     :param checker_list: List of code block checker functions
     :param ignore_messages: Regex for ignoring error messages;
-        defaults to None
-    :return: None
-    :yield: Filtered LintErrors from run checker function
+        defaults to :py:obj:`None`
+    :return: :py:obj:`None`
+    :yield: Filtered :py:class:`rstcheck.types.LintError` s from run checker function
     """
     for checker in checker_list:
         for lint_error in checker():
@@ -240,14 +240,14 @@ def _parse_and_filter_rst_errors(
     source_origin: types.SourceFileOrString,
     ignore_messages: t.Optional[t.Pattern] = None,  # type: ignore[type-arg]
 ) -> types.YieldedLintError:
-    """Parse rst errors and yield filtered ``LintError``.
+    """Parse rst errors and yield filtered :py:class:`rstcheck.types.LintError`.
 
     :param rst_errors: String with rst errors
     :param source_origin: Origin of the source with the errors
     :param ignore_messages: Regex for ignoring error messages;
-        defaults to None
-    :return: None
-    :yield: Parsed and filtered LintErrors
+        defaults to :py:obj:`None`
+    :return: :py:obj:`None`
+    :yield: Parsed and filtered :py:class:`rstcheck.types.LintError` s
     """
     for message in rst_errors.splitlines():
         with contextlib.suppress(ValueError):
@@ -268,12 +268,13 @@ class _CheckWriter(docutils.writers.Writer):
         ignores: t.Optional[types.IgnoreDict] = None,
         report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
     ) -> None:
-        """Inititalize _CheckWriter.
+        """Inititalize :py:class:`_CheckWriter`.
 
         :param source: Rst source to check
         :param source_origin: Path to file the source comes from
-        :param ignores: Ignore information; defaults to None
-        :param report_level: Report level; defaults to config.DEFAULT_REPORT_LEVEL
+        :param ignores: Ignore information; defaults to :py:obj:`None`
+        :param report_level: Report level;
+            defaults to :py:data:`rstcheck.config.DEFAULT_REPORT_LEVEL`
         """
         docutils.writers.Writer.__init__(self)
         self.checkers: t.List[types.CheckerRunFunction] = []
@@ -306,13 +307,14 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         ignores: t.Optional[types.IgnoreDict] = None,
         report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
     ) -> None:
-        """Inititalize _CheckTranslator.
+        """Inititalize :py:class:`_CheckTranslator`.
 
         :param document: Document node
         :param source: Rst source to check
         :param source_origin: Path to file the source comes from
-        :param ignores: Ignore information; defaults to None
-        :param report_level: Report level; defaults to config.DEFAULT_REPORT_LEVEL
+        :param ignores: Ignore information; defaults to :py:obj:`None`
+        :param report_level: Report level;
+            defaults to :py:data:`rstcheck.config.DEFAULT_REPORT_LEVEL`
         """
         docutils.nodes.NodeVisitor.__init__(self, document)
         self.checkers: t.List[types.CheckerRunFunction] = []
@@ -480,8 +482,9 @@ class CodeBlockChecker:
         """Inititalize CodeBlockChecker.
 
         :param source_origin: Path to file the source comes from
-        :param ignores: Ignore information; defaults to None
-        :param report_level: Report level; defaults to config.DEFAULT_REPORT_LEVEL
+        :param ignores: Ignore information; defaults to :py:obj:`None`
+        :param report_level: Report level;
+            defaults to :py:data:`rstcheck.config.DEFAULT_REPORT_LEVEL`
         """
         self.source_origin = source_origin
         self.ignores = ignores
@@ -509,7 +512,7 @@ class CodeBlockChecker:
 
         :param source: Source code to check
         :param language: Language of the source code
-        :return: None if language is not supported
+        :return: :py:obj:`None` if language is not supported
         :yield: Found issues
         """
         checker_function = t.Callable[[str], types.YieldedLintError]
@@ -524,7 +527,7 @@ class CodeBlockChecker:
         """Check python source for syntax errors.
 
         :param source: Python source code to check
-        :return: None
+        :return: :py:obj:`None`
         :yield: Found issues
         """
         try:
@@ -540,7 +543,7 @@ class CodeBlockChecker:
         """Check JSON source for syntax errors.
 
         :param source: JSON source code to check
-        :return: None
+        :return: :py:obj:`None`
         :yield: Found issues
         """
         try:
@@ -558,7 +561,7 @@ class CodeBlockChecker:
         """Check XML source for syntax errors.
 
         :param source: XML source code to check
-        :return: None
+        :return: :py:obj:`None`
         :yield: Found issues
         """
         try:
@@ -576,7 +579,7 @@ class CodeBlockChecker:
         """Check nested rst source for syntax errors.
 
         :param source: rst source code to check
-        :return: None
+        :return: :py:obj:`None`
         :yield: Found issues
         """
         yield from check_source(
@@ -594,7 +597,7 @@ class CodeBlockChecker:
         incorrect for testing purposes.
 
         :param source: XML source code to check
-        :return: None
+        :return: :py:obj:`None`
         :yield: Found issues
         """
         parser = doctest.DocTestParser()
@@ -614,7 +617,7 @@ class CodeBlockChecker:
         """Check bash source for syntax errors.
 
         :param source: bash source code to check
-        :return: None
+        :return: :py:obj:`None`
         :yield: Found issues
         """
         result = self._run_in_subprocess(source_code, ".bash", ["bash", "-n"])
@@ -637,7 +640,7 @@ class CodeBlockChecker:
         """Check C source for syntax errors.
 
         :param source: C source code to check
-        :return: None
+        :return: :py:obj:`None`
         :yield: Found issues
         """
         return self._gcc_checker(
@@ -653,7 +656,7 @@ class CodeBlockChecker:
         """Check C++ source for syntax errors.
 
         :param source: C++ source code to check
-        :return: None
+        :return: :py:obj:`None`
         :yield: Found issues
         """
         yield from self._gcc_checker(
@@ -673,7 +676,7 @@ class CodeBlockChecker:
         :param source_code: Source code to check
         :param filename_suffix: File suffix for language of the source code
         :param arguments: Command and arguments to run
-        :return: None
+        :return: :py:obj:`None`
         :yield: Found issues
         """
         result = self._run_in_subprocess(
@@ -699,7 +702,8 @@ class CodeBlockChecker:
         :param source_code: Source code to check
         :param filename_suffix: File suffix for language of the source code
         :param arguments: Command and arguments to run
-        :return: ``None`` if no issues were found else a tuple of the stderr and temp-file name
+        :return: :py:obj:`None` if no issues were found else a tuple of the stderr and temp-file
+            name
         """
         get_encoding = lambda: locale.getpreferredencoding() or sys.getdefaultencoding()
 
@@ -741,7 +745,7 @@ def _parse_gcc_style_error_message(
 
     :param message: Message to parse
     :param filename: File the message is associated with
-    :param has_column: The the message has a column number; defaults to True
+    :param has_column: The the message has a column number; defaults to :py:obj:`True`
     :raises ValueError: If the message cannot be parsed
     :return: Parsed message
     """

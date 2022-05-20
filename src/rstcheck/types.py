@@ -18,7 +18,7 @@ class LintError(_compat.TypedDict):
 
 
 YieldedLintError = t.Generator[LintError, None, None]
-"""Yielded version of type ``LintError``."""
+"""Yielded version of type :py:class:`LintError`."""
 
 
 class IgnoreDict(_compat.TypedDict):
@@ -35,5 +35,5 @@ class IgnoreDict(_compat.TypedDict):
 CheckerRunFunction = t.Callable[..., YieldedLintError]
 """Function to run checks.
 
-Returned by ``CodeBlockChecker.create_checker``.
+Returned by :py:meth:`rstcheck.checker.CodeBlockChecker.create_checker`.
 """

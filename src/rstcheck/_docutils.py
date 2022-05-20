@@ -38,8 +38,8 @@ def clean_docutils_directives_and_roles_cache() -> None:  # pragma: no cover
     """Clean docutils' directives and roles cache by reloading their modules.
 
     Reloads:
-    - docutils.parsers.rst.directives
-    - docutils.parsers.rst.roles
+    - :py:mod:`docutils.parsers.rst.directives`
+    - :py:mod:`docutils.parsers.rst.roles`
     """
     importlib.reload(docutils.parsers.rst.directives)
     importlib.reload(docutils.parsers.rst.roles)
@@ -89,11 +89,11 @@ def register_code_directive(
     """Optionally register code directives.
 
     :param ignore_code_directive: If "code" directive should be ignored,
-        so that the code block will not be checked; defaults to False
+        so that the code block will not be checked; defaults to :py:obj:`False`
     :param ignore_codeblock_directive: If "code-block" directive should be ignored,
-        so that the code block will not be checked; defaults to False
+        so that the code block will not be checked; defaults to :py:obj:`False`
     :param ignore_sourcecode_directive: If "sourcecode" directive should be ignored,
-        so that the code block will not be checked; defaults to False
+        so that the code block will not be checked; defaults to :py:obj:`False`
     """
     if not _extras.SPHINX_INSTALLED:
         if ignore_code_directive is False:

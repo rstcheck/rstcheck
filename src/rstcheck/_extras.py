@@ -1,7 +1,7 @@
 """Central place for install-checker and guards for 'extras' dependencies.
 
 The ``*_INSTALLED`` constansts reveal wether the dependency is installed with a supported version.
-The ``install_guard`` guard function is intended for use inside functions which need specific
+The :py:func:`install_guard` guard function is intended for use inside functions which need specific
 extra packages installed.
 
 Example usage:
@@ -70,7 +70,7 @@ ExtraDependenciesInstalled: t.Dict[ExtraDependencies, bool] = {
 
 
 def install_guard(package: ExtraDependencies) -> None:
-    """Guard code that needs the ``package`` installed and throw ModuleNotFoundError.
+    """Guard code that needs the ``package`` installed and throw :py:exc:`ModuleNotFoundError`.
 
     See example in module docstring.
 

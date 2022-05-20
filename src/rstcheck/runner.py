@@ -18,7 +18,7 @@ class RstcheckMainRunner:
         rstcheck_config: config.RstcheckConfig,
         overwrite_config: bool = True,
     ) -> None:
-        """Initialize the ``RstcheckMainRunner`` with a base config.
+        """Initialize the :py:class:`RstcheckMainRunner` with a base config.
 
         :param check_paths: Files to check.
         :param rstcheck_config: Base configuration config from e.g. the CLI.
@@ -42,8 +42,8 @@ class RstcheckMainRunner:
     def load_config_file(self, config_path: pathlib.Path) -> None:
         """Load config from file and merge with current config.
 
-        If the loaded file config overwrites the current config depends on the ``overwrite_config``
-        attribute set on initialization.
+        If the loaded file config overwrites the current config depends on the
+        :py:attr:`self.overwrite_config` attribute set on initialization.
 
         :param config_path: Path to config file; can be directory or file
         """
@@ -60,9 +60,9 @@ class RstcheckMainRunner:
         """Update file path list with paths specified on initialization.
 
         Clear the current file list. Then get the file and directory paths specified with
-        ``self.check_paths`` and search them for rst files to check. Add those files to the file
-        list.
-        """
+        :py:attr:`self.check_paths` attribute set on initialization and search them for rst files
+        to check. Add those files to the file list.
+        """  # noqa: Q440,Q441,Q447,Q449
         paths = list(self.check_paths)
         self.files_to_check = []
 
@@ -118,7 +118,8 @@ class RstcheckMainRunner:
     def _update_results(self, results: t.List[t.List[types.LintError]]) -> None:
         """Take results and update error cache.
 
-        Result normally come from ``self._run_checks_sync`` or ``self._run_checks_parallel``.
+        Result normally come from :py:meth:`RstcheckMainRunner._run_checks_sync` or
+        :py:meth:`RstcheckMainRunner._run_checks_parallel`.
         :param results: List of lists of errors found
         """
         self.errors = []

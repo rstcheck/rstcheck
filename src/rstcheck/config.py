@@ -16,6 +16,7 @@ if _extras.TOMLI_INSTALLED:  # pragma: no cover
 
 
 CONFIG_FILES = [".rstcheck.cfg", "setup.cfg"]
+"""Supported default config files."""
 if _extras.TOMLI_INSTALLED:  # pragma: no cover
     CONFIG_FILES = [".rstcheck.cfg", "pyproject.toml", "setup.cfg"]
 
@@ -41,13 +42,14 @@ ReportLevelMap = {
 
 
 DEFAULT_REPORT_LEVEL = ReportLevel.INFO
+"""Default report level."""
 
 
 class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
     """Rstcheck config file.
 
-    :raises ValueError:: If setting has incorrect value or type
-    :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
+    :raises ValueError: If setting has incorrect value or type
+    :raises pydantic.error_wrappers.ValidationError: If setting is not parsable into correct type
     """
 
     report_level: t.Optional[ReportLevel]
@@ -64,8 +66,8 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         """Validate the report_level setting.
 
         :param value: Value to validate
-        :raises ValueError: If ``Value`` is not a valid docutils report level
-        :return: Instance of ``ReportLevel`` or None if emptry string.
+        :raises ValueError: If ``value`` is not a valid docutils report level
+        :return: Instance of :py:class:`ReportLevel` or None if emptry string.
         """
         if value is None:
             return None
@@ -106,7 +108,7 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         Comma separated strings are split into a list.
 
         :param value: Value to validate
-        :raises ValueError: If not a ``str`` or ``List[str]``
+        :raises ValueError: If not a :py:class:`str` or :py:class:`list` of :py:class:`str`
         :return: List of things to ignore in the respective category
         """
         if value is None:
@@ -130,8 +132,9 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         If a list ist given, the entries are concatenated with "|" to create an or RegEx.
 
         :param value: Value to validate
-        :raises ValueError: If not a ``str`` or ``List[str]``
-        :return: A RegEx string with messages to ignore or Pattern if it is one already
+        :raises ValueError: If not a :py:class:`str` or :py:class:`list` of :py:class:`str`
+        :return: A RegEx string with messages to ignore or :py:class:`typing.Pattern` if it is one
+            already
         """
         if value is None:
             return None
@@ -151,8 +154,8 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
 class RstcheckConfig(RstcheckConfigFile):  # pylint: disable=too-few-public-methods
     """Rstcheck config.
 
-    :raises ValueError:: If setting has incorrect value or type
-    :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
+    :raises ValueError: If setting has incorrect value or type
+    :raises pydantic.error_wrappers.ValidationError: If setting is not parsable into correct type
     """
 
     config_path: t.Optional[pathlib.Path]
@@ -164,9 +167,9 @@ class _RstcheckConfigINIFile(
 ):  # pylint: disable=too-few-public-methods
     """Type for [rstcheck] section in INI file.
 
-    The types apply to the file's data before the parsing by ``RstcheckConfig`` is done.
+    The types apply to the file's data before the parsing by :py:class:`RstcheckConfig` is done.
 
-    :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
+    :raises pydantic.error_wrappers.ValidationError: If setting is not parsable into correct type
     """
 
     report_level: pydantic.NoneStr = pydantic.Field(None)  # pylint: disable=no-member
@@ -182,7 +185,8 @@ def _load_config_from_ini_file(ini_file: pathlib.Path) -> t.Optional[RstcheckCon
 
     :param ini_file: INI file to load config from
     :raises FileNotFoundError: If the file is not found
-    :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
+    :return: instance of :py:class:`RstcheckConfigFile` or :py:class:`None` on missing config
+        section
     """
     resolved_file = ini_file.resolve()
 
@@ -207,9 +211,9 @@ class _RstcheckConfigTOMLFile(
 ):  # pylint: disable=too-few-public-methods
     """Type for [tool.rstcheck] section in TOML file.
 
-    The types apply to the file's data before the parsing by ``RstcheckConfig`` is done.
+    The types apply to the file's data before the parsing by :py:class:`RstcheckConfig` is done.
 
-    :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
+    :raises pydantic.error_wrappers.ValidationError: If setting is not parsable into correct type
     """
 
     report_level: t.Optional[str] = pydantic.Field(None)
@@ -231,7 +235,7 @@ def _load_config_from_toml_file(toml_file: pathlib.Path) -> t.Optional[RstcheckC
     :param toml_file: TOML file to load config from
     :raises ValueError: If the file is not a TOML file
     :raises FileNotFoundError: If the file is not found
-    :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
+    :return: instance of :py:class:`RstcheckConfigFile` or :py:obj:`None` on missing config section
     """
     _extras.install_guard("tomli")
 
@@ -264,11 +268,11 @@ def load_config_file(file_path: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
     .. caution::
 
         If a TOML file is passed this function need tomli installed!
-        Use toml extra or install manally.
+        Use toml extra or install manually.
 
     :param file_path: File to load config from
     :raises FileNotFoundError: If the file is not found
-    :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
+    :return: instance of :py:class:`RstcheckConfigFile` or :py:obj:`None` on missing config section
     """
     if file_path.suffix.casefold() == ".toml":
         return _load_config_from_toml_file(file_path)
@@ -278,12 +282,12 @@ def load_config_file(file_path: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
 def load_config_file_from_dir(dir_path: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
     """Search, load, parse and validate rstcheck config from a directory.
 
-    Searches files from ``CONFIG_FILES`` in the directory. If a file is found, try to load the
-    config from it. If is has no config, search further.
+    Searches files from :py:data:`CONFIG_FILES` in the directory. If a file is found, try to load
+    the config from it. If is has no config, search further.
 
     :param dir_path: Directory to search
-    :return: instance of ``RstcheckConfigFile`` or
-        ``None`` if no file is found or no file has a rstcheck section
+    :return: instance of :py:class:`RstcheckConfigFile` or
+        :py:obj:`None` if no file is found or no file has a rstcheck section
     """
     config = None
 
@@ -300,13 +304,13 @@ def load_config_file_from_dir(dir_path: pathlib.Path) -> t.Optional[RstcheckConf
 def load_config_file_from_dir_tree(dir_path: pathlib.Path) -> t.Optional[RstcheckConfigFile]:
     """Search, load, parse and validate rstcheck config from a directory tree.
 
-    Searches files from ``CONFIG_FILES`` in the directory. If a file is found, try to load the
-    config from it. If is has no config, search further. If no config is found in the directory
+    Searches files from :py:data:`CONFIG_FILES` in the directory. If a file is found, try to load
+    the config from it. If is has no config, search further. If no config is found in the directory
     search its parents one by one.
 
     :param dir_path: Directory to search
-    :return: instance of ``RstcheckConfigFile`` or
-        ``None`` if no file is found or no file has a rstcheck section
+    :return: instance of :py:class:`RstcheckConfigFile` or
+        :py:obj:`None` if no file is found or no file has a rstcheck section
     """
     config = None
 
@@ -334,9 +338,9 @@ def load_config_file_from_path(
     :param path: Path to load config file from; can be a file or directory
     :param search_dir_tree: If the directory tree should be searched;
         only applies if ``path`` is a directory;
-        defaults to False
-    :return: instance of ``RstcheckConfigFile`` or
-        ``None`` if no file is found or no file has a rstcheck section
+        defaults to :py:obj:`False`
+    :return: instance of :py:class:`RstcheckConfigFile` or
+        :py:obj:`None` if no file is found or no file has a rstcheck section
     """
     resolved_path = path.resolve()
 
@@ -362,7 +366,7 @@ def merge_configs(
     :param config_base: The base config to merge into
     :param config_add: The config that is merged into the ``config_base``
     :param config_add_is_dominant: If the ``config_add`` overwrites values of ``config_base``;
-        defaults to True
+        defaults to :py:obj:`True`
     :return: New merged config
     """
     sub_config: t.Union[RstcheckConfig, RstcheckConfigFile] = config_base
