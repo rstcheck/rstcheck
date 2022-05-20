@@ -3,6 +3,7 @@ name: Test documentation
 
 env:
   CI_FORCE_COLORS_POETRY: --ansi
+  CI_FORCE_COLORS_SPHINX: --color
 
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
