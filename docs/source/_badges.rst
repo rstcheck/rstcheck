@@ -1,7 +1,7 @@
 +-------------------+---------------------------------------------------------------------------------------------+
 | **General**       | |maintenance_y| |license| |semver|                                                          |
 |                   +---------------------------------------------------------------------------------------------+
-|                   | |gha_tests| |gha_qa|                                                                        |
+|                   | |gha_tests| |gha_docu| |gha_qa|                                                             |
 +-------------------+---------------------------------------------------------------------------------------------+
 | **PyPI**          | |pypi_release| |pypi_py_versions| |pypi_implementations|                                    |
 |                   +---------------------------------------------------------------------------------------------+
@@ -36,6 +36,10 @@
     :alt: Semantic Versioning - 2.0.0
 
 .. |gha_tests| image:: https://img.shields.io/github/workflow/status/myint/rstcheck/Test%20code/master?style=flat-square&logo=github&label=Test%20code
+    :target: https://github.com/myint/rstcheck/actions/workflows/test.yaml
+    :alt: Test status
+
+.. |gha_docu| image:: https://img.shields.io/github/workflow/status/myint/rstcheck/Test%20documentation/master?style=flat-square&logo=github&label=Test%20documentation
     :target: https://github.com/myint/rstcheck/actions/workflows/test.yaml
     :alt: Test status
 
