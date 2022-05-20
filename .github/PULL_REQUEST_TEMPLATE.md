@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD033 -->
 <!-- PLEASE READ !!!
 
     The checklist below is just a reminder about the most common mistakes.

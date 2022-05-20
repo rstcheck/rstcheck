@@ -30,6 +30,10 @@ def load_sphinx_if_available() -> t.Generator[None, None, None]:
                 buildername="dummy",
                 status=None,  # type: ignore[arg-type] # NOTE: sphinx type hint is incorrect
             )
+            # NOTE: Hack to prevent sphinx warnings for overwriting registered nodes; see #113
+            sphinx.application.builtin_extensions = [  # type: ignore[assignment]
+                e for e in sphinx.application.builtin_extensions if e != "sphinx.addnodes"
+            ]
             yield
     else:
         yield
