@@ -26,6 +26,10 @@ def find_ignored_languages(source: str) -> t.Generator[str, None, None]:  # noqa
 
     For example, to ignore C++, JSON, and Python:
 
+    .. testsetup::
+
+        from rstcheck.inline_config import find_ignored_languages
+
     >>> list(find_ignored_languages('''
     ... Example
     ... =======
@@ -34,7 +38,7 @@ def find_ignored_languages(source: str) -> t.Generator[str, None, None]:  # noqa
     ...
     ... .. rstcheck: ignore-languages=python
     ... '''))
-    ["cpp", "json", "python"]
+    ['cpp', 'json', 'python']
 
     :param source: Rst source code
     :raises RstcheckCommentSyntaxError: When the comment has invalid syntax
