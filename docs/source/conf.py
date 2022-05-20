@@ -102,7 +102,11 @@ extensions.append("sphinx.ext.viewcode")
 #: Links
 extensions.append("sphinx.ext.intersphinx")
 # NOTE: to inspect .inv files: https://github.com/bskinn/sphobjinv
-intersphinx_mapping = {"python": ("https://docs.python.org/3/", None)}
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3/", None),
+    "pattern": ("https://docs.python.org/3/library/", "objects.pattern.inv"),
+    "pydantic": ("https://pydantic-docs.helpmanual.io/usage/", "objects.pydantic.inv"),
+}
 
 extensions.append("sphinx.ext.extlinks")
 extlinks = {

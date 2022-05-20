@@ -43,7 +43,7 @@ class RstcheckMainRunner:
         """Load config from file and merge with current config.
 
         If the loaded file config overwrites the current config depends on the
-        :py:attr:`self.overwrite_config` attribute set on initialization.
+        ``self.overwrite_config`` attribute set on initialization.
 
         :param config_path: Path to config file; can be directory or file
         """
@@ -60,7 +60,7 @@ class RstcheckMainRunner:
         """Update file path list with paths specified on initialization.
 
         Clear the current file list. Then get the file and directory paths specified with
-        :py:attr:`self.check_paths` attribute set on initialization and search them for rst files
+        ``self.check_paths`` attribute set on initialization and search them for rst files
         to check. Add those files to the file list.
         """  # noqa: Q440,Q441,Q447,Q449
         paths = list(self.check_paths)
