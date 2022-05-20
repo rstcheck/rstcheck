@@ -74,7 +74,7 @@ Links on the versions point to PyPI.
 
 ### BREAKING CHANGES
 
-- Rewrite test.bash script in pytest test cases adn run them on linux in CI
+- Rewrite test.bash script in pytest test cases and run them on linux in CI
 - Rewrite old test suite in pytest and AAA style
 
 ## [v4.1.0 (2022-04-16)](https://pypi.org/project/rstcheck/4.1.0/)
