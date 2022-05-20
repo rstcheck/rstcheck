@@ -30,5 +30,6 @@ the syntax of reStructuredText and code blocks nested within it.
 
    faq
    changelog
+   migrations
    authors
    license
