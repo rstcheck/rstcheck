@@ -14,9 +14,7 @@ ERROR_CODE_REGEX = re.compile(r"\([A-Z]*?/\d\)")
 @pytest.fixture(name="cli_app")
 def cli_app_fixture() -> typer.Typer:
     """Create typer app from ``cli`` function for testing."""
-    app = typer.Typer()
-    app.command()(cli.cli)
-    return app
+    return cli.app
 
 
 @pytest.fixture(name="cli_runner")

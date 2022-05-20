@@ -103,6 +103,11 @@ Enabled features: {enabled_features}
 """
 
 
+app = typer.Typer()
+app.command()(cli)
+typer_click_object = typer.main.get_command(app)
+
+
 def main() -> None:  # pragma: no cover
     """Run CLI."""
     typer.run(cli)
