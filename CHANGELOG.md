@@ -16,7 +16,21 @@ Links on the versions point to PyPI.
 
 ## Unreleased
 
-[diff v6.0.0a1...master](https://github.com/myint/rstcheck/compare/v6.0.0a1...master)
+[diff v6.0.0a2...master](https://github.com/myint/rstcheck/compare/v6.0.0a2...master)
+
+- Add more thorough documentation (#112)
+
+## [v6.0.0a2 (2022-05-20)](https://pypi.org/project/rstcheck/6.0.0a2/)
+
+[diff v6.0.0a1...v6.0.0a2](https://github.com/myint/rstcheck/compare/v6.0.0a1...v6.0.0a2)
+
+- Add support for INI multi-line string back (#116)
+- Fix bug #113 - sphinx print warnings for overwriting registered nodes (#117)
+
+### BREAKING CHANGES
+
+- String lists for `ignore_*` configs are whitespace cleaned at string start and end.
+  Restores behavior of pre v6. (#116)
 
 ## [v6.0.0a1 (2022-05-13)](https://pypi.org/project/rstcheck/6.0.0a1/)
 
