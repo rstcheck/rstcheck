@@ -9,7 +9,6 @@ from rstcheck import _compat, _extras, config as config_mod, runner
 
 ValidReportLevels = _compat.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]
 
-HELP_FILES = "RST files to check. Can be files or directories if --recursive is passed too."
 HELP_CONFIG = """Config file to load. Can be a INI file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | setup.cfg.
 """
@@ -43,7 +42,7 @@ Can be set in config file.
 
 def cli(  # pylint: disable=too-many-arguments
     files: t.List[pathlib.Path] = typer.Argument(  # noqa: M511,B008
-        ..., help=HELP_FILES, allow_dash=True
+        ..., allow_dash=True, hidden=True
     ),
     config: t.Optional[pathlib.Path] = typer.Option(  # noqa: M511,B008
         None, "--config", help=HELP_CONFIG
@@ -100,6 +99,10 @@ if _extras.TOMLI_INSTALLED:  # pragma: no cover
 cli.__doc__ = f"""CLI of rstcheck.
 
 Enabled features: {enabled_features}
+
+Pass one ore more rst FILES to check.
+Can be files or directories if --recursive is passed too.
+Pass "-" if you want to read from stdin.
 """
 
 
