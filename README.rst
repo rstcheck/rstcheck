@@ -433,6 +433,22 @@ BREAKING CHANGES
 - ``find_ignored_languages`` no longer throws exception but loggs warning (#108)
 
 
+6.0.0a2 (2022-05-20)
+--------------------
+
+- Add support for INI multi-line string back (#116)
+- Fix bug #113 - sphinx print warnings for overwriting registered nodes (#117)
+
+
+.. _beaking_changes_v6a2:
+
+BREAKING CHANGES
+~~~~~~~~~~~~~~~~
+
+- String lists for ``ignore_*`` configs are whitespace cleaned at string start and end.
+  Restores behavior of pre v6. (#116)
+
+
 6.0.0a1 (2022-05-13)
 --------------------
 
@@ -454,6 +470,7 @@ BREAKING CHANGES
 - Rewrite of CLI with ``typer`` (#100)
 - Renamed config ``report`` to ``report_level`` (#100)
 - Renamed config ``ignore_language`` to ``ignore_languages`` (#100)
+- Renamed CLI option ``--report`` to ``--report-level`` (#100)
 - Renamed CLI option ``--ignore-language`` to ``--ignore-languages`` (#100)
 - Drop CLI option ``--ignore`` as alias to ``--ignore-languages`` (#100)
 - Drop CLI option ``--debug`` (#100)

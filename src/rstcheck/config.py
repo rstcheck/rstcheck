@@ -117,10 +117,10 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
             return None
 
         if isinstance(value, str):
-            return value.split(",")
+            return [v.strip() for v in value.split(",") if v.strip()]
 
         if isinstance(value, list) and all(isinstance(v, str) for v in value):
-            return value
+            return [v.strip() for v in value if v.strip()]
 
         raise ValueError("Not a string or list of strings")
 

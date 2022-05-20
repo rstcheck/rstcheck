@@ -37,6 +37,7 @@ class TestContextManager:
             assert ctx_manager is None
             assert docutils_directives._directives
             assert docutils_roles._roles
+            assert "sphinx.addnodes" not in sphinx.application.builtin_extensions
 
 
 class TestSphinxDirectiveAndRoleGetter:
