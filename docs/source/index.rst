@@ -29,7 +29,7 @@ the syntax of reStructuredText and code blocks nested within it.
    :caption: Miscellaneous:
 
    faq
-   changelog
    migrations
+   changelog
    authors
    license
