@@ -28,7 +28,7 @@
     :alt: Maintenance - intended
 
 .. |license| image:: https://img.shields.io/github/license/myint/rstcheck.svg?style=flat-square&label=License
-    :target: https://github.com/myint/rstcheck/blob/main/LICENSE
+    :target: https://github.com/myint/rstcheck/blob/master/LICENSE
     :alt: License
 
 .. |semver| image:: https://img.shields.io/badge/Semantic%20Versioning-2.0.0-brightgreen.svg?style=flat-square
@@ -79,7 +79,7 @@
     :alt: Github - Latest Release
 
 .. |gh_last_commit| image:: https://img.shields.io/github/last-commit/myint/rstcheck.svg?style=flat-square&logo=github
-    :target: https://github.com/myint/rstcheck/commits/main
+    :target: https://github.com/myint/rstcheck/commits/master
     :alt: GitHub - Last Commit
 
 .. |gh_stars| image:: https://img.shields.io/github/stars/myint/rstcheck.svg?style=flat-square&logo=github
