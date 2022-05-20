@@ -41,6 +41,6 @@ Add this to your ``.pre-commit-config.yaml``
 Use with Mega-Linter
 --------------------
 
-Just install `Mega-Linter <https://nvuillam.github.io/mega-linter/>`__ in your repository,
-`rstcheck <https://nvuillam.github.io/mega-linter/descriptors/rst_rstcheck/>`__
+Just install `Mega-Linter <https://megalinter.github.io/latest//>`__ in your repository,
+`rstcheck <https://megalinter.github.io/latest/descriptors/rst_rstcheck//>`__
 is part of the 70 linters activated out of the box.
