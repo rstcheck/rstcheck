@@ -24,6 +24,19 @@ You can simply install the package from PyPI::
     $ pip install rstcheck
 
 
+Extras
+~~~~~~
+
+``rstcheck`` has extras which can be installed to activate optional functionallity:
+
+- ``sphinx`` - To activate support for rst documents using the sphinx builder.
+- ``toml`` - To activate support for TOML files as configuration files.
+
+To install an extra simply add it in brackets like so::
+
+    $ pip install rstcheck[sphinx,toml]
+
+
 Installation from source
 ------------------------
 
