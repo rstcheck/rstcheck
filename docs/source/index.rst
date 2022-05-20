@@ -27,6 +27,7 @@ the syntax of reStructuredText and code blocks nested within it.
    :maxdepth: 2
    :caption: Miscellaneous:
 
+   faq
    changelog
    authors
    license
