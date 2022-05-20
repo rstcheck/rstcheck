@@ -43,6 +43,7 @@ Links on the versions point to PyPI.
 - Fix Malformed tables because of substitutions (#82)
 - Fix: remove `include` directive from ignore list when sphinx is active (#70)
 - Allow errors in code blocks to be ignored via ignore_messages (#100)
+- Add support for TOML config files (#84)
 
 ### BREAKING CHANGES
 
@@ -56,7 +57,6 @@ Links on the versions point to PyPI.
 - Drop CLI option `--debug` (#100)
 - Drop CLI option `--version`; may be readded later (#100)
 - Don't support multiline strings in INI files (#100)
-- Allow a string or list of strings for `ignore_messages` in TOML config files (#100)
 - Prohibit numbers as report level (#100)
 - Non-existing files are skipped; `rstcheck non-existing-file.rst` exits 0; may be changed later (#100)
 - Drop support for sphinx < 2.0
