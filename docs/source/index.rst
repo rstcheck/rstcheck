@@ -14,6 +14,7 @@ the syntax of reStructuredText and code blocks nested within it.
 
    installation
    usage/index
+   workflows/index
 
 
 .. toctree::
