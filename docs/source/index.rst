@@ -13,7 +13,7 @@ the syntax of reStructuredText and code blocks nested within it.
    :caption: Contents:
 
    installation
-   usage
+   usage/index
 
 
 .. toctree::
@@ -21,7 +21,6 @@ the syntax of reStructuredText and code blocks nested within it.
    :caption: API Reference:
 
    api
-   cli
 
 
 .. toctree::
