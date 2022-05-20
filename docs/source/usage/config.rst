@@ -18,7 +18,7 @@ Configuration file
 ~~~~~~~~~~~~~~~~~~
 
 A configuration file can only be set via the ``--config`` CLI option.
-After the option you must specify a path. The path may be relativ or absolute.
+After the option you must specify a path. The path may be relative or absolute.
 
 When the path points to a file, this concrete file is read and searched for a configuration
 section for ``rstcheck``. If no section is found a warning is printed and no file configuration
@@ -86,7 +86,7 @@ The level can be set case insensitive.
 Logging level
 ~~~~~~~~~~~~~
 
-The level at which addtional information besides linting issues should be printed.
+The level at which additional information besides linting issues should be printed.
 The following levels are supported:
 
 - DEBUG

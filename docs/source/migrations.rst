@@ -52,8 +52,8 @@ Sphinx features
 
 Support for sphinx prior version 2.0 was dropped.
 
-Hardcoded default values for roles and directives coming from ``sphinx`` were dropped.
-If you encounter a lot of unknwon roles and directives this may be the reason
+Hard-coded default values for roles and directives coming from ``sphinx`` were dropped.
+If you encounter a lot of unknown roles and directives this may be the reason
 (`Example issue <https://github.com/myint/rstcheck/issues/109>`__).
 
 To fix this simply add sphinx to the environment from where you run ``rstcheck``::

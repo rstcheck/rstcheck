@@ -29,7 +29,7 @@ Links on the versions point to PyPI.
 
 ### BREAKING CHANGES
 
-- String lists for `ignore_*` configs are whitespace cleaned at string start and end.
+- String lists for `ignore_*` configs are white-space cleaned at string start and end.
   Restores behavior of pre v6. (#116)
 
 ## [v6.0.0a1 (2022-05-13)](https://pypi.org/project/rstcheck/6.0.0a1/)
@@ -55,12 +55,12 @@ Links on the versions point to PyPI.
 - Renamed CLI option `--ignore-language` to `--ignore-languages` (#100)
 - Drop CLI option `--ignore` as alias to `--ignore-languages` (#100)
 - Drop CLI option `--debug` (#100)
-- Drop CLI option `--version`; may be readded later (#100)
-- Don't support multiline strings in INI files (#100)
+- Drop CLI option `--version`; may be added back later (#100)
+- Don't support multi-line strings in INI files (#100)
 - Prohibit numbers as report level (#100)
 - Non-existing files are skipped; `rstcheck non-existing-file.rst` exits 0; may be changed later (#100)
 - Drop support for sphinx < 2.0
-- Drop default values for directves and roles for sphinx (#65)
+- Drop default values for directives and roles for sphinx (#65)
 - CLI options now take precedence over config file options (#96)
 
 ## [v5.0.0 (2022-04-17)](https://pypi.org/project/rstcheck/5.0.0/)
@@ -74,7 +74,7 @@ Links on the versions point to PyPI.
 
 ### BREAKING CHANGES
 
-- Rewrite test.bash script in pytest test cases and run them on linux in CI
+- Rewrite test.bash script in pytest test cases and run them on Linux in CI
 - Rewrite old test suite in pytest and AAA style
 
 ## [v4.1.0 (2022-04-16)](https://pypi.org/project/rstcheck/4.1.0/)

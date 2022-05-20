@@ -6,7 +6,7 @@ Development
 ``rstcheck`` uses `Semantic Versioning <https://semver.org/>`__.
 
 ``rstcheck`` uses ``master`` as its single development branch. Therefore releases are
-made from this branch. Only the current release is upported and bugfixes are released
+made from this branch. Only the current release is supported and bugfixes are released
 with a patch release for the current minor release.
 
 
@@ -29,7 +29,7 @@ The setup of a local development environment is pretty easy. The only tool you n
 globally on your system or you can install it via ``pip`` in a self-created virtualenv
 (`virtualenv manual <https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/>`__).
 
-With ``poetry`` set up and ready we can create our development environment in just ome
+With ``poetry`` set up and ready we can create our development environment in just one
 step::
 
     $ poetry install
@@ -78,7 +78,7 @@ There are 3 available ``tox`` envs with all use the same virtualenv:
 - ``pre-commit``:
   For running any ``pre-commit`` command like ``tox -e pre-commit -- autoupdate --freeze``.
 - ``pre-commit-run``:
-  For runnning all hooks against the code base.
+  For running all hooks against the code base.
   A single hook's id can be passed as argument to run this hook only like
   ``tox -e pre-commit-run -- black``.
 - ``pre-commit-install``: For installing pre-commit hooks as git hooks, to automatically run

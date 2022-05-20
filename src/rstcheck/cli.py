@@ -19,7 +19,7 @@ If a directory is passed it will be searched for .rstcheck.cfg | pyproject.toml 
 HELP_RECURSIVE = "Recursively search passed directories for RST files to check."
 HELP_REPORT_LEVEL = f"""The report level of the linting issues found.
 Valid levels are: INFO | WARNING | ERROR | SEVERE | NONE.
-Defauls to {config_mod.DEFAULT_REPORT_LEVEL.name}.
+Defaults to {config_mod.DEFAULT_REPORT_LEVEL.name}.
 Can be set in config file.
 """
 HELP_IGNORE_DIRECTIVES = """Comma-separated-list of directives to add to the ignore list.

@@ -27,7 +27,7 @@ You can simply install the package from PyPI::
 Extras
 ~~~~~~
 
-``rstcheck`` has extras which can be installed to activate optional functionallity:
+``rstcheck`` has extras which can be installed to activate optional functionality:
 
 - ``sphinx`` - To activate support for rst documents using the sphinx builder.
 - ``toml`` - To activate support for TOML files as configuration files.
