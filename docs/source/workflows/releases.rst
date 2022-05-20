@@ -16,14 +16,14 @@ judgment of the mastertainer(s).
   Before starting the process of creating a new release make sure that all CI pipelines
   are green for the current commit.
 
-1. Check if the ``CHANGELOG.md`` is up-to-date and all changes are noted.
+#. Check if the ``CHANGELOG.md`` is up-to-date and all changes are noted.
 
-2. Run ``prep_release.py`` script to bump version, finalize ``CHANGELOG.md``,
+#. Run ``prep_release.py`` script to bump version, finalize ``CHANGELOG.md``,
    commit the changes and create a new git tag::
 
-    $ python3 prep_release.py --increase-type <TYPE>
+      $ python3 prep_release.py --increase-type <TYPE>
 
-  For the increase type there are three options:
+   For the increase type there are three options:
 
      - ``patch`` / ``bugfix``:
        for changes that **do not** add new functionality and are backwards compatible
@@ -32,15 +32,15 @@ judgment of the mastertainer(s).
      - ``major`` / ``breaking``:
        for changes that are **not** backwards compatible
 
-3. Build the sdist and wheel::
+#. Build the sdist and wheel::
 
     $ poetry build
 
-4. Publish package::
+#. Publish package::
 
    $ poetry publish
 
-5. Push the commit and tag to github::
+#. Push the commit and tag to github::
 
     $ git push --follow-tags
 
