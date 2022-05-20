@@ -17,14 +17,6 @@ rstcheck.checker module
    :undoc-members:
    :show-inheritance:
 
-rstcheck.cli module
--------------------
-
-.. automodule:: rstcheck.cli
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 rstcheck.config module
 ----------------------
 
