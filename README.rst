@@ -415,6 +415,10 @@ History
 (next version)
 --------------
 
+
+6.0.0a2 (2022-05-20)
+--------------------
+
 - Add support for INI multi-line string back (#116)
 - Fix bug #113 - sphinx print warnings for overwriting registered nodes (#117)
 
