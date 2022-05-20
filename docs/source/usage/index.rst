@@ -10,3 +10,4 @@ Documentation for the open API of the library can be found in the :ref:`api:API`
 
    cli
    config
+   integration
