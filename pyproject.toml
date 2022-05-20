@@ -48,6 +48,7 @@ sphinx-rtd-dark-mode = {version = "^1.2.4", optional = true}
 sphinx-autodoc-typehints = { version = ">=1.15", optional = true }
 sphinxcontrib-apidoc = { version = ">=0.3", optional = true }
 sphinxcontrib-spelling = { version = ">=7.3", optional = true }
+sphinx-click = "^4.0.3"
 # MAIN DEPENDENCIES
 importlib-metadata = {version = ">=1.6, <5.0", python = "<3.8"}
 typing-extensions = {version = ">=3.7.4, <5.0", python = "<3.8"}
@@ -86,6 +87,7 @@ docs = [
   "sphinx-autodoc-typehints",
   "sphinxcontrib-apidoc",
   "sphinxcontrib-spelling",
+  "sphinx-click",
 ]
 
 
