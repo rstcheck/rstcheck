@@ -55,7 +55,7 @@ repos:
 
   # pyupgrade - upgrade old syntax to new
   - repo: https://github.com/asottile/pyupgrade
-    rev: 256bd84aa5a17edbd3dcfaaa4f30f870168d2838 # frozen: v2.32.0
+    rev: 4d35c00c9ff5a51a853a89137db5fdd2bdf0ca95 # frozen: v2.32.1
     hooks:
       - id: pyupgrade
         args: ["--py37-plus"]
@@ -157,7 +157,7 @@ repos:
 
   # flakeheaven - wrapper for flake8
   - repo: https://github.com/flakeheaven/flakeheaven
-    rev: "3f0afc179dbd0907230fb3123f2938b0b63d3b7f" # frozen: 0.11.0
+    rev: "20f94457744c47d965d4520d3b22def538b0cc49" # frozen: 0.11.1
     hooks:
       - id: flakeheaven
         types: [python]
@@ -191,7 +191,7 @@ repos:
 
   # poetry - python dependency maJSONnagement
   - repo: https://github.com/python-poetry/poetry
-    rev: dca6ff2699a06c0217ed6d5a278fa3146e4136ff # frozen: 1.2.0b1
+    rev: 1492f0efa8aae73843f7c68ae06b74d2ac78bdd7 # frozen: 1.2.0b1
     hooks:
       - id: poetry-check
 
@@ -211,12 +211,22 @@ repos:
 
   # rstcheck - rst file checker
   - repo: https://github.com/myint/rstcheck
-    rev: 209a4a9850083ba9922f3094a579c4009927906d # frozen: v5.0.0
+    rev: 3a9ecb0f07517895f612cd04a8194390ce5c7b83 # frozen: v6.0.0a2
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
         exclude: testing
         args: ["--config", ".rstcheck.project.cfg"]
+
+  # ----------------------------------------------
+  # Markdown
+  # ----------------------------------------------
+
+  # markdownlint - md file checker
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: 79c5e552066e7ad28aca449e7f2eed692a603abf # frozen: v0.4.0
+    hooks:
+      - id: markdownlint-cli2
 
   # ----------------------------------------------
   # TOML / YAML
@@ -240,6 +250,6 @@ repos:
   # ----------------------------------------------
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: 0276e25f713ddfd66482f358d238186ca47a6eb4 # frozen: v2.18.1
+    rev: cc9d950601cd3eba27e8395a7edcd455262705d9 # frozen: v2.19.0
     hooks:
       - id: validate_manifest

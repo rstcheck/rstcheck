@@ -21,6 +21,10 @@ def find_ignored_languages(
 
     For example, to ignore C++, JSON, and Python:
 
+    .. testsetup::
+
+        from rstcheck.inline_config import find_ignored_languages
+
     >>> list(find_ignored_languages('''
     ... Example
     ... =======
@@ -28,8 +32,8 @@ def find_ignored_languages(
     ... .. rstcheck: ignore-languages=cpp,json
     ...
     ... .. rstcheck: ignore-languages=python
-    ... '''))
-    ["cpp", "json", "python"]
+    ... ''', "<string>"))
+    ['cpp', 'json', 'python']
 
     :param source: Rst source code
     :param source_origin: Origin of the source with the inline ignore comments

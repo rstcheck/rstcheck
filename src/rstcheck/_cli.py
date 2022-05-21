@@ -10,7 +10,6 @@ from rstcheck import _compat, _extras, config as config_mod, runner
 
 ValidReportLevels = _compat.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]
 
-HELP_FILES = "RST files to check. Can be files or directories if --recursive is passed too."
 HELP_CONFIG = """Config file to load. Can be a INI file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | setup.cfg.
 """
@@ -23,12 +22,12 @@ Can be hidden via --log-level."""
 HELP_RECURSIVE = "Recursively search passed directories for RST files to check."
 HELP_REPORT_LEVEL = f"""The report level of the linting issues found.
 Valid levels are: INFO | WARNING | ERROR | SEVERE | NONE.
-Defauls to {config_mod.DEFAULT_REPORT_LEVEL.name}.
+Defaults to {config_mod.DEFAULT_REPORT_LEVEL.name}.
 Can be set in config file.
 """
 HELP_LOG_LEVEL = """The log level of the application for information that is not a linting issue.
 Valid levels are: DEBUG | INFO | WARNING | ERROR | CRITICAL.
-Defauls to WARNING.
+Defaults to WARNING.
 """
 HELP_IGNORE_DIRECTIVES = """Comma-separated-list of directives to add to the ignore list.
 Can be set in config file.
@@ -63,7 +62,7 @@ def setup_logger(loglevel: str) -> None:
 
 def cli(  # pylint: disable=too-many-arguments
     files: t.List[pathlib.Path] = typer.Argument(  # noqa: M511,B008
-        ..., help=HELP_FILES, allow_dash=True
+        ..., allow_dash=True, hidden=True
     ),
     config: t.Optional[pathlib.Path] = typer.Option(  # noqa: M511,B008
         None, "--config", help=HELP_CONFIG
@@ -135,7 +134,16 @@ if _extras.TOMLI_INSTALLED:  # pragma: no cover
 cli.__doc__ = f"""CLI of rstcheck.
 
 Enabled features: {enabled_features}
+
+Pass one ore more rst FILES to check.
+Can be files or directories if --recursive is passed too.
+Pass "-" if you want to read from stdin.
 """
+
+
+app = typer.Typer()
+app.command()(cli)
+typer_click_object = typer.main.get_command(app)
 
 
 def main() -> None:  # pragma: no cover

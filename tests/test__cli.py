@@ -1,21 +1,21 @@
-"""Tests for ``cli`` module.
+"""Tests for ``_cli`` module.
 
-``cli.cli`` is not really good testable with unit tests.
+``_cli.cli`` is not really good testable with unit tests.
 Therfore tests are in the ``integration_tests`` directory.
 """
 import pytest
 
-from rstcheck import cli
+from rstcheck import _cli
 
 
 @pytest.mark.parametrize("level", ["SEVERE", "NONE"])
 def test_setup_logger_errors_on_invalid_levels(level: str) -> None:
     """Tests exception is raised on invalid levels."""
     with pytest.raises(ValueError, match=f"Invalid log level: {level}"):
-        cli.setup_logger(level)
+        _cli.setup_logger(level)
 
 
 @pytest.mark.parametrize("level", ["debug", "InFO", "WARNING", "ErRor", "critical"])
 def test_setup_logger_valid_levels(level: str) -> None:
     """Test no execption is raised on valid levels."""
-    cli.setup_logger(level)  # act
+    _cli.setup_logger(level)  # act

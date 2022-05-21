@@ -1,7 +1,3 @@
-========
-rstcheck
-========
-
 +-------------------+---------------------------------------------------------------------------------------------+
 | **General**       | |maintenance_y| |license| |semver|                                                          |
 |                   +---------------------------------------------------------------------------------------------+
@@ -17,100 +13,11 @@ rstcheck
 +-------------------+---------------------------------------------------------------------------------------------+
 
 
-Checks syntax of reStructuredText and code blocks nested within it.
-
-
-.. contents::
-
-
-Installation
-============
-
-From pip
-
-.. code:: shell
-
-    $ pip install rstcheck
-
-To use pyproject.toml for configuration::
-
-    $ pip install rstcheck[toml]
-
-To add sphinx support::
-
-    $ pip install rstcheck[sphinx]
-
-
-Supported languages in code blocks
-==================================
-
-- Bash
-- Doctest
-- C (C99)
-- C++ (C++11)
-- JSON
-- XML
-- Python
-- reStructuredText
-
-
-Examples
-========
-
-.. rstcheck: ignore-languages=cpp,python,rst
-
-With bad Python syntax:
-
-.. code:: rst
-
-    ====
-    Test
-    ====
-
-    .. code:: python
-
-        print(
-
-.. code:: text
-
-    $ rstcheck bad_python.rst
-    bad_python.rst:7: (ERROR/3) (python) unexpected EOF while parsing
-
-With bad C++ syntax:
-
-.. code:: rst
-
-    ====
-    Test
-    ====
-
-    .. code:: cpp
-
-        int main()
-        {
-            return x;
-        }
-
-.. code:: text
-
-    $ rstcheck bad_cpp.rst
-    bad_cpp.rst:9: (ERROR/3) (cpp) error: 'x' was not declared in this scope
-
-With bad syntax in the reStructuredText document itself:
-
-.. code:: rst
-
-    ====
-    Test
-    ===
-
-.. code:: text
-
-    $ rstcheck bad_rst.rst
-    bad_rst.rst:1: (SEVERE/4) Title overline & underline mismatch.
-
+.. Change badges in README also
 
 .. General
+
+.. Change maintenance status in README also
 
 .. |maintenance_n| image:: https://img.shields.io/badge/Maintenance%20Intended-✖-red.svg?style=flat-square
     :target: http://unmaintained.tech/
@@ -121,7 +28,7 @@ With bad syntax in the reStructuredText document itself:
     :alt: Maintenance - intended
 
 .. |license| image:: https://img.shields.io/github/license/myint/rstcheck.svg?style=flat-square&label=License
-    :target: https://github.com/myint/rstcheck/blob/main/LICENSE
+    :target: https://github.com/myint/rstcheck/blob/master/LICENSE
     :alt: License
 
 .. |semver| image:: https://img.shields.io/badge/Semantic%20Versioning-2.0.0-brightgreen.svg?style=flat-square
@@ -172,7 +79,7 @@ With bad syntax in the reStructuredText document itself:
     :alt: Github - Latest Release
 
 .. |gh_last_commit| image:: https://img.shields.io/github/last-commit/myint/rstcheck.svg?style=flat-square&logo=github
-    :target: https://github.com/myint/rstcheck/commits/main
+    :target: https://github.com/myint/rstcheck/commits/master
     :alt: GitHub - Last Commit
 
 .. |gh_stars| image:: https://img.shields.io/github/stars/myint/rstcheck.svg?style=flat-square&logo=github

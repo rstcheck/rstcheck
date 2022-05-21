@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 CONFIG_FILES = [".rstcheck.cfg", "setup.cfg"]
+"""Supported default config files."""
 if _extras.TOMLI_INSTALLED:  # pragma: no cover
     CONFIG_FILES = [".rstcheck.cfg", "pyproject.toml", "setup.cfg"]
 
@@ -45,13 +46,14 @@ ReportLevelMap = {
 
 
 DEFAULT_REPORT_LEVEL = ReportLevel.INFO
+"""Default report level."""
 
 
 class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
     """Rstcheck config file.
 
-    :raises ValueError:: If setting has incorrect value or type
-    :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
+    :raises ValueError: If setting has incorrect value or type
+    :raises pydantic.error_wrappers.ValidationError: If setting is not parsable into correct type
     """
 
     report_level: t.Optional[ReportLevel]
@@ -68,8 +70,8 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         """Validate the report_level setting.
 
         :param value: Value to validate
-        :raises ValueError: If ``Value`` is not a valid docutils report level
-        :return: Instance of ``ReportLevel`` or None if emptry string.
+        :raises ValueError: If ``value`` is not a valid docutils report level
+        :return: Instance of :py:class:`ReportLevel` or None if emptry string.
         """
         if value is None:
             return None
@@ -110,7 +112,7 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         Comma separated strings are split into a list.
 
         :param value: Value to validate
-        :raises ValueError: If not a ``str`` or ``List[str]``
+        :raises ValueError: If not a :py:class:`str` or :py:class:`list` of :py:class:`str`
         :return: List of things to ignore in the respective category
         """
         if value is None:
@@ -134,8 +136,9 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         If a list ist given, the entries are concatenated with "|" to create an or RegEx.
 
         :param value: Value to validate
-        :raises ValueError: If not a ``str`` or ``List[str]``
-        :return: A RegEx string with messages to ignore or Pattern if it is one already
+        :raises ValueError: If not a :py:class:`str` or :py:class:`list` of :py:class:`str`
+        :return: A RegEx string with messages to ignore or :py:class:`typing.Pattern` if it is one
+            already
         """
         if value is None:
             return None
@@ -155,8 +158,8 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
 class RstcheckConfig(RstcheckConfigFile):  # pylint: disable=too-few-public-methods
     """Rstcheck config.
 
-    :raises ValueError:: If setting has incorrect value or type
-    :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
+    :raises ValueError: If setting has incorrect value or type
+    :raises pydantic.error_wrappers.ValidationError: If setting is not parsable into correct type
     """
 
     config_path: t.Optional[pathlib.Path]
@@ -169,9 +172,9 @@ class _RstcheckConfigINIFile(
 ):  # pylint: disable=too-few-public-methods
     """Type for [rstcheck] section in INI file.
 
-    The types apply to the file's data before the parsing by ``RstcheckConfig`` is done.
+    The types apply to the file's data before the parsing by :py:class:`RstcheckConfig` is done.
 
-    :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
+    :raises pydantic.error_wrappers.ValidationError: If setting is not parsable into correct type
     """
 
     report_level: pydantic.NoneStr = pydantic.Field(None)  # pylint: disable=no-member
@@ -192,12 +195,13 @@ def _load_config_from_ini_file(
 
     :param ini_file: INI file to load config from
     :param log_missing_section_as_warning: If a missing [tool.rstcheck] section should be logged at
-        WARNING (``True``) or ``INFO`` (``False``) level;
-        defaults to ``True``
+        WARNING (:py:obj:`True`) or ``INFO`` (:py:obj:`False`) level;
+        defaults to :py:obj:`True`
     :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
         defaults to :py:obj:`False`
     :raises FileNotFoundError: If the file is not found
-    :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
+    :return: instance of :py:class:`RstcheckConfigFile` or :py:class:`None` on missing config
+        section
     """
     logger.debug(f"Try loading config from INI file: '{ini_file}'")
     resolved_file = ini_file.resolve()
@@ -233,9 +237,9 @@ class _RstcheckConfigTOMLFile(
 ):  # pylint: disable=too-few-public-methods
     """Type for [tool.rstcheck] section in TOML file.
 
-    The types apply to the file's data before the parsing by ``RstcheckConfig`` is done.
+    The types apply to the file's data before the parsing by :py:class:`RstcheckConfig` is done.
 
-    :raises pydantic.error_wrappers.ValidationError:: If setting is not parsable into correct type
+    :raises pydantic.error_wrappers.ValidationError: If setting is not parsable into correct type
     """
 
     report_level: t.Optional[str] = pydantic.Field(None)
@@ -261,13 +265,13 @@ def _load_config_from_toml_file(
 
     :param toml_file: TOML file to load config from
     :param log_missing_section_as_warning: If a missing [tool.rstcheck] section should be logged at
-        WARNING (``True``) or ``INFO`` (``False``) level;
-        defaults to ``True``
+        WARNING (:py:obj:`True`) or ``INFO`` (:py:obj:`False`) level;
+        defaults to :py:obj:`True`
     :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
         defaults to :py:obj:`False`
     :raises ValueError: If the file is not a TOML file
     :raises FileNotFoundError: If the file is not found
-    :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
+    :return: instance of :py:class:`RstcheckConfigFile` or :py:obj:`None` on missing config section
     """
     _extras.install_guard("tomli")
     logger.debug(f"Try loading config from TOML file: '{toml_file}'.")
@@ -318,16 +322,16 @@ def load_config_file(
     .. caution::
 
         If a TOML file is passed this function need tomli installed!
-        Use toml extra or install manally.
+        Use toml extra or install manually.
 
     :param file_path: File to load config from
     :param log_missing_section_as_warning: If a missing config section should be logged at
-        WARNING (``True``) or ``INFO`` (``False``) level;
-        defaults to ``True``
+        WARNING (:py:obj:`True`) or ``INFO`` (:py:obj:`False`) level;
+        defaults to :py:obj:`True`
     :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
         defaults to :py:obj:`False`
     :raises FileNotFoundError: If the file is not found
-    :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
+    :return: instance of :py:class:`RstcheckConfigFile` or :py:obj:`None` on missing config section
     """
     logger.debug("Try loading config file.")
     if file_path.suffix.casefold() == ".toml":
@@ -351,17 +355,17 @@ def load_config_file_from_dir(
 ) -> t.Optional[RstcheckConfigFile]:
     """Search, load, parse and validate rstcheck config from a directory.
 
-    Searches files from ``CONFIG_FILES`` in the directory. If a file is found, try to load the
-    config from it. If is has no config, search further.
+    Searches files from :py:data:`CONFIG_FILES` in the directory. If a file is found, try to load
+    the config from it. If is has no config, search further.
 
     :param dir_path: Directory to search
     :param log_missing_section_as_warning: If a missing config section in a config file should be
-        logged at WARNING (``True``) or ``INFO`` (``False``) level;
-        defaults to ``False``
+        logged at WARNING (:py:obj:`True`) or ``INFO`` (:py:obj:`False`) level;
+        defaults to :py:obj:`False`
     :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
         defaults to :py:obj:`False`
-    :return: instance of ``RstcheckConfigFile`` or
-        ``None`` if no file is found or no file has a rstcheck section
+    :return: instance of :py:class:`RstcheckConfigFile` or
+        :py:obj:`None` if no file is found or no file has a rstcheck section
     """
     logger.debug(f"Try loading config file from directory: '{dir_path}'.")
     config = None
@@ -393,18 +397,18 @@ def load_config_file_from_dir_tree(
 ) -> t.Optional[RstcheckConfigFile]:
     """Search, load, parse and validate rstcheck config from a directory tree.
 
-    Searches files from ``CONFIG_FILES`` in the directory. If a file is found, try to load the
-    config from it. If is has no config, search further. If no config is found in the directory
+    Searches files from :py:data:`CONFIG_FILES` in the directory. If a file is found, try to load
+    the config from it. If is has no config, search further. If no config is found in the directory
     search its parents one by one.
 
     :param dir_path: Directory to search
     :param log_missing_section_as_warning: If a missing config section in a config file should be
-        logged at WARNING (``True``) or ``INFO`` (``False``) level;
-        defaults to ``False``
+        logged at ``WARNING`` (:py:obj:`True`) or ``INFO`` (:py:obj:`False`) level;
+        defaults to :py:obj:`False`
     :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
         defaults to :py:obj:`False`
-    :return: instance of ``RstcheckConfigFile`` or
-        ``None`` if no file is found or no file has a rstcheck section
+    :return: instance of :py:class:`RstcheckConfigFile` or
+        :py:obj:`None` if no file is found or no file has a rstcheck section
     """
     logger.debug(f"Try loading config file from directory tree: '{dir_path}'.")
     config = None
@@ -447,19 +451,19 @@ def load_config_file_from_path(
     :param path: Path to load config file from; can be a file or directory
     :param search_dir_tree: If the directory tree should be searched;
         only applies if ``path`` is a directory;
-        defaults to False
+        defaults to :py:obj:`False`
     :param log_missing_section_as_warning_for_file: If a missing config section in a config file
-        should be logged at WARNING (``True``) or ``INFO`` (``False``) level when the given path is
-        a file;
-        defaults to ``True``
+        should be logged at WARNING (:py:obj:`True`) or ``INFO`` (:py:obj:`False`) level when the
+        given path is a file;
+        defaults to :py:obj:`True`
     :param log_missing_section_as_warning_for_dir: If a missing config section in a config file
-        should be logged at WARNING (``True``) or ``INFO`` (``False``) level when the given file is
-        a direcotry;
-        defaults to ``False``
+        should be logged at ``WARNING`` (:py:obj:`True`) or ``INFO`` (:py:obj:`False`) level when
+        the given file is a direcotry;
+        defaults to :py:obj:`False`
     :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
         defaults to :py:obj:`False`
-    :return: instance of ``RstcheckConfigFile`` or
-        ``None`` if no file is found or no file has a rstcheck section
+    :return: instance of :py:class:`RstcheckConfigFile` or
+        :py:obj:`None` if no file is found or no file has a rstcheck section
     """
     logger.debug(f"Try loading config file from path: '{path}'.")
     resolved_path = path.resolve()
@@ -499,7 +503,7 @@ def merge_configs(
     :param config_base: The base config to merge into
     :param config_add: The config that is merged into the ``config_base``
     :param config_add_is_dominant: If the ``config_add`` overwrites values of ``config_base``;
-        defaults to True
+        defaults to :py:obj:`True`
     :return: New merged config
     """
     logger.debug("Merging configs.")
