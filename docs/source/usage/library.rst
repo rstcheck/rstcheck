@@ -35,4 +35,4 @@ Following the `Official HOWTO`_ logging is deactivated by default, but can be ac
 if you as a developer provide a logging configuration.
 
 
-.. _Official HOWTO: https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library__
+.. _Official HOWTO: https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library
