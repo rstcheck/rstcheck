@@ -1,6 +1,4 @@
 """Tests for ``inline_config`` module."""
-import pytest
-
 from rstcheck import inline_config
 
 
@@ -12,7 +10,7 @@ class TestFindIgnoredLanguages:
         """Test giving an empty string as source results in no languages found."""
         source = ""
 
-        result = list(inline_config.find_ignored_languages(source))
+        result = list(inline_config.find_ignored_languages(source, "<string>"))
 
         assert not result
 
@@ -24,7 +22,7 @@ Example
 =======
 """
 
-        result = list(inline_config.find_ignored_languages(source))
+        result = list(inline_config.find_ignored_languages(source, "<string>"))
 
         assert not result
 
@@ -37,7 +35,7 @@ Example
 .. rstcheck: ignore-languages=cpp
 """
 
-        result = list(inline_config.find_ignored_languages(source))
+        result = list(inline_config.find_ignored_languages(source, "<string>"))
 
         assert result == ["cpp"]
 
@@ -53,7 +51,7 @@ Example
 .. rstcheck: ignore-languages=cpp,json
 """
 
-        result = list(inline_config.find_ignored_languages(source))
+        result = list(inline_config.find_ignored_languages(source, "<string>"))
 
         assert result == ["cpp", "json"]
 
@@ -70,7 +68,7 @@ Example
 .. rstcheck: ignore-languages=json
 """
 
-        result = list(inline_config.find_ignored_languages(source))
+        result = list(inline_config.find_ignored_languages(source, "<string>"))
 
         assert result == ["cpp", "json"]
 
@@ -88,7 +86,7 @@ Example
 .. rstcheck: ignore-languages = python
 """
 
-        result = list(inline_config.find_ignored_languages(source))
+        result = list(inline_config.find_ignored_languages(source, "<string>"))
 
         assert result == ["cpp", "json", "python"]
 
@@ -101,18 +99,19 @@ Example
 .. rstcheck: ignore_languages=cpp
 """
 
-        result = list(inline_config.find_ignored_languages(source))
+        result = list(inline_config.find_ignored_languages(source, "<string>"))
 
         assert not result
 
     @staticmethod
     def test_source_with_incorrect_config_syntax_raises() -> None:
-        """Test error on incorrect inline config."""
+        """Test incorrect inline config is ignored."""
         source = """
 Example
 =======
 .. rstcheck: ignore-languages: cpp
 """
 
-        with pytest.raises(inline_config.RstcheckCommentSyntaxError):
-            list(inline_config.find_ignored_languages(source))
+        result = list(inline_config.find_ignored_languages(source, "<string>"))
+
+        assert not result

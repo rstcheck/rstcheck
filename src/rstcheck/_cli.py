@@ -1,4 +1,5 @@
 """CLI for rstcheck."""
+import logging
 import pathlib
 import typing as t
 
@@ -16,11 +17,17 @@ if _extras.TOMLI_INSTALLED:  # pragma: no cover
     HELP_CONFIG = """Config file to load. Can be a INI or TOML file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | pyproject.toml | setup.cfg.
 """
+HELP_WARN_UNKNOWN_SETTINGS = """Log a WARNING for unknown settings in config files.
+Can be hidden via --log-level."""
 HELP_RECURSIVE = "Recursively search passed directories for RST files to check."
 HELP_REPORT_LEVEL = f"""The report level of the linting issues found.
 Valid levels are: INFO | WARNING | ERROR | SEVERE | NONE.
 Defaults to {config_mod.DEFAULT_REPORT_LEVEL.name}.
 Can be set in config file.
+"""
+HELP_LOG_LEVEL = """The log level of the application for information that is not a linting issue.
+Valid levels are: DEBUG | INFO | WARNING | ERROR | CRITICAL.
+Defauls to WARNING.
 """
 HELP_IGNORE_DIRECTIVES = """Comma-separated-list of directives to add to the ignore list.
 Can be set in config file.
@@ -40,6 +47,19 @@ Can be set in config file.
 """
 
 
+def setup_logger(loglevel: str) -> None:
+    """Set up logging.
+
+    :param loglevel: Level to log at.
+    :raises ValueError: On invalid logging leveles.
+    """
+    numeric_level = getattr(logging, loglevel.upper(), None)
+    if not isinstance(numeric_level, int):
+        raise ValueError(f"Invalid log level: {loglevel}")
+
+    logging.basicConfig(level=numeric_level)
+
+
 def cli(  # pylint: disable=too-many-arguments
     files: t.List[pathlib.Path] = typer.Argument(  # noqa: M511,B008
         ..., allow_dash=True, hidden=True
@@ -47,11 +67,17 @@ def cli(  # pylint: disable=too-many-arguments
     config: t.Optional[pathlib.Path] = typer.Option(  # noqa: M511,B008
         None, "--config", help=HELP_CONFIG
     ),
+    warn_unknown_settings: t.Optional[bool] = typer.Option(  # noqa: M511,B008
+        None, "--warn-unknown-settings", help=HELP_WARN_UNKNOWN_SETTINGS
+    ),
     recursive: t.Optional[bool] = typer.Option(  # noqa: M511,B008
         None, "--recursive", "-r", help=HELP_RECURSIVE
     ),
     report_level: t.Optional[str] = typer.Option(  # noqa: M511,B008
         None, metavar="LEVEL", help=HELP_REPORT_LEVEL
+    ),
+    log_level: str = typer.Option(  # noqa: M511,B008
+        "WARNING", metavar="LEVEL", help=HELP_LOG_LEVEL
     ),
     ignore_directives: t.Optional[str] = typer.Option(  # noqa: M511,B008
         None, help=HELP_IGNORE_DIRECTIVES
@@ -68,12 +94,17 @@ def cli(  # pylint: disable=too-many-arguments
     ),
 ) -> int:
     """CLI of rstcheck."""
+    setup_logger(log_level)
+    logger = logging.getLogger(__name__)
+
     if pathlib.Path("-") in files and len(files) > 1:
         typer.echo("'-' is only allowed without additional files.", err=True)
         raise typer.Abort()
 
+    logger.info("Create main configuration from CLI options.")
     rstcheck_config = config_mod.RstcheckConfig(
         config_path=config,
+        warn_unknown_settings=warn_unknown_settings,
         recursive=recursive,
         report_level=report_level,
         ignore_directives=ignore_directives,
@@ -82,9 +113,13 @@ def cli(  # pylint: disable=too-many-arguments
         ignore_languages=ignore_languages,
         ignore_messages=ignore_messages,
     )
+
+    logger.debug("Create main runner instance.")
     _runner = runner.RstcheckMainRunner(
         check_paths=files, rstcheck_config=rstcheck_config, overwrite_config=False
     )
+
+    logger.info("Run main runner instance.")
     _runner.check()
     exit_code = _runner.print_result()
     raise typer.Exit(code=exit_code)

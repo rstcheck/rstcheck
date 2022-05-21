@@ -1,4 +1,5 @@
 """Runner of rstcheck."""
+import logging
 import multiprocessing
 import os
 import pathlib
@@ -7,6 +8,9 @@ import sys
 import typing as t
 
 from . import _sphinx, checker, config, types
+
+
+logger = logging.getLogger(__name__)
 
 
 class RstcheckMainRunner:
@@ -27,7 +31,9 @@ class RstcheckMainRunner:
         self.config = rstcheck_config
         self.overwrite_config = overwrite_config
         if rstcheck_config.config_path:
-            self.load_config_file(rstcheck_config.config_path)
+            self.load_config_file(
+                rstcheck_config.config_path, rstcheck_config.warn_unknown_settings or False
+            )
 
         self.check_paths = check_paths
         self.files_to_check: t.List[pathlib.Path] = []
@@ -39,19 +45,32 @@ class RstcheckMainRunner:
 
         self.errors: t.List[types.LintError] = []
 
-    def load_config_file(self, config_path: pathlib.Path) -> None:
+    def load_config_file(
+        self, config_path: pathlib.Path, warn_unknown_settings: bool = False
+    ) -> None:
         """Load config from file and merge with current config.
 
         If the loaded file config overwrites the current config depends on the
         ``self.overwrite_config`` attribute set on initialization.
 
         :param config_path: Path to config file; can be directory or file
+        :param warn_unknown_settings: If a warning should be logged for unknown settings in config
+            file;
+            defaults to :py:obj:`False`
         """
-        file_config = config.load_config_file_from_path(config_path)
+        logger.info(f"Load config file for main runner: '{config_path}'.")
+        file_config = config.load_config_file_from_path(
+            config_path, warn_unknown_settings=warn_unknown_settings
+        )
 
         if file_config is None:
+            logger.warning("Config file was empty or not found.")
             return
 
+        logger.debug(
+            "Merging config from file into main config. "
+            f"File config is dominant: {self.overwrite_config}"
+        )
         self.config = config.merge_configs(
             self.config, file_config, config_add_is_dominant=self.overwrite_config
         )
@@ -63,10 +82,12 @@ class RstcheckMainRunner:
         ``self.check_paths`` attribute set on initialization and search them for rst files
         to check. Add those files to the file list.
         """  # noqa: Q440,Q441,Q447,Q449
+        logger.debug("Updating list of files to check.")
         paths = list(self.check_paths)
         self.files_to_check = []
 
         if len(paths) == 1 and paths[0].name == "-":
+            logger.info("'-' detected. Using stdin for input.'")
             self.files_to_check.append(paths[0])
             return
 
@@ -96,6 +117,7 @@ class RstcheckMainRunner:
 
         :return: List of lists of errors found per file
         """
+        logger.debug("Runnning checks synchronically.")
         with _sphinx.load_sphinx_if_available():
             results = [
                 checker.check_file(file, self.config, self.overwrite_config)
@@ -108,6 +130,7 @@ class RstcheckMainRunner:
 
         :return: List of lists of errors found per file
         """
+        logger.debug(f"Runnning checks in parallel with pool size of {self._pool_size}.")
         with _sphinx.load_sphinx_if_available(), multiprocessing.Pool(self._pool_size) as pool:
             results = pool.starmap(
                 checker.check_file,
@@ -133,6 +156,7 @@ class RstcheckMainRunner:
 
         A new call overwrite the old cached errors.
         """
+        logger.info("Run checks for all files.")
         results = (
             self._run_checks_parallel() if len(self.files_to_check) > 1 else self._run_checks_sync()
         )
@@ -166,5 +190,6 @@ class RstcheckMainRunner:
 
         :return: exit code 0 if no error is printed; 1 if any error is printed
         """
+        logger.info("Run checks and print results.")
         self.check()
         return self.print_result()

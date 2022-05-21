@@ -221,35 +221,6 @@ Test
         assert not result
 
     @staticmethod
-    def test_invalid_inline_ignore_config() -> None:
-        """Test error on invalid inline ignore-languages is passed on."""
-        source = """
-.. rstcheck: ignore-languages python
-"""
-
-        result = list(checker.check_source(source))
-
-        assert 'Expected "key=value" syntax' in result[0].get("message", "")
-
-    @staticmethod
-    def test_invalid_inline_ignore_config_not_ignored() -> None:
-        """Test error on invalid inline ignore-languages is not ignored."""
-        source = """
-.. rstcheck: ignore-languages python
-"""
-        ignores = types.IgnoreDict(
-            messages=re.compile(r'Expected "key=value" syntax'),
-            languages=[],
-            directives=[],
-            roles=[],
-            substitutions=[],
-        )
-
-        result = list(checker.check_source(source, ignores=ignores))
-
-        assert 'Expected "key=value" syntax' in result[0]["message"]
-
-    @staticmethod
     @pytest.mark.skipif(_extras.SPHINX_INSTALLED, reason="Test without sphinx extra.")
     def test_sphinx_directive_errors_without_sphinx() -> None:
         """Test error on sphinx directive when sphinx is missing."""

@@ -25,7 +25,7 @@ class TestRstcheckMainRunnerInit:
 
         runner.RstcheckMainRunner([], init_config)  # act
 
-        mocked_loader.assert_called_once_with(config_file_path)
+        mocked_loader.assert_called_once_with(config_file_path, False)
 
     @staticmethod
     def test_no_load_config_file_if_unset(mocker: pytest_mock.MockerFixture) -> None:
@@ -56,7 +56,9 @@ class TestRstcheckMainRunnerConfigFileLoader:
     @staticmethod
     def test_no_config_update_on_no_file_config(monkeypatch: pytest.MonkeyPatch) -> None:
         """Test config is not updated when no file config is found."""
-        monkeypatch.setattr(config, "load_config_file_from_path", lambda _: None)
+        monkeypatch.setattr(
+            config, "load_config_file_from_path", lambda _, warn_unknown_settings: None
+        )
         init_config = config.RstcheckConfig()
         _runner = runner.RstcheckMainRunner([], init_config)
 
@@ -68,7 +70,9 @@ class TestRstcheckMainRunnerConfigFileLoader:
     def test_config_update_on_found_file_config(monkeypatch: pytest.MonkeyPatch) -> None:
         """Test config is updated when file config is found."""
         file_config = config.RstcheckConfigFile(report_level=config.ReportLevel.SEVERE)
-        monkeypatch.setattr(config, "load_config_file_from_path", lambda _: file_config)
+        monkeypatch.setattr(
+            config, "load_config_file_from_path", lambda _, warn_unknown_settings: file_config
+        )
         init_config = config.RstcheckConfig(report_level=config.ReportLevel.INFO)
         _runner = runner.RstcheckMainRunner([], init_config, overwrite_config=True)
 
