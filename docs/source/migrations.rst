@@ -60,7 +60,7 @@ Support for sphinx prior version 2.0 was dropped.
 
 Hard-coded default values for roles and directives coming from ``sphinx`` were dropped.
 If you encounter a lot of unknown roles and directives this may be the reason
-(`Example issue <https://github.com/myint/rstcheck/issues/109>`__).
+(`Example issue`_).
 
 To fix this simply add sphinx to the environment from where you run ``rstcheck``::
 
@@ -87,3 +87,6 @@ Version 3 to 4
 Use python 3.7 or newer to run ``rstcheck``.
 
 .. highlight:: default
+
+
+.. _Example issue: https://github.com/myint/rstcheck/issues/109

@@ -3,7 +3,7 @@
 Development
 ===========
 
-``rstcheck`` uses `Semantic Versioning <https://semver.org/>`__.
+``rstcheck`` uses `Semantic Versioning`_.
 
 ``rstcheck`` uses ``master`` as its single development branch. Therefore releases are
 made from this branch. Only the current release is supported and bugfixes are released
@@ -23,11 +23,9 @@ For development the following tools are used:
 Set up Local Development Environment
 ------------------------------------
 
-The setup of a local development environment is pretty easy. The only tool you need is
-`poetry <https://python-poetry.org/docs/>`__. You can install it via the
-`recommended way <https://python-poetry.org/docs/#installation>`__, which installs it
-globally on your system or you can install it via ``pip`` in a self-created virtualenv
-(`virtualenv manual <https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/>`__).
+The setup of a local development environment is pretty easy. The only tool you need is the
+`poetry`_. You can install it via the `recommended way`_, which installs it globally on your
+system or you can install it via ``pip`` in a self-created virtualenv (`virtualenv manual`_).
 
 With ``poetry`` set up and ready we can create our development environment in just one
 step::
@@ -40,8 +38,8 @@ This will install ``rstcheck`` along its main and development dependencies.
 Working with the Local Development Environment
 ----------------------------------------------
 
-poetry
-~~~~~~
+Dependency management and more with poetry
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 is used for dependency management, building and publishing ``rstcheck``.
 
@@ -67,8 +65,8 @@ Different environment lists are available and can be selected with ``tox -n <ENV
 - docs: run all documentation tests.
 
 
-pre-commit
-~~~~~~~~~~
+Linting and formatting pre-commit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 can be used directly from within the development environment or you can use
 ``tox`` to run it pre-configured.
@@ -93,3 +91,9 @@ installed to allow IDEs to use them for inline error messages. Their config is i
 ``pyproject.toml``. To run them actively use ``pre-commit`` and/or ``tox``.
 
 .. highlight:: default
+
+
+.. _Semantic Versioning: https://semver.org/
+.. _poetry: https://python-poetry.org/docs/
+.. _recommended way: https://python-poetry.org/docs/#installation
+.. _virtualenv manual: https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/

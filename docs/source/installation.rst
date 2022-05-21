@@ -11,9 +11,7 @@ Create virtual environment
 --------------------------
 
 There are several packages/modules for creating python virtual environments.
-Here is a
-`manual <https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/>`__
-by the PyPA.
+Here is a manual_ by the PyPA.
 
 
 Installation from PyPI
@@ -57,3 +55,6 @@ You can also download the current version as `tar.gz` or `zip` file, extract it 
 install it with pip like above.
 
 .. highlight:: default
+
+
+.. _manual: https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/
