@@ -18,6 +18,8 @@ if _extras.TOMLI_INSTALLED:  # pragma: no cover
     HELP_CONFIG = """Config file to load. Can be a INI or TOML file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | pyproject.toml | setup.cfg.
 """
+HELP_WARN_UNKNOWN_SETTINGS = """Log a WARNING for unknown settings in config files.
+Can be hidden via --log-level."""
 HELP_RECURSIVE = "Recursively search passed directories for RST files to check."
 HELP_REPORT_LEVEL = f"""The report level of the linting issues found.
 Valid levels are: INFO | WARNING | ERROR | SEVERE | NONE.
@@ -66,6 +68,9 @@ def cli(  # pylint: disable=too-many-arguments
     config: t.Optional[pathlib.Path] = typer.Option(  # noqa: M511,B008
         None, "--config", help=HELP_CONFIG
     ),
+    warn_unknown_settings: t.Optional[bool] = typer.Option(  # noqa: M511,B008
+        None, "--warn-unknown-settings", help=HELP_WARN_UNKNOWN_SETTINGS
+    ),
     recursive: t.Optional[bool] = typer.Option(  # noqa: M511,B008
         None, "--recursive", "-r", help=HELP_RECURSIVE
     ),
@@ -100,6 +105,7 @@ def cli(  # pylint: disable=too-many-arguments
     logger.info("Create main configuration from CLI options.")
     rstcheck_config = config_mod.RstcheckConfig(
         config_path=config,
+        warn_unknown_settings=warn_unknown_settings,
         recursive=recursive,
         report_level=report_level,
         ignore_directives=ignore_directives,
