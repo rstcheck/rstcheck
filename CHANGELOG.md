@@ -18,7 +18,7 @@ Links on the versions point to PyPI.
 
 [diff v6.0.0rc1...master](https://github.com/myint/rstcheck/compare/v6.0.0rc1...master)
 
-## [v6.0.0rc1 (2022-05-20)](https://pypi.org/project/rstcheck/6.0.0rc1/)
+## [v6.0.0rc1 (2022-05-21)](https://pypi.org/project/rstcheck/6.0.0rc1/)
 
 [diff v6.0.0a2...v6.0.0rc1](https://github.com/myint/rstcheck/compare/v6.0.0a2...v6.0.0rc1)
 
