@@ -18,7 +18,17 @@ Links on the versions point to PyPI.
 
 [diff v6.0.0a2...master](https://github.com/myint/rstcheck/compare/v6.0.0a2...master)
 
+### New features
+
 - Add more thorough documentation ([#112](https://github.com/myint/rstcheck/pull/112))
+- Add `--log-level` option to CLI ([#108](https://github.com/myint/rstcheck/pull/108))
+- Add `--warn-unknown-settings` flag to CLI ([#118](https://github.com/myint/rstcheck/pull/118))
+- Setup logging to console for CLI ([#108](https://github.com/myint/rstcheck/pull/108))
+- Setup logging to console for library (deactivated by default) ([#108](https://github.com/myint/rstcheck/pull/108))
+
+### BREAKING CHANGES
+
+- `find_ignored_languages` no longer throws exception but loggs warning ([#108](https://github.com/myint/rstcheck/pull/108))
 
 ## [v6.0.0a2 (2022-05-20)](https://pypi.org/project/rstcheck/6.0.0a2/)
 
