@@ -44,4 +44,4 @@ jobs:
           python -m pip install tox poetry
 
       - name: Run pre-commit with tox
-        run: tox -e pre-commit
+        run: tox -e pre-commit-run
