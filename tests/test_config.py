@@ -539,6 +539,28 @@ unkwown_setting=true
             f"Unknown setting(s) ['unkwown_setting'] found in file: '{conf_file}'."
         )
 
+    @staticmethod
+    def test_no_warning_on_known_settings_when_set(
+        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+    ) -> None:
+        """Test that a warning is logged on known settings when activated."""
+        conf_file = tmp_path / "config.ini"
+        file_content = """
+[rstcheck]
+report_level=INFO
+"""
+        conf_file.write_text(file_content)
+        warning_mock = mocker.patch.object(config.logger, "warning")
+
+        result = config._load_config_from_ini_file(  # pylint: disable=protected-access
+            conf_file,
+            log_missing_section_as_warning=False,
+            warn_unknown_settings=True,
+        )
+
+        assert result is not None
+        warning_mock.assert_not_called()
+
 
 @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
 class TestTomlFileLoader:
@@ -820,6 +842,28 @@ unkwown_setting=true
         warning_mock.assert_called_once_with(
             f"Unknown setting(s) ['unkwown_setting'] found in file: '{conf_file}'."
         )
+
+    @staticmethod
+    def test_no_warning_on_known_settings_when_set(
+        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+    ) -> None:
+        """Test that a warning is logged on known settings when activated."""
+        conf_file = tmp_path / "config.toml"
+        file_content = """
+[tool.rstcheck]
+report_level="INFO"
+"""
+        conf_file.write_text(file_content)
+        warning_mock = mocker.patch.object(config.logger, "warning")
+
+        result = config._load_config_from_toml_file(  # pylint: disable=protected-access
+            conf_file,
+            log_missing_section_as_warning=False,
+            warn_unknown_settings=True,
+        )
+
+        assert result is not None
+        warning_mock.assert_not_called()
 
 
 class TestConfigFileLoader:
