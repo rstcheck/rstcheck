@@ -31,7 +31,9 @@ class RstcheckMainRunner:
         self.config = rstcheck_config
         self.overwrite_config = overwrite_config
         if rstcheck_config.config_path:
-            self.load_config_file(rstcheck_config.config_path)
+            self.load_config_file(
+                rstcheck_config.config_path, rstcheck_config.warn_unknown_settings or False
+            )
 
         self.check_paths = check_paths
         self.files_to_check: t.List[pathlib.Path] = []
@@ -43,16 +45,23 @@ class RstcheckMainRunner:
 
         self.errors: t.List[types.LintError] = []
 
-    def load_config_file(self, config_path: pathlib.Path) -> None:
+    def load_config_file(
+        self, config_path: pathlib.Path, warn_unknown_settings: bool = False
+    ) -> None:
         """Load config from file and merge with current config.
 
         If the loaded file config overwrites the current config depends on the ``overwrite_config``
         attribute set on initialization.
 
         :param config_path: Path to config file; can be directory or file
+        :param warn_unknown_settings: If a warning should be logged for unknown settings in config
+            file;
+            defaults to :py:obj:`False`
         """
         logger.info(f"Load config file for main runner: '{config_path}'.")
-        file_config = config.load_config_file_from_path(config_path)
+        file_config = config.load_config_file_from_path(
+            config_path, warn_unknown_settings=warn_unknown_settings
+        )
 
         if file_config is None:
             logger.warning("Config file was empty or not found.")
