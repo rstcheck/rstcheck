@@ -1,11 +1,11 @@
 """Tests for ``config`` module."""
 # pylint: disable=too-many-lines
+import logging
 import pathlib
 import re
 import typing as t
 
 import pytest
-import pytest_mock
 
 from rstcheck import _extras, config
 
@@ -459,42 +459,38 @@ class TestIniFileLoader:
 
     @staticmethod
     def test_warning_is_logged_on_missing_section_by_default(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+        tmp_path: pathlib.Path, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test if a warning is logged on missing section."""
         conf_file = tmp_path / "config.ini"
         file_content = "[checkrst]"
         conf_file.write_text(file_content)
-        warning_mock = mocker.patch.object(config.logger, "warning")
 
         result = config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
 
         assert result is None
-        warning_mock.assert_called_once()
-        warning_mock.assert_called_once_with(
-            f"Config file has no [rstcheck] section: '{conf_file}'."
-        )
+        assert f"Config file has no [rstcheck] section: '{conf_file}'." in caplog.text
 
     @staticmethod
     def test_warning_on_missing_section_can_be_info(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+        tmp_path: pathlib.Path, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test if the warning logged on missing section can be an info."""
         conf_file = tmp_path / "config.ini"
         file_content = "[checkrst]"
         conf_file.write_text(file_content)
-        info_mock = mocker.patch.object(config.logger, "info")
+        caplog.set_level(logging.INFO)
 
         result = config._load_config_from_ini_file(  # pylint: disable=protected-access
             conf_file, log_missing_section_as_warning=False
         )
 
         assert result is None
-        info_mock.assert_called_once_with(f"Config file has no [rstcheck] section: '{conf_file}'.")
+        assert f"Config file has no [rstcheck] section: '{conf_file}'." in caplog.text
 
     @staticmethod
     def test_dont_warning_on_unknown_settings_by_default(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+        tmp_path: pathlib.Path, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test that no warning is logged on unknown setting by default."""
         conf_file = tmp_path / "config.ini"
@@ -504,7 +500,6 @@ report_level=INFO
 unkwown_setting=true
 """
         conf_file.write_text(file_content)
-        warning_mock = mocker.patch.object(config.logger, "warning")
 
         result = config._load_config_from_ini_file(  # pylint: disable=protected-access
             conf_file,
@@ -512,11 +507,11 @@ unkwown_setting=true
         )
 
         assert result is not None
-        warning_mock.assert_not_called()
+        assert not caplog.text
 
     @staticmethod
     def test_warning_on_unknown_settings_when_set(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+        tmp_path: pathlib.Path, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test that a warning is logged on unknown setting when activated."""
         conf_file = tmp_path / "config.ini"
@@ -526,7 +521,6 @@ report_level=INFO
 unkwown_setting=true
 """
         conf_file.write_text(file_content)
-        warning_mock = mocker.patch.object(config.logger, "warning")
 
         result = config._load_config_from_ini_file(  # pylint: disable=protected-access
             conf_file,
@@ -535,13 +529,13 @@ unkwown_setting=true
         )
 
         assert result is not None
-        warning_mock.assert_called_once_with(
-            f"Unknown setting(s) ['unkwown_setting'] found in file: '{conf_file}'."
+        assert (
+            f"Unknown setting(s) ['unkwown_setting'] found in file: '{conf_file}'." in caplog.text
         )
 
     @staticmethod
     def test_no_warning_on_known_settings_when_set(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+        tmp_path: pathlib.Path, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test that a warning is logged on known settings when activated."""
         conf_file = tmp_path / "config.ini"
@@ -550,7 +544,6 @@ unkwown_setting=true
 report_level=INFO
 """
         conf_file.write_text(file_content)
-        warning_mock = mocker.patch.object(config.logger, "warning")
 
         result = config._load_config_from_ini_file(  # pylint: disable=protected-access
             conf_file,
@@ -559,7 +552,7 @@ report_level=INFO
         )
 
         assert result is not None
-        warning_mock.assert_not_called()
+        assert not caplog.text
 
 
 @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
@@ -761,44 +754,38 @@ class TestTomlFileLoader:
 
     @staticmethod
     def test_warning_is_logged_on_missing_section_by_default(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+        tmp_path: pathlib.Path, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test if a warning is logged on missing section."""
         conf_file = tmp_path / "config.toml"
         file_content = "[tool.checkrst]"
         conf_file.write_text(file_content)
-        warning_mock = mocker.patch.object(config.logger, "warning")
 
         result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
 
         assert result is None
-        warning_mock.assert_called_once()
-        warning_mock.assert_called_once_with(
-            f"Config file has no [tool.rstcheck] section: '{conf_file}'."
-        )
+        assert f"Config file has no [tool.rstcheck] section: '{conf_file}'." in caplog.text
 
     @staticmethod
     def test_warning_on_missing_section_can_be_info(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+        tmp_path: pathlib.Path, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test if the warning logged on missing section can be an info."""
         conf_file = tmp_path / "config.toml"
         file_content = "[tool.checkrst]"
         conf_file.write_text(file_content)
-        info_mock = mocker.patch.object(config.logger, "info")
+        caplog.set_level(logging.INFO)
 
         result = config._load_config_from_toml_file(  # pylint: disable=protected-access
             conf_file, log_missing_section_as_warning=False
         )
 
         assert result is None
-        info_mock.assert_called_once_with(
-            f"Config file has no [tool.rstcheck] section: '{conf_file}'."
-        )
+        assert f"Config file has no [tool.rstcheck] section: '{conf_file}'." in caplog.text
 
     @staticmethod
     def test_dont_warning_on_unknown_settings_by_default(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+        tmp_path: pathlib.Path, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test that no warning is logged on unknown setting by default."""
         conf_file = tmp_path / "config.toml"
@@ -808,7 +795,6 @@ report_level="INFO"
 unkwown_setting=true
 """
         conf_file.write_text(file_content)
-        warning_mock = mocker.patch.object(config.logger, "warning")
 
         result = config._load_config_from_toml_file(  # pylint: disable=protected-access
             conf_file,
@@ -816,11 +802,11 @@ unkwown_setting=true
         )
 
         assert result is not None
-        warning_mock.assert_not_called()
+        assert not caplog.text
 
     @staticmethod
     def test_warning_on_unknown_settings_when_set(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+        tmp_path: pathlib.Path, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test that a warning is logged on unknown setting when activated."""
         conf_file = tmp_path / "config.toml"
@@ -830,7 +816,6 @@ report_level="INFO"
 unkwown_setting=true
 """
         conf_file.write_text(file_content)
-        warning_mock = mocker.patch.object(config.logger, "warning")
 
         result = config._load_config_from_toml_file(  # pylint: disable=protected-access
             conf_file,
@@ -839,13 +824,13 @@ unkwown_setting=true
         )
 
         assert result is not None
-        warning_mock.assert_called_once_with(
-            f"Unknown setting(s) ['unkwown_setting'] found in file: '{conf_file}'."
+        assert (
+            f"Unknown setting(s) ['unkwown_setting'] found in file: '{conf_file}'." in caplog.text
         )
 
     @staticmethod
     def test_no_warning_on_known_settings_when_set(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+        tmp_path: pathlib.Path, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test that a warning is logged on known settings when activated."""
         conf_file = tmp_path / "config.toml"
@@ -854,7 +839,6 @@ unkwown_setting=true
 report_level="INFO"
 """
         conf_file.write_text(file_content)
-        warning_mock = mocker.patch.object(config.logger, "warning")
 
         result = config._load_config_from_toml_file(  # pylint: disable=protected-access
             conf_file,
@@ -863,7 +847,7 @@ report_level="INFO"
         )
 
         assert result is not None
-        warning_mock.assert_not_called()
+        assert not caplog.text
 
 
 class TestConfigFileLoader:
@@ -1045,36 +1029,33 @@ class TestConfigDirLoader:
 
     @staticmethod
     def test_info_is_logged_on_no_config_found(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+        tmp_path: pathlib.Path, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test if an info is logged if no config could be found."""
         conf_dir = tmp_path
-        info_mock = mocker.patch.object(config.logger, "info")
+        caplog.set_level(logging.INFO)
 
         result = config.load_config_file_from_dir(conf_dir)
 
         assert result is None
-        info_mock.assert_called_once_with("No config section in supported config files found.")
+        assert "No config section in supported config files found." in caplog.text
 
     @staticmethod
     def test_warning_is_logged_on_no_config_section_in_rstcheck_file(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture
+        tmp_path: pathlib.Path, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test if an warning is logged if no config section could be found in .rstcheck.cfg."""
         conf_dir = tmp_path
         conf_file = conf_dir / ".rstcheck.cfg"
         file_content = "[checkrst]"
         conf_file.write_text(file_content)
-        warning_mock = mocker.patch.object(config.logger, "warning")
 
         result = config.load_config_file_from_dir(  # pylint: disable=protected-access
             conf_dir, log_missing_section_as_warning=False
         )
 
         assert result is None
-        warning_mock.assert_called_once_with(
-            f"Config file has no [rstcheck] section: '{conf_file}'."
-        )
+        assert f"Config file has no [rstcheck] section: '{conf_file}'." in caplog.text
 
 
 class TestConfigDirTreeLoader:
@@ -1115,18 +1096,19 @@ class TestConfigDirTreeLoader:
 
     @staticmethod
     def test_info_is_logged_on_no_config_found(
-        tmp_path: pathlib.Path, mocker: pytest_mock.MockerFixture, monkeypatch: pytest.MonkeyPatch
+        tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Test if an info is logged if no config could be found."""
         conf_dir = tmp_path
+        caplog.set_level(logging.INFO)
         monkeypatch.setattr(pathlib.Path, "parent", conf_dir)
-        info_mock = mocker.patch.object(config.logger, "info")
 
         result = config.load_config_file_from_dir_tree(conf_dir)
 
         assert result is None
-        info_mock.assert_called_with(
+        assert (
             f"No config section in supported config files found in directory tree: '{conf_dir}'."
+            in caplog.text
         )
 
 
