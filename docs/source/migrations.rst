@@ -19,6 +19,9 @@ With version 6 the whole code base was restructured and with it the whole open l
 has changed. A simple migration is not possible. Please see the :ref:`api:API` section or
 open an issue if you have open questions.
 
+The new logging system may help you find issues while migrating to v6.
+You may then want to turn it on on the lowest level ``--log-level DEBUG``.
+
 
 Configuration file
 ~~~~~~~~~~~~~~~~~~
@@ -29,6 +32,9 @@ The following configuration keys changed:
 
 - ``report`` renamed to ``report_level``
 - ``ignore_language`` renamed to ``ignore_languages``
+
+Set the ``--warn-unknown-settings`` CLI flag for warnings on unknown settings in
+configuration files.
 
 
 CLI
