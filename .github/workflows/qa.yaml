@@ -21,11 +21,6 @@ on: # yamllint disable-line rule:truthy
 jobs:
   build:
     name: Run QA Tools
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'pull_request' ||
-      (github.event_name == 'push' &&
-      contains(toJson(github.event.head_commit.message), '[skip ci]') == false)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

@@ -18,10 +18,6 @@ on: # yamllint disable-line rule:truthy
 jobs:
   update-authors:
     name: Update AUTHORS.rst file
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'push' &&
-      contains(toJson(github.event.head_commit.message), '[skip ci]') == false)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
