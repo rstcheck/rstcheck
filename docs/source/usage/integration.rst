@@ -21,8 +21,8 @@ Using with ALE_:
 
 Just install ``rstcheck`` and make sure is on your path.
 
-.. _Syntastic: https://github.com/scrooloose/syntastic
-.. _ALE: https://github.com/w0rp/ale
+.. _Syntastic: https://github.com/vim-syntastic/syntastic
+.. _ALE: https://github.com/dense-analysis/ale
 
 
 Use as a pre-commit hook

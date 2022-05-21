@@ -27,7 +27,7 @@ The setup of a local development environment is pretty easy. The only tool you n
 `poetry <https://python-poetry.org/docs/>`__. You can install it via the
 `recommended way <https://python-poetry.org/docs/#installation>`__, which installs it
 globally on your system or you can install it via ``pip`` in a self-created virtualenv
-(`virtualenv manual <https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/>`__).
+(`virtualenv manual <https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/>`__).
 
 With ``poetry`` set up and ready we can create our development environment in just one
 step::

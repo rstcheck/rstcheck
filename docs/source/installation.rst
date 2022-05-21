@@ -12,7 +12,7 @@ Create virtual environment
 
 There are several packages/modules for creating python virtual environments.
 Here is a
-`manual <https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/>`__
+`manual <https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/>`__
 by the PyPA.
 
 
