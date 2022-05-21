@@ -40,8 +40,8 @@
     :alt: Test status
 
 .. |gha_docu| image:: https://img.shields.io/github/workflow/status/myint/rstcheck/Test%20documentation/master?style=flat-square&logo=github&label=Test%20documentation
-    :target: https://github.com/myint/rstcheck/actions/workflows/test.yaml
-    :alt: Test status
+    :target: https://github.com/myint/rstcheck/actions/workflows/documentation.yaml
+    :alt: Documentation status
 
 .. |gha_qa| image:: https://img.shields.io/github/workflow/status/myint/rstcheck/QA/master?style=flat-square&logo=github&label=QA
     :target: https://github.com/myint/rstcheck/actions/workflows/qa.yaml
