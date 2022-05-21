@@ -1,5 +1,6 @@
 """Docutils helper functions."""
 import importlib
+import logging
 import typing as t
 
 import docutils.nodes
@@ -8,6 +9,9 @@ import docutils.parsers.rst.roles
 import docutils.writers
 
 from . import _extras
+
+
+logger = logging.getLogger(__name__)
 
 
 class IgnoredDirective(docutils.parsers.rst.Directive):  # pragma: no cover
@@ -41,6 +45,7 @@ def clean_docutils_directives_and_roles_cache() -> None:  # pragma: no cover
     - docutils.parsers.rst.directives
     - docutils.parsers.rst.roles
     """
+    logger.info("Reload module docutils.parsers.rst.directives/roles")
     importlib.reload(docutils.parsers.rst.directives)
     importlib.reload(docutils.parsers.rst.roles)
 
@@ -97,9 +102,12 @@ def register_code_directive(
     """
     if not _extras.SPHINX_INSTALLED:
         if ignore_code_directive is False:
+            logger.debug("Register custom directive for 'code'.")
             docutils.parsers.rst.directives.register_directive("code", CodeBlockDirective)
         # NOTE: docutils maps `code-block` and `sourcecode` to `code`
         if ignore_codeblock_directive is False:
+            logger.debug("Register custom directive for 'code-block'.")
             docutils.parsers.rst.directives.register_directive("code-block", CodeBlockDirective)
         if ignore_sourcecode_directive is False:
+            logger.debug("Register custom directive for 'sourcecode'.")
             docutils.parsers.rst.directives.register_directive("sourcecode", CodeBlockDirective)

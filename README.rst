@@ -131,6 +131,11 @@ If ``sphinx`` and ``tomli`` are installed:
                                 Valid levels are: INFO | WARNING | ERROR |
                                 SEVERE | NONE. Defauls to INFO. Can be set in
                                 config file.
+    --log-level LEVEL            The log level of the application for
+                                information that is not a linting issue. Valid
+                                levels are: DEBUG | INFO | WARNING | ERROR |
+                                CRITICAL. Defauls to WARNING.  [default:
+                                WARNING]
     --ignore-directives TEXT     Comma-separated-list of directives to add to
                                 the ignore list. Can be set in config file.
     --ignore-roles TEXT          Comma-separated-list of roles to add to the
@@ -414,6 +419,18 @@ History
 
 (next version)
 --------------
+
+- Add ``--log-level`` option to CLI (#108)
+- Setup logging to console for CLI (#108)
+- Setup logging to console for library (deactivated by default) (#108)
+
+
+.. _beaking_changes_v6:
+
+BREAKING CHANGES
+~~~~~~~~~~~~~~~~
+
+- ``find_ignored_languages`` no longer throws exception but loggs warning (#108)
 
 
 6.0.0a2 (2022-05-20)

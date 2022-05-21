@@ -19,9 +19,13 @@ Example usage:
         print(sphinx.version_info)
 """
 import importlib
+import logging
 import typing as t
 
 from . import _compat
+
+
+logger = logging.getLogger(__name__)
 
 
 ExtraDependencies = _compat.Literal["sphinx", "tomli"]
@@ -48,6 +52,7 @@ def is_installed_with_supported_version(package: ExtraDependencies) -> bool:
     :param package: Name of packge to check
     :return: Bool if package is installed with supported version
     """
+    logger.debug(f"Check if package is installed with supported version: '{package}'.")
     try:
         importlib.import_module(package)
     except ImportError:
