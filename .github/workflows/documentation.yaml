@@ -48,5 +48,15 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install tox
 
+      - name: Set up Homebrew
+        if: runner.os == 'macOS'
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Install enchant on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew update
+          brew install enchant
+
       - name: Run tests with tox
         run: tox -n docs
