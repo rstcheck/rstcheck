@@ -66,6 +66,7 @@ pylint = ">=2.12"
 mypy = ">=0.931"
 pytest = ">=6.0"
 sphinx = ">=4.0"
+sphinx-rtd-theme = "*"
 
 [tool.poetry.extras]
 sphinx = ["sphinx"]

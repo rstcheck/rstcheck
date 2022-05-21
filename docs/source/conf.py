@@ -8,14 +8,14 @@ from importlib.util import find_spec
 from pathlib import Path
 from typing import List
 
-import sphinx_rtd_theme
+import sphinx_rtd_theme  # type: ignore[import]
 from sphinx.application import Sphinx
 
 
 try:
     from importlib.metadata import metadata  # pylint: disable=ungrouped-imports
 except ModuleNotFoundError:  # pragma: py-gte-38
-    from importlib_metadata import metadata  # type: ignore[import,no-redef]
+    from importlib_metadata import metadata
 
 
 needs_sphinx = "3.1"  #: Minimum Sphinx version to build the docs
