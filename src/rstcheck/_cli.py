@@ -27,7 +27,7 @@ Can be set in config file.
 """
 HELP_LOG_LEVEL = """The log level of the application for information that is not a linting issue.
 Valid levels are: DEBUG | INFO | WARNING | ERROR | CRITICAL.
-Defauls to WARNING.
+Defaults to WARNING.
 """
 HELP_IGNORE_DIRECTIVES = """Comma-separated-list of directives to add to the ignore list.
 Can be set in config file.

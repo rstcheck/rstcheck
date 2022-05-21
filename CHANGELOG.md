@@ -28,7 +28,7 @@ Links on the versions point to PyPI.
 
 ### BREAKING CHANGES
 
-- `find_ignored_languages` no longer throws exception but loggs warning ([#108](https://github.com/myint/rstcheck/pull/108))
+- `find_ignored_languages` no longer throws exception but logs warning ([#108](https://github.com/myint/rstcheck/pull/108))
 
 ## [v6.0.0a2 (2022-05-20)](https://pypi.org/project/rstcheck/6.0.0a2/)
 
