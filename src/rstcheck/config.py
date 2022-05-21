@@ -161,6 +161,7 @@ class RstcheckConfig(RstcheckConfigFile):  # pylint: disable=too-few-public-meth
 
     config_path: t.Optional[pathlib.Path]
     recursive: t.Optional[bool]
+    warn_unknown_settings: t.Optional[bool]
 
 
 class _RstcheckConfigINIFile(
@@ -182,7 +183,10 @@ class _RstcheckConfigINIFile(
 
 
 def _load_config_from_ini_file(
-    ini_file: pathlib.Path, *, log_missing_section_as_warning: bool = True
+    ini_file: pathlib.Path,
+    *,
+    log_missing_section_as_warning: bool = True,
+    warn_unknown_settings: bool = False,
 ) -> t.Optional[RstcheckConfigFile]:
     """Load, parse and validate rstcheck config from a ini file.
 
@@ -190,6 +194,8 @@ def _load_config_from_ini_file(
     :param log_missing_section_as_warning: If a missing [tool.rstcheck] section should be logged at
         WARNING (``True``) or ``INFO`` (``False``) level;
         defaults to ``True``
+    :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
+        defaults to :py:obj:`False`
     :raises FileNotFoundError: If the file is not found
     :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
     """
@@ -210,6 +216,12 @@ def _load_config_from_ini_file(
         return None
 
     config_values_raw = dict(parser.items("rstcheck"))
+    if warn_unknown_settings:
+        known_settings = _RstcheckConfigINIFile().dict().keys()
+        unknown = [s for s in config_values_raw.keys() if s not in known_settings]
+        if unknown:
+            logger.warning(f"Unknown setting(s) {unknown} found in file: '{ini_file}'.")
+
     config_values_checked = _RstcheckConfigINIFile(**config_values_raw)
     config_values_parsed = RstcheckConfigFile(**config_values_checked.dict())
 
@@ -235,7 +247,10 @@ class _RstcheckConfigTOMLFile(
 
 
 def _load_config_from_toml_file(
-    toml_file: pathlib.Path, *, log_missing_section_as_warning: bool = True
+    toml_file: pathlib.Path,
+    *,
+    log_missing_section_as_warning: bool = True,
+    warn_unknown_settings: bool = False,
 ) -> t.Optional[RstcheckConfigFile]:
     """Load, parse and validate rstcheck config from a TOML file.
 
@@ -248,6 +263,8 @@ def _load_config_from_toml_file(
     :param log_missing_section_as_warning: If a missing [tool.rstcheck] section should be logged at
         WARNING (``True``) or ``INFO`` (``False``) level;
         defaults to ``True``
+    :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
+        defaults to :py:obj:`False`
     :raises ValueError: If the file is not a TOML file
     :raises FileNotFoundError: If the file is not found
     :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
@@ -278,6 +295,12 @@ def _load_config_from_toml_file(
         logger.info(f"Config file has no [tool.rstcheck] section: '{toml_file}'.")
         return None
 
+    if warn_unknown_settings:
+        known_settings = _RstcheckConfigTOMLFile().dict().keys()
+        unknown = [s for s in rstcheck_section.keys() if s not in known_settings]
+        if unknown:
+            logger.warning(f"Unknown setting(s) {unknown} found in file: '{toml_file}'.")
+
     config_values_checked = _RstcheckConfigTOMLFile(**rstcheck_section)
     config_values_parsed = RstcheckConfigFile(**config_values_checked.dict())
 
@@ -285,7 +308,10 @@ def _load_config_from_toml_file(
 
 
 def load_config_file(
-    file_path: pathlib.Path, *, log_missing_section_as_warning: bool = True
+    file_path: pathlib.Path,
+    *,
+    log_missing_section_as_warning: bool = True,
+    warn_unknown_settings: bool = False,
 ) -> t.Optional[RstcheckConfigFile]:
     """Load, parse and validate rstcheck config from a file.
 
@@ -298,21 +324,30 @@ def load_config_file(
     :param log_missing_section_as_warning: If a missing config section should be logged at
         WARNING (``True``) or ``INFO`` (``False``) level;
         defaults to ``True``
+    :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
+        defaults to :py:obj:`False`
     :raises FileNotFoundError: If the file is not found
     :return: instance of ``RstcheckConfigFile`` or ``None`` on missing config section
     """
     logger.debug("Try loading config file.")
     if file_path.suffix.casefold() == ".toml":
         return _load_config_from_toml_file(
-            file_path, log_missing_section_as_warning=log_missing_section_as_warning
+            file_path,
+            log_missing_section_as_warning=log_missing_section_as_warning,
+            warn_unknown_settings=warn_unknown_settings,
         )
     return _load_config_from_ini_file(
-        file_path, log_missing_section_as_warning=log_missing_section_as_warning
+        file_path,
+        log_missing_section_as_warning=log_missing_section_as_warning,
+        warn_unknown_settings=warn_unknown_settings,
     )
 
 
 def load_config_file_from_dir(
-    dir_path: pathlib.Path, *, log_missing_section_as_warning: bool = False
+    dir_path: pathlib.Path,
+    *,
+    log_missing_section_as_warning: bool = False,
+    warn_unknown_settings: bool = False,
 ) -> t.Optional[RstcheckConfigFile]:
     """Search, load, parse and validate rstcheck config from a directory.
 
@@ -323,6 +358,8 @@ def load_config_file_from_dir(
     :param log_missing_section_as_warning: If a missing config section in a config file should be
         logged at WARNING (``True``) or ``INFO`` (``False``) level;
         defaults to ``False``
+    :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
+        defaults to :py:obj:`False`
     :return: instance of ``RstcheckConfigFile`` or
         ``None`` if no file is found or no file has a rstcheck section
     """
@@ -337,6 +374,7 @@ def load_config_file_from_dir(
                 log_missing_section_as_warning=(
                     log_missing_section_as_warning or (file_name == ".rstcheck.cfg")
                 ),
+                warn_unknown_settings=warn_unknown_settings,
             )
             if config is not None:
                 break
@@ -348,7 +386,10 @@ def load_config_file_from_dir(
 
 
 def load_config_file_from_dir_tree(
-    dir_path: pathlib.Path, *, log_missing_section_as_warning: bool = False
+    dir_path: pathlib.Path,
+    *,
+    log_missing_section_as_warning: bool = False,
+    warn_unknown_settings: bool = False,
 ) -> t.Optional[RstcheckConfigFile]:
     """Search, load, parse and validate rstcheck config from a directory tree.
 
@@ -360,6 +401,8 @@ def load_config_file_from_dir_tree(
     :param log_missing_section_as_warning: If a missing config section in a config file should be
         logged at WARNING (``True``) or ``INFO`` (``False``) level;
         defaults to ``False``
+    :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
+        defaults to :py:obj:`False`
     :return: instance of ``RstcheckConfigFile`` or
         ``None`` if no file is found or no file has a rstcheck section
     """
@@ -370,7 +413,9 @@ def load_config_file_from_dir_tree(
 
     while True:
         config = load_config_file_from_dir(
-            search_dir, log_missing_section_as_warning=log_missing_section_as_warning
+            search_dir,
+            log_missing_section_as_warning=log_missing_section_as_warning,
+            warn_unknown_settings=warn_unknown_settings,
         )
 
         if config is not None:
@@ -395,6 +440,7 @@ def load_config_file_from_path(
     search_dir_tree: bool = False,
     log_missing_section_as_warning_for_file: bool = True,
     log_missing_section_as_warning_for_dir: bool = False,
+    warn_unknown_settings: bool = False,
 ) -> t.Optional[RstcheckConfigFile]:
     """Analyse the path and call the correct config file loader.
 
@@ -410,6 +456,8 @@ def load_config_file_from_path(
         should be logged at WARNING (``True``) or ``INFO`` (``False``) level when the given file is
         a direcotry;
         defaults to ``False``
+    :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
+        defaults to :py:obj:`False`
     :return: instance of ``RstcheckConfigFile`` or
         ``None`` if no file is found or no file has a rstcheck section
     """
@@ -418,16 +466,22 @@ def load_config_file_from_path(
 
     if resolved_path.is_file():
         return load_config_file(
-            resolved_path, log_missing_section_as_warning=log_missing_section_as_warning_for_file
+            resolved_path,
+            log_missing_section_as_warning=log_missing_section_as_warning_for_file,
+            warn_unknown_settings=warn_unknown_settings,
         )
 
     if resolved_path.is_dir():
         if search_dir_tree:
             return load_config_file_from_dir_tree(
-                resolved_path, log_missing_section_as_warning=log_missing_section_as_warning_for_dir
+                resolved_path,
+                log_missing_section_as_warning=log_missing_section_as_warning_for_dir,
+                warn_unknown_settings=warn_unknown_settings,
             )
         return load_config_file_from_dir(
-            resolved_path, log_missing_section_as_warning=log_missing_section_as_warning_for_dir
+            resolved_path,
+            log_missing_section_as_warning=log_missing_section_as_warning_for_dir,
+            warn_unknown_settings=warn_unknown_settings,
         )
 
     logger.warning("Passed path is neither a file nor a directory: '{path}'.")

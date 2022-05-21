@@ -408,6 +408,46 @@ class TestWithConfigFile:
         assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 1
 
 
+class TestWarningOnUnknownSettings:
+    """Test warnings logged on unknown settings in config files."""
+
+    @staticmethod
+    @pytest.mark.parametrize("config_file_name", ["bad_config.cfg", "bad_config.toml"])
+    def test_no_warnings_are_logged_by_default(
+        config_file_name: str,
+        cli_app: typer.Typer,
+        cli_runner: typer.testing.CliRunner,
+        caplog: pytest.LogCaptureFixture,
+    ) -> None:
+        """Test that no warning is logged on unknown setting by default."""
+        test_file = EXAMPLES_DIR / "good" / "rst.rst"
+        config_file = EXAMPLES_DIR / "with_configuration" / config_file_name
+
+        result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
+
+        assert result.exit_code == 0
+        assert "Unknown setting(s)" not in caplog.text
+
+    @staticmethod
+    @pytest.mark.parametrize("config_file_name", ["bad_config.cfg", "bad_config.toml"])
+    def test_no_warnings_are_logged_by_default_on_ini_files(
+        config_file_name: str,
+        cli_app: typer.Typer,
+        cli_runner: typer.testing.CliRunner,
+        caplog: pytest.LogCaptureFixture,
+    ) -> None:
+        """Test that a warning is logged on unknown setting when activated."""
+        test_file = EXAMPLES_DIR / "good" / "rst.rst"
+        config_file = EXAMPLES_DIR / "with_configuration" / config_file_name
+
+        result = cli_runner.invoke(
+            cli_app, [str(test_file), "--config", str(config_file), "--warn-unknown-settings"]
+        )
+
+        assert result.exit_code == 0
+        assert "Unknown setting(s)" in caplog.text
+
+
 class TestCustomDirectivesAndRoles:
     """Test custom directives and roles."""
 

@@ -423,6 +423,7 @@ History
 - Add ``--log-level`` option to CLI (#108)
 - Setup logging to console for CLI (#108)
 - Setup logging to console for library (deactivated by default) (#108)
+- Add ``--warn-unknown-settings`` flag to CLI (#115)
 
 
 .. _beaking_changes_v6:
