@@ -18,50 +18,50 @@ Links on the versions point to PyPI.
 
 [diff v6.0.0a2...master](https://github.com/myint/rstcheck/compare/v6.0.0a2...master)
 
-- Add more thorough documentation (#112)
+- Add more thorough documentation ([#112](https://github.com/myint/rstcheck/pull/112))
 
 ## [v6.0.0a2 (2022-05-20)](https://pypi.org/project/rstcheck/6.0.0a2/)
 
 [diff v6.0.0a1...v6.0.0a2](https://github.com/myint/rstcheck/compare/v6.0.0a1...v6.0.0a2)
 
-- Add support for INI multi-line string back (#116)
-- Fix bug #113 - sphinx print warnings for overwriting registered nodes (#117)
+- Add support for INI multi-line string back ([#116](https://github.com/myint/rstcheck/pull/116))
+- Fix bug #113 - sphinx print warnings for overwriting registered nodes ([#117](https://github.com/myint/rstcheck/pull/117))
 
 ### BREAKING CHANGES
 
 - String lists for `ignore_*` configs are white-space cleaned at string start and end.
-  Restores behavior of pre v6. (#116)
+  Restores behavior of pre v6. ([#116](https://github.com/myint/rstcheck/pull/116))
 
 ## [v6.0.0a1 (2022-05-13)](https://pypi.org/project/rstcheck/6.0.0a1/)
 
 [diff v5.0.0...v6.0.0a1](https://github.com/myint/rstcheck/compare/v5.0.0...v6.0.0a1)
 
-- Fix inability to ignore `code`, `code-block` and `sourcecode` directives (#79)
-- Fix `code-block` options recognition (#62)
-- Add section with `Known limitations / FAQ` to the README (#97)
-- Accumulate all errors in rst source instead of only one (#83)
-- Fix Malformed tables because of substitutions (#82)
-- Fix: remove `include` directive from ignore list when sphinx is active (#70)
-- Allow errors in code blocks to be ignored via ignore_messages (#100)
-- Add support for TOML config files (#84)
+- Fix inability to ignore `code`, `code-block` and `sourcecode` directives ([#79](https://github.com/myint/rstcheck/issues/79))
+- Fix `code-block` options recognition ([#62](https://github.com/myint/rstcheck/issues/62))
+- Add section with `Known limitations / FAQ` to the README ([#97](https://github.com/myint/rstcheck/issues/97))
+- Accumulate all errors in rst source instead of only one ([#83](https://github.com/myint/rstcheck/issues/83))
+- Fix Malformed tables because of substitutions ([#82](https://github.com/myint/rstcheck/pull/82))
+- Fix: remove `include` directive from ignore list when sphinx is active ([#70](https://github.com/myint/rstcheck/issues/70))
+- Allow errors in code blocks to be ignored via ignore_messages ([#100](https://github.com/myint/rstcheck/pull/100))
+- Add support for TOML config files ([#84](https://github.com/myint/rstcheck/pull/84))
 
 ### BREAKING CHANGES
 
-- Full restructuring of the code base (#100)
-- Rewrite of CLI with `typer` (#100)
-- Renamed config `report` to `report_level` (#100)
-- Renamed config `ignore_language` to `ignore_languages` (#100)
-- Renamed CLI option `--report` to `--report-level` (#100)
-- Renamed CLI option `--ignore-language` to `--ignore-languages` (#100)
-- Drop CLI option `--ignore` as alias to `--ignore-languages` (#100)
-- Drop CLI option `--debug` (#100)
-- Drop CLI option `--version`; may be added back later (#100)
-- Don't support multi-line strings in INI files (#100)
-- Prohibit numbers as report level (#100)
-- Non-existing files are skipped; `rstcheck non-existing-file.rst` exits 0; may be changed later (#100)
+- Full restructuring of the code base ([#100](https://github.com/myint/rstcheck/pull/100))
+- Rewrite of CLI with `typer` ([#100](https://github.com/myint/rstcheck/pull/100))
+- Renamed config `report` to `report_level` ([#100](https://github.com/myint/rstcheck/pull/100))
+- Renamed config `ignore_language` to `ignore_languages` ([#100](https://github.com/myint/rstcheck/pull/100))
+- Renamed CLI option `--report` to `--report-level` ([#100](https://github.com/myint/rstcheck/pull/100))
+- Renamed CLI option `--ignore-language` to `--ignore-languages` ([#100](https://github.com/myint/rstcheck/pull/100))
+- Drop CLI option `--ignore` as alias to `--ignore-languages` ([#100](https://github.com/myint/rstcheck/pull/100))
+- Drop CLI option `--debug` ([#100](https://github.com/myint/rstcheck/pull/100))
+- Drop CLI option `--version`; may be added back later ([#100](https://github.com/myint/rstcheck/pull/100))
+- Don't support multi-line strings in INI files ([#100](https://github.com/myint/rstcheck/pull/100))
+- Prohibit numbers as report level ([#100](https://github.com/myint/rstcheck/pull/100))
+- Non-existing files are skipped; `rstcheck non-existing-file.rst` exits 0; may be changed later ([#100](https://github.com/myint/rstcheck/pull/100))
 - Drop support for sphinx < 2.0
-- Drop default values for directives and roles for sphinx (#65)
-- CLI options now take precedence over config file options (#96)
+- Drop default values for directives and roles for sphinx ([#65](https://github.com/myint/rstcheck/issues/65))
+- CLI options now take precedence over config file options ([#96](https://github.com/myint/rstcheck/issues/96))
 
 ## [v5.0.0 (2022-04-17)](https://pypi.org/project/rstcheck/5.0.0/)
 
@@ -81,10 +81,10 @@ Links on the versions point to PyPI.
 
 [diff v4.0.0...v4.1.0](https://github.com/myint/rstcheck/compare/v4.0.0...v4.1.0)
 
-- Fix shebangs and scripts to use `python3` instead of `python` (#78)
+- Fix shebangs and scripts to use `python3` instead of `python` ([#78](https://github.com/myint/rstcheck/pull/78))
 - Improve the gcc checker functions by removing restrictions and
-  using environment variable flags (#88)
-- Fix pool size on windows by setting max to 61 (#86)
+  using environment variable flags ([#88](https://github.com/myint/rstcheck/pull/88))
+- Fix pool size on windows by setting max to 61 ([#86](https://github.com/myint/rstcheck/pull/86))
 - Update test.bash script and makefile with new file location
 
 ## [v4.0.0 (2022-04-15)](https://pypi.org/project/rstcheck/4.0.0/)
