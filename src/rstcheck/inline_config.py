@@ -32,7 +32,7 @@ def find_ignored_languages(
     ... .. rstcheck: ignore-languages=cpp,json
     ...
     ... .. rstcheck: ignore-languages=python
-    ... '''))
+    ... ''', "<string>"))
     ['cpp', 'json', 'python']
 
     :param source: Rst source code
