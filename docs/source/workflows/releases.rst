@@ -7,7 +7,7 @@ Release workflow
 ----------------
 
 When enough changes and additions or time important fixes have accumulated on the
-``master`` branch its time for a new release. The exact time is subject to the
+``main`` branch its time for a new release. The exact time is subject to the
 judgment of the maintainer(s).
 
 

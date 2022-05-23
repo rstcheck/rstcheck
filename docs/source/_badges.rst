@@ -30,7 +30,7 @@
     :alt: Maintenance - intended
 
 .. |license| image:: https://img.shields.io/github/license/rstcheck/rstcheck.svg?style=flat-square&label=License
-    :target: https://github.com/rstcheck/rstcheck/blob/master/LICENSE
+    :target: https://github.com/rstcheck/rstcheck/blob/main/LICENSE
     :alt: License
 
 .. |semver| image:: https://img.shields.io/badge/Semantic%20Versioning-2.0.0-brightgreen.svg?style=flat-square
@@ -45,15 +45,15 @@
 .. CI
 
 
-.. |gha_tests| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/Test%20code/master?style=flat-square&logo=github&label=Test%20code
+.. |gha_tests| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/Test%20code/main?style=flat-square&logo=github&label=Test%20code
     :target: https://github.com/rstcheck/rstcheck/actions/workflows/test.yaml
     :alt: Test status
 
-.. |gha_docu| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/Test%20documentation/master?style=flat-square&logo=github&label=Test%20documentation
+.. |gha_docu| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/Test%20documentation/main?style=flat-square&logo=github&label=Test%20documentation
     :target: https://github.com/rstcheck/rstcheck/actions/workflows/documentation.yaml
     :alt: Documentation status
 
-.. |gha_qa| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/QA/master?style=flat-square&logo=github&label=QA
+.. |gha_qa| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/QA/main?style=flat-square&logo=github&label=QA
     :target: https://github.com/rstcheck/rstcheck/actions/workflows/qa.yaml
     :alt: QA status
 
@@ -89,7 +89,7 @@
     :alt: Github - Latest Release
 
 .. |gh_last_commit| image:: https://img.shields.io/github/last-commit/rstcheck/rstcheck.svg?style=flat-square&logo=github
-    :target: https://github.com/rstcheck/rstcheck/commits/master
+    :target: https://github.com/rstcheck/rstcheck/commits/main
     :alt: GitHub - Last Commit
 
 .. |gh_stars| image:: https://img.shields.io/github/stars/rstcheck/rstcheck.svg?style=flat-square&logo=github

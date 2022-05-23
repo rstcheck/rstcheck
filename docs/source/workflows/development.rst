@@ -5,7 +5,7 @@ Development
 
 ``rstcheck`` uses `Semantic Versioning`_.
 
-``rstcheck`` uses ``master`` as its single development branch. Therefore releases are
+``rstcheck`` uses ``main`` as its single development branch. Therefore releases are
 made from this branch. Only the current release is supported and bugfixes are released
 with a patch release for the current minor release.
 

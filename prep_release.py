@@ -137,7 +137,7 @@ def update_changelog(new_version: str, last_version: str, first_release: bool) -
         changelog_lines[release_line] = (
             "## Unreleased\n"
             "\n"
-            f"[diff v{new_version}...master]"
+            f"[diff v{new_version}...main]"
             f"({REPO_URL}/compare/v{new_version}...main)\n"
             "\n"
             f"## [{new_version}]({REPO_URL}/releases/v{new_version}) ({today})\n"

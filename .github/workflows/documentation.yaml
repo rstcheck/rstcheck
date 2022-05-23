@@ -12,7 +12,7 @@ on: # yamllint disable-line rule:truthy
     tags:
       - "!*"
     branches:
-      - master
+      - main
       - "test-me-*"
 
   pull_request:

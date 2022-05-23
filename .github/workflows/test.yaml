@@ -12,7 +12,7 @@ on: # yamllint disable-line rule:truthy
     tags:
       - "!*"
     branches:
-      - master
+      - main
       - "test-me-*"
 
   pull_request:
@@ -33,7 +33,7 @@ jobs:
 
       - name: Fetch origin/main
         #: https://github.com/Bachmann1234/diff_cover#troubleshooting
-        run: git fetch --no-tags origin master:refs/remotes/origin/master
+        run: git fetch --no-tags origin main:refs/remotes/origin/main
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v3

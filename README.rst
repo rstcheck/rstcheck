@@ -143,15 +143,15 @@ With bad syntax in the reStructuredText document itself:
 .. CI
 
 
-.. |gha_tests| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/Test%20code/master?style=flat-square&logo=github&label=Test%20code
+.. |gha_tests| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/Test%20code/main?style=flat-square&logo=github&label=Test%20code
     :target: https://github.com/rstcheck/rstcheck/actions/workflows/test.yaml
     :alt: Test status
 
-.. |gha_docu| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/Test%20documentation/master?style=flat-square&logo=github&label=Test%20documentation
+.. |gha_docu| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/Test%20documentation/main?style=flat-square&logo=github&label=Test%20documentation
     :target: https://github.com/rstcheck/rstcheck/actions/workflows/documentation.yaml
     :alt: Documentation status
 
-.. |gha_qa| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/QA/master?style=flat-square&logo=github&label=QA
+.. |gha_qa| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/QA/main?style=flat-square&logo=github&label=QA
     :target: https://github.com/rstcheck/rstcheck/actions/workflows/qa.yaml
     :alt: QA status
 
