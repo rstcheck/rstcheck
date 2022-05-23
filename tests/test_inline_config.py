@@ -3,7 +3,7 @@ import typing as t
 
 import pytest
 
-from rstcheck import inline_config
+from rstcheck import inline_config, types
 
 
 def test_default_values_for_inline_config() -> None:
@@ -130,48 +130,89 @@ class TestSplitStrValidatorMethod:  # pylint: disable=duplicate-code
             )
 
 
-class TestFindIgnoredLanguages:
-    """Test ``find_ignored_languages`` function."""
+class TestInlineConfigGetter:
+    """Test ``get_inline_config_from_source`` function."""
 
     @staticmethod
     def test_empty_string_source() -> None:
-        """Test giving an empty string as source results in no languages found."""
+        """Test giving an empty string as source results in no config found."""
         source = ""
 
-        result = list(inline_config.find_ignored_languages(source, "<string>"))
+        result = list(inline_config.get_inline_config_from_source(source, "<string>"))
 
         assert not result
 
     @staticmethod
     def test_source_without_config() -> None:
-        """Test giving source without config comment results in no languages found."""
+        """Test giving source without config comment results in no config found."""
         source = """
 Example
 =======
 """
 
-        result = list(inline_config.find_ignored_languages(source, "<string>"))
+        result = list(inline_config.get_inline_config_from_source(source, "<string>"))
 
         assert not result
 
     @staticmethod
     def test_source_with_correct_config() -> None:
-        """Test giving source with correct config comment results in languages found."""
+        """Test giving source with correct config comment results in config found."""
         source = """
 Example
 =======
 .. rstcheck: ignore-languages=cpp
 """
 
-        result = list(inline_config.find_ignored_languages(source, "<string>"))
+        result = list(inline_config.get_inline_config_from_source(source, "<string>"))
 
-        assert result == ["cpp"]
+        assert result == [types.InlineConfig(key="ignore-languages", value="cpp")]
 
     @staticmethod
-    def test_source_with_correct_config_multiple_languages() -> None:
-        """Test giving source with correct config comment results in languages found.
+    def test_source_with_unknown_config() -> None:
+        """Test unknown config in comments is ignored."""
+        source = """
+Example
+=======
+.. rstcheck: unknown-config=true
+.. rstcheck: ignore_languages=json
+"""
 
-        Test with multiple languages on one comment.
+        result = list(inline_config.get_inline_config_from_source(source, "<string>"))
+
+        assert not result
+
+    @staticmethod
+    def test_source_with_invalid_config_format_is_ignored() -> None:
+        """Test unknown config in comments is ignored."""
+        source = """
+Example
+=======
+.. rstcheck: ignore-languages: cpp
+"""
+
+        result = list(inline_config.get_inline_config_from_source(source, "<string>"))
+
+        assert not result
+
+    @staticmethod
+    def test_source_with_known_and_unknown_config() -> None:
+        """Test unknown config comments are ignored when mixed with valid confg."""
+        source = """
+Example
+=======
+.. rstcheck: unknown-config=true
+.. rstcheck: ignore-languages=cpp
+"""
+
+        result = list(inline_config.get_inline_config_from_source(source, "<string>"))
+
+        assert result == [types.InlineConfig(key="ignore-languages", value="cpp")]
+
+    @staticmethod
+    def test_source_with_correct_config_multiple_values() -> None:
+        """Test giving source with correct config comment results in values found.
+
+        Test with multiple values on one comment.
         """
         source = """
 Example
@@ -179,15 +220,15 @@ Example
 .. rstcheck: ignore-languages=cpp,json
 """
 
-        result = list(inline_config.find_ignored_languages(source, "<string>"))
+        result = list(inline_config.get_inline_config_from_source(source, "<string>"))
 
-        assert result == ["cpp", "json"]
+        assert result == [types.InlineConfig(key="ignore-languages", value="cpp,json")]
 
     @staticmethod
     def test_source_with_correct_config_multiple_comments() -> None:
-        """Test giving source with correct config comment results in languages found.
+        """Test giving source with correct config comment results in configs found.
 
-        Test with multiple languages on different comments.
+        Test with multiple configs on different comments.
         """
         source = """
 Example
@@ -196,13 +237,16 @@ Example
 .. rstcheck: ignore-languages=json
 """
 
-        result = list(inline_config.find_ignored_languages(source, "<string>"))
+        result = list(inline_config.get_inline_config_from_source(source, "<string>"))
 
-        assert result == ["cpp", "json"]
+        assert result == [
+            types.InlineConfig(key="ignore-languages", value="cpp"),
+            types.InlineConfig(key="ignore-languages", value="json"),
+        ]
 
     @staticmethod
     def test_source_with_correct_config_whitespace() -> None:
-        """Test giving source with correct config comment results in languages found.
+        """Test giving source with correct config comment results in configs found.
 
         Test whitspace around equal sign.
         """
@@ -214,32 +258,43 @@ Example
 .. rstcheck: ignore-languages = python
 """
 
+        result = list(inline_config.get_inline_config_from_source(source, "<string>"))
+
+        assert result == [
+            types.InlineConfig(key="ignore-languages", value="cpp"),
+            types.InlineConfig(key="ignore-languages", value="json"),
+            types.InlineConfig(key="ignore-languages", value="python"),
+        ]
+
+
+class TestFindIgnoredLanguages:
+    """Test ``find_ignored_languages`` function."""
+
+    @staticmethod
+    def test_only_languages_are_used() -> None:
+        """Test only ignore-languages are returned."""
+        source = """
+Example
+=======
+.. rstcheck: unknown-config=true
+.. rstcheck: ignore-languages=cpp
+.. rstcheck: ignore-directives=directive1
+"""
+
+        result = list(inline_config.find_ignored_languages(source, "<string>"))
+
+        assert result == ["cpp"]
+
+    @staticmethod
+    def test_languages_are_comma_splitted() -> None:
+        """Test ignore-languages config is split on comma."""
+        source = """
+Example
+=======
+.. rstcheck: ignore-languages=cpp,json
+.. rstcheck: ignore-languages=python
+"""
+
         result = list(inline_config.find_ignored_languages(source, "<string>"))
 
         assert result == ["cpp", "json", "python"]
-
-    @staticmethod
-    def test_source_with_incorrect_config_keyword_gets_ignored() -> None:
-        """Test wrong config keyword results in no languages found."""
-        source = """
-Example
-=======
-.. rstcheck: ignore_languages=cpp
-"""
-
-        result = list(inline_config.find_ignored_languages(source, "<string>"))
-
-        assert not result
-
-    @staticmethod
-    def test_source_with_incorrect_config_syntax_raises() -> None:
-        """Test incorrect inline config is ignored."""
-        source = """
-Example
-=======
-.. rstcheck: ignore-languages: cpp
-"""
-
-        result = list(inline_config.find_ignored_languages(source, "<string>"))
-
-        assert not result

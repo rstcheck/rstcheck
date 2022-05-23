@@ -1,4 +1,5 @@
 """Inline config comment functionality."""
+import functools
 import logging
 import re
 import typing as t
@@ -45,11 +46,48 @@ class RstcheckConfigInline(
         return config._split_str_validator(value)  # pylint: disable=protected-access
 
 
-RSTCHECK_COMMENT_REGEX = re.compile(r"\.\. rstcheck:")
+RSTCHECK_CONFIG_COMMENT_REGEX = re.compile(r"\.\. rstcheck: (.*)=(.*)$")
+VALID_INLINE_CONFIG_KEYS = ("ignore-languages",)
+
+
+@functools.lru_cache()
+def get_inline_config_from_source(
+    source: str, source_origin: types.SourceFileOrString, warn_unknown_settings: bool = False
+) -> t.List[types.InlineConfig]:
+    """Get rstcheck inline configs from source.
+
+    Unknown configs are ignored.
+
+    :param source: Source to get config from
+    :param source_origin: Origin of the source with the inline ignore comments
+    :param warn_unknown_settings: If a warning should be logged on unknown settings;
+        defaults to :py:obj:`False`
+    :return: A list of inline configs
+    """
+    configs: t.List[types.InlineConfig] = []
+    for (idx, line) in enumerate(source.splitlines()):
+        match = RSTCHECK_CONFIG_COMMENT_REGEX.search(line)
+        if match is None:
+            continue
+
+        key = match.group(1).strip()
+        value = match.group(2).strip()
+
+        if key not in VALID_INLINE_CONFIG_KEYS:
+            if warn_unknown_settings:
+                logger.warning(
+                    f"Unknown inline config '{key}' found. "
+                    f"Source: '{source_origin}' at line {idx + 1}"
+                )
+            continue
+
+        configs.append(types.InlineConfig(key=key, value=value))
+
+    return configs
 
 
 def find_ignored_languages(
-    source: str, source_origin: types.SourceFileOrString
+    source: str, source_origin: types.SourceFileOrString, warn_unknown_settings: bool = False
 ) -> t.Generator[str, None, None]:
     """Search the rst source for rstcheck inline ignore-languages comments.
 
@@ -76,19 +114,8 @@ def find_ignored_languages(
     :return: None
     :yield: Found languages to ignore
     """
-    for (index, line) in enumerate(source.splitlines()):
-        match = RSTCHECK_COMMENT_REGEX.match(line)
-        if match is None:
-            continue
-
-        key_and_value = line[match.end() :].strip().split("=")
-        if len(key_and_value) != 2:
-            logger.warning(
-                'Skipping invalid inline ignore syntax. Expected "key=value" syntax. '
-                f"Source: '{source_origin}' at line {index + 1}"
-            )
-            continue
-
-        if key_and_value[0].strip() == "ignore-languages":
-            for language in key_and_value[1].strip().split(","):
+    inline_configs = get_inline_config_from_source(source, source_origin, warn_unknown_settings)
+    for inline_config in inline_configs:
+        if inline_config["key"] == "ignore-languages":
+            for language in inline_config["value"].split(","):
                 yield language.strip()
