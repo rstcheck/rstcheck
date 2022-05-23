@@ -3,3 +3,4 @@
   entry: rstcheck
   language: python
   types: [rst]
+  require_serial: true
