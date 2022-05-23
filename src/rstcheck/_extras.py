@@ -22,17 +22,17 @@ import importlib
 import logging
 import typing as t
 
-from . import _compat
+from . import _compat as _t
 
 
 logger = logging.getLogger(__name__)
 
 
-ExtraDependencies = _compat.Literal["sphinx", "tomli"]
+ExtraDependencies = _t.Literal["sphinx", "tomli"]
 """List of all dependencies installable through extras."""
 
 
-class DependencyInfos(_compat.TypedDict):
+class DependencyInfos(_t.TypedDict):
     """Information about a dependency."""
 
     min_version: t.Tuple[int, ...]
@@ -58,7 +58,7 @@ def is_installed_with_supported_version(package: ExtraDependencies) -> bool:
     except ImportError:
         return False
 
-    version: str = _compat.version(package)
+    version: str = _t.version(package)
     version_tuple = tuple(int(v) for v in version.split(".")[:3])
 
     return version_tuple >= ExtraDependenciesInfos[package]["min_version"]

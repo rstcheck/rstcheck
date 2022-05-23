@@ -5,10 +5,10 @@ import typing as t
 
 import typer
 
-from rstcheck import _compat, _extras, config as config_mod, runner
+from rstcheck import _compat as _t, _extras, config as config_mod, runner
 
 
-ValidReportLevels = _compat.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]
+ValidReportLevels = _t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]
 
 HELP_CONFIG = """Config file to load. Can be a INI file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | setup.cfg.

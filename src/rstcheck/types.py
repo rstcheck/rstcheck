@@ -2,14 +2,14 @@
 import pathlib
 import typing as t
 
-from . import _compat
+from . import _compat as _t
 
 
-SourceFileOrString = t.Union[pathlib.Path, _compat.Literal["<string>"]]
+SourceFileOrString = t.Union[pathlib.Path, _t.Literal["<string>"]]
 """Path to source file or if it is a string then '<string>'."""
 
 
-class LintError(_compat.TypedDict):
+class LintError(_t.TypedDict):
     """Dict with information about an linting error."""
 
     source_origin: SourceFileOrString
@@ -21,7 +21,7 @@ YieldedLintError = t.Generator[LintError, None, None]
 """Yielded version of type :py:class:`LintError`."""
 
 
-class IgnoreDict(_compat.TypedDict):
+class IgnoreDict(_t.TypedDict):
     """Dict with ignore information."""
 
     # NOTE: Pattern type-arg errors pydanic: https://github.com/samuelcolvin/pydantic/issues/2636
