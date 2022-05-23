@@ -3,7 +3,7 @@ import typing as t
 
 import pytest
 
-from rstcheck import inline_config, types
+from rstcheck import _compat as _t, inline_config, types
 
 
 def test_default_values_for_inline_config() -> None:
@@ -332,7 +332,7 @@ Example
         assert result == ["cpp", "json", "python"]
 
 
-class FindIgnoreFn(t.Protocol):  # pylint: disable=too-few-public-methods # noqa: D101
+class FindIgnoreFn(_t.Protocol):  # pylint: disable=too-few-public-methods # noqa: D101
     def __call__(  # noqa: D102
         self,
         source: str,
