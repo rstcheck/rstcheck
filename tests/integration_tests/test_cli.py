@@ -530,3 +530,33 @@ class TestSphinx:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code == 0
+
+
+class TestInlineIgnoreComments:
+    """Test inline config comments to ignore things."""
+
+    @staticmethod
+    def test_bad_example_has_issues(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test all issues are found on bad example."""
+        test_file = EXAMPLES_DIR / "inline_config" / "without_inline_ignore.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code != 0
+        assert "custom-directive" in result.stdout
+        assert "custom-role" in result.stdout
+        assert "python" in result.stdout
+        assert "unmatched-substitution" in result.stdout
+
+    @staticmethod
+    def test_sphinx_role_exits_zero_with_sphinx(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test no issues are found on bad example with ignore comments."""
+        test_file = EXAMPLES_DIR / "sphinx" / "with_inline_ignore.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code == 0
