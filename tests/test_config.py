@@ -1039,7 +1039,7 @@ class TestConfigDirLoader:
 
         assert result is None
         assert (
-            f"No config section in supported config files found in directory '{conf_dir}'."
+            f"No config section in supported config files found in directory: '{conf_dir}'."
             in caplog.text
         )
 
