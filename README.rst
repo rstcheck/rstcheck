@@ -21,6 +21,8 @@ rstcheck
 
 Checks syntax of reStructuredText and code blocks nested within it.
 
+See the full documentation at `read-the-docs`_
+
 
 .. contents::
 
@@ -110,6 +112,9 @@ With bad syntax in the reStructuredText document itself:
 
     $ rstcheck bad_rst.rst
     bad_rst.rst:1: (SEVERE/4) Title overline & underline mismatch.
+
+
+.. _read-the-docs: https://rstcheck.readthedocs.io
 
 
 .. General
