@@ -27,6 +27,8 @@ Links on the versions point to PyPI.
 ### Miscellaneous
 
 - Fix release date in changelog for v6.0.0rc1 release
+- Set the rstcheck pre-commit hook to run in serial to avoid overhead of doubling parallel runs
+  with pre-commit
 
 [diff v6.0.0a2...v6.0.0rc1](https://github.com/rstcheck/rstcheck/compare/v6.0.0a2...v6.0.0rc1)
 
