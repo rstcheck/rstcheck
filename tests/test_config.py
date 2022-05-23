@@ -55,7 +55,7 @@ def test_default_values_for_config() -> None:
     assert result.recursive is None
 
 
-class TestReportLevelValidator:
+class TestReportLevelValidatorMethod:
     """Test ``valid_report_level`` validator method of the ``RstcheckConfig`` class.
 
     It validates the ``report_level`` setting.
@@ -108,7 +108,7 @@ class TestReportLevelValidator:
             config.RstcheckConfigFile(report_level=level)
 
 
-class TestSplitStrValidator:
+class TestSplitStrValidatorMethod:
     """Test ``split_str`` validator method of the ``RstcheckConfig`` class.
 
     It validates the
@@ -222,7 +222,7 @@ class TestSplitStrValidator:
             )
 
 
-class TestJoinRegexStrValidator:
+class TestJoinRegexStrValidatorMethod:
     """Test ``join_regex_str`` validator method of the ``RstcheckConfig`` class.
 
     It validates the ``ignore_messages`` setting.
