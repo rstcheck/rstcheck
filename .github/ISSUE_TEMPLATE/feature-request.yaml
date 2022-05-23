@@ -20,7 +20,7 @@ body:
       description: Before submitting please confirm and check the following options.
       options:
         - label: >
-            I have checked the [issues](https://github.com/myint/rstcheck/issues)
+            I have checked the [issues](https://github.com/rstcheck/rstcheck/issues)
             and think that this is not a duplicate.
           required: true
         - label: I added a very descriptive title to this issue.

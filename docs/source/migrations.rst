@@ -89,4 +89,4 @@ Use python 3.7 or newer to run ``rstcheck``.
 .. highlight:: default
 
 
-.. _Example issue: https://github.com/myint/rstcheck/issues/109
+.. _Example issue: https://github.com/rstcheck/rstcheck/issues/109

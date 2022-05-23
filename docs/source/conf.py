@@ -28,7 +28,7 @@ NOT_LOADED_MSGS = []
 #: -- PROJECT INFORMATION --------------------------------------------------------------
 project = "rstcheck"
 author = "Steven Myint <git@stevenmyint.com>"
-GH_REPO_LINK = "https://github.com/myint/rstcheck"
+GH_REPO_LINK = "https://github.com/rstcheck/rstcheck"
 CREATION_YEAR = 2013
 CURRENT_YEAR = f"{date.today().year}"
 copyright = (  # noqa: VNE003 # pylint: disable=W0622

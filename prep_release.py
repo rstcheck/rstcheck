@@ -14,7 +14,7 @@ PATCH = ("patch", "bugfix")
 MINOR = ("minor", "feature")
 MAJOR = ("major", "breaking")
 
-REPO_URL = "https://github.com/myint/rstcheck"
+REPO_URL = "https://github.com/rstcheck/rstcheck"
 
 
 #: -- UTILS ----------------------------------------------------------------------------

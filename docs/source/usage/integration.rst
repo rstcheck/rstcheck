@@ -29,7 +29,7 @@ Add this to your ``.pre-commit-config.yaml``
 
 .. code:: yaml
 
-    -   repo: https://github.com/myint/rstcheck
+    -   repo: https://github.com/rstcheck/rstcheck
         rev: ''  # Use the sha / tag you want to point at
         hooks:
         -   id: rstcheck

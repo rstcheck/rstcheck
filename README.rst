@@ -120,24 +120,24 @@ With bad syntax in the reStructuredText document itself:
     :target: http://unmaintained.tech/
     :alt: Maintenance - intended
 
-.. |license| image:: https://img.shields.io/github/license/myint/rstcheck.svg?style=flat-square&label=License
-    :target: https://github.com/myint/rstcheck/blob/main/LICENSE
+.. |license| image:: https://img.shields.io/github/license/rstcheck/rstcheck.svg?style=flat-square&label=License
+    :target: https://github.com/rstcheck/rstcheck/blob/main/LICENSE
     :alt: License
 
 .. |semver| image:: https://img.shields.io/badge/Semantic%20Versioning-2.0.0-brightgreen.svg?style=flat-square
     :target: https://semver.org/
     :alt: Semantic Versioning - 2.0.0
 
-.. |gha_tests| image:: https://img.shields.io/github/workflow/status/myint/rstcheck/Test%20code/master?style=flat-square&logo=github&label=Test%20code
-    :target: https://github.com/myint/rstcheck/actions/workflows/test.yaml
+.. |gha_tests| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/Test%20code/master?style=flat-square&logo=github&label=Test%20code
+    :target: https://github.com/rstcheck/rstcheck/actions/workflows/test.yaml
     :alt: Test status
 
-.. |gha_docu| image:: https://img.shields.io/github/workflow/status/myint/rstcheck/Test%20documentation/master?style=flat-square&logo=github&label=Test%20documentation
-    :target: https://github.com/myint/rstcheck/actions/workflows/documentation.yaml
+.. |gha_docu| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/Test%20documentation/master?style=flat-square&logo=github&label=Test%20documentation
+    :target: https://github.com/rstcheck/rstcheck/actions/workflows/documentation.yaml
     :alt: Documentation status
 
-.. |gha_qa| image:: https://img.shields.io/github/workflow/status/myint/rstcheck/QA/master?style=flat-square&logo=github&label=QA
-    :target: https://github.com/myint/rstcheck/actions/workflows/qa.yaml
+.. |gha_qa| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/QA/master?style=flat-square&logo=github&label=QA
+    :target: https://github.com/rstcheck/rstcheck/actions/workflows/qa.yaml
     :alt: QA status
 
 
@@ -167,26 +167,26 @@ With bad syntax in the reStructuredText document itself:
 
 .. GitHub
 
-.. |gh_tag| image:: https://img.shields.io/github/v/tag/myint/rstcheck.svg?sort=semver&style=flat-square&logo=github
-    :target: https://github.com/myint/rstcheck/tags
+.. |gh_tag| image:: https://img.shields.io/github/v/tag/rstcheck/rstcheck.svg?sort=semver&style=flat-square&logo=github
+    :target: https://github.com/rstcheck/rstcheck/tags
     :alt: Github - Latest Release
 
-.. |gh_last_commit| image:: https://img.shields.io/github/last-commit/myint/rstcheck.svg?style=flat-square&logo=github
-    :target: https://github.com/myint/rstcheck/commits/main
+.. |gh_last_commit| image:: https://img.shields.io/github/last-commit/rstcheck/rstcheck.svg?style=flat-square&logo=github
+    :target: https://github.com/rstcheck/rstcheck/commits/main
     :alt: GitHub - Last Commit
 
-.. |gh_stars| image:: https://img.shields.io/github/stars/myint/rstcheck.svg?style=flat-square&logo=github
-    :target: https://github.com/myint/rstcheck/stargazers
+.. |gh_stars| image:: https://img.shields.io/github/stars/rstcheck/rstcheck.svg?style=flat-square&logo=github
+    :target: https://github.com/rstcheck/rstcheck/stargazers
     :alt: Github - Stars
 
-.. |gh_forks| image:: https://img.shields.io/github/forks/myint/rstcheck.svg?style=flat-square&logo=github
-    :target: https://github.com/myint/rstcheck/network/members
+.. |gh_forks| image:: https://img.shields.io/github/forks/rstcheck/rstcheck.svg?style=flat-square&logo=github
+    :target: https://github.com/rstcheck/rstcheck/network/members
     :alt: Github - Forks
 
-.. |gh_contributors| image:: https://img.shields.io/github/contributors/myint/rstcheck.svg?style=flat-square&logo=github
-    :target: https://github.com/myint/rstcheck/graphs/contributors
+.. |gh_contributors| image:: https://img.shields.io/github/contributors/rstcheck/rstcheck.svg?style=flat-square&logo=github
+    :target: https://github.com/rstcheck/rstcheck/graphs/contributors
     :alt: Github - Contributors
 
-.. |gh_watchers| image:: https://img.shields.io/github/watchers/myint/rstcheck.svg?style=flat-square&logo=github
-    :target: https://github.com/myint/rstcheck/watchers/
+.. |gh_watchers| image:: https://img.shields.io/github/watchers/rstcheck/rstcheck.svg?style=flat-square&logo=github
+    :target: https://github.com/rstcheck/rstcheck/watchers/
     :alt: Github - Watchers

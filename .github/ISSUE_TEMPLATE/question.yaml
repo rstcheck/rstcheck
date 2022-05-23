@@ -24,7 +24,7 @@ body:
         - label: I already read and followed the README and didn't find an answer.
           required: true
         - label: >
-            I have checked the [issues](https://github.com/myint/rstcheck/issues)
+            I have checked the [issues](https://github.com/rstcheck/rstcheck/issues)
             and think that this is not a duplicate.
           required: true
         - label: I added a very descriptive title to this issue.
