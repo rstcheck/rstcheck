@@ -6,7 +6,7 @@ import typing as t
 
 import pydantic
 
-from . import _compat, config, types
+from . import _compat as _t, config, types
 
 
 logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ class RstcheckConfigInline(
 
 RSTCHECK_CONFIG_COMMENT_REGEX = re.compile(r"\.\. rstcheck: (.*)=(.*)$")
 VALID_INLINE_CONFIG_KEYS = ("ignore-languages",)
-ValidInlineConfigKeys = _compat.Literal["ignore-languages"]
+ValidInlineConfigKeys = _t.Literal["ignore-languages"]
 
 
 @functools.lru_cache()

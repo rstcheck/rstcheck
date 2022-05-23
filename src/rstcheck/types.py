@@ -39,7 +39,7 @@ Returned by :py:meth:`rstcheck.checker.CodeBlockChecker.create_checker`.
 """
 
 
-class InlineConfig(_compat.TypedDict):
+class InlineConfig(_t.TypedDict):
     """Dict with a config key and config value comming from a inline config comment."""
 
     key: str
