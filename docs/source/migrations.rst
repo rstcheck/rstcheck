@@ -22,6 +22,12 @@ open an issue if you have open questions.
 The new logging system may help you find issues while migrating to v6.
 You may then want to turn it on on the lowest level ``--log-level DEBUG``.
 
+``rstcheck`` moved from ``myint/rstcheck`` to ``rstcheck/rstcheck`` so you may want to update
+links you have pointing to the old repository's location.
+
+The ``master`` branch was renamed to ``main``. If you use git dependencies you may need to update
+your reference.
+
 
 Configuration file
 ~~~~~~~~~~~~~~~~~~
