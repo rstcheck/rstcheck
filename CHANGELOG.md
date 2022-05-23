@@ -20,7 +20,13 @@ Links on the versions point to PyPI.
 
 ## [v6.0.0rc1 (2022-05-21)](https://pypi.org/project/rstcheck/6.0.0rc1/)
 
+### Documentation
+
 - Update links to new repository home at rstcheck/rstcheck
+
+### Miscellaneous
+
+- Fix release date in changelog for v6.0.0rc1 release
 
 [diff v6.0.0a2...v6.0.0rc1](https://github.com/rstcheck/rstcheck/compare/v6.0.0a2...v6.0.0rc1)
 
