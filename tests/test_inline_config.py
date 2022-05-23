@@ -353,7 +353,7 @@ class TestFindIgnoredFunctions:
 
     @staticmethod
     @pytest.mark.parametrize(
-        ("target_config", "expected_result"),
+        ("target_function", "expected_result"),
         [
             (inline_config.find_ignored_directives, ["directive1"]),
             (inline_config.find_ignored_roles, ["role1"]),
@@ -381,7 +381,7 @@ Example
 
     @staticmethod
     @pytest.mark.parametrize(
-        ("target_config", "expected_result"),
+        ("target_function", "expected_result"),
         [
             (inline_config.find_ignored_directives, ["directive1", "directive3", "directive2"]),
             (inline_config.find_ignored_roles, ["role1", "role3", "role2"]),
