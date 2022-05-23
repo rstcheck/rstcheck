@@ -1038,7 +1038,10 @@ class TestConfigDirLoader:
         result = config.load_config_file_from_dir(conf_dir)
 
         assert result is None
-        assert "No config section in supported config files found." in caplog.text
+        assert (
+            f"No config section in supported config files found in directory '{conf_dir}'."
+            in caplog.text
+        )
 
     @staticmethod
     def test_warning_is_logged_on_no_config_section_in_rstcheck_file(
