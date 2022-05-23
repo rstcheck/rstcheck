@@ -1,7 +1,9 @@
 +-------------------+---------------------------------------------------------------------------------------------+
 | **General**       | |maintenance_y| |license| |semver|                                                          |
 |                   +---------------------------------------------------------------------------------------------+
-|                   | |gha_tests| |gha_docu| |gha_qa|                                                             |
+|                   | |rtd|                                                                                       |
++-------------------+---------------------------------------------------------------------------------------------+
+| **CI**            | |gha_tests| |gha_docu| |gha_qa|                                                             |
 +-------------------+---------------------------------------------------------------------------------------------+
 | **PyPI**          | |pypi_release| |pypi_py_versions| |pypi_implementations|                                    |
 |                   +---------------------------------------------------------------------------------------------+
@@ -34,6 +36,14 @@
 .. |semver| image:: https://img.shields.io/badge/Semantic%20Versioning-2.0.0-brightgreen.svg?style=flat-square
     :target: https://semver.org/
     :alt: Semantic Versioning - 2.0.0
+
+.. |rtd| image:: https://img.shields.io/readthedocs/rstcheck/latest.svg?style=flat-square&logo=read-the-docs&logoColor=white&label=Read%20the%20Docs
+    :target: https://rstcheck.readthedocs.io/en/latest/
+    :alt: Read the Docs - Build Status (latest)
+
+
+.. CI
+
 
 .. |gha_tests| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/Test%20code/master?style=flat-square&logo=github&label=Test%20code
     :target: https://github.com/rstcheck/rstcheck/actions/workflows/test.yaml
