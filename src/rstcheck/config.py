@@ -384,7 +384,9 @@ def load_config_file_from_dir(
                 break
 
     if config is None:
-        logger.info("No config section in supported config files found.")
+        logger.info(
+            f"No config section in supported config files found in directory: '{dir_path}'."
+        )
 
     return config
 
