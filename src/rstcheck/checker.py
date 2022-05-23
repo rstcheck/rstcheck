@@ -64,6 +64,7 @@ def check_file(
             source_file=source_file,
             ignores=ignore_dict,
             report_level=run_config.report_level or config.DEFAULT_REPORT_LEVEL,
+            warn_unknown_settings=run_config.warn_unknown_settings or False,
         ):
             all_errors.append(error)
 
@@ -150,6 +151,7 @@ def check_source(
     source_file: t.Optional[pathlib.Path] = None,
     ignores: t.Optional[types.IgnoreDict] = None,
     report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
+    warn_unknown_settings: bool = False,
 ) -> types.YieldedLintError:
     """Check the given rst source for issues.
 
@@ -157,6 +159,8 @@ def check_source(
         defaults to :py:obj:`None`
     :param ignores: Ignore information; defaults to :py:obj:`None`
     :param report_level: Report level; defaults to :py:data:`rstcheck.config.DEFAULT_REPORT_LEVEL`
+    :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
+        defaults to :py:obj:`False`
     :return: :py:obj:`None`
     :yield: Found issues
     """
@@ -164,6 +168,18 @@ def check_source(
     logger.info(f"Check source from '{source_origin}'")
     ignores = ignores or types.IgnoreDict(
         messages=None, languages=[], directives=[], roles=[], substitutions=[]
+    )
+    ignores["directives"].extend(
+        inline_config.find_ignored_directives(source, source_origin, warn_unknown_settings)
+    )
+    ignores["roles"].extend(
+        inline_config.find_ignored_roles(source, source_origin, warn_unknown_settings)
+    )
+    ignores["substitutions"].extend(
+        inline_config.find_ignored_substitutions(source, source_origin, warn_unknown_settings)
+    )
+    ignores["languages"].extend(
+        inline_config.find_ignored_languages(source, source_origin, warn_unknown_settings)
     )
 
     source = _replace_ignored_substitutions(source, ignores["substitutions"])
@@ -178,8 +194,6 @@ def check_source(
 
     if _extras.SPHINX_INSTALLED:
         _sphinx.load_sphinx_ignores()
-
-    ignores["languages"].extend(inline_config.find_ignored_languages(source, source_origin))
 
     writer = _CheckWriter(source, source_origin, ignores, report_level)
 
@@ -263,12 +277,13 @@ def _parse_and_filter_rst_errors(
 class _CheckWriter(docutils.writers.Writer):
     """Runs CheckTranslator on code blocks."""
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         source: str,
         source_origin: types.SourceFileOrString,
         ignores: t.Optional[types.IgnoreDict] = None,
         report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
+        warn_unknown_settings: bool = False,
     ) -> None:
         """Inititalize :py:class:`_CheckWriter`.
 
@@ -277,6 +292,9 @@ class _CheckWriter(docutils.writers.Writer):
         :param ignores: Ignore information; defaults to :py:obj:`None`
         :param report_level: Report level;
             defaults to :py:data:`rstcheck.config.DEFAULT_REPORT_LEVEL`
+        :param warn_unknown_settings: If a warning should be logged for unknown settings in config
+            file;
+            defaults to :py:obj:`False`
         """
         docutils.writers.Writer.__init__(self)
         self.checkers: t.List[types.CheckerRunFunction] = []
@@ -284,6 +302,7 @@ class _CheckWriter(docutils.writers.Writer):
         self.source_origin = source_origin
         self.ignores = ignores
         self.report_level = report_level
+        self.warn_unknown_settings = warn_unknown_settings
 
     def translate(self) -> None:
         """Run CheckTranslator."""
@@ -293,6 +312,7 @@ class _CheckWriter(docutils.writers.Writer):
             source_origin=self.source_origin,
             ignores=self.ignores,
             report_level=self.report_level,
+            warn_unknown_settings=self.warn_unknown_settings,
         )
         self.document.walkabout(visitor)
         self.checkers += visitor.checkers
@@ -308,6 +328,7 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         source_origin: types.SourceFileOrString,
         ignores: t.Optional[types.IgnoreDict] = None,
         report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
+        warn_unknown_settings: bool = False,
     ) -> None:
         """Inititalize :py:class:`_CheckTranslator`.
 
@@ -317,6 +338,9 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
         :param ignores: Ignore information; defaults to :py:obj:`None`
         :param report_level: Report level;
             defaults to :py:data:`rstcheck.config.DEFAULT_REPORT_LEVEL`
+        :param warn_unknown_settings: If a warning should be logged for unknown settings in config
+            file;
+            defaults to :py:obj:`False`
         """
         docutils.nodes.NodeVisitor.__init__(self, document)
         self.checkers: t.List[types.CheckerRunFunction] = []
@@ -326,7 +350,9 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
             messages=None, languages=[], directives=[], roles=[], substitutions=[]
         )
         self.report_level = report_level
-        self.code_block_checker = CodeBlockChecker(source_origin, ignores, report_level)
+        self.code_block_checker = CodeBlockChecker(
+            source_origin, ignores, report_level, warn_unknown_settings
+        )
 
     def visit_doctest_block(self, node: docutils.nodes.Element) -> None:
         """Add check for syntax of doctest.
@@ -480,6 +506,7 @@ class CodeBlockChecker:
         source_origin: types.SourceFileOrString,
         ignores: t.Optional[types.IgnoreDict] = None,
         report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
+        warn_unknown_settings: bool = False,
     ) -> None:
         """Inititalize CodeBlockChecker.
 
@@ -487,10 +514,14 @@ class CodeBlockChecker:
         :param ignores: Ignore information; defaults to :py:obj:`None`
         :param report_level: Report level;
             defaults to :py:data:`rstcheck.config.DEFAULT_REPORT_LEVEL`
+        :param warn_unknown_settings: If a warning should be logged for unknown settings in config
+            file;
+            defaults to :py:obj:`False`
         """
         self.source_origin = source_origin
         self.ignores = ignores
         self.report_level = report_level
+        self.warn_unknown_settings = warn_unknown_settings
 
     def language_is_supported(self, language: str) -> bool:
         """Check if given language can be checked.
@@ -593,6 +624,7 @@ class CodeBlockChecker:
             source_file=None,
             ignores=self.ignores,
             report_level=self.report_level,
+            warn_unknown_settings=self.warn_unknown_settings,
         )
 
     def check_doctest(self, source_code: str) -> types.YieldedLintError:
