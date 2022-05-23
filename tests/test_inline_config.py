@@ -266,6 +266,30 @@ Example
             types.InlineConfig(key="ignore-languages", value="python"),
         ]
 
+    @staticmethod
+    def test_source_with_multiple_correct_configs() -> None:
+        """Test source with multiple correct configs.
+
+        Test whitspace around equal sign.
+        """
+        source = """
+Example
+=======
+.. rstcheck: ignore-languages=cpp
+.. rstcheck: ignore-roles=role
+.. rstcheck: ignore-languages=python
+.. rstcheck: ignore-directives=direct
+"""
+
+        result = list(inline_config.get_inline_config_from_source(source, "<string>"))
+
+        assert result == [
+            types.InlineConfig(key="ignore-languages", value="cpp"),
+            types.InlineConfig(key="ignore-roles", value="role"),
+            types.InlineConfig(key="ignore-languages", value="python"),
+            types.InlineConfig(key="ignore-directives", value="direct"),
+        ]
+
 
 class TestConfigFilterAndSpliter:
     """Test ``_filter_config_and_split_values`` function."""
@@ -308,34 +332,82 @@ Example
         assert result == ["cpp", "json", "python"]
 
 
-class TestFindIgnoredLanguages:
-    """Test ``find_ignored_languages`` function."""
+class FindIgnoreFn(t.Protocol):  # pylint: disable=too-few-public-methods # noqa: D101
+    def __call__(  # noqa: D102
+        self,
+        source: str,
+        source_origin: types.SourceFileOrString,
+        warn_unknown_settings: bool = False,
+    ) -> t.Generator[str, None, None]:
+        ...
+
+
+class TestFindIgnoredFunctions:
+    """Test ``find_ignored_*`` function.
+
+    - find_ignored_directives
+    - find_ignored_roles
+    - find_ignored_substitutions
+    - find_ignored_languages
+    """
 
     @staticmethod
-    def test_only_languages_are_used() -> None:
-        """Test only ignore-languages are returned."""
+    @pytest.mark.parametrize(
+        ("target_config", "expected_result"),
+        [
+            (inline_config.find_ignored_directives, ["directive1"]),
+            (inline_config.find_ignored_roles, ["role1"]),
+            (inline_config.find_ignored_substitutions, ["substitution1"]),
+            (inline_config.find_ignored_languages, ["cpp"]),
+        ],
+    )
+    def test_only_target_config_is_used(
+        target_function: FindIgnoreFn, expected_result: str
+    ) -> None:
+        """Test only targeted configs are returned."""
         source = """
 Example
 =======
 .. rstcheck: unknown-config=true
-.. rstcheck: ignore-languages=cpp
 .. rstcheck: ignore-directives=directive1
+.. rstcheck: ignore-roles=role1
+.. rstcheck: ignore-substitutions=substitution1
+.. rstcheck: ignore-languages=cpp
 """
 
-        result = list(inline_config.find_ignored_languages(source, "<string>"))
+        result = list(target_function(source, "<string>"))
 
-        assert result == ["cpp"]
+        assert result == expected_result
 
     @staticmethod
-    def test_languages_are_comma_splitted() -> None:
-        """Test ignore-languages config is split on comma."""
+    @pytest.mark.parametrize(
+        ("target_config", "expected_result"),
+        [
+            (inline_config.find_ignored_directives, ["directive1", "directive3", "directive2"]),
+            (inline_config.find_ignored_roles, ["role1", "role3", "role2"]),
+            (
+                inline_config.find_ignored_substitutions,
+                ["substitution1", "substitution3", "substitution2"],
+            ),
+            (inline_config.find_ignored_languages, ["cpp", "json", "python"]),
+        ],
+    )
+    def test_values_are_comma_splitted(target_function: FindIgnoreFn, expected_result: str) -> None:
+        """Test  config values are split on comma."""
         source = """
 Example
 =======
+.. rstcheck: unknown-config=true
+.. rstcheck: ignore-directives=directive1,directive3
+.. rstcheck: ignore-directives=directive2
+.. rstcheck: ignore-roles=role1,role3
+.. rstcheck: ignore-roles=role2
+.. rstcheck: ignore-substitutions=substitution1,substitution3
+.. rstcheck: ignore-substitutions=substitution2
 .. rstcheck: ignore-languages=cpp,json
 .. rstcheck: ignore-languages=python
 """
 
-        result = list(inline_config.find_ignored_languages(source, "<string>"))
+        result = list(target_function(source, "<string>"))
 
-        assert result == ["cpp", "json", "python"]
+        assert result == expected_result

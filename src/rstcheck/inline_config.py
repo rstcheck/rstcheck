@@ -47,8 +47,18 @@ class RstcheckConfigInline(
 
 
 RSTCHECK_CONFIG_COMMENT_REGEX = re.compile(r"\.\. rstcheck: (.*)=(.*)$")
-VALID_INLINE_CONFIG_KEYS = ("ignore-languages",)
-ValidInlineConfigKeys = _t.Literal["ignore-languages"]
+VALID_INLINE_CONFIG_KEYS = (
+    "ignore-directives",
+    "ignore-roles",
+    "ignore-substitutions",
+    "ignore-languages",
+)
+ValidInlineConfigKeys = t.Union[
+    _t.Literal["ignore-directives"],
+    _t.Literal["ignore-roles"],
+    _t.Literal["ignore-substitutions"],
+    _t.Literal["ignore-languages"],
+]
 
 
 @functools.lru_cache()
@@ -108,6 +118,105 @@ def _filter_config_and_split_values(
         if inline_config["key"] == target_config:
             for language in inline_config["value"].split(","):
                 yield language.strip()
+
+
+def find_ignored_directives(
+    source: str, source_origin: types.SourceFileOrString, warn_unknown_settings: bool = False
+) -> t.Generator[str, None, None]:
+    """Search the rst source for rstcheck inline ignore-directives comments.
+
+    Directives are ignored via comment.
+
+    For example, to ignore directive1, directive2, and directive3:
+
+    .. testsetup::
+
+        from rstcheck.inline_config import find_ignored_directives
+
+    >>> list(find_ignored_directives('''
+    ... Example
+    ... =======
+    ...
+    ... .. rstcheck: ignore-directives=directive1,directive3
+    ...
+    ... .. rstcheck: ignore-directives=directive2
+    ... ''', "<string>"))
+    ['directive1', 'directive3', 'directive2']
+
+    :param source: Rst source code
+    :param source_origin: Origin of the source with the inline ignore comments
+    :return: None
+    :yield: Found directives to ignore
+    """
+    yield from _filter_config_and_split_values(
+        "ignore-directives", source, source_origin, warn_unknown_settings
+    )
+
+
+def find_ignored_roles(
+    source: str, source_origin: types.SourceFileOrString, warn_unknown_settings: bool = False
+) -> t.Generator[str, None, None]:
+    """Search the rst source for rstcheck inline ignore-roles comments.
+
+    Roles are ignored via comment.
+
+    For example, to ignore role1, role2, and role3:
+
+    .. testsetup::
+
+        from rstcheck.inline_config import find_ignored_roles
+
+    >>> list(find_ignored_roles('''
+    ... Example
+    ... =======
+    ...
+    ... .. rstcheck: ignore-roles=role1,role3
+    ...
+    ... .. rstcheck: ignore-roles=role2
+    ... ''', "<string>"))
+    ['roles1', 'roles3', 'roles2']
+
+    :param source: Rst source code
+    :param source_origin: Origin of the source with the inline ignore comments
+    :return: None
+    :yield: Found roles to ignore
+    """
+    yield from _filter_config_and_split_values(
+        "ignore-roles", source, source_origin, warn_unknown_settings
+    )
+
+
+def find_ignored_substitutions(
+    source: str, source_origin: types.SourceFileOrString, warn_unknown_settings: bool = False
+) -> t.Generator[str, None, None]:
+    """Search the rst source for rstcheck inline ignore-substitutions comments.
+
+    Substitutions are ignored via comment.
+
+    For example, to ignore substitution1, substitution2, and substitution3:
+
+    .. testsetup::
+
+        from rstcheck.inline_config import find_ignored_substitutions
+
+    >>> list(find_ignored_substitutions('''
+    ... Example
+    ... =======
+    ...
+    ... .. rstcheck: ignore-substitutions=substitution1,substitution3
+    ...
+    ... .. rstcheck: ignore-substitutions=substitution2
+    ... ''', "<string>"))
+    ['substitutions1', 'substitutions3', 'substitutions2']
+
+    :param source: Rst source code
+    :param source_origin: Origin of the source with the inline ignore comments
+    :return: None
+    :yield: Found substitutions to ignore
+    """
+    yield from _filter_config_and_split_values(
+        "ignore-substitutions", source, source_origin, warn_unknown_settings
+    )
 
 
 def find_ignored_languages(
