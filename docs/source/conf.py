@@ -57,7 +57,7 @@ rst_prolog = """
 .. ifconfig:: RELEASE_LEVEL in ('alpha', 'beta', 'rc')
 
    .. warning::
-      The here documented release |release| is a prerelease.
+      The here documented release |release| is a pre-release.
       Keep in mind that breaking changes can occur till the final release.
 
       You may want to use the latest stable release instead.
