@@ -4,46 +4,10 @@ import logging
 import re
 import typing as t
 
-import pydantic
-
-from . import _compat as _t, config, types
+from . import _compat as _t, types
 
 
 logger = logging.getLogger(__name__)
-
-
-class RstcheckConfigInline(
-    pydantic.BaseModel  # pylint: disable=no-member
-):  # pylint: disable=too-few-public-methods
-    """Type for inline config in rst source.
-
-    :raises pydantic.error_wrappers.ValidationError: If setting is not parsable into correct type
-    """
-
-    ignore_directives: t.Optional[t.List[str]]
-    ignore_roles: t.Optional[t.List[str]]
-    ignore_substitutions: t.Optional[t.List[str]]
-    ignore_languages: t.Optional[t.List[str]]
-
-    @pydantic.validator(
-        "ignore_directives", "ignore_roles", "ignore_substitutions", "ignore_languages", pre=True
-    )
-    @classmethod
-    def split_str(cls, value: t.Any) -> t.Optional[t.List[str]]:  # noqa: ANN401
-        """Validate and parse the following ignore_* settings.
-
-        - ignore_directives
-        - ignore_roles
-        - ignore_substitutions
-        - ignore_languages
-
-        Comma separated strings are split into a list.
-
-        :param value: Value to validate
-        :raises ValueError: If not a :py:class:`str` or :py:class:`list` of :py:class:`str`
-        :return: List of things to ignore in the respective category
-        """
-        return config._split_str_validator(value)  # pylint: disable=protected-access
 
 
 RSTCHECK_CONFIG_COMMENT_REGEX = re.compile(r"\.\. rstcheck: (.*)=(.*)$")
