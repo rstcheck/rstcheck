@@ -29,7 +29,7 @@ Links on the versions point to PyPI.
 - Fix release date in changelog for v6.0.0rc1 release
 - Set the rstcheck pre-commit hook to run in serial to avoid overhead of doubling parallel runs
   with pre-commit
-- Little improvents to logging messages
+- Little improvements to logging messages
 - Rename master branch to main
 
 [diff v6.0.0a2...v6.0.0rc1](https://github.com/rstcheck/rstcheck/compare/v6.0.0a2...v6.0.0rc1)
