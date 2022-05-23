@@ -6,7 +6,7 @@ import typing as t
 
 import pydantic
 
-from . import config, types
+from . import _compat, config, types
 
 
 logger = logging.getLogger(__name__)
@@ -48,6 +48,7 @@ class RstcheckConfigInline(
 
 RSTCHECK_CONFIG_COMMENT_REGEX = re.compile(r"\.\. rstcheck: (.*)=(.*)$")
 VALID_INLINE_CONFIG_KEYS = ("ignore-languages",)
+ValidInlineConfigKeys = _compat.Literal["ignore-languages"]
 
 
 @functools.lru_cache()
@@ -86,6 +87,29 @@ def get_inline_config_from_source(
     return configs
 
 
+def _filter_config_and_split_values(
+    target_config: ValidInlineConfigKeys,
+    source: str,
+    source_origin: types.SourceFileOrString,
+    warn_unknown_settings: bool = False,
+) -> t.Generator[str, None, None]:
+    """Get specified configs and comma split them.
+
+    :param target_config: Config target to filter for
+    :param source: Source to get config from
+    :param source_origin: Origin of the source with the inline ignore comments
+    :param warn_unknown_settings: If a warning should be logged on unknown settings;
+        defaults to :py:obj:`False`
+    :return: None
+    :yield: Single values for the ``target_config``
+    """
+    inline_configs = get_inline_config_from_source(source, source_origin, warn_unknown_settings)
+    for inline_config in inline_configs:
+        if inline_config["key"] == target_config:
+            for language in inline_config["value"].split(","):
+                yield language.strip()
+
+
 def find_ignored_languages(
     source: str, source_origin: types.SourceFileOrString, warn_unknown_settings: bool = False
 ) -> t.Generator[str, None, None]:
@@ -114,8 +138,6 @@ def find_ignored_languages(
     :return: None
     :yield: Found languages to ignore
     """
-    inline_configs = get_inline_config_from_source(source, source_origin, warn_unknown_settings)
-    for inline_config in inline_configs:
-        if inline_config["key"] == "ignore-languages":
-            for language in inline_config["value"].split(","):
-                yield language.strip()
+    yield from _filter_config_and_split_values(
+        "ignore-languages", source, source_origin, warn_unknown_settings
+    )

@@ -267,6 +267,47 @@ Example
         ]
 
 
+class TestConfigFilterAndSpliter:
+    """Test ``_filter_config_and_split_values`` function."""
+
+    @staticmethod
+    def test_only_specified_config_is_used() -> None:
+        """Test only specified config is returned."""
+        source = """
+Example
+=======
+.. rstcheck: unknown-config=true
+.. rstcheck: ignore-languages=cpp
+.. rstcheck: ignore-directives=directive1
+"""
+
+        result = list(
+            inline_config._filter_config_and_split_values(  # pylint: disable=protected-access
+                "ignore-languages", source, "<string>"
+            )
+        )
+
+        assert result == ["cpp"]
+
+    @staticmethod
+    def test_configs_are_comma_splitted() -> None:
+        """Test configs are split on comma."""
+        source = """
+Example
+=======
+.. rstcheck: ignore-languages=cpp,json
+.. rstcheck: ignore-languages=python
+"""
+
+        result = list(
+            inline_config._filter_config_and_split_values(  # pylint: disable=protected-access
+                "ignore-languages", source, "<string>"
+            )
+        )
+
+        assert result == ["cpp", "json", "python"]
+
+
 class TestFindIgnoredLanguages:
     """Test ``find_ignored_languages`` function."""
 
