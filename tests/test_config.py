@@ -55,6 +55,78 @@ def test_default_values_for_config() -> None:
     assert result.recursive is None
 
 
+class TestSplitStrValidator:
+    """Test ``_split_str_validator`` validator function."""
+
+    @staticmethod
+    def test_none_means_default() -> None:
+        """Test ``None`` results in ``None``."""
+        result = config._split_str_validator(None)  # pylint: disable=protected-access
+
+        assert result is None
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("string", "split_list"),
+        [
+            ("value1", ["value1"]),
+            ("value1,value2", ["value1", "value2"]),
+            ("value1, value2", ["value1", "value2"]),
+            ("value1 ,value2", ["value1", "value2"]),
+            ("value1 , value2", ["value1", "value2"]),
+            ("value1 ,\n value2", ["value1", "value2"]),
+            ("value1 ,\n value2\n", ["value1", "value2"]),
+            ("value1 , value2,", ["value1", "value2"]),
+            ("value1 , value2 ,", ["value1", "value2"]),
+            ("value1 , value2 , ", ["value1", "value2"]),
+        ],
+    )
+    def test_strings_are_transformed_to_lists(string: str, split_list: t.List[str]) -> None:
+        """Test strings are split at the ",", trailing commas are ignored and whitespace cleaned."""
+        result = config._split_str_validator(string)  # pylint: disable=protected-access
+
+        assert result == split_list
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("string_list", "string_list_cleaned"),
+        [
+            (["value1"], ["value1"]),
+            (["value1", "value2"], ["value1", "value2"]),
+            (["value1", " value2"], ["value1", "value2"]),
+            (["value1 ", "value2"], ["value1", "value2"]),
+            (["value1 ", " value2"], ["value1", "value2"]),
+        ],
+    )
+    def test_string_lists_are_whitespace_cleaned(
+        string_list: t.List[str], string_list_cleaned: t.List[str]
+    ) -> None:
+        """Test lists of strings are whitespace cleaned."""
+        result = config._split_str_validator(string_list)  # pylint: disable=protected-access
+
+        assert result == string_list_cleaned
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        "value",
+        [
+            1,
+            [1],
+            1.1,
+            [1.1],
+            False,
+            [False],
+            True,
+            [True],
+            ["foo", 1],
+        ],
+    )
+    def test_invalid_settings(value: str) -> None:
+        """Test invalid settings."""
+        with pytest.raises(ValueError, match="Not a string or list of strings"):
+            config._split_str_validator(value)  # pylint: disable=protected-access
+
+
 class TestReportLevelValidatorMethod:
     """Test ``valid_report_level`` validator method of the ``RstcheckConfig`` class.
 
