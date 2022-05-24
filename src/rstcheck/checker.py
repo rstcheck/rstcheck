@@ -350,8 +350,16 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
             messages=None, languages=[], directives=[], roles=[], substitutions=[]
         )
         self.report_level = report_level
+        self.warn_unknown_settings = warn_unknown_settings
         self.code_block_checker = CodeBlockChecker(
             source_origin, ignores, report_level, warn_unknown_settings
+        )
+        self.code_block_ignore_lines = list(
+            inline_config.find_code_block_ignore_lines(
+                source=self.source,
+                source_origin=self.source_origin,
+                warn_unknown_settings=self.warn_unknown_settings,
+            )
         )
 
     def visit_doctest_block(self, node: docutils.nodes.Element) -> None:
@@ -386,6 +394,13 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
                 language = classes[-1]
             else:
                 return
+
+        if node.line is not None and node.line - 1 in self.code_block_ignore_lines:
+            logger.debug(
+                "Skipping code-block due to skip comment. "
+                f"Source: '{self.source_origin}' at line {node.line}"
+            )
+            return
 
         if language in self.ignores["languages"]:
             return
