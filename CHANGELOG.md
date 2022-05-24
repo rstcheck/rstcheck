@@ -23,6 +23,7 @@ Links on the versions point to PyPI.
 ### Documentation
 
 - Update links to new repository home at rstcheck/rstcheck
+- Update config documentation
 
 ### Miscellaneous
 
