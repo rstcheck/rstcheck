@@ -318,7 +318,7 @@ class _CheckWriter(docutils.writers.Writer):
         self.checkers += visitor.checkers
 
 
-class _CheckTranslator(docutils.nodes.NodeVisitor):
+class _CheckTranslator(docutils.nodes.NodeVisitor):  # pylint: disable=too-many-instance-attributes
     """Visits code blocks and checks for syntax errors in code."""
 
     def __init__(  # pylint: disable=too-many-arguments
@@ -390,10 +390,9 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):
             # For "..code:: language"
             is_code_node = True
             classes = node.get("classes")
-            if "code" in classes:
-                language = classes[-1]
-            else:
+            if "code" not in classes:
                 return
+            language = classes[-1]
 
         if node.line is not None and node.line - 1 in self.code_block_ignore_lines:
             logger.debug(
