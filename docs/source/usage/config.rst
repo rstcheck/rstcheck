@@ -7,11 +7,71 @@ Configuration
 #. CLI options
 #. Configuration files
 
-This means that e.g. a configuration via CLI overwrites configuration from a file.
+This means that e.g. a configuration via CLI overwrites configuration from a file and so on.
+
+
+Configuration Examples
+----------------------
+
+First of some configuration examples to show you how to set them.
+
+
+Inline configuration comment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Inline configuration is passed after a ``rstcheck:`` in a rst comment.
+
+.. code-block:: rst
+
+    Example
+    =======
+
+    .. code-block:: python
+
+        print("Hello world")
+
+    .. rstcheck: ignore-languages=python
+
+
+INI Configuration file
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: ini
+
+    [rstcheck]
+    report_level=warning
+    ignore_directives =
+        one,
+        two,
+        three,
+    ignore_roles=src,RFC
+    ignore_substitutions=image_link
+    ignore_languages=python,cpp
+    ignore_messages=(Document or section may not begin with a transition\.$)
+
+
+TOML Configuration file
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: toml
+
+    [tool.rstcheck]
+    report_level = "WARNING"
+    ignore_directives = [
+        "one",
+        "two",
+        "three",
+    ]
+    ignore_roles = ["src", "RFC"]
+    ignore_substitutions = ["image_link"]
+    ignore_languages = ["python", "cpp"]
+    ignore_messages = "(Document or section may not begin with a transition\.$)"
 
 
 Configuration options
 ---------------------
+
+Now it's time for all the available configuration you can set.
 
 
 Configuration file
@@ -166,58 +226,3 @@ in a configuration file with the ``ignore_messages`` key.
 On CLI and in INI format a regular expression string is expected.
 In TOML format a single string or a list of strings is expected. The list's entries will be
 concatenated and the OR operator "|" will be set between each entry.
-
-
-Configuration Examples
-----------------------
-
-Inline configuration comment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Inline configuration is passed after a ``rstcheck:`` in a rst comment.
-
-.. code-block:: rst
-
-    Example
-    =======
-
-    .. code-block:: python
-
-        print("Hello world")
-
-    .. rstcheck: ignore-languages=python
-
-
-INI Configuration file
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: ini
-
-    [rstcheck]
-    report_level=warning
-    ignore_directives =
-        one,
-        two,
-        three,
-    ignore_roles=src,RFC
-    ignore_substitutions=image_link
-    ignore_languages=python,cpp
-    ignore_messages=(Document or section may not begin with a transition\.$)
-
-
-TOML Configuration file
-~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: toml
-
-    [tool.rstcheck]
-    report_level = "WARNING"
-    ignore_directives = [
-        "one",
-        "two",
-        "three",
-    ]
-    ignore_roles = ["src", "RFC"]
-    ignore_substitutions = ["image_link"]
-    ignore_languages = ["python", "cpp"]
-    ignore_messages = "(Document or section may not begin with a transition\.$)"
