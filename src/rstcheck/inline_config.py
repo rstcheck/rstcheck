@@ -24,6 +24,9 @@ ValidInlineConfigKeys = t.Union[
     _t.Literal["ignore-languages"],
 ]
 
+RSTCHECK_FLOW_CONTROL_COMMENT_REGEX = re.compile(r"\.\. rstcheck: ([a-z-]*)$")
+VALID_INLINE_FLOW_CONTROLS = ("ignore-next-code-block",)
+
 
 @functools.lru_cache()
 def get_inline_config_from_source(
@@ -214,3 +217,61 @@ def find_ignored_languages(
     yield from _filter_config_and_split_values(
         "ignore-languages", source, source_origin, warn_unknown_settings
     )
+
+
+@functools.lru_cache()
+def get_inline_flow_control_from_source(
+    source: str, source_origin: types.SourceFileOrString, warn_unknown_settings: bool = False
+) -> t.List[types.InlineFlowControl]:
+    """Get rstcheck inline flow control from source.
+
+    Unknown flow controls are ignored.
+
+    :param source: Source to get config from
+    :param source_origin: Origin of the source with the inline flow control
+    :param warn_unknown_settings: If a warning should be logged on unknown settings;
+        defaults to :py:obj:`False`
+    :return: A list of inline flow controls
+    """
+    configs: t.List[types.InlineFlowControl] = []
+    for (idx, line) in enumerate(source.splitlines()):
+        match = RSTCHECK_FLOW_CONTROL_COMMENT_REGEX.search(line)
+        if match is None:
+            continue
+
+        value = match.group(1).strip()
+        line_number = idx + 1
+
+        if value not in VALID_INLINE_FLOW_CONTROLS:
+            if warn_unknown_settings:
+                logger.warning(
+                    f"Unknown inline flow control '{value}' found. "
+                    f"Source: '{source_origin}' at line {line_number}"
+                )
+            continue
+
+        configs.append(types.InlineFlowControl(value=value, line_number=line_number))
+
+    return configs
+
+
+def find_code_block_ignore_lines(
+    source: str,
+    source_origin: types.SourceFileOrString,
+    warn_unknown_settings: bool = False,
+) -> t.Generator[int, None, None]:
+    """Get lines of ``ignore-next-code-block`` flow control comments.
+
+    :param source: Source to get config from
+    :param source_origin: Origin of the source with the inline ignore comments
+    :param warn_unknown_settings: If a warning should be logged on unknown settings;
+        defaults to :py:obj:`False`
+    :return: None
+    :yield: Single values for the ``target_config``
+    """
+    flow_controls = get_inline_flow_control_from_source(
+        source, source_origin, warn_unknown_settings
+    )
+    for flow_control in flow_controls:
+        if flow_control["value"] == "ignore-next-code-block":
+            yield flow_control["line_number"]

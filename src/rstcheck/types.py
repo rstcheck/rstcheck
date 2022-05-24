@@ -44,3 +44,10 @@ class InlineConfig(_t.TypedDict):
 
     key: str
     value: str
+
+
+class InlineFlowControl(_t.TypedDict):
+    """Dict with a flow control value and line number comming from a inline config comment."""
+
+    value: str
+    line_number: int
