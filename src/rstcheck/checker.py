@@ -394,7 +394,15 @@ class _CheckTranslator(docutils.nodes.NodeVisitor):  # pylint: disable=too-many-
                 return
             language = classes[-1]
 
-        if node.line is not None and node.line - 1 in self.code_block_ignore_lines:
+        directive_line = _get_code_block_directive_line(node, self.source)
+        if directive_line is None:
+            logger.error(
+                "Could not find line for literal block directive. "
+                f"Source: '{self.source_origin}' at line {node.line}"
+            )
+            return
+
+        if directive_line - 1 in self.code_block_ignore_lines:
             logger.debug(
                 "Skipping code-block due to skip comment. "
                 f"Source: '{self.source_origin}' at line {node.line}"
@@ -510,6 +518,33 @@ def _beginning_of_code_block(
             break
 
     return line_no - code_block_length
+
+
+CODE_BLOCK_RE = re.compile(r"\.\. code::|\.\. code-block::|\.\. sourcecode::")
+
+
+def _get_code_block_directive_line(
+    node: docutils.nodes.Element, full_contents: str
+) -> t.Optional[int]:
+    """Find line of code block directive.
+
+    :param node: The code block node
+    :param full_contents: The node's contents
+    :return: Line of code block directive or :py:obj:`None`
+    """
+    line_number = node.line
+    if line_number is None:
+        return None
+
+    if _extras.SPHINX_INSTALLED:
+        return line_number
+
+    lines = full_contents.splitlines()
+    for line_no in range(line_number, 1, -1):
+        if CODE_BLOCK_RE.match(lines[line_no - 2].strip()) is not None:
+            return line_no - 1
+
+    return None
 
 
 class CodeBlockChecker:
