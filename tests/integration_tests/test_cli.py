@@ -1,5 +1,6 @@
 """Integration test for the CLI."""
 import pathlib
+import re
 import sys
 
 import pytest
@@ -560,3 +561,37 @@ class TestInlineIgnoreComments:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code == 0
+
+
+class TestInlineFlowControlComments:
+    """Test inline flow control comments to e.g. skip things."""
+
+    @staticmethod
+    def test_bad_example_has_only_one_issue(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test only one issue is detected for two same code-blocks.
+
+        One code-block has skip comment.
+        """
+        test_file = EXAMPLES_DIR / "inline_config" / "with_inline_skip_code_block.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code != 0
+        assert len(re.findall(r"unexpected EOF while parsing", result.stdout)) == 1
+
+    @staticmethod
+    def test_nested_bad_example_has_only_one_issue(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test only one issue is detected for two same nested code-blocks.
+
+        One code-block has skip comment.
+        """
+        test_file = EXAMPLES_DIR / "inline_config" / "with_nested_inline_skip_code_block.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code != 0
+        assert len(re.findall(r"unexpected EOF while parsing", result.stdout)) == 1
