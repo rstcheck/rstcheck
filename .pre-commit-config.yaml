@@ -211,7 +211,7 @@ repos:
 
   # rstcheck - rst file checker
   - repo: https://github.com/rstcheck/rstcheck
-    rev: 3a9ecb0f07517895f612cd04a8194390ce5c7b83 # frozen: v6.0.0a2
+    rev: fe0866883f96071f9b1bb37f6cb445727124b785 # PR
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
