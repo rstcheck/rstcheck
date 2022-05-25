@@ -21,6 +21,8 @@ Links on the versions point to PyPI.
 ### New features
 
 - Catch SyntaxWarnings in python code-blocks and handle them like SyntaxErrors ([#124](https://github.com/rstcheck/rstcheck/pull/124))
+- Add additional inline configuration and flow control options ([#123](https://github.com/rstcheck/rstcheck/pull/123))
+  (see the config docs for more information)
 
 ### Documentation
 
