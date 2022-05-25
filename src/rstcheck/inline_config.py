@@ -141,7 +141,7 @@ def find_ignored_roles(
     ...
     ... .. rstcheck: ignore-roles=role2
     ... ''', "<string>"))
-    ['roles1', 'roles3', 'roles2']
+    ['role1', 'role3', 'role2']
 
     :param source: Rst source code
     :param source_origin: Origin of the source with the inline ignore comments
@@ -174,7 +174,7 @@ def find_ignored_substitutions(
     ...
     ... .. rstcheck: ignore-substitutions=substitution2
     ... ''', "<string>"))
-    ['substitutions1', 'substitutions3', 'substitutions2']
+    ['substitution1', 'substitution3', 'substitution2']
 
     :param source: Rst source code
     :param source_origin: Origin of the source with the inline ignore comments
