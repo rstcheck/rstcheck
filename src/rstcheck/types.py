@@ -37,3 +37,17 @@ CheckerRunFunction = t.Callable[..., YieldedLintError]
 
 Returned by :py:meth:`rstcheck.checker.CodeBlockChecker.create_checker`.
 """
+
+
+class InlineConfig(_t.TypedDict):
+    """Dict with a config key and config value comming from a inline config comment."""
+
+    key: str
+    value: str
+
+
+class InlineFlowControl(_t.TypedDict):
+    """Dict with a flow control value and line number comming from a inline config comment."""
+
+    value: str
+    line_number: int

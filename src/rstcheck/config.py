@@ -49,6 +49,27 @@ DEFAULT_REPORT_LEVEL = ReportLevel.INFO
 """Default report level."""
 
 
+def _split_str_validator(value: t.Any) -> t.Optional[t.List[str]]:  # noqa: ANN401
+    """Validate and parse strings and string-lists.
+
+    Comma separated strings are split into a list.
+
+    :param value: Value to validate
+    :raises ValueError: If not a :py:class:`str` or :py:class:`list` of :py:class:`str`
+    :return: List of strings
+    """
+    if value is None:
+        return None
+
+    if isinstance(value, str):
+        return [v.strip() for v in value.split(",") if v.strip()]
+
+    if isinstance(value, list) and all(isinstance(v, str) for v in value):
+        return [v.strip() for v in value if v.strip()]
+
+    raise ValueError("Not a string or list of strings")
+
+
 class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
     """Rstcheck config file.
 
@@ -115,16 +136,7 @@ class RstcheckConfigFile(pydantic.BaseModel):  # pylint: disable=no-member
         :raises ValueError: If not a :py:class:`str` or :py:class:`list` of :py:class:`str`
         :return: List of things to ignore in the respective category
         """
-        if value is None:
-            return None
-
-        if isinstance(value, str):
-            return [v.strip() for v in value.split(",") if v.strip()]
-
-        if isinstance(value, list) and all(isinstance(v, str) for v in value):
-            return [v.strip() for v in value if v.strip()]
-
-        raise ValueError("Not a string or list of strings")
+        return _split_str_validator(value)
 
     @pydantic.validator("ignore_messages", pre=True)
     @classmethod

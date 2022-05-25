@@ -20,12 +20,18 @@ Inline configuration comment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Inline configuration is passed after a ``rstcheck:`` in a rst comment.
+There are two types of inline configuration:
+
+- Simple inline config e.g. ``ignore-languages=python`` which follows the syntax of ``key=value``
+- Flow control instructions e.g. ``ignore-next-code-block`` which follows the syntax of
+  ``words divided by dashes``
 
 .. code-block:: rst
 
     Example
     =======
 
+    .. rstcheck: ignore-next-code-block
     .. code-block:: python
 
         print("Hello world")
@@ -165,8 +171,9 @@ Ignore directives
 A list of directives to ignore while checking rst source.
 
 Can be set via the CLI option ``--ignore-directives`` or
-in a configuration file with the ``ignore_directives`` key.
-On CLI and in INI format a comma separated list is expected.
+in a configuration file with the ``ignore_directives`` key
+or as an inline configuration comment with the ``ignore-directives`` key.
+On CLI, in INI format and as inline configuration comment a comma separated list is expected.
 In TOML format a list of strings is expected.
 
 
@@ -176,8 +183,9 @@ Ignore roles
 A list of roles to ignore while checking rst source.
 
 Can be set via the CLI option ``--ignore-roles`` or
-in a configuration file with the ``ignore_roles`` key.
-On CLI and in INI format a comma separated list is expected.
+in a configuration file with the ``ignore_roles`` key
+or as an inline configuration comment with the ``ignore-roles`` key.
+On CLI, in INI format and as inline configuration comment a comma separated list is expected.
 In TOML format a list of strings is expected.
 
 
@@ -187,8 +195,9 @@ Ignore substitutions
 A list of substitutions to ignore while checking rst source.
 
 Can be set via the CLI option ``--ignore-substitutions`` or
-in a configuration file with the ``ignore_substitutions`` key.
-On CLI and in INI format a comma separated list is expected.
+in a configuration file with the ``ignore_substitutions`` key
+or as an inline configuration comment with the ``ignore-substitutions`` key.
+On CLI, in INI format and as inline configuration comment a comma separated list is expected.
 In TOML format a list of strings is expected.
 
 
@@ -226,3 +235,27 @@ in a configuration file with the ``ignore_messages`` key.
 On CLI and in INI format a regular expression string is expected.
 In TOML format a single string or a list of strings is expected. The list's entries will be
 concatenated and the OR operator "|" will be set between each entry.
+
+
+Control Flow instructions
+-------------------------
+
+There are also control flow instructions which are only available as inline comments.
+They change the flow of checking the rst source, hence the name.
+
+
+Skipping code blocks
+~~~~~~~~~~~~~~~~~~~~
+
+With the ``ignore-next-code-block`` flow control instruction you can skip single code blocks.
+This way you don't have to use the heavy tools like ignoring a whole language or directive.
+
+The instruction **must** be placed in the line directly above the code block directive like so:
+
+
+.. code-block:: rst
+
+    .. rstcheck: ignore-next-code-block
+    .. code-block:: python
+
+        print("Hello world")

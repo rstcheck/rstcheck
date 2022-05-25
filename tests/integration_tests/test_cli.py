@@ -1,5 +1,6 @@
 """Integration test for the CLI."""
 import pathlib
+import re
 import sys
 
 import pytest
@@ -530,3 +531,116 @@ class TestSphinx:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code == 0
+
+
+class TestInlineIgnoreComments:
+    """Test inline config comments to ignore things."""
+
+    @staticmethod
+    @pytest.mark.skipif(
+        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
+    )
+    def test_bad_example_has_issues(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test all issues are found on bad example."""
+        test_file = EXAMPLES_DIR / "inline_config" / "without_inline_ignore.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code != 0
+        assert "custom-directive" in result.stdout
+        assert "custom-role" in result.stdout
+        assert "python" in result.stdout
+        assert "unmatched-substitution" in result.stdout
+
+    @staticmethod
+    def test_sphinx_role_exits_zero_with_sphinx(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test no issues are found on bad example with ignore comments."""
+        test_file = EXAMPLES_DIR / "sphinx" / "with_inline_ignore.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code == 0
+
+
+class TestInlineFlowControlComments:
+    """Test inline flow control comments to e.g. skip things."""
+
+    @staticmethod
+    @pytest.mark.skipif(
+        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
+    )
+    @pytest.mark.skipif(sys.version_info[0:2] > (3, 9), reason="Requires python3.9 or lower")
+    def test_bad_example_has_only_one_issue_pre310(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test only one issue is detected for two same code-blocks.
+
+        One code-block has skip comment.
+        """
+        test_file = EXAMPLES_DIR / "inline_config" / "with_inline_skip_code_block.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code != 0
+        assert len(re.findall(r"unexpected EOF while parsing", result.stdout)) == 1
+
+    @staticmethod
+    @pytest.mark.skipif(
+        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
+    )
+    @pytest.mark.skipif(sys.version_info < (3, 10), reason="Requires python3.10 or higher")
+    def test_bad_example_has_only_one_issue(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test only one issue is detected for two same code-blocks.
+
+        One code-block has skip comment.
+        """
+        test_file = EXAMPLES_DIR / "inline_config" / "with_inline_skip_code_block.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code != 0
+        assert len(re.findall(r"'\(' was never closed", result.stdout)) == 1
+
+    @staticmethod
+    @pytest.mark.skipif(
+        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
+    )
+    @pytest.mark.skipif(sys.version_info[0:2] > (3, 9), reason="Requires python3.9 or lower")
+    def test_nested_bad_example_has_only_one_issue_pre310(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test only one issue is detected for two same nested code-blocks.
+
+        One code-block has skip comment.
+        """
+        test_file = EXAMPLES_DIR / "inline_config" / "with_nested_inline_skip_code_block.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code != 0
+        assert len(re.findall(r"unexpected EOF while parsing", result.stdout)) == 1
+
+    @staticmethod
+    @pytest.mark.skipif(
+        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
+    )
+    @pytest.mark.skipif(sys.version_info < (3, 10), reason="Requires python3.10 or higher")
+    def test_nested_bad_example_has_only_one_issue(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test only one issue is detected for two same nested code-blocks.
+
+        One code-block has skip comment.
+        """
+        test_file = EXAMPLES_DIR / "inline_config" / "with_nested_inline_skip_code_block.rst"
+
+        result = cli_runner.invoke(cli_app, str(test_file))
+
+        assert result.exit_code != 0
+        assert len(re.findall(r"'\(' was never closed", result.stdout)) == 1
