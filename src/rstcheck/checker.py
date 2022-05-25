@@ -14,6 +14,7 @@ import subprocess  # noqa: S404
 import sys
 import tempfile
 import typing as t
+import warnings
 import xml.etree.ElementTree  # noqa: S405
 
 import docutils.core
@@ -534,7 +535,9 @@ class CodeBlockChecker:
         """
         logger.debug("Check python source.")
         try:
-            compile(source_code, "<string>", "exec")
+            with warnings.catch_warnings():
+                warnings.simplefilter("error", SyntaxWarning)
+                compile(source_code, "<string>", "exec")
         except SyntaxError as exception:
             yield types.LintError(
                 source_origin=self.source_origin,

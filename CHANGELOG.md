@@ -18,6 +18,10 @@ Links on the versions point to PyPI.
 
 [diff v6.0.0rc1...main](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc1...main)
 
+### New features
+
+- Catch SyntaxWarnings in python code-blocks and handle them like SyntaxErrors ([#124](https://github.com/rstcheck/rstcheck/pull/124))
+
 ### Documentation
 
 - Update links to new repository home at rstcheck/rstcheck
