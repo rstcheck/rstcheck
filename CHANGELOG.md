@@ -18,8 +18,6 @@ Links on the versions point to PyPI.
 
 [diff v6.0.0rc1...main](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc1...main)
 
-## [v6.0.0rc1 (2022-05-21)](https://pypi.org/project/rstcheck/6.0.0rc1/)
-
 ### Documentation
 
 - Update links to new repository home at rstcheck/rstcheck
@@ -32,6 +30,8 @@ Links on the versions point to PyPI.
   with pre-commit
 - Little improvements to logging messages
 - Rename master branch to main
+
+## [v6.0.0rc1 (2022-05-21)](https://pypi.org/project/rstcheck/6.0.0rc1/)
 
 [diff v6.0.0a2...v6.0.0rc1](https://github.com/rstcheck/rstcheck/compare/v6.0.0a2...v6.0.0rc1)
 
