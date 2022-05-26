@@ -12,6 +12,18 @@ from tests.conftest import EXAMPLES_DIR, TESTING_DIR
 from tests.integration_tests.conftest import ERROR_CODE_REGEX
 
 
+def test_exit_0_on_nonexisting_config_path(
+    cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+) -> None:
+    """Test runner exits with error on non existing config path."""
+    test_file = EXAMPLES_DIR / "good" / "rst.rst"
+    config_file = pathlib.Path("does-not-exist")
+
+    result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
+
+    assert result.exit_code != 0
+
+
 class TestHelpMessage:
     """Test help CLI message."""
 
@@ -319,7 +331,7 @@ class TestWithConfigFile:
     ) -> None:
         """Test bad file ``bad.rst`` without config file is not ok."""
         test_file = EXAMPLES_DIR / "with_configuration" / "bad.rst"
-        config_file = "no-config-file"
+        config_file = pathlib.Path("NONE")
 
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
@@ -337,7 +349,7 @@ class TestWithConfigFile:
         ``(ERROR/3) (cpp) warning: no newline at end of file [-Wnewline-eof]``
         """
         test_file = EXAMPLES_DIR / "with_configuration" / "bad.rst"
-        config_file = "no-config-file"
+        config_file = pathlib.Path("NONE")
 
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
@@ -350,7 +362,7 @@ class TestWithConfigFile:
     ) -> None:
         """Test bad file ``bad_rst.rst`` without config file not ok."""
         test_file = EXAMPLES_DIR / "with_configuration" / "bad_rst.rst"
-        config_file = "no-config-file"
+        config_file = pathlib.Path("NONE")
 
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 

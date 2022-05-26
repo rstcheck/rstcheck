@@ -214,8 +214,14 @@ def _load_config_from_ini_file(
     :raises FileNotFoundError: If the file is not found
     :return: instance of :py:class:`RstcheckConfigFile` or :py:class:`None` on missing config
         section
+        or ``NONE`` is passed as the config path.
     """
     logger.debug(f"Try loading config from INI file: '{ini_file}'")
+
+    if ini_file.name == "NONE":
+        logger.info("Config path is set to 'NONE'. No config file is loaded.")
+        return None
+
     resolved_file = ini_file.resolve()
 
     if not resolved_file.is_file():
@@ -284,9 +290,14 @@ def _load_config_from_toml_file(
     :raises ValueError: If the file is not a TOML file
     :raises FileNotFoundError: If the file is not found
     :return: instance of :py:class:`RstcheckConfigFile` or :py:obj:`None` on missing config section
+        or ``NONE`` is passed as the config path.
     """
     _extras.install_guard("tomli")
     logger.debug(f"Try loading config from TOML file: '{toml_file}'.")
+
+    if toml_file.name == "NONE":
+        logger.info("Config path is set to 'NONE'. No config file is loaded.")
+        return None
 
     resolved_file = toml_file.resolve()
 
@@ -344,8 +355,14 @@ def load_config_file(
         defaults to :py:obj:`False`
     :raises FileNotFoundError: If the file is not found
     :return: instance of :py:class:`RstcheckConfigFile` or :py:obj:`None` on missing config section
+        or ``NONE`` is passed as the config path.
     """
     logger.debug("Try loading config file.")
+
+    if file_path.name == "NONE":
+        logger.info("Config path is set to 'NONE'. No config file is loaded.")
+        return None
+
     if file_path.suffix.casefold() == ".toml":
         return _load_config_from_toml_file(
             file_path,
@@ -378,8 +395,14 @@ def load_config_file_from_dir(
         defaults to :py:obj:`False`
     :return: instance of :py:class:`RstcheckConfigFile` or
         :py:obj:`None` if no file is found or no file has a rstcheck section
+        or ``NONE`` is passed as the config path.
     """
     logger.debug(f"Try loading config file from directory: '{dir_path}'.")
+
+    if dir_path.name == "NONE":
+        logger.info("Config path is set to 'NONE'. No config file is loaded.")
+        return None
+
     config = None
 
     for file_name in CONFIG_FILES:
@@ -423,8 +446,14 @@ def load_config_file_from_dir_tree(
         defaults to :py:obj:`False`
     :return: instance of :py:class:`RstcheckConfigFile` or
         :py:obj:`None` if no file is found or no file has a rstcheck section
+        or ``NONE`` is passed as the config path.
     """
     logger.debug(f"Try loading config file from directory tree: '{dir_path}'.")
+
+    if dir_path.name == "NONE":
+        logger.info("Config path is set to 'NONE'. No config file is loaded.")
+        return None
+
     config = None
 
     search_dir = dir_path.resolve()
@@ -476,10 +505,17 @@ def load_config_file_from_path(
         defaults to :py:obj:`False`
     :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
         defaults to :py:obj:`False`
+    :raises FileNotFoundError: When the passed path is not found.
     :return: instance of :py:class:`RstcheckConfigFile` or
         :py:obj:`None` if no file is found or no file has a rstcheck section
+        or ``NONE`` is passed as the config path.
     """
     logger.debug(f"Try loading config file from path: '{path}'.")
+
+    if path.name == "NONE":
+        logger.info("Config path is set to 'NONE'. No config file is loaded.")
+        return None
+
     resolved_path = path.resolve()
 
     if resolved_path.is_file():
@@ -502,8 +538,7 @@ def load_config_file_from_path(
             warn_unknown_settings=warn_unknown_settings,
         )
 
-    logger.warning("Passed path is neither a file nor a directory: '{path}'.")
-    return None
+    raise FileNotFoundError(2, "Passed config path not found.", path)
 
 
 def merge_configs(

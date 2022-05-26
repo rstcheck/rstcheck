@@ -388,6 +388,15 @@ class TestIniFileLoader:
     """Test ``load_config_from_ini_file``."""
 
     @staticmethod
+    def test_no_config_on_none() -> None:
+        """Test no config is loaded if NONE is set."""
+        conf_file = pathlib.Path("NONE")
+
+        result = config._load_config_from_ini_file(conf_file)  # pylint: disable=protected-access
+
+        assert result is None
+
+    @staticmethod
     def test_missing_file_errors(tmp_path: pathlib.Path) -> None:
         """Test ``FileNotFoundError`` is raised on missing file."""
         conf_file = tmp_path / "config.ini"
@@ -630,6 +639,15 @@ report_level=INFO
 @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
 class TestTomlFileLoader:
     """Test ``load_config_from_toml_file``."""
+
+    @staticmethod
+    def test_no_config_on_none() -> None:
+        """Test no config is loaded if NONE is set."""
+        conf_file = pathlib.Path("NONE")
+
+        result = config._load_config_from_toml_file(conf_file)  # pylint: disable=protected-access
+
+        assert result is None
 
     @staticmethod
     def test_wrong_file_suffix_errors(tmp_path: pathlib.Path) -> None:
@@ -926,6 +944,15 @@ class TestConfigFileLoader:
     """Test ``load_config_file``."""
 
     @staticmethod
+    def test_no_config_on_none() -> None:
+        """Test no config is loaded if NONE is set."""
+        conf_file = pathlib.Path("NONE")
+
+        result = config.load_config_file(conf_file)
+
+        assert result is None
+
+    @staticmethod
     @pytest.mark.parametrize("ini_file", [".rstcheck.cfg", "setup.cfg", "config.ini", "config.cfg"])
     def test_ini_files(tmp_path: pathlib.Path, ini_file: str) -> None:
         """Test with INI files."""
@@ -959,6 +986,15 @@ class TestConfigFileLoader:
 
 class TestConfigDirLoader:
     """Test ``load_config_file_from_dir``."""
+
+    @staticmethod
+    def test_no_config_on_none() -> None:
+        """Test no config is loaded if NONE is set."""
+        conf_file = pathlib.Path("NONE")
+
+        result = config.load_config_file_from_dir(conf_file)
+
+        assert result is None
 
     @staticmethod
     @pytest.mark.parametrize("ini_file", [".rstcheck.cfg", "setup.cfg"])
@@ -1137,6 +1173,15 @@ class TestConfigDirTreeLoader:
     """Test ``load_config_file_from_dir_tree``."""
 
     @staticmethod
+    def test_no_config_on_none() -> None:
+        """Test no config is loaded if NONE is set."""
+        conf_file = pathlib.Path("NONE")
+
+        result = config.load_config_file_from_dir_tree(conf_file)
+
+        assert result is None
+
+    @staticmethod
     def test_parent_searching(tmp_path: pathlib.Path) -> None:
         """Test option to search up the dir tree."""
         nested_dir = tmp_path / "nested"
@@ -1191,9 +1236,17 @@ class TestConfigPathLoader:
     """Test ``load_config_file_from_path``."""
 
     @staticmethod
-    def test_with_nonexisting_path() -> None:
-        """Test with INI file."""
+    def test_raises_on_nonexisting_path() -> None:
+        """Test raises OSError on path that is not a file or directory."""
         conf_file = pathlib.Path("does-not-exist-cfg")
+
+        with pytest.raises(FileNotFoundError, match=re.compile("Passed config path not found.")):
+            config.load_config_file_from_path(conf_file)
+
+    @staticmethod
+    def test_no_config_on_none() -> None:
+        """Test no config is loaded if NONE is set."""
+        conf_file = pathlib.Path("NONE")
 
         result = config.load_config_file_from_path(conf_file)
 

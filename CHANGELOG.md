@@ -19,6 +19,16 @@ NOTE: please use them in this order.
 
 [diff v6.0.0rc2...main](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc2...main)
 
+### BREAKING CHANGES
+
+- `rstcheck.config.load_config_file_from_path` now raises an OSError if the given path
+  is neither a file nor a directory ([#125](https://github.com/rstcheck/rstcheck/pull/125))
+- The CLI runner exits 1 when the config path passed with `--config` does not exist ([#125](https://github.com/rstcheck/rstcheck/pull/125))
+
+### New features
+
+- Add `NONE` as a special config file path, to disable config file loading ([#125](https://github.com/rstcheck/rstcheck/pull/125))
+
 ## [v6.0.0rc2 (2022-05-26)](https://pypi.org/project/rstcheck/6.0.0rc2/)
 
 [diff v6.0.0rc1...v6.0.0rc2](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc1...v6.0.0rc2)
