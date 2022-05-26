@@ -62,7 +62,7 @@ def setup_logger(loglevel: str) -> None:
     logging.basicConfig(level=numeric_level)
 
 
-def cli(  # pylint: disable=too-many-arguments
+def cli(  # pylint: disable=too-many-arguments,too-many-locals
     files: t.List[pathlib.Path] = typer.Argument(  # noqa: M511,B008
         ..., allow_dash=True, hidden=True
     ),
@@ -116,14 +116,22 @@ def cli(  # pylint: disable=too-many-arguments
         ignore_messages=ignore_messages,
     )
 
-    logger.debug("Create main runner instance.")
-    _runner = runner.RstcheckMainRunner(
-        check_paths=files, rstcheck_config=rstcheck_config, overwrite_config=False
-    )
+    exit_code = 1
 
-    logger.info("Run main runner instance.")
-    _runner.check()
-    exit_code = _runner.print_result()
+    try:
+        logger.debug("Create main runner instance.")
+        _runner = runner.RstcheckMainRunner(
+            check_paths=files, rstcheck_config=rstcheck_config, overwrite_config=False
+        )
+        logger.info("Run main runner instance.")
+        _runner.check()
+        exit_code = _runner.print_result()
+
+    except FileNotFoundError as exc:
+        if not exc.strerror == "Passed config path not found.":
+            raise
+        logger.critical(f"### Passed config path was not found: '{exc.filename}'")
+
     raise typer.Exit(code=exit_code)
 
 
