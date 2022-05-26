@@ -22,6 +22,7 @@ Links on the versions point to PyPI.
 
 - `rstcheck.config.load_config_file_from_path` now raises an OSError if the given path
   is neither a file nor a directory ([#125](https://github.com/rstcheck/rstcheck/pull/125))
+- The CLI runner exits 1 when the config path passed with `--config` does not exist ([#125](https://github.com/rstcheck/rstcheck/pull/125))
 
 ### New features
 
