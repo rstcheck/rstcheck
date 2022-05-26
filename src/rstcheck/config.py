@@ -505,7 +505,7 @@ def load_config_file_from_path(
         defaults to :py:obj:`False`
     :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
         defaults to :py:obj:`False`
-    :raises OSError: When the passed path is neither a file nor a directory.
+    :raises FileNotFoundError: When the passed path is not found.
     :return: instance of :py:class:`RstcheckConfigFile` or
         :py:obj:`None` if no file is found or no file has a rstcheck section
         or ``NONE`` is passed as the config path.
@@ -538,7 +538,7 @@ def load_config_file_from_path(
             warn_unknown_settings=warn_unknown_settings,
         )
 
-    raise OSError(f"The passed path is neither a file nor a directory: '{path}'.")
+    raise FileNotFoundError(2, "Passed config path not found.", path)
 
 
 def merge_configs(

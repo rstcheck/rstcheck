@@ -1240,9 +1240,7 @@ class TestConfigPathLoader:
         """Test raises OSError on path that is not a file or directory."""
         conf_file = pathlib.Path("does-not-exist-cfg")
 
-        with pytest.raises(
-            OSError, match=f"The passed path is neither a file nor a directory: '{conf_file}'."
-        ):
+        with pytest.raises(FileNotFoundError, match=re.compile("Passed config path not found.")):
             config.load_config_file_from_path(conf_file)
 
     @staticmethod
