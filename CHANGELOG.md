@@ -16,7 +16,11 @@ Links on the versions point to PyPI.
 
 ## Unreleased
 
-[diff v6.0.0rc1...main](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc1...main)
+[diff v6.0.0rc2...main](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc2...main)
+
+## [v6.0.0rc2 (2022-05-26)](https://pypi.org/project/rstcheck/6.0.0rc2/)
+
+[diff v6.0.0rc1...v6.0.0rc2](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc1...v6.0.0rc2)
 
 ### New features
 
