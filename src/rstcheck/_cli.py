@@ -12,10 +12,12 @@ ValidReportLevels = _t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]
 
 HELP_CONFIG = """Config file to load. Can be a INI file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | setup.cfg.
+If 'NONE' is passed no config file is loaded at all.
 """
 if _extras.TOMLI_INSTALLED:  # pragma: no cover
     HELP_CONFIG = """Config file to load. Can be a INI or TOML file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | pyproject.toml | setup.cfg.
+If 'NONE' is passed no config file is loaded at all.
 """
 HELP_WARN_UNKNOWN_SETTINGS = """Log a WARNING for unknown settings in config files.
 Can be hidden via --log-level."""
