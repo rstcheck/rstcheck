@@ -26,7 +26,7 @@ The config sources apply according to a set of rules:
    - **always apply for the whole file** regardless where they are placed.
    - is **added** to the remaining config and does **not overwrite** it.
 
-#. CLI options **always overwrite** config comming from a file.
+#. CLI options **always overwrite** config coming from a file.
 #. File config has the lowest priority.
 
 
@@ -88,7 +88,7 @@ If the parent directory has no config file with a matching config section the pa
 parent directory is searched next. This continues up the directory tree until the root directory.
 If no config file is found, the default values for each setting apply.
 
-This whole mechanic is deactivated, when a config file or directory is explicity set.
+This whole mechanic is deactivated, when a config file or directory is explicitly set.
 See the `Configuration file`_ section for more information on setting a config file/directory.
 
 ``rstcheck`` supports two types of config formats: **INI** and **TOML**.
@@ -142,7 +142,7 @@ In TOML format all config related to ``rstcheck`` must go into the ``[tool.rstch
 dictionary. This is due to the python convention for the ``pyproject.toml`` file, which
 ``rstcheck`` uses for all TOML files.
 
-The official TOML syntax applies here, so strings are strings and lists are lists for exmaple.
+The official TOML syntax applies here, so strings are strings and lists are lists for example.
 
 Here is an example:
 
@@ -184,7 +184,7 @@ The path may be relative or absolute.
 
 If the passed path does not exist the runner exits with an error, which is logged.
 
-If the path is a literal ``NONE``, no file is loaded or directory serached, this includes
+If the path is a literal ``NONE``, no file is loaded or directory searched, this includes
 the automatic config file detection mechanic.
 
 When the path points to a file, this concrete file is read and searched for a matching
@@ -192,8 +192,8 @@ config section.
 If no section is found a warning is logged and no file config is used.
 
 When the path is a directory, this directory is search for a config file, like described
-in the earlier `Configuration files`_ section, except that only this directry is saerch and
-not the directry tree.
+in the earlier `Configuration files`_ section, except that only this directory is search and
+not the directory tree.
 
 
 Recursive resolution

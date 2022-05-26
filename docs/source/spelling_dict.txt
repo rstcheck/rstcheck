@@ -50,6 +50,7 @@ linters
 makefile
 monkypatch
 monkypatched
+multiline
 nd
 noqa
 nosec
@@ -92,4 +93,5 @@ travis
 txt
 venv
 virtualenv
+whitespace
 xml
