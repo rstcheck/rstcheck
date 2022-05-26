@@ -29,6 +29,10 @@ NOTE: please use them in this order.
 
 - Add `NONE` as a special config file path, to disable config file loading ([#125](https://github.com/rstcheck/rstcheck/pull/125))
 
+### Documentation
+
+- Update config documentation ([#126](https://github.com/rstcheck/rstcheck/pull/126))
+
 ## [v6.0.0rc2 (2022-05-26)](https://pypi.org/project/rstcheck/6.0.0rc2/)
 
 [diff v6.0.0rc1...v6.0.0rc2](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc1...v6.0.0rc2)
