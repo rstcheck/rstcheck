@@ -14,7 +14,7 @@ Resolves: #<issue number here>
 - [ ] I added **tests** for the changed code.
 - [ ] I updated the **documentation** for the changed code.
 - [ ] I ran the **full** `tox` test suite locally, so the CI pipelines should be green.
-- [ ] I added the change to the History section on the README.
+- [ ] I added the change to the CHANGELOG.md file.
 
 <!--
     Please add further information below that may help
