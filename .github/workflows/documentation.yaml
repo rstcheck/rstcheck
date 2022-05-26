@@ -53,5 +53,10 @@ jobs:
           brew update
           brew install enchant
 
-      - name: Run tests with tox
-        run: tox -n docs
+      - name: Run tests with tox except linkcheck
+        if: runner.os != 'Linux'
+        run: TOX_SKIP_ENV=docs-test-linkcheck tox -n docs
+
+      - name: Run all tests with tox
+        if: runner.os == 'Linux'
+        run: TOX_SKIP_ENV=docs-test-linkcheck tox -n docs
