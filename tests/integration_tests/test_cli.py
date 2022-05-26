@@ -319,7 +319,7 @@ class TestWithConfigFile:
     ) -> None:
         """Test bad file ``bad.rst`` without config file is not ok."""
         test_file = EXAMPLES_DIR / "with_configuration" / "bad.rst"
-        config_file = "no-config-file"
+        config_file = pathlib.Path("NONE")
 
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
@@ -337,7 +337,7 @@ class TestWithConfigFile:
         ``(ERROR/3) (cpp) warning: no newline at end of file [-Wnewline-eof]``
         """
         test_file = EXAMPLES_DIR / "with_configuration" / "bad.rst"
-        config_file = "no-config-file"
+        config_file = pathlib.Path("NONE")
 
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
@@ -350,7 +350,7 @@ class TestWithConfigFile:
     ) -> None:
         """Test bad file ``bad_rst.rst`` without config file not ok."""
         test_file = EXAMPLES_DIR / "with_configuration" / "bad_rst.rst"
-        config_file = "no-config-file"
+        config_file = pathlib.Path("NONE")
 
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
