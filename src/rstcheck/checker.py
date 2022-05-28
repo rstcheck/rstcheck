@@ -25,6 +25,13 @@ import docutils.utils
 from . import _docutils, _extras, _sphinx, config, inline_config, types
 
 
+if _extras.SPHINX_INSTALLED:
+    import sphinx.application
+    import sphinx.environment
+    import sphinx.io
+    import sphinx.parsers
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -57,7 +64,7 @@ def check_file(
 
     _docutils.clean_docutils_directives_and_roles_cache()
 
-    with _sphinx.load_sphinx_if_available():
+    with _sphinx.load_sphinx_if_available() as sphinx_app:
 
         all_errors = []
         for error in check_source(
@@ -66,6 +73,7 @@ def check_file(
             ignores=ignore_dict,
             report_level=run_config.report_level or config.DEFAULT_REPORT_LEVEL,
             warn_unknown_settings=run_config.warn_unknown_settings or False,
+            sphinx_app=sphinx_app,
         ):
             all_errors.append(error)
 
@@ -147,12 +155,13 @@ def _create_ignore_dict_from_config(rstcheck_config: config.RstcheckConfig) -> t
     )
 
 
-def check_source(
+def check_source(  # pylint: disable=too-many-arguments
     source: str,
     source_file: t.Optional[pathlib.Path] = None,
     ignores: t.Optional[types.IgnoreDict] = None,
     report_level: config.ReportLevel = config.DEFAULT_REPORT_LEVEL,
     warn_unknown_settings: bool = False,
+    sphinx_app: t.Optional["sphinx.application.Sphinx"] = None,
 ) -> types.YieldedLintError:
     """Check the given rst source for issues.
 
@@ -206,19 +215,41 @@ def check_source(
     with contextlib.suppress(UnicodeError):
         source = source.encode("utf-8").decode("utf-8-sig")
 
-    with contextlib.suppress(docutils.utils.SystemMessage, AttributeError):
+    reader = None
+    parser = None
+    settings_overrides = {
+        "halt_level": 5,
+        "report_level": report_level.value,
+        "warning_stream": string_io,
+    }
+    source_path = source_origin
+
+    if sphinx_app is not None:
+        sphinx_app.env = t.cast(sphinx.environment.BuildEnvironment, sphinx_app.env)
+
+        reader = sphinx.io.SphinxStandaloneReader()
+        reader.setup(sphinx_app)
+
+        parser = sphinx.parsers.RSTParser()
+        parser.set_application(sphinx_app)
+
+        settings_overrides = {**sphinx_app.env.settings, **settings_overrides}
+        source_path = pathlib.Path(source_path).resolve()
+
+        sphinx_app.env.srcdir = str(source_path.parent)
+        sphinx_app.env.temp_data["docname"] = str(source_path)
+
+    with contextlib.suppress(docutils.utils.SystemMessage):
         # Sphinx will sometimes throw an `AttributeError` trying to access
         # "self.state.document.settings.env". Ignore this for now until we
         # figure out a better approach.
         docutils.core.publish_string(
             source,
+            reader=reader,
+            parser=parser,
             writer=writer,
-            source_path=str(source_origin),
-            settings_overrides={
-                "halt_level": 5,
-                "report_level": report_level.value,
-                "warning_stream": string_io,
-            },
+            source_path=str(source_path),
+            settings_overrides=settings_overrides,
         )
 
     yield from _run_code_checker_and_filter_errors(writer.checkers, ignores["messages"])
