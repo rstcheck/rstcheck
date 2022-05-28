@@ -34,7 +34,7 @@ class TestContextManager:
         """Test for ``None`` yield but action when sphinx is installed."""
         with _sphinx.load_sphinx_if_available() as ctx_manager:
 
-            assert ctx_manager is None
+            assert isinstance(ctx_manager, sphinx.application.Sphinx)
             assert docutils_directives._directives
             assert docutils_roles._roles
             assert "sphinx.addnodes" not in sphinx.application.builtin_extensions
