@@ -24,29 +24,35 @@ if _extras.SPHINX_INSTALLED:
 logger = logging.getLogger(__name__)
 
 
+def create_dummy_sphinx_app() -> sphinx.application.Sphinx:
+    """Create a dummy sphinx instance with temp dirs."""
+    logger.debug("Create dummy sphinx application.")
+    with tempfile.TemporaryDirectory() as temp_dir:
+        outdir = pathlib.Path(temp_dir) / "_build"
+        sphinx_app = sphinx.application.Sphinx(
+            srcdir=temp_dir,
+            confdir=None,
+            outdir=str(outdir),
+            doctreedir=str(outdir),
+            buildername="dummy",
+            # NOTE: https://github.com/sphinx-doc/sphinx/issues/10483
+            status=None,  # type: ignore[arg-type]
+        )
+
+        return sphinx_app
+
+
 @contextlib.contextmanager
 def load_sphinx_if_available() -> t.Generator[t.Optional[sphinx.application.Sphinx], None, None]:
     """Contextmanager to register Sphinx directives and roles if sphinx is available."""
     if _extras.SPHINX_INSTALLED:
-        logger.debug("Init dummy sphinx application.")
-        with tempfile.TemporaryDirectory() as temp_dir:
-            outdir = pathlib.Path(temp_dir) / "_build"
-            sphinx_app = sphinx.application.Sphinx(
-                srcdir=temp_dir,
-                confdir=None,
-                outdir=str(outdir),
-                doctreedir=str(outdir),
-                buildername="dummy",
-                # NOTE: https://github.com/sphinx-doc/sphinx/issues/10483
-                status=None,  # type: ignore[arg-type]
-            )
-            # NOTE: Hack to prevent sphinx warnings for overwriting registered nodes; see #113
-            sphinx.application.builtin_extensions = [  # type: ignore[assignment]
-                e for e in sphinx.application.builtin_extensions if e != "sphinx.addnodes"
-            ]
-            yield sphinx_app
-    else:
-        yield None
+        create_dummy_sphinx_app()
+        # NOTE: Hack to prevent sphinx warnings for overwriting registered nodes; see #113
+        sphinx.application.builtin_extensions = [  # type: ignore[assignment]
+            e for e in sphinx.application.builtin_extensions if e != "sphinx.addnodes"
+        ]
+
+    yield None
 
 
 def get_sphinx_directives_and_roles() -> t.Tuple[t.List[str], t.List[str]]:
