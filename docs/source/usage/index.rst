@@ -1,7 +1,7 @@
 Usage
 =====
 
-``rstcheck`` is a library at heart but comes packed with a CLI application.
+``rstcheck`` is a CLI application which uses the ``rstcheck-core`` library.
 
 .. toctree::
    :maxdepth: 1
@@ -10,4 +10,3 @@ Usage
    cli
    config
    integration
-   library

@@ -2,7 +2,6 @@
 # pylint: disable=C0103
 import os
 import re
-import shutil
 from datetime import date
 from importlib.util import find_spec
 from pathlib import Path
@@ -117,48 +116,6 @@ extlinks = {
 }
 
 
-#: -- APIDOC ---------------------------------------------------------------------------
-apidoc_module_dir = f"../../src/{project}/"
-apidoc_output_dir = "autoapidoc"
-apidoc_toc_file = False
-apidoc_separate_modules = False
-apidoc_module_first = True
-apidoc_extra_args = []
-if Path("_apidoc_templates").is_dir():
-    apidoc_extra_args += ["--templatedir", "apidoc_templates"]
-autoclass_content = "both"
-
-
-if find_spec("sphinxcontrib.apidoc") is not None:
-    extensions.append("sphinxcontrib.apidoc")
-    if Path(apidoc_output_dir).is_dir():
-        shutil.rmtree(apidoc_output_dir)
-else:
-    NOT_LOADED_MSGS.append("## 'sphinxcontrib-apidoc' extension not loaded - not installed")
-
-
-#: -- AUTODOC --------------------------------------------------------------------------
-extensions.append("sphinx.ext.autodoc")
-autodoc_typehints = "description"
-autodoc_member_order = "bysource"
-autodoc_mock_imports: List[str] = []
-autodoc_default_options = {"members": True}
-
-
-def _remove_module_docstring(  # pylint: disable=R0913
-    app, what, name, obj, options, lines  # pylint: disable=W0613 # noqa: ANN001
-) -> None:
-    """Remove module docstring."""
-    if what == "module":
-        del lines[:]
-
-
-if find_spec("sphinx_autodoc_typehints") is not None:
-    extensions.append("sphinx_autodoc_typehints")
-else:
-    NOT_LOADED_MSGS.append("## 'sphinx-autodoc-typehints' extension not loaded - not installed")
-
-
 #: -- CLICK ----------------------------------------------------------------------------
 extensions.append("sphinx_click.ext")
 
@@ -166,7 +123,6 @@ extensions.append("sphinx_click.ext")
 #: -- SPELLING -------------------------------------------------------------------------
 spelling_word_list_filename = "spelling_dict.txt"
 spelling_show_suggestions = True
-spelling_exclude_patterns = ["autoapi/**", "autoapidoc/**"]
 
 if find_spec("sphinxcontrib.spelling") is not None:
     extensions.append("sphinxcontrib.spelling")
@@ -193,8 +149,6 @@ html_show_sourcelink = True  #: Add links to *.rst source files on HTML pages
 #: -- FINAL SETUP ----------------------------------------------------------------------
 def setup(app: Sphinx) -> None:
     """Connect custom func to sphinx events."""
-    app.connect("autodoc-process-docstring", _remove_module_docstring)
-
     app.add_config_value("RELEASE_LEVEL", "", "env")
 
 

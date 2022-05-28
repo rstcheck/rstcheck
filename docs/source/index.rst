@@ -4,7 +4,7 @@ Welcome to rstcheck's documentation!
 .. include:: _badges.rst
 
 
-This a the documentation of ``rstcheck``. A library and CLI application for checking
+This a the documentation of ``rstcheck``. A CLI application for checking
 the syntax of reStructuredText and code blocks nested within it.
 
 
@@ -15,13 +15,6 @@ the syntax of reStructuredText and code blocks nested within it.
    installation
    usage/index
    workflows/index
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: API Reference:
-
-   api
 
 
 .. toctree::

@@ -15,15 +15,15 @@ Version 5 to 6 (alpha2)
 
 **Subject to change till final release**
 
-With version 6 the whole code base was restructured and with it the whole open library API
-has changed. A simple migration is not possible. Please see the :ref:`api:API` section or
-open an issue if you have open questions.
+With version 6 the whole code base was restructured. The core library was moved into its own
+repository.
 
 The new logging system may help you find issues while migrating to v6.
 You may then want to turn it on on the lowest level ``--log-level DEBUG``.
 
 ``rstcheck`` moved from ``myint/rstcheck`` to ``rstcheck/rstcheck`` so you may want to update
 links you have pointing to the old repository's location.
+Also the core library moved to the new repository ``rstcheck/rstcheck-core``.
 
 The ``master`` branch was renamed to ``main``. If you use git dependencies you may need to update
 your reference.
