@@ -25,7 +25,9 @@ def test_check_file(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         checker,
         "check_source",
-        lambda _, source_file, ignores, report_level, warn_unknown_settings: (e for e in errors),
+        lambda _, source_file, ignores, report_level, warn_unknown_settings, sphinx_app: (
+            e for e in errors
+        ),
     )
     test_config = config.RstcheckConfig(config_path=pathlib.Path())
 
