@@ -1,4 +1,6 @@
 """Sphinx helper functions."""
+from __future__ import annotations
+
 import contextlib
 import logging
 import pathlib
@@ -21,13 +23,13 @@ logger = logging.getLogger(__name__)
 
 
 @contextlib.contextmanager
-def load_sphinx_if_available() -> t.Generator[None, None, None]:
+def load_sphinx_if_available() -> t.Generator[t.Optional[sphinx.application.Sphinx], None, None]:
     """Contextmanager to register Sphinx directives and roles if sphinx is available."""
     if _extras.SPHINX_INSTALLED:
         logger.debug("Init dummy sphinx application.")
         with tempfile.TemporaryDirectory() as temp_dir:
             outdir = pathlib.Path(temp_dir) / "_build"
-            sphinx.application.Sphinx(
+            sphinx_app = sphinx.application.Sphinx(
                 srcdir=temp_dir,
                 confdir=None,
                 outdir=str(outdir),
@@ -39,9 +41,9 @@ def load_sphinx_if_available() -> t.Generator[None, None, None]:
             sphinx.application.builtin_extensions = [  # type: ignore[assignment]
                 e for e in sphinx.application.builtin_extensions if e != "sphinx.addnodes"
             ]
-            yield
+            yield sphinx_app
     else:
-        yield
+        yield None
 
 
 def get_sphinx_directives_and_roles() -> t.Tuple[t.List[str], t.List[str]]:
