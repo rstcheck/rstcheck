@@ -171,6 +171,8 @@ def check_source(  # pylint: disable=too-many-arguments
     :param report_level: Report level; defaults to :py:data:`rstcheck.config.DEFAULT_REPORT_LEVEL`
     :param warn_unknown_settings: If a warning should be logged for unknown settings in config file;
         defaults to :py:obj:`False`
+    :param sphinx_app: A :py:class:`sphinx.application.Sphinx` instance to use ofr parsing;
+        defaults to :py:obj:`None`
     :return: :py:obj:`None`
     :yield: Found issues
     """
