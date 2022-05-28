@@ -12,7 +12,7 @@ import docutils.nodes
 import docutils.utils
 import pytest
 
-from rstcheck import _extras, checker, config, types
+from rstcheck import _extras, _sphinx, checker, config, types
 
 
 def test_check_file(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -323,6 +323,68 @@ Test
         result = list(checker.check_source(source, ignores=ignores))
 
         assert not result
+
+    @staticmethod
+    @pytest.mark.skipif(sys.version_info[0:2] > (3, 9), reason="Requires python3.9 or lower")
+    @pytest.mark.parametrize("code_block_directive", ["code", "code-block", "sourcecode"])
+    def test_code_block_without_language_works_with_and_without_sphinx_pre310(
+        code_block_directive: str,
+    ) -> None:
+        """Test code blocks without a language are not checked and do not error."""
+        source = f"""
+.. {code_block_directive}::
+
+    print(
+
+.. {code_block_directive}:: python
+
+    print(
+"""
+        ignores = types.IgnoreDict(
+            messages=None,
+            languages=[],
+            directives=[],
+            roles=[],
+            substitutions=[],
+        )
+        with _sphinx.load_sphinx_if_available() as sphinx_app:
+
+            result = list(checker.check_source(source, ignores=ignores, sphinx_app=sphinx_app))
+
+        assert result is not None
+        assert result[0]["line_number"] == 8
+        assert "unexpected EOF while parsing" in result[0]["message"]
+
+    @staticmethod
+    @pytest.mark.skipif(sys.version_info < (3, 10), reason="Requires python3.10 or higher")
+    @pytest.mark.parametrize("code_block_directive", ["code", "code-block", "sourcecode"])
+    def test_code_block_without_language_works_with_and_without_sphinx(
+        code_block_directive: str,
+    ) -> None:
+        """Test code blocks without a language are not checked and do not error."""
+        source = f"""
+.. {code_block_directive}::
+
+    print(
+
+.. {code_block_directive}:: python
+
+    print(
+"""
+        ignores = types.IgnoreDict(
+            messages=None,
+            languages=[],
+            directives=[],
+            roles=[],
+            substitutions=[],
+        )
+        with _sphinx.load_sphinx_if_available() as sphinx_app:
+
+            result = list(checker.check_source(source, ignores=ignores, sphinx_app=sphinx_app))
+
+        assert result is not None
+        assert result[0]["line_number"] == 8
+        assert "'(' was never closed" in result[0]["message"]
 
 
 class TestCodeCheckRunner:
