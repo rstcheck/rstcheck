@@ -240,9 +240,6 @@ def check_source(  # pylint: disable=too-many-arguments
         sphinx_app.env.temp_data["docname"] = str(source_path)
 
     with contextlib.suppress(docutils.utils.SystemMessage):
-        # Sphinx will sometimes throw an `AttributeError` trying to access
-        # "self.state.document.settings.env". Ignore this for now until we
-        # figure out a better approach.
         docutils.core.publish_string(
             source,
             reader=reader,
