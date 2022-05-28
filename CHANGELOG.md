@@ -24,10 +24,15 @@ NOTE: please use them in this order.
 - `rstcheck.config.load_config_file_from_path` now raises an OSError if the given path
   is neither a file nor a directory ([#125](https://github.com/rstcheck/rstcheck/pull/125))
 - The CLI runner exits 1 when the config path passed with `--config` does not exist ([#125](https://github.com/rstcheck/rstcheck/pull/125))
+- Internally uses the sphinx rst parser and reader classes, when sphinx support is active ([#127](https://github.com/rstcheck/rstcheck/pull/127))
 
 ### New features
 
 - Add `NONE` as a special config file path, to disable config file loading ([#125](https://github.com/rstcheck/rstcheck/pull/125))
+
+### Bugfixes
+
+- Code blocks without language no longer raise AttributeError, when sphinx support is active ([#127](https://github.com/rstcheck/rstcheck/pull/127))
 
 ### Documentation
 
