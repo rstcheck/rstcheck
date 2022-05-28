@@ -17,10 +17,15 @@ NOTE: please use them in this order.
 
 ## Unreleased
 
-[diff v6.0.0rc2...main](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc2...main)
+[diff v6.0.0rc3...main](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc3...main)
+
+## [v6.0.0rc3 (2022-05-28)](https://pypi.org/project/rstcheck/6.0.0rc3/)
+
+[diff v6.0.0rc2...v6.0.0rc3](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc2...v6.0.0rc3)
 
 ### BREAKING CHANGES
 
+- **MOVED THE CORE LIBRARY INTO IT'S OWN REPOSITORY AT rstcheck/rstcheck-core**
 - `rstcheck.config.load_config_file_from_path` now raises an OSError if the given path
   is neither a file nor a directory ([#125](https://github.com/rstcheck/rstcheck/pull/125))
 - The CLI runner exits 1 when the config path passed with `--config` does not exist ([#125](https://github.com/rstcheck/rstcheck/pull/125))
