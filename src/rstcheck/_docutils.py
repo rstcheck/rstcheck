@@ -8,8 +8,6 @@ import docutils.parsers.rst.directives
 import docutils.parsers.rst.roles
 import docutils.writers
 
-from . import _extras
-
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +83,7 @@ class CodeBlockDirective(docutils.parsers.rst.Directive):
         return [literal]
 
 
-def register_code_directive(
+def register_code_directives(
     *,
     ignore_code_directive: bool = False,
     ignore_codeblock_directive: bool = False,
@@ -100,14 +98,12 @@ def register_code_directive(
     :param ignore_sourcecode_directive: If "sourcecode" directive should be ignored,
         so that the code block will not be checked; defaults to :py:obj:`False`
     """
-    if not _extras.SPHINX_INSTALLED:
-        if ignore_code_directive is False:
-            logger.debug("Register custom directive for 'code'.")
-            docutils.parsers.rst.directives.register_directive("code", CodeBlockDirective)
-        # NOTE: docutils maps `code-block` and `sourcecode` to `code`
-        if ignore_codeblock_directive is False:
-            logger.debug("Register custom directive for 'code-block'.")
-            docutils.parsers.rst.directives.register_directive("code-block", CodeBlockDirective)
-        if ignore_sourcecode_directive is False:
-            logger.debug("Register custom directive for 'sourcecode'.")
-            docutils.parsers.rst.directives.register_directive("sourcecode", CodeBlockDirective)
+    if ignore_code_directive is False:
+        logger.debug("Register custom directive for 'code'.")
+        docutils.parsers.rst.directives.register_directive("code", CodeBlockDirective)
+    if ignore_codeblock_directive is False:
+        logger.debug("Register custom directive for 'code-block'.")
+        docutils.parsers.rst.directives.register_directive("code-block", CodeBlockDirective)
+    if ignore_sourcecode_directive is False:
+        logger.debug("Register custom directive for 'sourcecode'.")
+        docutils.parsers.rst.directives.register_directive("sourcecode", CodeBlockDirective)
