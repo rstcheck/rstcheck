@@ -106,6 +106,7 @@ intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
     "pattern": ("https://docs.python.org/3/library/", "objects.pattern.inv"),
     "pydantic": ("https://pydantic-docs.helpmanual.io/usage/", "objects.pydantic.inv"),
+    "sphinx": ("https://www.sphinx-doc.org/en/master/extdev/", "objects.sphinx.inv"),
 }
 
 extensions.append("sphinx.ext.extlinks")
