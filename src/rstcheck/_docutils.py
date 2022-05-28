@@ -127,9 +127,7 @@ def register_rstcheck_code_directives(  # pylint: disable=duplicate-code
     """
     logger.debug("Register rstcheck code directive.")
     register_code_directives(
-        code_directive=CodeBlockDirective if ignore_code_directive is not False else None,
-        codeblock_directive=CodeBlockDirective if ignore_codeblock_directive is not False else None,
-        sourcecode_directive=CodeBlockDirective
-        if ignore_sourcecode_directive is not False
-        else None,
+        code_directive=CodeBlockDirective if ignore_code_directive is False else None,
+        codeblock_directive=CodeBlockDirective if ignore_codeblock_directive is False else None,
+        sourcecode_directive=CodeBlockDirective if ignore_sourcecode_directive is False else None,
     )

@@ -137,13 +137,11 @@ def register_sphinx_code_directives(  # pylint: disable=duplicate-code
     """
     logger.debug("Register rstcheck code directive.")
     _docutils.register_code_directives(
-        code_directive=sphinx.directives.patches.Code
-        if ignore_code_directive is not False
-        else None,
+        code_directive=sphinx.directives.patches.Code if ignore_code_directive is False else None,
         codeblock_directive=sphinx.directives.code.CodeBlock
-        if ignore_codeblock_directive is not False
+        if ignore_codeblock_directive is False
         else None,
         sourcecode_directive=sphinx.directives.code.CodeBlock
-        if ignore_sourcecode_directive is not False
+        if ignore_sourcecode_directive is False
         else None,
     )
