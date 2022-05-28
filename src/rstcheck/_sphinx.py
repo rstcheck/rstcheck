@@ -82,7 +82,7 @@ def get_sphinx_directives_and_roles() -> t.Tuple[t.List[str], t.List[str]]:
     return (sphinx_directives, sphinx_roles)
 
 
-_DIRECTIVE_WHITELIST = ["code", "code-block", "include"]
+_DIRECTIVE_WHITELIST = ["code", "code-block", "sourcecode", "include"]
 _ROLE_WHITELIST: t.List[str] = []
 
 
