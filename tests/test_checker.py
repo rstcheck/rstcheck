@@ -25,9 +25,7 @@ def test_check_file(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         checker,
         "check_source",
-        lambda _, source_file, ignores, report_level, warn_unknown_settings, sphinx_app: (
-            e for e in errors
-        ),
+        lambda _, source_file, ignores, report_level, warn_unknown_settings: (e for e in errors),
     )
     test_config = config.RstcheckConfig(config_path=pathlib.Path())
 
@@ -347,9 +345,9 @@ Test
             roles=[],
             substitutions=[],
         )
-        with _sphinx.load_sphinx_if_available() as sphinx_app:
+        with _sphinx.load_sphinx_if_available():
 
-            result = list(checker.check_source(source, ignores=ignores, sphinx_app=sphinx_app))
+            result = list(checker.check_source(source, ignores=ignores))
 
         assert result is not None
         assert result[0]["line_number"] == 8
@@ -378,9 +376,9 @@ Test
             roles=[],
             substitutions=[],
         )
-        with _sphinx.load_sphinx_if_available() as sphinx_app:
+        with _sphinx.load_sphinx_if_available():
 
-            result = list(checker.check_source(source, ignores=ignores, sphinx_app=sphinx_app))
+            result = list(checker.check_source(source, ignores=ignores))
 
         assert result is not None
         assert result[0]["line_number"] == 8
