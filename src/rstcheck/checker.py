@@ -197,7 +197,7 @@ def check_source(  # pylint: disable=too-many-arguments
     source = _replace_ignored_substitutions(source, ignores["substitutions"])
 
     if not _extras.SPHINX_INSTALLED:
-        _docutils.register_code_directives(
+        _docutils.register_rstcheck_code_directives(
             ignore_code_directive="code" in ignores["directives"],
             ignore_codeblock_directive="code-block" in ignores["directives"],
             ignore_sourcecode_directive="sourcecode" in ignores["directives"],

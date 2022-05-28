@@ -12,6 +12,8 @@ from . import _docutils, _extras
 
 if _extras.SPHINX_INSTALLED:
     import sphinx.application
+    import sphinx.directives.code
+    import sphinx.directives.patches
     import sphinx.domains.c
     import sphinx.domains.cpp
     import sphinx.domains.javascript
@@ -110,3 +112,32 @@ def load_sphinx_ignores() -> None:  # pragma: no cover
     (directives, roles) = filter_whitelisted_directives_and_roles(directives, roles)
 
     _docutils.ignore_directives_and_roles(directives, roles)
+
+
+def register_sphinx_code_directives(  # pylint: disable=duplicate-code
+    *,
+    ignore_code_directive: bool = False,
+    ignore_codeblock_directive: bool = False,
+    ignore_sourcecode_directive: bool = False,
+) -> None:
+    """Optionally register code directives.
+
+    :param ignore_code_directive: If "code" directive should be ignored,
+        so that the code block will not be checked; defaults to :py:obj:`False`
+    :param ignore_codeblock_directive: If "code-block" directive should be ignored,
+        so that the code block will not be checked; defaults to :py:obj:`False`
+    :param ignore_sourcecode_directive: If "sourcecode" directive should be ignored,
+        so that the code block will not be checked; defaults to :py:obj:`False`
+    """
+    logger.debug("Register rstcheck code directive.")
+    _docutils.register_code_directives(
+        code_directive=sphinx.directives.patches.Code
+        if ignore_code_directive is not False
+        else None,
+        codeblock_directive=sphinx.directives.code.CodeBlock
+        if ignore_codeblock_directive is not False
+        else None,
+        sourcecode_directive=sphinx.directives.code.CodeBlock
+        if ignore_sourcecode_directive is not False
+        else None,
+    )

@@ -145,3 +145,72 @@ class TestDirectiveAndRoleFilter:
 
         assert "test-role" not in result_roles
         assert "test-role2" in result_roles
+
+
+class TestRegisterSphinxCodeRirective:  # pylint: disable=duplicate-code
+    """Test ``register_code_directive`` function."""
+
+    @staticmethod
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
+    def test_registers_all() -> None:
+        """Test function registers all directives."""
+        _sphinx.register_sphinx_code_directives()  # act
+
+        assert "code" in docutils_directives._directives
+        assert "code-block" in docutils_directives._directives
+        assert "sourcecode" in docutils_directives._directives
+
+    @staticmethod
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
+    def test_does_nothing_and_all_ignored() -> None:
+        """Test function does nothing when all ignores are ``True``."""
+        _sphinx.register_sphinx_code_directives(  # act
+            ignore_code_directive=True,
+            ignore_codeblock_directive=True,
+            ignore_sourcecode_directive=True,
+        )
+
+        assert "code" not in docutils_directives._directives
+        assert "code-block" not in docutils_directives._directives
+        assert "sourcecode" not in docutils_directives._directives
+
+    @staticmethod
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
+    def test_install_only_code_when_others_are_ignored() -> None:
+        """Test function installes only code directive when others are ignored."""
+        _sphinx.register_sphinx_code_directives(  # act
+            ignore_codeblock_directive=True, ignore_sourcecode_directive=True
+        )
+
+        assert "code" in docutils_directives._directives
+        assert "code-block" not in docutils_directives._directives
+        assert "sourcecode" not in docutils_directives._directives
+
+    @staticmethod
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
+    def test_install_only_code_block_when_others_are_ignored() -> None:
+        """Test function installes only code-block directive when others are ignored."""
+        _sphinx.register_sphinx_code_directives(  # act
+            ignore_code_directive=True, ignore_sourcecode_directive=True
+        )
+
+        assert "code" not in docutils_directives._directives
+        assert "code-block" in docutils_directives._directives
+        assert "sourcecode" not in docutils_directives._directives
+
+    @staticmethod
+    @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
+    @pytest.mark.usefixtures("patch_docutils_directives_and_roles_dict")
+    def test_install_only_sourcecode_when_others_are_ignored() -> None:
+        """Test function installes only sourcecode directive when others are ignored."""
+        _sphinx.register_sphinx_code_directives(  # act
+            ignore_code_directive=True, ignore_codeblock_directive=True
+        )
+
+        assert "code" not in docutils_directives._directives
+        assert "code-block" not in docutils_directives._directives
+        assert "sourcecode" in docutils_directives._directives

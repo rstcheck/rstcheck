@@ -4,6 +4,7 @@ import logging
 import typing as t
 
 import docutils.nodes
+import docutils.parsers.rst
 import docutils.parsers.rst.directives
 import docutils.parsers.rst.roles
 import docutils.writers
@@ -85,6 +86,32 @@ class CodeBlockDirective(docutils.parsers.rst.Directive):
 
 def register_code_directives(
     *,
+    code_directive: t.Optional[t.Type[docutils.parsers.rst.Directive]] = None,
+    codeblock_directive: t.Optional[t.Type[docutils.parsers.rst.Directive]] = None,
+    sourcecode_directive: t.Optional[t.Type[docutils.parsers.rst.Directive]] = None,
+) -> None:
+    """Optionally register code directives.
+
+    :param code_directive: Directive to register for "code";
+        defaults to :py:obj:`None`
+    :param codeblock_directive: Directive to register for "code-block";
+        defaults to :py:obj:`None`
+    :param sourcecode_directive: Directive to register for "sourcecode";
+        defaults to :py:obj:`None`
+    """
+    if code_directive is not None:
+        logger.debug("Register custom directive for 'code'.")
+        docutils.parsers.rst.directives.register_directive("code", code_directive)
+    if codeblock_directive is not None:
+        logger.debug("Register custom directive for 'code-block'.")
+        docutils.parsers.rst.directives.register_directive("code-block", codeblock_directive)
+    if sourcecode_directive is not None:
+        logger.debug("Register custom directive for 'sourcecode'.")
+        docutils.parsers.rst.directives.register_directive("sourcecode", sourcecode_directive)
+
+
+def register_rstcheck_code_directives(  # pylint: disable=duplicate-code
+    *,
     ignore_code_directive: bool = False,
     ignore_codeblock_directive: bool = False,
     ignore_sourcecode_directive: bool = False,
@@ -98,12 +125,11 @@ def register_code_directives(
     :param ignore_sourcecode_directive: If "sourcecode" directive should be ignored,
         so that the code block will not be checked; defaults to :py:obj:`False`
     """
-    if ignore_code_directive is False:
-        logger.debug("Register custom directive for 'code'.")
-        docutils.parsers.rst.directives.register_directive("code", CodeBlockDirective)
-    if ignore_codeblock_directive is False:
-        logger.debug("Register custom directive for 'code-block'.")
-        docutils.parsers.rst.directives.register_directive("code-block", CodeBlockDirective)
-    if ignore_sourcecode_directive is False:
-        logger.debug("Register custom directive for 'sourcecode'.")
-        docutils.parsers.rst.directives.register_directive("sourcecode", CodeBlockDirective)
+    logger.debug("Register rstcheck code directive.")
+    register_code_directives(
+        code_directive=CodeBlockDirective if ignore_code_directive is not False else None,
+        codeblock_directive=CodeBlockDirective if ignore_codeblock_directive is not False else None,
+        sourcecode_directive=CodeBlockDirective
+        if ignore_sourcecode_directive is not False
+        else None,
+    )
