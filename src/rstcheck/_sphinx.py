@@ -35,7 +35,8 @@ def load_sphinx_if_available() -> t.Generator[t.Optional[sphinx.application.Sphi
                 outdir=str(outdir),
                 doctreedir=str(outdir),
                 buildername="dummy",
-                status=None,  # type: ignore[arg-type] # NOTE: sphinx type hint is incorrect
+                # NOTE: https://github.com/sphinx-doc/sphinx/issues/10483
+                status=None,  # type: ignore[arg-type]
             )
             # NOTE: Hack to prevent sphinx warnings for overwriting registered nodes; see #113
             sphinx.application.builtin_extensions = [  # type: ignore[assignment]
