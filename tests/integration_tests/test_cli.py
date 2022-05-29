@@ -6,8 +6,8 @@ import sys
 import pytest
 import typer
 import typer.testing
-
 from rstcheck_core import _extras
+
 from tests.conftest import EXAMPLES_DIR, TESTING_DIR
 from tests.integration_tests.conftest import ERROR_CODE_REGEX
 

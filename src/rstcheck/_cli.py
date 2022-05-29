@@ -4,9 +4,9 @@ import pathlib
 import typing as t
 
 import typer
+from rstcheck_core import _extras, config as config_mod, runner
 
 from rstcheck import _compat as _t
-from rstcheck_core import _extras, config as config_mod, runner
 
 
 ValidReportLevels = _t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]
