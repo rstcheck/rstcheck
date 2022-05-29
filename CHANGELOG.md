@@ -30,7 +30,7 @@ NOTE: please use them in this order.
 ### BREAKING CHANGES
 
 - **MOVED THE CORE LIBRARY INTO IT'S OWN REPOSITORY AT rstcheck/rstcheck-core**
-- `rstcheck.config.load_config_file_from_path` now raises an OSError if the given path
+- `rstcheck.config.load_config_file_from_path` now raises an FileNotFoundError if the given path
   is neither a file nor a directory ([#125](https://github.com/rstcheck/rstcheck/pull/125))
 - The CLI runner exits 1 when the config path passed with `--config` does not exist ([#125](https://github.com/rstcheck/rstcheck/pull/125))
 
