@@ -27,6 +27,7 @@ from . import _docutils, _extras, _sphinx, config, inline_config, types
 
 if _extras.SPHINX_INSTALLED:
     import sphinx.application
+    import sphinx.config
     import sphinx.environment
     import sphinx.io
     import sphinx.parsers
@@ -203,8 +204,8 @@ def check_source(  # pylint: disable=too-many-arguments
 
     _docutils.ignore_directives_and_roles(ignores["directives"] or [], ignores["roles"] or [])
 
-    if _extras.SPHINX_INSTALLED:
-        _sphinx.load_sphinx_ignores()
+    # if _extras.SPHINX_INSTALLED:
+    #     _sphinx.load_sphinx_ignores()
 
     writer = _CheckWriter(source, source_origin, ignores, report_level)
 
@@ -216,35 +217,26 @@ def check_source(  # pylint: disable=too-many-arguments
     with contextlib.suppress(UnicodeError):
         source = source.encode("utf-8").decode("utf-8-sig")
 
-    reader = None
-    parser = None
+    source_path = source_origin
     settings_overrides = {
         "halt_level": 5,
         "report_level": report_level.value,
         "warning_stream": string_io,
     }
-    source_path = source_origin
 
-    if sphinx_app is not None:
-        sphinx_app.env = t.cast(sphinx.environment.BuildEnvironment, sphinx_app.env)
+    if _extras.SPHINX_INSTALLED:
+        source_path = pathlib.Path(source_origin).resolve()
 
-        reader = sphinx.io.SphinxStandaloneReader()
-        reader.setup(sphinx_app)
+        sphinx_env = sphinx.environment.BuildEnvironment()
+        sphinx_env.config = sphinx.config.Config()
+        sphinx_env.srcdir = str(source_path.parent)
+        sphinx_env.temp_data["docname"] = str(source_path)
 
-        parser = sphinx.parsers.RSTParser()
-        parser.set_application(sphinx_app)
-
-        settings_overrides = {**sphinx_app.env.settings, **settings_overrides}
-        source_path = pathlib.Path(source_path).resolve()
-
-        sphinx_app.env.srcdir = str(source_path.parent)
-        sphinx_app.env.temp_data["docname"] = str(source_path)
+        settings_overrides = {**sphinx_env.settings, **settings_overrides}
 
     with contextlib.suppress(docutils.utils.SystemMessage):
         docutils.core.publish_string(
             source,
-            reader=reader,
-            parser=parser,
             writer=writer,
             source_path=str(source_path),
             settings_overrides=settings_overrides,
