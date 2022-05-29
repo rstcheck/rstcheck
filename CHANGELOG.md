@@ -19,6 +19,10 @@ NOTE: please use them in this order.
 
 [diff v6.0.0rc3...main](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc3...main)
 
+### New features
+
+- Add a `--version` flag back. This flag gets its information from the metadata in the virtualenv.
+
 ## [v6.0.0rc3 (2022-05-28)](https://pypi.org/project/rstcheck/6.0.0rc3/)
 
 [diff v6.0.0rc2...v6.0.0rc3](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc2...v6.0.0rc3)

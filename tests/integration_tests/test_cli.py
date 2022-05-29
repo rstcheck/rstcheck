@@ -25,7 +25,16 @@ def test_exit_0_on_nonexisting_config_path(
 
 
 class TestHelpMessage:
-    """Test help CLI message."""
+    """Test help CLI messages."""
+
+    @staticmethod
+    def test_cli_version_message(cli_app: typer.Typer, cli_runner: typer.testing.CliRunner) -> None:
+        """Test help message."""
+        result = cli_runner.invoke(cli_app, "--version")
+
+        assert result.exit_code == 0
+        assert "rstcheck CLI Version:" in result.stdout
+        assert "rstcheck-core Version:" in result.stdout
 
     @staticmethod
     def test_cli_help_message(cli_app: typer.Typer, cli_runner: typer.testing.CliRunner) -> None:

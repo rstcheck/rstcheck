@@ -6,7 +6,7 @@ import typing as t
 import typer
 from rstcheck_core import _extras, config as config_mod, runner
 
-from rstcheck import _compat as _t
+from rstcheck import _compat, _compat as _t  # pylint: disable=reimported
 
 
 ValidReportLevels = _t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]
@@ -63,6 +63,16 @@ def setup_logger(loglevel: str) -> None:
     logging.basicConfig(level=numeric_level)
 
 
+def version_callback(value: bool) -> None:
+    """Print the version and exit."""
+    if value:
+        version = _compat.version("rstcheck")
+        core_version = _compat.version("rstcheck-core")
+        typer.echo(f"rstcheck CLI Version: {version}")
+        typer.echo(f"rstcheck-core Version: {core_version}")
+        raise typer.Exit()
+
+
 def cli(  # pylint: disable=too-many-arguments,too-many-locals
     files: t.List[pathlib.Path] = typer.Argument(  # noqa: M511,B008
         ..., allow_dash=True, hidden=True
@@ -94,6 +104,9 @@ def cli(  # pylint: disable=too-many-arguments,too-many-locals
     ),
     ignore_messages: t.Optional[str] = typer.Option(  # noqa: M511,B008
         None, metavar="REGEX", help=HELP_IGNORE_MESSAGES
+    ),
+    version: t.Optional[bool] = typer.Option(  # pylint: disable=unused-argument # noqa: M511,B008
+        None, "--version", callback=version_callback, is_eager=True
     ),
 ) -> int:
     """CLI of rstcheck."""
