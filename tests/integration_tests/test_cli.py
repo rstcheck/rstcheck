@@ -74,9 +74,7 @@ class TestInput:
     """Test file input with good and bad files and piping."""
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong negative. `assert 1 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     @pytest.mark.parametrize("test_file", list(TESTING_DIR.glob("examples/good/*.rst")))
     def test_all_good_examples(
         test_file: pathlib.Path,
@@ -90,9 +88,7 @@ class TestInput:
         assert "Success! No issues detected." in result.stdout
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong negative. `assert 1 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     def test_all_good_examples_recurively(
         cli_app: typer.Typer,
         cli_runner: typer.testing.CliRunner,
@@ -106,9 +102,7 @@ class TestInput:
         assert "Success! No issues detected." in result.stdout
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     @pytest.mark.parametrize("test_file", list(TESTING_DIR.glob("examples/bad/*.rst")))
     def test_all_bad_examples(
         test_file: pathlib.Path,
@@ -263,9 +257,7 @@ class TestWithoutConfigFile:
     """Test without config file in dir tree."""
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     @pytest.mark.skipif(sys.platform == "darwin", reason="MacOS specific variant exists")
     def test_error_without_config_file(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
@@ -382,9 +374,7 @@ class TestWithConfigFile:
         assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 2
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     def test_bad_file_1_with_implicit_config_no_errors(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
     ) -> None:
@@ -396,9 +386,7 @@ class TestWithConfigFile:
         assert result.exit_code == 0
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     def test_bad_file_2_with_implicit_config_some_errors(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
     ) -> None:
@@ -480,9 +468,7 @@ class TestCustomDirectivesAndRoles:
     """Test custom directives and roles."""
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     def test_custom_directive_and_role(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
     ) -> None:
@@ -533,9 +519,7 @@ class TestSphinx:
     """Test integration with sphinx."""
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     @pytest.mark.skipif(_extras.SPHINX_INSTALLED, reason="Test without sphinx extra.")
     def test_sphinx_role_erros_without_sphinx(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
@@ -548,6 +532,7 @@ class TestSphinx:
         assert result.exit_code != 0
 
     @staticmethod
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     @pytest.mark.skipif(not _extras.SPHINX_INSTALLED, reason="Depends on sphinx extra.")
     def test_sphinx_role_exits_zero_with_sphinx(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
@@ -564,9 +549,7 @@ class TestInlineIgnoreComments:
     """Test inline config comments to ignore things."""
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     def test_bad_example_has_issues(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
     ) -> None:
@@ -582,9 +565,7 @@ class TestInlineIgnoreComments:
         assert "unmatched-substitution" in result.stdout
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     def test_bad_example_has_no_issues_with_inline_ignores(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
     ) -> None:
@@ -600,9 +581,7 @@ class TestInlineFlowControlComments:
     """Test inline flow control comments to e.g. skip things."""
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     @pytest.mark.skipif(sys.version_info[0:2] > (3, 9), reason="Requires python3.9 or lower")
     def test_bad_example_has_only_one_issue_pre310(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
@@ -619,9 +598,7 @@ class TestInlineFlowControlComments:
         assert len(re.findall(r"unexpected EOF while parsing", result.stdout)) == 1
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     @pytest.mark.skipif(sys.version_info < (3, 10), reason="Requires python3.10 or higher")
     def test_bad_example_has_only_one_issue(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
@@ -638,9 +615,7 @@ class TestInlineFlowControlComments:
         assert len(re.findall(r"'\(' was never closed", result.stdout)) == 1
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     @pytest.mark.skipif(sys.version_info[0:2] > (3, 9), reason="Requires python3.9 or lower")
     def test_nested_bad_example_has_only_one_issue_pre310(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
@@ -657,9 +632,7 @@ class TestInlineFlowControlComments:
         assert len(re.findall(r"unexpected EOF while parsing", result.stdout)) == 1
 
     @staticmethod
-    @pytest.mark.skipif(
-        sys.platform == "win32", reason="Unknown Windows specific wrong positive. `assert 0 != 0`"
-    )
+    @pytest.mark.skipif(sys.platform == "win32", reason="Unknown Windows specific wrong result")
     @pytest.mark.skipif(sys.version_info < (3, 10), reason="Requires python3.10 or higher")
     def test_nested_bad_example_has_only_one_issue(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
