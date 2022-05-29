@@ -134,11 +134,7 @@ min_python_version = "3.7"  # CHANGE ME
 
 [tool.flakeheaven.exceptions."examples"]
 flake8-eradicate = ["-E800"]
-  flake8-logging-format = [
-    "+*",
-    # deactivate because unwanted
-    "-G004",  # Prohibit format strings in logging calls
-  ]
+
 
 # -- PYLINT CONFIG --------------------------------------------------------------------
 [tool.pylint]
