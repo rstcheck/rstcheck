@@ -2,10 +2,10 @@
 # pylint: disable=C0103
 import os
 import re
+import typing as t
 from datetime import date
 from importlib.util import find_spec
 from pathlib import Path
-from typing import List
 
 import sphinx_rtd_theme  # type: ignore[import]
 from sphinx.application import Sphinx
@@ -44,9 +44,9 @@ RELEASE_LEVEL = None if not version_parts else version_parts.group("tag")
 
 
 #: -- GENERAL CONFIG -------------------------------------------------------------------
-extensions: List[str] = []
+extensions: t.List[str] = []
 today_fmt = "%Y-%m-%d"
-exclude_patterns: List[str] = []  #: Files to exclude for source of doc
+exclude_patterns: t.List[str] = []  #: Files to exclude for source of doc
 
 #: Added dirs for static and template files if they exist
 html_static_path = ["_static"] if Path("_static").exists() else []
