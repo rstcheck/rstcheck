@@ -10,53 +10,55 @@ somehow correspond to a breaking change.
 .. contents::
 
 
-Version 5 to 6 (alpha2)
------------------------
-
-**Subject to change till final release**
+Version 5 to 6
+--------------
 
 With version 6 the whole code base was restructured. The core library was moved into its own
-repository.
-
-The new logging system may help you find issues while migrating to v6.
-You may then want to turn it on on the lowest level ``--log-level DEBUG``.
+repository at ``rstcheck/rstcheck-core``.
 
 ``rstcheck`` moved from ``myint/rstcheck`` to ``rstcheck/rstcheck`` so you may want to update
 links you have pointing to the old repository's location.
-Also the core library moved to the new repository ``rstcheck/rstcheck-core``.
 
 The ``master`` branch was renamed to ``main``. If you use git dependencies you may need to update
 your reference.
+
+The new logging system may help you find issues while migrating to v6.
+You may then want to turn it on on the lowest level ``--log-level DEBUG``.
 
 
 Configuration file
 ~~~~~~~~~~~~~~~~~~
 
-CLI options now overwrite settings in configuration files. Update your setup accordingly.
+- CLI options now overwrite settings in configuration files. Update your setup accordingly.
 
-The following configuration keys changed:
+- The following configuration keys changed:
 
-- ``report`` renamed to ``report_level``
-- ``ignore_language`` renamed to ``ignore_languages``
+  - ``report`` renamed to ``report_level``
+  - ``ignore_language`` renamed to ``ignore_languages``
 
-Set the ``--warn-unknown-settings`` CLI flag for warnings on unknown settings in
-configuration files.
+- Set the ``--warn-unknown-settings`` CLI flag for warnings on unknown settings in
+  configuration files.
+
+- Numbers are no longer supported for ``report_level`` (old: ``report``)
 
 
 CLI
 ~~~
 
-CLI options now overwrite settings in configuration files. Update your setup accordingly.
+- CLI options now overwrite settings in configuration files. Update your setup accordingly.
 
-Non existing files are silently ignored.
+- Non existing files are ignored, but a warning is logged and the exit code is non-zero.
 
-The following CLI options changed:
+-The following CLI options changed:
 
-- ``--report`` renamed to ``--report-level`` and no longer accepts integers
-- ``--ignore-language`` renamed to ``--ignore-languages``
-- ``--ignore`` dropped -> use ``--ignore-languages``
-- ``--debug`` replaced with new ``--log-level`` -> use ``--log-level DEBUG``
-- ``--version`` dropped without replacement
+  - ``--report`` renamed to ``--report-level`` and no longer accepts integers
+  - ``--ignore-language`` renamed to ``--ignore-languages``
+  - ``--ignore`` dropped -> use ``--ignore-languages``
+  - ``--debug`` replaced with new ``--log-level`` -> use ``--log-level DEBUG`` for verbose output
+
+- Numbers are no longer supported for ``--report-level`` (old: ``--report``)
+
+- A non-existing path passed with ``--config`` results in a non-zero exit code.
 
 
 Sphinx features
