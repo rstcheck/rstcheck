@@ -38,8 +38,5 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install tox poetry
 
-      - name: Run pylint via pre-commit with tox
-        run: tox -e pre-commit-run -- pylint
-
-      - name: Run mypy via pre-commit with tox
-        run: tox -e pre-commit-run -- mypy
+      - name: Run pre-commit with tox
+        run: tox -e pre-commit-run
