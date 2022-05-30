@@ -22,6 +22,7 @@ def test_exit_0_on_nonexisting_config_path(
     result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
     assert result.exit_code != 0
+    assert "Passed config path was not found" in result.stdout
 
 
 class TestHelpMessage:
@@ -160,6 +161,7 @@ class TestInput:
         result = cli_runner.invoke(cli_app, "-", input=test_file_content)
 
         assert result.exit_code == 0
+        assert "Success! No issues detected." in result.stdout
 
     @staticmethod
     def test_bad_example_with_piping(
@@ -204,6 +206,7 @@ class TestIgnoreOptions:
         result = cli_runner.invoke(cli_app, [str(test_file), "--report-level", "none"])
 
         assert result.exit_code == 0
+        assert "Success! No issues detected." in result.stdout
 
     @staticmethod
     def test_ignore_language_silences_error(
@@ -216,6 +219,7 @@ class TestIgnoreOptions:
         result = cli_runner.invoke(cli_app, [str(test_file), "--ignore-languages", "cpp"])
 
         assert result.exit_code == 0
+        assert "Success! No issues detected." in result.stdout
 
     @staticmethod
     def test_matching_ignore_msg_exits_zero(
@@ -231,6 +235,7 @@ class TestIgnoreOptions:
         )
 
         assert result.exit_code == 0
+        assert "Success! No issues detected." in result.stdout
 
     @staticmethod
     def test_non_matching_ignore_msg_errors(
@@ -243,6 +248,7 @@ class TestIgnoreOptions:
         result = cli_runner.invoke(cli_app, [str(test_file), "--ignore-messages", r"(No match\.$)"])
 
         assert result.exit_code != 0
+        assert "Error! Issues detected." in result.stdout
 
     @staticmethod
     def test_table_substitution_error_fixed_by_ignore(
@@ -257,6 +263,7 @@ class TestIgnoreOptions:
         )
 
         assert result.exit_code == 0
+        assert "Success! No issues detected." in result.stdout
 
 
 class TestWithoutConfigFile:
@@ -306,6 +313,7 @@ class TestWithoutConfigFile:
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
         assert result.exit_code == 0
+        assert "Success! No issues detected." in result.stdout
 
     @staticmethod
     def test_no_error_with_set_config_dir(
@@ -318,6 +326,7 @@ class TestWithoutConfigFile:
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_dir)])
 
         assert result.exit_code == 0
+        assert "Success! No issues detected." in result.stdout
 
     @staticmethod
     @pytest.mark.skipif(not _extras.TOMLI_INSTALLED, reason="Depends on toml extra.")
@@ -331,6 +340,7 @@ class TestWithoutConfigFile:
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
         assert result.exit_code == 0
+        assert "Success! No issues detected." in result.stdout
 
 
 class TestWithConfigFile:
@@ -394,6 +404,7 @@ class TestWithConfigFile:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code == 0
+        assert "Success! No issues detected." in result.stdout
 
     @staticmethod
     @pytest.mark.xfail(
@@ -421,6 +432,7 @@ class TestWithConfigFile:
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
         assert result.exit_code == 0
+        assert "Success! No issues detected." in result.stdout
 
     @staticmethod
     def test_bad_file_2_with_explicit_config_some_errors(
@@ -546,6 +558,7 @@ class TestSphinx:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code != 0
+        assert "Error! Issues detected." in result.stdout
 
     @staticmethod
     @pytest.mark.xfail(
@@ -561,6 +574,7 @@ class TestSphinx:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code == 0
+        assert "Success! No issues detected." in result.stdout
 
 
 class TestInlineIgnoreComments:
@@ -597,6 +611,7 @@ class TestInlineIgnoreComments:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code == 0
+        assert "Success! No issues detected." in result.stdout
 
 
 class TestInlineFlowControlComments:
