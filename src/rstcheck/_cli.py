@@ -142,7 +142,7 @@ def cli(  # pylint: disable=too-many-arguments,too-many-locals
         exit_code = _runner.print_result()
 
     except FileNotFoundError as exc:
-        if not exc.strerror == "Passed config path not found.":
+        if not exc.strerror == "Passed config path not found.":  # pragma: no cover
             raise
         logger.critical(f"### Passed config path was not found: '{exc.filename}'")
 
