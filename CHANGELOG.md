@@ -26,6 +26,7 @@ NOTE: please use them in this order.
 ### Documentation
 
 - Finalize v6 migration guide.
+- Add notice to fix `rstcheck-core` version for needed features.
 
 ### Miscellaneous
 

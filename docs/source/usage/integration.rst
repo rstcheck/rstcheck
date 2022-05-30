@@ -25,7 +25,7 @@ Just install ``rstcheck`` and make sure is on your path.
 Use as a pre-commit hook
 ------------------------
 
-Add this to your ``.pre-commit-config.yaml``
+Add this to your ``.pre-commit-config.yaml``:
 
 .. code:: yaml
 
@@ -33,6 +33,11 @@ Add this to your ``.pre-commit-config.yaml``
         rev: ''  # Use the sha / tag you want to point at
         hooks:
         -   id: rstcheck
+            additional_dependencies: []  # can be omitted if empty
+
+You may want to specify a ``rstcheck-core`` version or range, if you depend on a feature which was
+added after the current minimal version of ``rstcheck-core``.
+Simply add e.g. ``"rstcheck-core==v1.0.0"`` to the list for ``additional_dependencies``.
 
 
 Use with Mega-Linter
