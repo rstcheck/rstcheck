@@ -13,3 +13,4 @@ build
 *.snm
 poetry.lock
 *.bak.*
+objects.*.txt
