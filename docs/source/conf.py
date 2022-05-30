@@ -109,10 +109,10 @@ intersphinx_mapping = {
 
 extensions.append("sphinx.ext.extlinks")
 extlinks = {
-    "repo": (f"{GH_REPO_LINK}/%s", "Repo's "),
-    "issue": (f"{GH_REPO_LINK}/issues/%s", "#"),
-    "pull": (f"{GH_REPO_LINK}/pull/%s", "pr"),
-    "user": ("https://github.com/%s", "@"),
+    "repo": (f"{GH_REPO_LINK}/%s", "Repo's %s"),
+    "issue": (f"{GH_REPO_LINK}/issues/%s", "#%s"),
+    "pull": (f"{GH_REPO_LINK}/pull/%s", "PR#%s"),
+    "user": ("https://github.com/%s", "@%s"),
 }
 
 
