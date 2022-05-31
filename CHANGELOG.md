@@ -32,7 +32,7 @@ NOTE: please use them in this order.
 
 - Add tox envs to test with sphinx v5.
 - Update `sphinx` `extlinks` config for v5.
-- Bump min verion of `rstcheck-core` to v1.0.2.
+- Bump min version of `rstcheck-core` to v1.0.2.
 
 ## [v6.0.0rc3 (2022-05-28)](https://pypi.org/project/rstcheck/6.0.0rc3/)
 
