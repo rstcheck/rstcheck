@@ -545,9 +545,6 @@ class TestSphinx:
     """Test integration with sphinx."""
 
     @staticmethod
-    @pytest.mark.xfail(
-        sys.platform == "win32", reason="Unknown Windows specific wrong result", strict=True
-    )
     @pytest.mark.skipif(_extras.SPHINX_INSTALLED, reason="Test without sphinx extra.")
     def test_sphinx_role_erros_without_sphinx(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
