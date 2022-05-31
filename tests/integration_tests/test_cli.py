@@ -13,7 +13,7 @@ from tests.integration_tests.conftest import ERROR_CODE_REGEX
 
 
 def test_exit_0_on_nonexisting_config_path(
-    cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    cli_app: typer.Typer, cli_runner: typer.testing.CliRunner, caplog: pytest.LogCaptureFixture
 ) -> None:
     """Test runner exits with error on non existing config path."""
     test_file = EXAMPLES_DIR / "good" / "rst.rst"
@@ -22,7 +22,7 @@ def test_exit_0_on_nonexisting_config_path(
     result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
     assert result.exit_code != 0
-    assert "Passed config path was not found" in result.stdout
+    assert "Passed config path was not found" in caplog.text
 
 
 class TestHelpMessage:
