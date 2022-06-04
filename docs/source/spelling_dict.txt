@@ -15,8 +15,8 @@ conf
 config
 configs
 csv
-dependabot
 deleter
+dependabot
 dev
 dir
 dirs
@@ -68,9 +68,9 @@ pyproject
 pytest
 rc
 rd
+reStructuredText
 redef
 repo
-reStructuredText
 riedel
 rst
 rstcheck
@@ -85,9 +85,9 @@ temp
 testcleanup
 testsetup
 tmp
-toml
 toctree
 tokenize
+toml
 tox
 travis
 txt

@@ -91,6 +91,27 @@ repos:
       - id: prettier
 
   # ----------------------------------------------
+  # Spelling dict
+  # ----------------------------------------------
+
+  # Custom hook as python command
+  - repo: local
+    hooks:
+      - id: sort-spelling-dicts
+        name: Sort spelling_dict.txt files
+        description: Sort spelling_dict.txt files
+        language: python
+        entry: python
+        args:
+          - "-c"
+          - |
+            import pathlib;
+            import sys;
+            p = pathlib.Path(sys.argv[1]);
+            p.write_text("\n".join(sorted(set(p.read_text("utf-8").splitlines()))) + "\n", "utf-8")
+        files: "spelling_dict.txt"
+
+  # ----------------------------------------------
   # General (code unspecific)
   # ----------------------------------------------
 
