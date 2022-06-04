@@ -17,7 +17,11 @@ NOTE: please use them in this order.
 
 ## Unreleased
 
-[diff v6.0.0rc3...main](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc3...main)
+[diff v6.0.0...main](https://github.com/rstcheck/rstcheck/compare/v6.0.0...main)
+
+## [6.0.0](https://github.com/rstcheck/rstcheck/releases/v6.0.0) (2022-06-04)
+
+[diff v6.0.0rc3...v6.0.0](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc3...v6.0.0)
 
 ### New features
 
