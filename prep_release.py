@@ -140,7 +140,7 @@ def update_changelog(new_version: str, last_version: str, first_release: bool) -
             f"[diff v{new_version}...main]"
             f"({REPO_URL}/compare/v{new_version}...main)\n"
             "\n"
-            f"## [{new_version}]({REPO_URL}/releases/v{new_version}) ({today})\n"
+            f"## [{new_version} ({today})]({REPO_URL}/releases/v{new_version})\n"
             f"[diff {compare}]({REPO_URL}/compare/{compare})"
         )
 
