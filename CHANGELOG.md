@@ -17,11 +17,16 @@ NOTE: please use them in this order.
 
 ## Unreleased
 
-[diff v6.0.0...main](https://github.com/rstcheck/rstcheck/compare/v6.0.0...main)
+[diff v6.0.0.post1...main](https://github.com/rstcheck/rstcheck/compare/v6.0.0.post1...main)
+
+## [6.0.0.post1 (2022-06-05)](https://github.com/rstcheck/rstcheck/releases/v6.0.0.post1)
+
+[diff v6.0.0...v6.0.0.post1](https://github.com/rstcheck/rstcheck/compare/v6.0.0...v6.0.0.post1)
 
 ### Miscellaneous
 
 - Move release date into version headline link
+- Don't include failing test example in sdist ([#128](https://github.com/rstcheck/rstcheck/issues/128))
 
 ## [6.0.0 (2022-06-04)](https://github.com/rstcheck/rstcheck/releases/v6.0.0)
 
