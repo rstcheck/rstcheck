@@ -25,7 +25,7 @@ repos:
 
   # file checking out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: db7346d375eda68a0174f2c057dd97f2fbffe030 # frozen: v4.2.0
+    rev: 3298ddab3c13dd77d6ce1fc0baf97691430d84b0 # frozen: v4.3.0
     hooks:
       - id: check-case-conflict
       - id: check-shebang-scripts-are-executable
@@ -55,7 +55,7 @@ repos:
 
   # pyupgrade - upgrade old syntax to new
   - repo: https://github.com/asottile/pyupgrade
-    rev: 4d35c00c9ff5a51a853a89137db5fdd2bdf0ca95 # frozen: v2.32.1
+    rev: 400a572e713da5a32bf2f00fd2926833b1570956 # frozen: v2.34.0
     hooks:
       - id: pyupgrade
         args: ["--py37-plus"]
@@ -86,7 +86,7 @@ repos:
 
   # prettier - multi formatter
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: 5e374fda194d7f7ce9eebbd582b2a5594838c85b # frozen: v2.6.2
+    rev: 50c5478ed9e10bf360335449280cf2a67f4edb7a # frozen: v2.7.1
     hooks:
       - id: prettier
 
@@ -117,7 +117,7 @@ repos:
 
   # code unspecific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: db7346d375eda68a0174f2c057dd97f2fbffe030 # frozen: v4.2.0
+    rev: 3298ddab3c13dd77d6ce1fc0baf97691430d84b0 # frozen: v4.3.0
     hooks:
       - id: end-of-file-fixer
         stages: [commit]
@@ -147,7 +147,7 @@ repos:
 
   # code unspecific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: db7346d375eda68a0174f2c057dd97f2fbffe030 # frozen: v4.2.0
+    rev: 3298ddab3c13dd77d6ce1fc0baf97691430d84b0 # frozen: v4.3.0
     hooks:
       - id: check-merge-conflict
       - id: detect-private-key
@@ -158,7 +158,7 @@ repos:
 
   # python specific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: db7346d375eda68a0174f2c057dd97f2fbffe030 # frozen: v4.2.0
+    rev: 3298ddab3c13dd77d6ce1fc0baf97691430d84b0 # frozen: v4.3.0
     hooks:
       - id: debug-statements
       - id: fix-encoding-pragma
@@ -178,7 +178,7 @@ repos:
 
   # flakeheaven - wrapper for flake8
   - repo: https://github.com/flakeheaven/flakeheaven
-    rev: "20f94457744c47d965d4520d3b22def538b0cc49" # frozen: 0.11.1
+    rev: "b1c9d8c333e7c1fbe4428c5a12ef26f603dca0a7" # frozen: 2.0.0
     hooks:
       - id: flakeheaven
         types: [python]
@@ -212,7 +212,7 @@ repos:
 
   # poetry - python dependency maJSONnagement
   - repo: https://github.com/python-poetry/poetry
-    rev: 1492f0efa8aae73843f7c68ae06b74d2ac78bdd7 # frozen: 1.2.0b1
+    rev: 00e63d093398ea87872067c83c3285e327d02461 # frozen: 1.2.0b2
     hooks:
       - id: poetry-check
 
@@ -232,7 +232,7 @@ repos:
 
   # rstcheck - rst file checker
   - repo: https://github.com/rstcheck/rstcheck
-    rev: fe0866883f96071f9b1bb37f6cb445727124b785 # PR
+    rev: v6.0.0.post1 # PR
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
@@ -255,7 +255,7 @@ repos:
 
   # JSON specific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: db7346d375eda68a0174f2c057dd97f2fbffe030 # frozen: v4.2.0
+    rev: 3298ddab3c13dd77d6ce1fc0baf97691430d84b0 # frozen: v4.3.0
     hooks:
       - id: check-toml
       - id: check-yaml
