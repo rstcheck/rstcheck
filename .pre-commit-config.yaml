@@ -36,7 +36,7 @@ repos:
 
   # safety - python dependency vulnerability checker
   - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: d0c2c5156e146e5030e6aafff1a0cb398875b4f2 # frozen: v1.2.4
+    rev: 8131ecce7c746aa3c0f8ebb453a6df1e0f62b8b5 # frozen: v1.3.0
     hooks:
       - id: python-safety-dependencies-check
         args: ["--full-report"]
@@ -68,7 +68,7 @@ repos:
 
   # black - python formatter
   - repo: https://github.com/psf/black
-    rev: ae2c0758c9e61a385df9700dc9c231bf54887041 # frozen: 22.3.0
+    rev: f6c139c5215ce04fd3e73a900f1372942d58eca0 # frozen: 22.6.0
     hooks:
       - id: black
         args: ["--safe"]
