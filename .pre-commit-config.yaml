@@ -55,7 +55,7 @@ repos:
 
   # pyupgrade - upgrade old syntax to new
   - repo: https://github.com/asottile/pyupgrade
-    rev: 28d3c0b287188512d7c7a7c225ff8dedf4a87ee1  # frozen: v2.37.2
+    rev: 28d3c0b287188512d7c7a7c225ff8dedf4a87ee1 # frozen: v2.37.2
     hooks:
       - id: pyupgrade
         args: ["--py37-plus"]
@@ -212,7 +212,7 @@ repos:
 
   # poetry - python dependency maJSONnagement
   - repo: https://github.com/python-poetry/poetry
-    rev: 536c7990696d73398ce380f2070e12d019eb1929  # frozen: 1.2.0b3
+    rev: 536c7990696d73398ce380f2070e12d019eb1929 # frozen: 1.2.0b3
     hooks:
       - id: poetry-check
 
@@ -262,7 +262,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: a09ad89268e9042349b764084426617da69957d3  # frozen: v1.27.1
+    rev: a09ad89268e9042349b764084426617da69957d3 # frozen: v1.27.1
     hooks:
       - id: yamllint
 
@@ -271,6 +271,6 @@ repos:
   # ----------------------------------------------
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: 78a2d867feac2c1602a608c1fa4eeecb2f8bb415  # frozen: v2.20.0
+    rev: 78a2d867feac2c1602a608c1fa4eeecb2f8bb415 # frozen: v2.20.0
     hooks:
       - id: validate_manifest
