@@ -21,7 +21,7 @@ NOTE: please use them in this order.
 
 ### Documentation
 
-- Fix broken megalinter URLs ([#136](https://github.com/rstcheck/rstcheck/pull/136))
+- Fix broken mega-linter URLs ([#136](https://github.com/rstcheck/rstcheck/pull/136))
 
 ## [6.0.0.post1 (2022-06-05)](https://github.com/rstcheck/rstcheck/releases/v6.0.0.post1)
 
