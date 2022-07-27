@@ -49,5 +49,5 @@ the 70 linters activated out of the box.
 
 .. _Syntastic: https://github.com/vim-syntastic/syntastic
 .. _ALE: https://github.com/dense-analysis/ale
-.. _Mega-Linter: https://megalinter.github.io/latest/
-.. _rstcheck: https://megalinter.github.io/latest/descriptors/rst_rstcheck/
+.. _Mega-Linter: https://oxsecurity.github.io/megalinter/latest/
+.. _rstcheck: https://oxsecurity.github.io/megalinter/latest/descriptors/rst_rstcheck/
