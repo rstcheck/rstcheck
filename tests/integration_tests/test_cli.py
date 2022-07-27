@@ -189,7 +189,7 @@ class TestInput:
 
         assert result.exit_code == 1
         assert "'-' is only allowed without additional files." in result.stderr
-        assert "Aborted!" in result.stderr
+        assert "Aborted" in result.stderr
 
 
 class TestIgnoreOptions:
