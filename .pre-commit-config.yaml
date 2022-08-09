@@ -55,7 +55,7 @@ repos:
 
   # pyupgrade - upgrade old syntax to new
   - repo: https://github.com/asottile/pyupgrade
-    rev: 28d3c0b287188512d7c7a7c225ff8dedf4a87ee1 # frozen: v2.37.2
+    rev: a78007c1e9de96e71d5fb3e720c2b9fae8ed8abf # frozen: v2.37.3
     hooks:
       - id: pyupgrade
         args: ["--py37-plus"]
@@ -178,7 +178,7 @@ repos:
 
   # flakeheaven - wrapper for flake8
   - repo: https://github.com/flakeheaven/flakeheaven
-    rev: "b1c9d8c333e7c1fbe4428c5a12ef26f603dca0a7" # frozen: 2.0.0
+    rev: "e32a6e822ae45390c9e02b5491d808d5a14971ba" # frozen: 3.0.0
     hooks:
       - id: flakeheaven
         types: [python]
@@ -245,7 +245,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: 79c5e552066e7ad28aca449e7f2eed692a603abf # frozen: v0.4.0
+    rev: 7bc1f05d19a53d136e723ee0e5bddb161f2c8dcd # frozen: v0.5.0
     hooks:
       - id: markdownlint-cli2
 
