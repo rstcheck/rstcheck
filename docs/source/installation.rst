@@ -41,7 +41,7 @@ Installation from source
 You can install ``rstcheck`` directly from a Git repository clone.
 This can be done either by cloning the repository and installing from the local clone::
 
-    $ git clone https://github.com/Cielquan/rstcheck.git
+    $ git clone https://github.com/rstcheck/rstcheck.git
     $ cd rstcheck
     $ pip install .
 
