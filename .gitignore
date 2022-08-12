@@ -1,5 +1,6 @@
 .*.swp
 .eggs/
+.tox/
 dist
 build
 *.pyc
@@ -14,3 +15,4 @@ build
 poetry.lock
 *.bak.*
 objects.*.txt
+.coverage_cache/
