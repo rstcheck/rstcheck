@@ -178,12 +178,12 @@ repos:
 
   # flakeheaven - wrapper for flake8
   - repo: https://github.com/flakeheaven/flakeheaven
-    rev: "e32a6e822ae45390c9e02b5491d808d5a14971ba" # frozen: 3.0.0
+    rev: e32a6e822ae45390c9e02b5491d808d5a14971ba # frozen: 3.0.0
     hooks:
       - id: flakeheaven
         types: [python]
         additional_dependencies:
-          - "git+https://github.com/cielquan/my-flake8-plugins.git@v1.3.1"
+          - "git+https://github.com/cielquan/my-flake8-plugins.git@v1.5.0"
 
   # Lint hooks managed via tox envs b/c they need the pkg installed
   - repo: local
@@ -232,7 +232,7 @@ repos:
 
   # rstcheck - rst file checker
   - repo: https://github.com/rstcheck/rstcheck
-    rev: v6.0.0.post1 # PR
+    rev: d798b84e4967b624ca5459197a7f851b018570dc # frozen: v6.0.0.post1
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
