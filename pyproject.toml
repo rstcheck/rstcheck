@@ -137,6 +137,7 @@ flake8-eradicate = ["-E800"]
 disable = [
   # deactivate because double check
   # https://github.com/PyCQA/pylint/issues/3512
+  "C0103",  # invalid-name - [pep8-naming]
   "C0113",  # unneeded-not - F713[flake8]
   "C0114",  # missing-module-docstring - D100,D104[flake8]
   "C0115",  # missing-class-docstring - D101,D106[flake8]
@@ -144,21 +145,20 @@ disable = [
   "C0301",  # line-too-long - E501[pycodestyle]
   "C0303",  # trailing-whitespace - W291,W293[falke8]
   "C0304",  # missing-final-newline - W292[falke8]
+  "C0305",  # trailing-newlines - W291[falke8]
   "C0321",  # multiple-statements - E701[falke8]
-  "C0326",  # bad-whitespace - E201,E202,E225[falke8]
-  "C0330",  # bad-continuation - E129[falke8]
   "C0411",  # wrong-import-order - I202[flake8]
+  "C0413",  # wrong-import-position - E402[flake8]
   "E0602",  # undefined-variable - F821[flake8]
   "R0912",  # too-many-branches - C901[flake8]
   "W0301",  # unnecessary-semicolon - E703[flake8]
   "W0311",  # bad-indentation - E111[flake8]
-  "W0312",  # mixed-indentation - W191[flake8]
   "W0611",  # unused-import - F401[flake8]
   "W0612",  # unused-variable - F841[flake8]
   "W0702",  # bare-except - E722[pycodestyle]
   # deactivate because unwanted
-  "C040?",  # spelling
   "W0511",  # fixme
+  "R0903",  # too-few-public-methods
   # deactivate because of bugs
   "W1203",  # Use % format in logger funcs | https://github.com/PyCQA/pylint/issues/2354
 ]
