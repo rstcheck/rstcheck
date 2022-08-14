@@ -28,6 +28,7 @@ NOTE: please use them in this order.
 
 ### Miscellaneous
 
+- Fix release script's changelog insertion
 - Add pre-commit-ci badge to README
 - Update development tooling dependencies
 - Bump lower version constraint on typer from 0.3.2 to 0.4.1 ([#138](https://github.com/rstcheck/rstcheck/issues/138))

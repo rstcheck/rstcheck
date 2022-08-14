@@ -141,12 +141,13 @@ def update_changelog(new_version: str, last_version: str, first_release: bool) -
             f"({REPO_URL}/compare/v{new_version}...main)\n"
             "\n"
             f"## [{new_version} ({today})]({REPO_URL}/releases/v{new_version})\n"
+            "\n"
             f"[diff {compare}]({REPO_URL}/compare/{compare})"
         )
 
-    #: Remove [diff ...] link line
-    if len(changelog_lines) - 1 >= release_line + 1:
-        changelog_lines.pop(release_line + 1)
+    if len(changelog_lines) - 1 >= release_line + 2:
+        changelog_lines.pop(release_line + 1)  # Remove blank line
+        changelog_lines.pop(release_line + 1)  # Remove [diff ...] link line
 
     with open("CHANGELOG.md", "w", encoding="utf8") as changelog_file:
         changelog_file.write("\n".join(changelog_lines))
