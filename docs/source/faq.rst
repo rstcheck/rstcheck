@@ -3,6 +3,8 @@ FAQ / Known limitations / Known issues
 
 .. rstcheck: ignore-roles=issue
 
+You may also take a look at the `same section for rstcheck-core`_.
+
 Known limitations
 -----------------
 
@@ -42,3 +44,5 @@ If you encounter this issue you can either:
   ``0.3.2`` and ``click`` version ``<7.2``.
 
 See :issue:`138` for reference.
+
+.. _same section for rstcheck-core: https://rstcheck-core.readthedocs.io/en/latest/faq/
