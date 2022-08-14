@@ -24,6 +24,7 @@ NOTE: please use them in this order.
 - Add note for incompatibility of typer <0.4.1 and click >=8.1 ([#138](https://github.com/rstcheck/rstcheck/issues/138))
 - Update GitHub URL in installation instructions ([#139](https://github.com/rstcheck/rstcheck/pull/139))
 - Fix broken mega-linter URLs ([#136](https://github.com/rstcheck/rstcheck/pull/136))
+- Update release docs for changed release script
 
 ### Miscellaneous
 

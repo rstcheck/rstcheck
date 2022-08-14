@@ -21,7 +21,7 @@ judgment of the maintainer(s).
 #. Run ``prep_release.py`` script to bump version, finalize ``CHANGELOG.md``,
    commit the changes and create a new git tag::
 
-      $ python3 prep_release.py --increase-type <TYPE>
+      $ python3 prep_release.py <TYPE>
 
    For the increase type there are three options:
 
