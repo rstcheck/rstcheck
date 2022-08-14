@@ -127,7 +127,7 @@ warn_untyped_fields = true
 
 # -- FLAKEHEAVEN CONFIG ----------------------------------------------------------------
 [tool.flakeheaven]
-base = ["https://raw.githubusercontent.com/Cielquan/my-flake8-plugins/v1.3.1/flakeheaven-base.toml"]
+base = ["https://raw.githubusercontent.com/Cielquan/my-flake8-plugins/v1.5.0/flakeheaven-base.toml"]
 min_python_version = "3.7"  # CHANGE ME
 
 [tool.flakeheaven.exceptions."examples"]
