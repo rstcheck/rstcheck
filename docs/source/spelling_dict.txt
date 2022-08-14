@@ -79,6 +79,7 @@ sdist
 setter
 st
 stdin
+subdependency
 submodule
 submodules
 temp

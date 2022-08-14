@@ -1,5 +1,10 @@
-FAQ / Known limitations
-=======================
+FAQ / Known limitations / Known issues
+======================================
+
+.. rstcheck: ignore-roles=issue
+
+Known limitations
+-----------------
 
 There are inherent limitations to what ``rstcheck`` can and cannot do. The reason for this is that
 ``rstcheck`` itself relies on external tools for parsing and error reporting.
@@ -15,4 +20,25 @@ code in supported code blocks.
     See issue :issue:`107`.
 
 
-.. rstcheck: ignore-roles=issue
+Known issues
+------------
+
+ImportError: cannot import name 'get_terminal_size' from 'click.termui'
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Affected rstcheck version(s): All 6.0 releases**
+
+This issue is caused by an incompatibility of the dependency ``typer`` in version ``0.4.0`` and its
+subdependency ``click`` with version ``>=8.1.0``.
+The issue was fixed in ``typer`` version ``0.4.1``.
+
+If you encounter this issue you can either:
+
+- update ``rstcheck`` to a non affected version.
+- manually limit ``click``'s upper version-bound to ``<8.1`` if you need to rely on ``typer``
+  ``<0.4.1``.
+- manually limit ``typer``'s lower version-bound to ``>=0.4.1``.
+- manually limit ``typer``'s upper version-bound to ``<0.4`` which results in ``typer`` version
+  ``0.3.2`` and ``click`` version ``<7.2``.
+
+See :issue:`138` for reference.
