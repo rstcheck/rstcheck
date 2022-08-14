@@ -7,7 +7,7 @@ rstcheck
 |                   +---------------------------------------------------------------------------------------------+
 |                   | |rtd|                                                                                       |
 +-------------------+---------------------------------------------------------------------------------------------+
-| **CI**            | |gha_tests| |gha_docu| |gha_qa|                                                             |
+| **CI**            | |gha_tests| |gha_docu| |gha_qa| |pre_commit_ci|                                             |
 +-------------------+---------------------------------------------------------------------------------------------+
 | **PyPI**          | |pypi_release| |pypi_py_versions| |pypi_implementations|                                    |
 |                   +---------------------------------------------------------------------------------------------+
@@ -154,6 +154,10 @@ With bad syntax in the reStructuredText document itself:
 .. |gha_qa| image:: https://img.shields.io/github/workflow/status/rstcheck/rstcheck/QA/main?style=flat-square&logo=github&label=QA
     :target: https://github.com/rstcheck/rstcheck/actions/workflows/qa.yaml
     :alt: QA status
+
+.. |pre_commit_ci| image:: https://results.pre-commit.ci/badge/github/rstcheck/rstcheck/main.svg
+    :target: https://results.pre-commit.ci/latest/github/rstcheck/rstcheck/main
+    :alt: pre-commit status
 
 
 .. PyPI

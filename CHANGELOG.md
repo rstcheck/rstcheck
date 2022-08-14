@@ -27,6 +27,7 @@ NOTE: please use them in this order.
 
 ### Miscellaneous
 
+- Add pre-commit-ci badge to README
 - Bump lower version constraint on typer from 0.3.2 to 0.4.1 ([#138](https://github.com/rstcheck/rstcheck/issues/138))
 
 ## [6.0.0.post1 (2022-06-05)](https://github.com/rstcheck/rstcheck/releases/v6.0.0.post1)
