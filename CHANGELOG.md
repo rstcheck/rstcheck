@@ -21,13 +21,13 @@ NOTE: please use them in this order.
 
 ### Documentation
 
-- Add note for incompatiblity of typer <0.4.1 and click >=8.1 ([#138](https://github.com/rstcheck/rstcheck/issue/138))
+- Add note for incompatibility of typer <0.4.1 and click >=8.1 ([#138](https://github.com/rstcheck/rstcheck/issues/138))
 - Update GitHub URL in installation instructions ([#139](https://github.com/rstcheck/rstcheck/pull/139))
 - Fix broken mega-linter URLs ([#136](https://github.com/rstcheck/rstcheck/pull/136))
 
 ### Miscellaneous
 
-- Bump lower version constraint on typer from 0.3.2 to 0.4.1 ([#138](https://github.com/rstcheck/rstcheck/issue/138))
+- Bump lower version constraint on typer from 0.3.2 to 0.4.1 ([#138](https://github.com/rstcheck/rstcheck/issues/138))
 
 ## [6.0.0.post1 (2022-06-05)](https://github.com/rstcheck/rstcheck/releases/v6.0.0.post1)
 

@@ -28,7 +28,7 @@ ImportError: cannot import name 'get_terminal_size' from 'click.termui'
 
 **Affected rstcheck version(s): All 6.0 releases**
 
-This issue is caused by an incompatiblity of the dependency ``typer`` in version ``0.4.0`` and its
+This issue is caused by an incompatibility of the dependency ``typer`` in version ``0.4.0`` and its
 subdependency ``click`` with version ``>=8.1.0``.
 The issue was fixed in ``typer`` version ``0.4.1``.
 
