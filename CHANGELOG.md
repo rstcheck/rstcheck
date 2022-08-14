@@ -21,6 +21,7 @@ NOTE: please use them in this order.
 
 ### Documentation
 
+- Update GitHub URL in installation instructions ([#139](https://github.com/rstcheck/rstcheck/pull/139))
 - Fix broken mega-linter URLs ([#136](https://github.com/rstcheck/rstcheck/pull/136))
 
 ## [6.0.0.post1 (2022-06-05)](https://github.com/rstcheck/rstcheck/releases/v6.0.0.post1)
