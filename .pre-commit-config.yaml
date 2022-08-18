@@ -232,7 +232,7 @@ repos:
 
   # rstcheck - rst file checker
   - repo: https://github.com/rstcheck/rstcheck
-    rev: d798b84e4967b624ca5459197a7f851b018570dc # frozen: v6.0.0.post1
+    rev: 7382aa227baa36f030c22d26661b02c657b0f1ed # frozen: v6.1.0
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
@@ -245,7 +245,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: 7bc1f05d19a53d136e723ee0e5bddb161f2c8dcd # frozen: v0.5.0
+    rev: c303058e614a540cf34066afe16cefb1521f8dec # frozen: v0.5.1
     hooks:
       - id: markdownlint-cli2
 
