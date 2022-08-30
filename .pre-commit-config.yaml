@@ -212,7 +212,7 @@ repos:
 
   # poetry - python dependency maJSONnagement
   - repo: https://github.com/python-poetry/poetry
-    rev: 536c7990696d73398ce380f2070e12d019eb1929 # frozen: 1.2.0b3
+    rev: 3f741f77a2822b6fe0cdf2f27cce2c701e011fc2 # frozen: 1.2.0rc1
     hooks:
       - id: poetry-check
 
