@@ -51,7 +51,7 @@ typing-extensions = {version = ">=3.7.4, <5.0", python = "<3.8"}
 docutils = ">=0.7, <0.19"
 types-docutils = ">=0.18, <0.19"
 pydantic = ">=1.2, <2.0"
-typer = {extras = ["all"], version = ">=0.4.1,<0.7"}
+typer = {extras = ["all"], version = ">=0.4.1,<0.8"}
 
 [tool.poetry.dev-dependencies]
 pre-commit = ">=2.17"
