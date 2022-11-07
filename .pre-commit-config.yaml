@@ -55,7 +55,7 @@ repos:
 
   # pyupgrade - upgrade old syntax to new
   - repo: https://github.com/asottile/pyupgrade
-    rev: a78007c1e9de96e71d5fb3e720c2b9fae8ed8abf # frozen: v2.37.3
+    rev: fe81c259f5169066cdd6dafdaf58677928b1fd61  # frozen: v3.2.0
     hooks:
       - id: pyupgrade
         args: ["--py37-plus"]
@@ -68,7 +68,7 @@ repos:
 
   # black - python formatter
   - repo: https://github.com/psf/black
-    rev: 2018e667a6a36ee3fbfa8041cd36512f92f60d49 # frozen: 22.8.0
+    rev: 27d20144a7517594e24a1649451177b2a11284be  # frozen: 22.10.0
     hooks:
       - id: black
         args: ["--safe"]
@@ -86,7 +86,7 @@ repos:
 
   # prettier - multi formatter
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: d0a4882e1c96eca274f90b273f0f809ab3d98aff # frozen: v3.0.0-alpha.0
+    rev: cafd5506f18eea191804850dacc0a4264772d59d  # frozen: v3.0.0-alpha.4
     hooks:
       - id: prettier
 
@@ -178,7 +178,7 @@ repos:
 
   # flakeheaven - wrapper for flake8
   - repo: https://github.com/flakeheaven/flakeheaven
-    rev: e32a6e822ae45390c9e02b5491d808d5a14971ba # frozen: 3.0.0
+    rev: 4cd049b3b188a32435fa2020f84625b5bd9c53d7  # frozen: 3.2.1
     hooks:
       - id: flakeheaven
         types: [python]
@@ -262,7 +262,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: a09ad89268e9042349b764084426617da69957d3 # frozen: v1.27.1
+    rev: 9cce2940414e9560ae4c8518ddaee2ac1863a4d2  # frozen: v1.28.0
     hooks:
       - id: yamllint
 
