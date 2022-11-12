@@ -55,7 +55,7 @@ repos:
 
   # pyupgrade - upgrade old syntax to new
   - repo: https://github.com/asottile/pyupgrade
-    rev: fe81c259f5169066cdd6dafdaf58677928b1fd61  # frozen: v3.2.0
+    rev: c1b1c5380dbb12b30ec0d0652df204d21ae003b8 # frozen: v3.2.2
     hooks:
       - id: pyupgrade
         args: ["--py37-plus"]
@@ -68,7 +68,7 @@ repos:
 
   # black - python formatter
   - repo: https://github.com/psf/black
-    rev: 27d20144a7517594e24a1649451177b2a11284be  # frozen: 22.10.0
+    rev: 27d20144a7517594e24a1649451177b2a11284be # frozen: 22.10.0
     hooks:
       - id: black
         args: ["--safe"]
@@ -86,7 +86,7 @@ repos:
 
   # prettier - multi formatter
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: cafd5506f18eea191804850dacc0a4264772d59d  # frozen: v3.0.0-alpha.4
+    rev: cafd5506f18eea191804850dacc0a4264772d59d # frozen: v3.0.0-alpha.4
     hooks:
       - id: prettier
 
@@ -178,7 +178,7 @@ repos:
 
   # flakeheaven - wrapper for flake8
   - repo: https://github.com/flakeheaven/flakeheaven
-    rev: 4cd049b3b188a32435fa2020f84625b5bd9c53d7  # frozen: 3.2.1
+    rev: 4cd049b3b188a32435fa2020f84625b5bd9c53d7 # frozen: 3.2.1
     hooks:
       - id: flakeheaven
         types: [python]
@@ -212,7 +212,7 @@ repos:
 
   # poetry - python dependency maJSONnagement
   - repo: https://github.com/python-poetry/poetry
-    rev: 3f741f77a2822b6fe0cdf2f27cce2c701e011fc2 # frozen: 1.2.0rc1
+    rev: 337e90f9a0731836a6806b26f594643674736467 # frozen: 1.2.2
     hooks:
       - id: poetry-check
 
@@ -262,7 +262,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: 9cce2940414e9560ae4c8518ddaee2ac1863a4d2  # frozen: v1.28.0
+    rev: 9cce2940414e9560ae4c8518ddaee2ac1863a4d2 # frozen: v1.28.0
     hooks:
       - id: yamllint
 
