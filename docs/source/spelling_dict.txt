@@ -65,6 +65,7 @@ parametrize
 pragma
 pre
 py
+pydantic
 pyproject
 pytest
 rc
