@@ -470,7 +470,7 @@ class TestWarningOnUnknownSettings:
 
     @staticmethod
     @pytest.mark.parametrize("config_file_name", ["bad_config.cfg", "bad_config.toml"])
-    def test_no_warnings_are_logged_by_default_on_ini_files(
+    def test_warnings_are_logged_when_set(
         config_file_name: str,
         cli_app: typer.Typer,
         cli_runner: typer.testing.CliRunner,
