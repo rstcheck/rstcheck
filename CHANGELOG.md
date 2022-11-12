@@ -23,6 +23,10 @@ NOTE: please use them in this order.
 
 - Add link to rstcheck-core for FAQ
 
+### Miscellaneous
+
+- Update upper version constraint on docutils ([#147](https://github.com/rstcheck/rstcheck/issue/147))
+
 ## [6.1.0 (2022-08-14)](https://github.com/rstcheck/rstcheck/releases/v6.1.0)
 
 [diff v6.0.0.post1...v6.1.0](https://github.com/rstcheck/rstcheck/compare/v6.0.0.post1...v6.1.0)
