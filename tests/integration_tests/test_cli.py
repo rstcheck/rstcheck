@@ -92,7 +92,7 @@ class TestInput:
 
     @staticmethod
     @pytest.mark.xfail(
-        sys.platform == "win32", reason="Unknown Windows specific wrong result", strict=True
+        sys.platform == "win32", reason="Random unknown Windows specific wrong result", strict=False
     )
     def test_all_good_examples_recurively(
         cli_app: typer.Typer,
