@@ -22,6 +22,11 @@ NOTE: please use them in this order.
 ### Documentation
 
 - Add link to rstcheck-core for FAQ
+- Remove unused pydantic related stuff from docs ([#149](https://github.com/rstcheck/rstcheck/pull/149))
+
+### Miscellaneous
+
+- Remove unused dependencies (docutils & its stubs, pydantic) ([#149](https://github.com/rstcheck/rstcheck/pull/149))
 
 ## [6.1.0 (2022-08-14)](https://github.com/rstcheck/rstcheck/releases/v6.1.0)
 
