@@ -19,6 +19,10 @@ NOTE: please use them in this order.
 
 [diff v6.1.1...main](https://github.com/rstcheck/rstcheck/compare/v6.1.1...main)
 
+### Miscellaneous
+
+- Update GHA workflows to use latest 'setup-python' action
+
 ## [6.1.1 (2022-11-12)](https://github.com/rstcheck/rstcheck/releases/v6.1.1)
 
 [diff v6.1.0...v6.1.1](https://github.com/rstcheck/rstcheck/compare/v6.1.0...v6.1.1)
