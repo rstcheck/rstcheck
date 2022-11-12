@@ -26,7 +26,7 @@ NOTE: please use them in this order.
 
 ### Miscellaneous
 
-- Remove unused dependencies (docutils & its stubs, pydanitc) ([#149](https://github.com/rstcheck/rstcheck/pull/149))
+- Remove unused dependencies (docutils & its stubs, pydantic) ([#149](https://github.com/rstcheck/rstcheck/pull/149))
 
 ## [6.1.0 (2022-08-14)](https://github.com/rstcheck/rstcheck/releases/v6.1.0)
 
