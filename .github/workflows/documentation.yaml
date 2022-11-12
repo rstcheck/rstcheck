@@ -33,7 +33,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
 
       - name: Display Python version
         run: python --version
