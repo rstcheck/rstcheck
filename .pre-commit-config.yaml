@@ -212,7 +212,7 @@ repos:
 
   # poetry - python dependency maJSONnagement
   - repo: https://github.com/python-poetry/poetry
-    rev: 337e90f9a0731836a6806b26f594643674736467 # frozen: 1.2.2
+    rev: 3f741f77a2822b6fe0cdf2f27cce2c701e011fc2  # frozen: 1.2.0rc1
     hooks:
       - id: poetry-check
 
@@ -232,7 +232,7 @@ repos:
 
   # rstcheck - rst file checker
   - repo: https://github.com/rstcheck/rstcheck
-    rev: 7382aa227baa36f030c22d26661b02c657b0f1ed # frozen: v6.1.0
+    rev: 77751d7a7d81a5d47aa344d802f41809c4d063c0  # frozen: v6.1.1
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
