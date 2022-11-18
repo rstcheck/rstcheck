@@ -210,9 +210,9 @@ repos:
         types: [python]
         require_serial: true
 
-  # poetry - python dependency maJSONnagement
-  - repo: https://github.com/python-poetry/poetry
-    rev: 3f741f77a2822b6fe0cdf2f27cce2c701e011fc2  # frozen: 1.2.0rc1
+  # poetry - python dependency management
+  - repo: https://github.com/Cielquan/mirrors-poetry
+    rev: de20845626cb378ff59a7b009825b76ebadaca59 # frozen: 1.2.2
     hooks:
       - id: poetry-check
 
