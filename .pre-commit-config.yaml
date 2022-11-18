@@ -232,7 +232,7 @@ repos:
 
   # rstcheck - rst file checker
   - repo: https://github.com/rstcheck/rstcheck
-    rev: 77751d7a7d81a5d47aa344d802f41809c4d063c0  # frozen: v6.1.1
+    rev: 77751d7a7d81a5d47aa344d802f41809c4d063c0 # frozen: v6.1.1
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
