@@ -39,7 +39,7 @@ repos:
     rev: 8131ecce7c746aa3c0f8ebb453a6df1e0f62b8b5 # frozen: v1.3.0
     hooks:
       - id: python-safety-dependencies-check
-        args: ["--full-report"]
+        args: ["--full-report", "--ignore=51457"]
         files: pyproject.toml
         exclude: testing
 
