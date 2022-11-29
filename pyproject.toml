@@ -30,7 +30,7 @@ sphinx = {version = "*", optional = true}
 # EXTRA toml
 tomli = { version = "*", optional = true }
 # EXTRA testing
-pytest = { version = ">=6.0", optional = true }
+pytest = { version = ">=7.2", optional = true }
 pytest-cov = {version = ">=3.0", optional = true}
 coverage = {extras = ["toml"], version = ">=6.0", optional = true}
 coverage-conditional-plugin = { version = ">=0.5", optional = true }
