@@ -55,7 +55,7 @@ repos:
 
   # pyupgrade - upgrade old syntax to new
   - repo: https://github.com/asottile/pyupgrade
-    rev: 01cee377ba3a5264c7fbe7b6beae7b575f764dc3  # frozen: v3.3.1
+    rev: 01cee377ba3a5264c7fbe7b6beae7b575f764dc3 # frozen: v3.3.1
     hooks:
       - id: pyupgrade
         args: ["--py37-plus"]
@@ -68,7 +68,7 @@ repos:
 
   # black - python formatter
   - repo: https://github.com/psf/black
-    rev: 2ddea293a88919650266472186620a98a4a8bb37  # frozen: 22.12.0
+    rev: 2ddea293a88919650266472186620a98a4a8bb37 # frozen: 22.12.0
     hooks:
       - id: black
         args: ["--safe"]
@@ -212,7 +212,7 @@ repos:
 
   # poetry - python dependency management
   - repo: https://github.com/Cielquan/mirrors-poetry
-    rev: 8fc2abc43174bec0a6938fed586b0090f4684d7d  # frozen: 1.3.0
+    rev: 8fc2abc43174bec0a6938fed586b0090f4684d7d # frozen: 1.3.0
     hooks:
       - id: poetry-check
 
