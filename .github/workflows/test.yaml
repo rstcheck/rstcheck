@@ -49,4 +49,4 @@ jobs:
           python -m pip install tox
 
       - name: Run tests with tox
-        run: tox -n py${{ matrix.python-version }}
+        run: tox -m py${{ matrix.python-version }}

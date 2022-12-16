@@ -204,7 +204,7 @@ repos:
         name: pylint
         description: run pylint over the installed package via tox
         entry: tox
-        args: ["-e", "pylint"]
+        args: ["-e", "pylint", "--"]
         language: python
         additional_dependencies: [tox]
         types: [python]
