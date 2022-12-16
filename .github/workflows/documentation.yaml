@@ -57,10 +57,10 @@ jobs:
 
       - name: Run tests with tox except linkcheck
         if: runner.os != 'Linux'
-        run: tox -n docs
+        run: tox -m docs
         env:
           TOX_SKIP_ENV: docs-test-linkcheck
 
       - name: Run all tests with tox
         if: runner.os == 'Linux'
-        run: tox -n docs
+        run: tox -m docs
