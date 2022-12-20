@@ -62,7 +62,7 @@ repos:
 
   # isort - sort imports
   - repo: https://github.com/PyCQA/isort
-    rev: dbfeff978be405f59704097cf11c59110a08e67b  # frozen: v5.11.3
+    rev: dbfeff978be405f59704097cf11c59110a08e67b # frozen: v5.11.3
     hooks:
       - id: isort
 
@@ -212,7 +212,7 @@ repos:
 
   # poetry - python dependency management
   - repo: https://github.com/Cielquan/mirrors-poetry
-    rev: 356c4b238462d33e78eee858573c5284c69f2214  # frozen: 1.3.1
+    rev: 356c4b238462d33e78eee858573c5284c69f2214 # frozen: 1.3.1
     hooks:
       - id: poetry-check
 
@@ -222,7 +222,7 @@ repos:
 
   # shellscript (via PyPI package)
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: 4bb61ddc1b4175565f8f975fd20d657f00f2bd53  # frozen: v0.9.0.2
+    rev: 4bb61ddc1b4175565f8f975fd20d657f00f2bd53 # frozen: v0.9.0.2
     hooks:
       - id: shellcheck
 
