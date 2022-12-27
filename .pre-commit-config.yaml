@@ -62,7 +62,7 @@ repos:
 
   # isort - sort imports
   - repo: https://github.com/PyCQA/isort
-    rev: 4e97b170469b7c8ef29afe944ebfb057791457aa  # frozen: 5.11.4
+    rev: 4e97b170469b7c8ef29afe944ebfb057791457aa # frozen: 5.11.4
     hooks:
       - id: isort
 
@@ -271,6 +271,6 @@ repos:
   # ----------------------------------------------
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: 40c5bdad65da4015af0e5ffe88227053109aecf3  # frozen: v2.21.0
+    rev: 40c5bdad65da4015af0e5ffe88227053109aecf3 # frozen: v2.21.0
     hooks:
       - id: validate_manifest
