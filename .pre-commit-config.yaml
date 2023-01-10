@@ -36,7 +36,7 @@ repos:
 
   # safety - python dependency vulnerability checker
   - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: 8131ecce7c746aa3c0f8ebb453a6df1e0f62b8b5 # frozen: v1.3.0
+    rev: a4a1eb373d8e809534a46855a58be427a0a29219 # frozen: v1.3.1
     hooks:
       - id: python-safety-dependencies-check
         args: ["--full-report", "--ignore=51457"]
@@ -245,7 +245,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: c303058e614a540cf34066afe16cefb1521f8dec # frozen: v0.5.1
+    rev: e3c981ce9ab04c82884e2bb074e13f0ad755a63d # frozen: v0.6.0
     hooks:
       - id: markdownlint-cli2
 
