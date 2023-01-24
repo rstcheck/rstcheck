@@ -75,7 +75,7 @@ repos:
 
   # blacken-docs - black for python code in docs (rst/md/tex)
   - repo: https://github.com/asottile/blacken-docs
-    rev: 7ae9389351f4090e3993de28015a05a18ca6b8a7 # frozen: v1.12.1
+    rev: 1238e1d8f03e96a7ed9ad44937ea4348eb6b11b8 # frozen: 1.13.0
     hooks:
       - id: blacken-docs
         exclude: testing|tests
@@ -168,7 +168,7 @@ repos:
 
   # several python code regex hooks
   - repo: https://github.com/pre-commit/pygrep-hooks
-    rev: 6f51a66bba59954917140ec2eeeaa4d5e630e6ce # frozen: v1.9.0
+    rev: 3a6eb0fadf60b3cccfd80bad9dbb6fae7e47b316 # frozen: v1.10.0
     hooks:
       - id: python-check-blanket-noqa
       - id: python-check-blanket-type-ignore
@@ -212,7 +212,7 @@ repos:
 
   # poetry - python dependency management
   - repo: https://github.com/Cielquan/mirrors-poetry
-    rev: 356c4b238462d33e78eee858573c5284c69f2214 # frozen: 1.3.1
+    rev: 62a6dec756dcc01ce336d2af971214a30fae3974 # frozen: 1.3.2
     hooks:
       - id: poetry-check
 
@@ -262,7 +262,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: 9cce2940414e9560ae4c8518ddaee2ac1863a4d2 # frozen: v1.28.0
+    rev: b9e1fd18c1acbaa4b0028196f8925ce4e91970d9 # frozen: v1.29.0
     hooks:
       - id: yamllint
 
@@ -271,6 +271,6 @@ repos:
   # ----------------------------------------------
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: 40c5bdad65da4015af0e5ffe88227053109aecf3 # frozen: v2.21.0
+    rev: 6b88fe577c44472d234e8d4d8ee89ca36e03ae2a # frozen: v3.0.0
     hooks:
       - id: validate_manifest
