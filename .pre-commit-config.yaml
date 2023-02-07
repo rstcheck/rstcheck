@@ -68,7 +68,7 @@ repos:
 
   # black - python formatter
   - repo: https://github.com/psf/black
-    rev: 2ddea293a88919650266472186620a98a4a8bb37 # frozen: 22.12.0
+    rev: b0d1fba7ac3be53c71fb0d3211d911e629f8aecb  # frozen: 23.1.0
     hooks:
       - id: black
         args: ["--safe"]
@@ -271,6 +271,6 @@ repos:
   # ----------------------------------------------
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: 6abb05a60c4087a10c6ce196cd3a8bce065fa6f1 # frozen: v3.0.2
+    rev: 0359fae2da2aadb2fbd3afae1777edd3aa856cc9  # frozen: v3.0.4
     hooks:
       - id: validate_manifest
