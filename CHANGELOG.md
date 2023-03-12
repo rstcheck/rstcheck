@@ -22,6 +22,7 @@ NOTE: please use them in this order.
 ### Miscellaneous
 
 - Update GHA workflows to use latest 'setup-python' action ([#150](https://github.com/rstcheck/rstcheck/issues/150))
+- Set tomli extra dependency to python < 3.11 like rstcheck-core ([#162](https://github.com/rstcheck/rstcheck/issues/162))
 
 ## [6.1.1 (2022-11-12)](https://github.com/rstcheck/rstcheck/releases/v6.1.1)
 
