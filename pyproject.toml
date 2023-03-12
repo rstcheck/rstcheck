@@ -28,7 +28,7 @@ python = "^3.7"
 # EXTRA sphinx
 sphinx = {version = "*", optional = true}
 # EXTRA toml
-tomli = { version = "*", optional = true }
+tomli = { version = "*", python="<3.11", optional = true }
 # EXTRA testing
 pytest = { version = ">=7.2", optional = true }
 pytest-cov = {version = ">=3.0", optional = true}
