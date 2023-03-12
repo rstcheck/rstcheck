@@ -91,6 +91,7 @@ tmp
 toctree
 tokenize
 toml
+tomli
 tox
 travis
 txt
