@@ -10,6 +10,7 @@ Steven Myint <git@stevenmyint.com>
 Additional contributions by (sorted by name)
 --------------------------------------------
 - Changxu Wang <Changxu.mail@gmail.com>
+- Christian Riedel <cannotguessit+github@protonmail.com>
 - Christian Riedel <cielquan@protonmail.com>
 - Daniel M. Capella <polyzen@users.noreply.github.com>
 - Dmitry <root@uralbash.ru>
