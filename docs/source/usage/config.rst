@@ -213,7 +213,7 @@ Report level
 Supported sources:
 
 - CLI (``--report-level LEVEL``)
-- File (key: ``report_level``, value: LEVEL)
+- Config-File (key: ``report_level``, value: LEVEL)
 
 The level at which linting issues should be printed. The following levels are supported:
 
@@ -256,7 +256,7 @@ Supported sources:
 
 - Inline comments (key: ``ignore-directives``, value: list of directives)
 - CLI (``--ignore-directives D1,D2,...``)
-- File (key: ``ignore_directives``, value: list of directives)
+- Config-File (key: ``ignore_directives``, value: list of directives)
 
 A list of directives to ignore while checking rst source.
 
@@ -268,7 +268,7 @@ Supported sources:
 
 - Inline comments (key: ``ignore-roles``, value: list of roles)
 - CLI (``--ignore-roles R1,R2,...``)
-- File (key: ``ignore_roles``, value: list of roles)
+- Config-File (key: ``ignore_roles``, value: list of roles)
 
 A list of roles to ignore while checking rst source.
 
@@ -280,7 +280,7 @@ Supported sources:
 
 - Inline comments (key: ``ignore-substitutions``, value: list of substitutions)
 - CLI (``--ignore-substitutions S1,S2,...``)
-- File (key: ``ignore_substitutions``, value: list of substitutions)
+- Config-File (key: ``ignore_substitutions``, value: list of substitutions)
 
 A list of substitutions to ignore while checking rst source.
 
@@ -292,7 +292,7 @@ Supported sources:
 
 - Inline comments (key: ``ignore-languages``, value: list of languages)
 - CLI (``--ignore-languages L1,L2,...``)
-- File (key: ``ignore_languages``, value: list of languages)
+- Config-File (key: ``ignore_languages``, value: list of languages)
 
 A list of languages to ignore for code blocks in rst source.
 Unsupported languages are ignored automatically.
@@ -315,7 +315,7 @@ Ignore specific error messages
 Supported sources:
 
 - CLI (``--ignore-messages REGEX_STRING``)
-- File (key: ``ignore_messages``, value: regular expression string)
+- Config-File (key: ``ignore_messages``, value: regular expression string)
 
 A list of linting issue messages to ignore while checking rst source and code blocks.
 
