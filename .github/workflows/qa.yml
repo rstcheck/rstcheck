@@ -33,10 +33,14 @@ jobs:
       - name: Display Python version
         run: python --version
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install tox poetry
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install tox
+        run: python -m pip install --upgrade tox
+
+      - name: Install poetry
+        run: python -m pip install --upgrade poetry>=1.2
 
       - name: Run pre-commit with tox
         run: tox -e pre-commit-run

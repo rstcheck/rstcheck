@@ -40,6 +40,7 @@ repos:
     hooks:
       - id: python-safety-dependencies-check
         args:
+          - "--disable-telemetry"
           - "--full-report"
           - "--ignore=51457" # ReDoS in py <=1.11.0 - used by pytest - vulnerable code not used
           - "--ignore=52322" # RCE in gitpython <=3.1.29 - used by bandit
