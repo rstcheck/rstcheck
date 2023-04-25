@@ -59,7 +59,7 @@ repos:
 
   # pyupgrade - upgrade old syntax to new
   - repo: https://github.com/asottile/pyupgrade
-    rev: 01cee377ba3a5264c7fbe7b6beae7b575f764dc3 # frozen: v3.3.1
+    rev: 7c551d39dfa69851607d85392ffa296568e92436 # frozen: v3.3.2
     hooks:
       - id: pyupgrade
         args: ["--py37-plus"]
@@ -90,7 +90,7 @@ repos:
 
   # prettier - multi formatter
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: 6f3cb139ef36133b6f903b97facc57b07cef57c9 # frozen: v3.0.0-alpha.6
+    rev: 6fd1ced85fc139abd7f5ab4f3d78dab37592cd5e # frozen: v3.0.0-alpha.9-for-vscode
     hooks:
       - id: prettier
 
@@ -249,7 +249,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: e3c981ce9ab04c82884e2bb074e13f0ad755a63d # frozen: v0.6.0
+    rev: e54fbe250d287fd6f09363395343887a999963c5 # frozen: v0.7.0
     hooks:
       - id: markdownlint-cli2
 
@@ -266,7 +266,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: 9d0f59876dc6882e263b2657ab42a1ced4c0207d # frozen: v1.30.0
+    rev: 98f2281f56be5503f3851e74556e1122fc18b2a8 # frozen: v1.31.0
     hooks:
       - id: yamllint
 
