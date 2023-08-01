@@ -59,7 +59,7 @@ repos:
 
   # pyupgrade - upgrade old syntax to new
   - repo: https://github.com/asottile/pyupgrade
-    rev: b3e813e5d60a472ba815a45d107bbdf106405973  # frozen: v3.10.1
+    rev: b3e813e5d60a472ba815a45d107bbdf106405973 # frozen: v3.10.1
     hooks:
       - id: pyupgrade
         args: ["--py37-plus"]
@@ -72,14 +72,14 @@ repos:
 
   # black - python formatter
   - repo: https://github.com/psf/black
-    rev: 193ee766ca496871f93621d6b58d57a6564ff81b  # frozen: 23.7.0
+    rev: 193ee766ca496871f93621d6b58d57a6564ff81b # frozen: 23.7.0
     hooks:
       - id: black
         args: ["--safe"]
 
   # blacken-docs - black for python code in docs (rst/md/tex)
   - repo: https://github.com/asottile/blacken-docs
-    rev: 2e74dc4c30c336176e76e0426c66f09a4e79df9c  # frozen: 1.15.0
+    rev: 2e74dc4c30c336176e76e0426c66f09a4e79df9c # frozen: 1.15.0
     hooks:
       - id: blacken-docs
         exclude: testing|tests
@@ -90,7 +90,7 @@ repos:
 
   # prettier - multi formatter
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: efd8b1e16f05132acf6edcf2827eeab21e0e00db  # frozen: v3.0.0
+    rev: efd8b1e16f05132acf6edcf2827eeab21e0e00db # frozen: v3.0.0
     hooks:
       - id: prettier
 
@@ -216,7 +216,7 @@ repos:
 
   # poetry - python dependency management
   - repo: https://github.com/Cielquan/mirrors-poetry
-    rev: 922851ade62d12cd103513b8c1046db0992d6a39  # frozen: 1.5.1
+    rev: 922851ade62d12cd103513b8c1046db0992d6a39 # frozen: 1.5.1
     hooks:
       - id: poetry-check
 
@@ -226,7 +226,7 @@ repos:
 
   # shellscript (via PyPI package)
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: 375289a39f5708101b1f916eb729e8d6da96993f  # frozen: v0.9.0.5
+    rev: 375289a39f5708101b1f916eb729e8d6da96993f # frozen: v0.9.0.5
     hooks:
       - id: shellcheck
 
@@ -249,7 +249,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: 50b923d7df0876a24adca18cbbca57ddfa7369ad  # frozen: v0.8.1
+    rev: 50b923d7df0876a24adca18cbbca57ddfa7369ad # frozen: v0.8.1
     hooks:
       - id: markdownlint-cli2
 
@@ -266,7 +266,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: b05e028c5881819161d11cb543fd96a30c06cceb  # frozen: v1.32.0
+    rev: b05e028c5881819161d11cb543fd96a30c06cceb # frozen: v1.32.0
     hooks:
       - id: yamllint
 
@@ -275,6 +275,6 @@ repos:
   # ----------------------------------------------
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: 5da4258b17dea7bd4601358de200e185699f9997  # frozen: v3.3.3
+    rev: 5da4258b17dea7bd4601358de200e185699f9997 # frozen: v3.3.3
     hooks:
       - id: validate_manifest
