@@ -27,6 +27,7 @@ NOTE: please use them in this order.
 
 - Update GHA workflows to use latest 'setup-python' action ([#150](https://github.com/rstcheck/rstcheck/issues/150))
 - Set tomli extra dependency to python < 3.11 like rstcheck-core ([#162](https://github.com/rstcheck/rstcheck/issues/162))
+- Drop python 3.7 ([#177](https://github.com/rstcheck/rstcheck/pull/177))
 
 ## [6.1.1 (2022-11-12)](https://github.com/rstcheck/rstcheck/releases/v6.1.1)
 
