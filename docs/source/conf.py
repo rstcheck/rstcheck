@@ -136,9 +136,6 @@ html_theme = "sphinx_rtd_theme"
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 html_theme_options = {"style_external_links": True, "navigation_depth": 5}
 
-extensions.append("sphinx_rtd_dark_mode")
-default_dark_mode = False
-
 
 #: -- HTML OUTPUT ----------------------------------------------------------------------
 html_last_updated_fmt = today_fmt
