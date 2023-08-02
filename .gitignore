@@ -16,3 +16,4 @@ poetry.lock
 *.bak.*
 objects.*.txt
 .coverage_cache/
+.flakeheaven_cache/
