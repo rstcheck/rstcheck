@@ -74,7 +74,6 @@ docs = [
   "sphinx-autobuild",
   "m2r2",
   "sphinx-rtd-theme",
-  "sphinx-rtd-dark-mode",
   "sphinxcontrib-spelling",
   "sphinx-click",
 ]
