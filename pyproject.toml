@@ -24,7 +24,7 @@ include = ["testing"]
 rstcheck = "rstcheck._cli:main"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 # EXTRA sphinx
 sphinx = {version = "*", optional = true}
 # EXTRA toml
