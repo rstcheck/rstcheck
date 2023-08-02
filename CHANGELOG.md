@@ -19,6 +19,10 @@ NOTE: please use them in this order.
 
 [diff v6.1.2...main](https://github.com/rstcheck/rstcheck/compare/v6.1.2...main)
 
+### Miscellaneous
+
+- Update Sphinx Theme Version and remove outdated Dark Mode Lib ([#176](https://github.com/rstcheck/rstcheck/pull/176))
+
 ## [6.1.2 (2023-03-12)](https://github.com/rstcheck/rstcheck/releases/v6.1.2)
 
 [diff v6.1.1...v6.1.2](https://github.com/rstcheck/rstcheck/compare/v6.1.1...v6.1.2)
