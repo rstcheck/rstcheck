@@ -41,7 +41,7 @@ sphinx-autobuild = { version = "2021.3.14", optional = true }
 m2r2 = { version = ">=0.3.2", optional = true }
 sphinx-rtd-theme = { version = ">1.2", optional = true }
 sphinxcontrib-spelling = { version = ">=7.3", optional = true }
-sphinx-click = "^4.0.3"
+sphinx-click = ">=4.0.3,<6.0.0"
 # MAIN DEPENDENCIES
 rstcheck-core = "^1.0.2"
 importlib-metadata = {version = ">=1.6, <5.0", python = "<3.8"}
