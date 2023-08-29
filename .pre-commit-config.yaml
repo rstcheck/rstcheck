@@ -36,7 +36,7 @@ repos:
 
   # safety - python dependency vulnerability checker
   - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: a4a1eb373d8e809534a46855a58be427a0a29219 # frozen: v1.3.1
+    rev: cdd875f1c96ba08362eb92c2b0f6de8d614f2fd1  # frozen: v1.3.2
     hooks:
       - id: python-safety-dependencies-check
         args:
@@ -79,7 +79,7 @@ repos:
 
   # blacken-docs - black for python code in docs (rst/md/tex)
   - repo: https://github.com/asottile/blacken-docs
-    rev: 2e74dc4c30c336176e76e0426c66f09a4e79df9c # frozen: 1.15.0
+    rev: 960ead214cd1184149d366c6d27ca6c369ce46b6  # frozen: 1.16.0
     hooks:
       - id: blacken-docs
         exclude: testing|tests
@@ -90,7 +90,7 @@ repos:
 
   # prettier - multi formatter
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: efd8b1e16f05132acf6edcf2827eeab21e0e00db # frozen: v3.0.0
+    rev: 672abe14d309fc28817d45b6be25ea976a92222a  # frozen: v3.0.2
     hooks:
       - id: prettier
 
@@ -216,7 +216,7 @@ repos:
 
   # poetry - python dependency management
   - repo: https://github.com/Cielquan/mirrors-poetry
-    rev: 922851ade62d12cd103513b8c1046db0992d6a39 # frozen: 1.5.1
+    rev: de4d70d4adc6e729486dddbbbdf74c8f7ba15a6c  # frozen: 1.6.1
     hooks:
       - id: poetry-check
 
@@ -249,7 +249,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: 50b923d7df0876a24adca18cbbca57ddfa7369ad # frozen: v0.8.1
+    rev: 5199ad880c218462d54620a41ea08cc210eb1c5f  # frozen: v0.9.2
     hooks:
       - id: markdownlint-cli2
 
