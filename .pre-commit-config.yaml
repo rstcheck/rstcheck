@@ -3,7 +3,7 @@ minimum_pre_commit_version: "2.17"
 default_stages: [commit]
 
 ci:
-  skip: [mypy, pylint, python-safety-dependencies-check, flakeheaven]
+  skip: [mypy, pylint, flakeheaven]
 
 repos:
   # ----------------------------------------------
@@ -29,23 +29,6 @@ repos:
     hooks:
       - id: check-case-conflict
       - id: check-shebang-scripts-are-executable
-
-  # ----------------------------------------------
-  # Dependency hooks
-  # ----------------------------------------------
-
-  # safety - python dependency vulnerability checker
-  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: cdd875f1c96ba08362eb92c2b0f6de8d614f2fd1 # frozen: v1.3.2
-    hooks:
-      - id: python-safety-dependencies-check
-        args:
-          - "--disable-telemetry"
-          - "--full-report"
-          - "--ignore=51457" # ReDoS in py <=1.11.0 - used by pytest - vulnerable code not used
-          - "--ignore=52322" # RCE in gitpython <=3.1.29 - used by bandit
-        files: pyproject.toml
-        exclude: testing
 
   # ####################################################################################
   #
@@ -213,12 +196,6 @@ repos:
         additional_dependencies: [tox]
         types: [python]
         require_serial: true
-
-  # poetry - python dependency management
-  - repo: https://github.com/Cielquan/mirrors-poetry
-    rev: de4d70d4adc6e729486dddbbbdf74c8f7ba15a6c # frozen: 1.6.1
-    hooks:
-      - id: poetry-check
 
   # ----------------------------------------------
   # Shell script

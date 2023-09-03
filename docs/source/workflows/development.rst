@@ -15,7 +15,8 @@ Tooling
 
 For development the following tools are used:
 
-- ``poetry`` for dependency management, package metadata, building and publishing.
+- ``setuptools`` for package metadata and building.
+- ``twine`` for publishing.
 - ``tox`` for automated and isolated testing.
 - ``pre-commit`` for automated QA checks via different linters and formatters.
 
@@ -23,25 +24,17 @@ For development the following tools are used:
 Set up Local Development Environment
 ------------------------------------
 
-The setup of a local development environment is pretty easy. The only tool you need is the
-`poetry`_. You can install it via the `recommended way`_, which installs it globally on your
-system or you can install it via ``pip`` in a self-created virtualenv (`virtualenv manual`_).
-
-With ``poetry`` set up and ready we can create our development environment in just one
-step::
-
-    $ poetry install
-
-This will install ``rstcheck`` along its main and development dependencies.
+Simply create a virtualenv and run ``pip install -e .[dev]``. This will install
+``rstcheck`` along its main and development dependencies.
 
 
 Working with the Local Development Environment
 ----------------------------------------------
 
-Dependency management and more with poetry
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Dependency management
+~~~~~~~~~~~~~~~~~~~~~
 
-is used for dependency management, building and publishing ``rstcheck``.
+Dependencies are listed in ``pyproject.toml`` and are manually managed.
 
 
 Testing with tox
@@ -58,7 +51,7 @@ This will run:
 - a test coverage report.
 - tests for the documentation.
 
-Different environment lists are available and can be selected with ``tox -n <ENVLIST>``:
+Different environment lists are available and can be selected with ``tox -m <ENVLIST>``:
 
 - test: run full test suite with ``pytest`` and report coverage.
 - py3.7 - py3.10 run full test suite with specific python version and report coverage.
@@ -79,8 +72,6 @@ There are 3 available ``tox`` envs with all use the same virtualenv:
   For running all hooks against the code base.
   A single hook's id can be passed as argument to run this hook only like
   ``tox -e pre-commit-run -- black``.
-- ``pre-commit-install``: For installing pre-commit hooks as git hooks, to automatically run
-  them before every commit.
 
 
 IDE integration
@@ -94,6 +85,3 @@ installed to allow IDEs to use them for inline error messages. Their config is i
 
 
 .. _Semantic Versioning: https://semver.org/
-.. _poetry: https://python-poetry.org/docs/
-.. _recommended way: https://python-poetry.org/docs/#installation
-.. _virtualenv manual: https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/

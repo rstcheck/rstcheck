@@ -24,6 +24,7 @@ NOTE: please use them in this order.
 - Update Sphinx Theme Version and remove outdated Dark Mode Lib ([#176](https://github.com/rstcheck/rstcheck/pull/176))
 - Drop support for Sphinx v2 and v3 ([#176](https://github.com/rstcheck/rstcheck/pull/176))
 - Add tox environments for v6 and v7 ([#176](https://github.com/rstcheck/rstcheck/pull/176))
+- Switch from poetry to setuptools ([#187](https://github.com/rstcheck/rstcheck/pull/187))
 
 ## [6.1.2 (2023-03-12)](https://github.com/rstcheck/rstcheck/releases/v6.1.2)
 

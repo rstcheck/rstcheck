@@ -28,7 +28,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.8"
+          python-version: "3.11"
 
       - name: Display Python version
         run: python --version
@@ -36,11 +36,11 @@ jobs:
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
 
-      - name: Install tox
-        run: python -m pip install --upgrade tox
+      - name: Install pipx
+        run: python -m pip install --upgrade pipx
 
-      - name: Install poetry
-        run: python -m pip install --upgrade poetry>=1.2
+      - name: Install tox via pipx
+        run: pipx install tox
 
-      - name: Run pre-commit with tox
+      - name: Run pre-commit via tox
         run: tox -e pre-commit-run
