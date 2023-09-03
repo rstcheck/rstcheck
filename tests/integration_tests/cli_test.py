@@ -1,4 +1,6 @@
 """Integration test for the CLI."""
+from __future__ import annotations
+
 import pathlib
 import re
 import sys

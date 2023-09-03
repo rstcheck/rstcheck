@@ -1,4 +1,5 @@
 """Compatability code for older python version."""
+from __future__ import annotations
 
 try:
     from importlib.metadata import version
@@ -9,7 +10,7 @@ except ImportError:  # pragma: py-gte-38
 try:
     from typing import Literal
 except ImportError:  # pragma: py-gte-38
-    from typing_extensions import Literal  # type: ignore[assignment]
+    from typing import Literal  # type: ignore[assignment]
 
 
 __all__ = ["Literal", "version"]

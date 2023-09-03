@@ -1,13 +1,16 @@
 """Script for preparing the repo for a new release."""
-import argparse
-import re
-import subprocess  # noqa: S404
-import sys
-from datetime import date
+from __future__ import annotations
 
+import argparse
+import datetime
+import re
+import subprocess
+import sys
+from pathlib import Path
 
 if sys.version_info[0:2] <= (3, 6):
-    raise RuntimeError("Script runs only with python 3.7 or newer.")
+    msg = "Script runs only with python 3.7 or newer."
+    raise RuntimeError(msg)
 
 
 PATCH = ("patch", "bugfix")
@@ -22,12 +25,12 @@ class PyprojectError(Exception):
     """Exception for lookup errors in pyproject.toml file."""
 
 
-def _get_config_value(section: str, key: str) -> str:  # noqa: CCR001
+def _get_config_value(section: str, key: str) -> str:
     """Extract a config value from pyproject.toml file.
 
     :return: config value
     """
-    with open("pyproject.toml", encoding="utf8") as pyproject_file:
+    with Path.open("pyproject.toml", encoding="utf8") as pyproject_file:
         pyproject = pyproject_file.read().split("\n")
 
     start = False
@@ -43,16 +46,16 @@ def _get_config_value(section: str, key: str) -> str:  # noqa: CCR001
             match = re.match(r"\s*" + key + r"""\s?=\s?["']{1}([^"']*)["']{1}.*""", line)
             if match:
                 return match.group(1)
-            raise PyprojectError(
-                f"No value for key '{key}' in {section} section could be extracted."
-            )
+            msg = f"No value for key '{key}' in {section} section could be extracted."
+            raise PyprojectError(msg)
 
-    raise PyprojectError(f"No '{key}' found in {section} section.")
+    msg = f"No '{key}' found in {section} section."
+    raise PyprojectError(msg)
 
 
 def _set_config_value(section: str, key: str, value: str) -> None:
     """Set a config value in pyproject.toml file."""
-    with open("pyproject.toml", encoding="utf8") as pyproject_file:
+    with Path.open("pyproject.toml", encoding="utf8") as pyproject_file:
         pyproject = pyproject_file.read().split("\n")
 
     start = False
@@ -62,7 +65,8 @@ def _set_config_value(section: str, key: str, value: str) -> None:
             continue
 
         if start and line.strip().startswith("["):
-            raise PyprojectError(f"No '{key}' found in {section} section.")
+            msg = f"No '{key}' found in {section} section."
+            raise PyprojectError(msg)
 
         if start and line.strip().startswith(key):
             match = re.sub(
@@ -73,7 +77,7 @@ def _set_config_value(section: str, key: str, value: str) -> None:
             pyproject[idx] = match
             break
 
-    with open("pyproject.toml", "w", encoding="utf8") as pyproject_file:
+    with Path.open("pyproject.toml", "w", encoding="utf8") as pyproject_file:
         pyproject_file.write("\n".join(pyproject))
 
 
@@ -89,18 +93,20 @@ def bump_version(release_type: str = "patch") -> str:
     :return: new version string
     """
     if release_type not in PATCH + MINOR + MAJOR:
-        raise ValueError(f"Invalid version increase type: {release_type}")
+        msg = f"Invalid version increase type: {release_type}"
+        raise ValueError(msg)
 
     current_version = _get_config_value("[tool.poetry]", "version")
 
     version_parts = re.match(r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)", current_version)
     if not version_parts:
-        raise ValueError(f"Unparsable version: {current_version}")
+        msg = f"Unparsable version: {current_version}"
+        raise ValueError(msg)
 
     if release_type in MAJOR:
         version = f"{int(version_parts.group('major')) + 1}.0.0"
     elif release_type in MINOR:
-        version = f"{version_parts.group('major')}" f".{int(version_parts.group('minor')) + 1}.0"
+        version = f"{version_parts.group('major')}.{int(version_parts.group('minor')) + 1}.0"
     elif release_type in PATCH:
         version = (
             f"{version_parts.group('major')}"
@@ -108,21 +114,21 @@ def bump_version(release_type: str = "patch") -> str:
             f".{int(version_parts.group('patch')) + 1}"
         )
     else:
-        print("Given `RELEASE TYPE` is invalid.")
+        print("Given `RELEASE TYPE` is invalid.")  # noqa: T201
         sys.exit(1)
 
     _set_config_value("[tool.poetry]", "version", version)
     return version
 
 
-def update_changelog(new_version: str, last_version: str, first_release: bool) -> None:
+def update_changelog(new_version: str, last_version: str, *, first_release: bool) -> None:
     """Update CHANGELOG.md to be release ready.
 
     :param new_version: new version string
     :param last_version: current version string
     :first_release: if this is the first release
     """
-    with open("CHANGELOG.md", encoding="utf8") as changelog_file:
+    with Path.open("CHANGELOG.md", encoding="utf8") as changelog_file:
         changelog_lines = changelog_file.read().split("\n")
 
     release_line = 0
@@ -132,7 +138,7 @@ def update_changelog(new_version: str, last_version: str, first_release: bool) -
             release_line = idx
 
     if release_line:
-        today = date.today().isoformat()
+        today = datetime.datetime.now(tz=datetime.UTC).date().isoformat()
         compare = f"{'' if first_release else 'v'}{last_version}...v{new_version}"
         changelog_lines[release_line] = (
             "## Unreleased\n"
@@ -149,14 +155,14 @@ def update_changelog(new_version: str, last_version: str, first_release: bool) -
         changelog_lines.pop(release_line + 1)  # Remove blank line
         changelog_lines.pop(release_line + 1)  # Remove [diff ...] link line
 
-    with open("CHANGELOG.md", "w", encoding="utf8") as changelog_file:
+    with Path.open("CHANGELOG.md", "w", encoding="utf8") as changelog_file:
         changelog_file.write("\n".join(changelog_lines))
 
 
 def commit_and_tag(version: str) -> None:
     """Git commit and tag the new release."""
-    subprocess.run(  # noqa: S603,S607
-        [
+    subprocess.run(
+        [  # noqa: S603,S607
             "git",
             "commit",
             "--no-verify",
@@ -167,8 +173,8 @@ def commit_and_tag(version: str) -> None:
         ],
         check=True,
     )
-    subprocess.run(  # noqa: S603,S607
-        ["git", "tag", "-am", f"'v{version}'", f"v{version}"], check=True
+    subprocess.run(
+        ["git", "tag", "-am", f"'v{version}'", f"v{version}"], check=True  # noqa: S603,S607
     )
 
 
@@ -201,8 +207,8 @@ def _main() -> int:
     if args.first_release:
         release_version = _get_config_value("[tool.poetry]", "version")
         #: Get first commit
-        current_version = subprocess.run(  # noqa: S603,S607
-            ["git", "rev-list", "--max-parents=0", "HEAD"],
+        current_version = subprocess.run(
+            ["git", "rev-list", "--max-parents=0", "HEAD"],  # noqa: S603,S607
             check=True,
             capture_output=True,
         ).stdout.decode()[0:7]
@@ -212,7 +218,7 @@ def _main() -> int:
     update_changelog(
         release_version,
         current_version,
-        args.first_release,
+        first_release=args.first_release,
     )
     commit_and_tag(release_version)
     return 0
