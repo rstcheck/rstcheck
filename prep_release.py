@@ -20,69 +20,8 @@ MAJOR = ("major", "breaking")
 REPO_URL = "https://github.com/rstcheck/rstcheck"
 
 
-#: -- UTILS ----------------------------------------------------------------------------
-class PyprojectError(Exception):
-    """Exception for lookup errors in pyproject.toml file."""
-
-
-def _get_config_value(section: str, key: str) -> str:
-    """Extract a config value from pyproject.toml file.
-
-    :return: config value
-    """
-    with Path.open("pyproject.toml", encoding="utf8") as pyproject_file:
-        pyproject = pyproject_file.read().split("\n")
-
-    start = False
-    for line in pyproject:
-        if not start and line.strip().startswith(section):
-            start = True
-            continue
-
-        if start and line.strip().startswith("["):
-            break
-
-        if start and line.strip().startswith(key):
-            match = re.match(r"\s*" + key + r"""\s?=\s?["']{1}([^"']*)["']{1}.*""", line)
-            if match:
-                return match.group(1)
-            msg = f"No value for key '{key}' in {section} section could be extracted."
-            raise PyprojectError(msg)
-
-    msg = f"No '{key}' found in {section} section."
-    raise PyprojectError(msg)
-
-
-def _set_config_value(section: str, key: str, value: str) -> None:
-    """Set a config value in pyproject.toml file."""
-    with Path.open("pyproject.toml", encoding="utf8") as pyproject_file:
-        pyproject = pyproject_file.read().split("\n")
-
-    start = False
-    for idx, line in enumerate(pyproject):
-        if not start and line.strip().startswith(section):
-            start = True
-            continue
-
-        if start and line.strip().startswith("["):
-            msg = f"No '{key}' found in {section} section."
-            raise PyprojectError(msg)
-
-        if start and line.strip().startswith(key):
-            match = re.sub(
-                r"(\s*" + key + r"""\s?=\s?["']{1})[^"']*(["']{1}.*)""",
-                f"\\g<1>{value}\\g<2>",
-                line,
-            )
-            pyproject[idx] = match
-            break
-
-    with Path.open("pyproject.toml", "w", encoding="utf8") as pyproject_file:
-        pyproject_file.write("\n".join(pyproject))
-
-
 #: -- MAIN -----------------------------------------------------------------------------
-def bump_version(release_type: str = "patch") -> str:
+def bump_version(current_version: str, release_type: str = "patch") -> str:
     """Bump the current version for the next release.
 
     :param release_type: type of release;
@@ -95,8 +34,6 @@ def bump_version(release_type: str = "patch") -> str:
     if release_type not in PATCH + MINOR + MAJOR:
         msg = f"Invalid version increase type: {release_type}"
         raise ValueError(msg)
-
-    current_version = _get_config_value("[tool.poetry]", "version")
 
     version_parts = re.match(r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)", current_version)
     if not version_parts:
@@ -117,7 +54,6 @@ def bump_version(release_type: str = "patch") -> str:
         print("Given `RELEASE TYPE` is invalid.")  # noqa: T201
         sys.exit(1)
 
-    _set_config_value("[tool.poetry]", "version", version)
     return version
 
 
@@ -166,7 +102,7 @@ def commit_and_tag(version: str) -> None:
             "git",
             "commit",
             "--no-verify",
-            f"--message=release v{version} [skip ci]",
+            f'--message="release v{version} [skip ci]"',
             "--include",
             "pyproject.toml",
             "CHANGELOG.md",
@@ -205,7 +141,7 @@ def _main() -> int:
     args = _parser()
 
     if args.first_release:
-        release_version = _get_config_value("[tool.poetry]", "version")
+        release_version = "v1.0.0"
         #: Get first commit
         current_version = subprocess.run(
             ["git", "rev-list", "--max-parents=0", "HEAD"],  # noqa: S603,S607
@@ -213,8 +149,20 @@ def _main() -> int:
             capture_output=True,
         ).stdout.decode()[0:7]
     else:
-        current_version = _get_config_value("[tool.poetry]", "version")
-        release_version = bump_version(args.increase_type)
+        git_tags = (
+            subprocess.run(
+                ["git", "tag", "--list"],  # noqa: S603,S607
+                check=True,
+                capture_output=True,
+                cwd=Path(__file__).parent,
+            )
+            .stdout.decode()
+            .split("\n")
+        )
+        git_tags = [t for t in git_tags if t.startswith("v")]
+        git_tags.sort()
+        current_version = git_tags[-1]
+        release_version = bump_version(current_version, args.increase_type)
     update_changelog(
         release_version,
         current_version,
