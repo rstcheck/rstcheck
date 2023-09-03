@@ -3,13 +3,14 @@ from __future__ import annotations
 
 import logging
 import pathlib
+import typing as t
 
 import typer
 from rstcheck_core import _extras, config as config_mod, runner
 
-from rstcheck import _compat, _compat as _t
+from rstcheck import _compat
 
-ValidReportLevels = _t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]
+ValidReportLevels = t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]
 
 HELP_CONFIG = """Config file to load. Can be a INI file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | setup.cfg.

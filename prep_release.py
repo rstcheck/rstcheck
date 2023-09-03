@@ -64,7 +64,7 @@ def update_changelog(new_version: str, last_version: str, *, first_release: bool
     :param last_version: current version string
     :first_release: if this is the first release
     """
-    with Path.open("CHANGELOG.md", encoding="utf8") as changelog_file:
+    with Path("CHANGELOG.md").open(encoding="utf8") as changelog_file:
         changelog_lines = changelog_file.read().split("\n")
 
     release_line = 0
@@ -91,7 +91,7 @@ def update_changelog(new_version: str, last_version: str, *, first_release: bool
         changelog_lines.pop(release_line + 1)  # Remove blank line
         changelog_lines.pop(release_line + 1)  # Remove [diff ...] link line
 
-    with Path.open("CHANGELOG.md", "w", encoding="utf8") as changelog_file:
+    with Path("CHANGELOG.md").open("w", encoding="utf8") as changelog_file:
         changelog_file.write("\n".join(changelog_lines))
 
 
