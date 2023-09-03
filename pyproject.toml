@@ -73,14 +73,6 @@ exclude = "venv/"
 include = '\.pyi?$'  # single quotes needed
 
 
-# -- ISORT CONFIG ---------------------------------------------------------------------
-[tool.isort]
-profile = "black"
-lines_after_imports = 2
-combine_as_imports = true
-skip_gitignore = true
-
-
 # -- MYPY CONFIG ----------------------------------------------------------------------
 [tool.mypy]
 show_error_codes = true
@@ -102,47 +94,167 @@ warn_required_dynamic_aliases = true
 warn_untyped_fields = true
 
 
-# -- FLAKEHEAVEN CONFIG ----------------------------------------------------------------
-[tool.flakeheaven]
-base = ["https://raw.githubusercontent.com/Cielquan/my-flake8-plugins/v1.5.0/flakeheaven-base.toml"]
-min_python_version = "3.7"  # CHANGE ME
-
-[tool.flakeheaven.exceptions."examples"]
-flake8-eradicate = ["-E800"]
-
-
-# -- PYLINT CONFIG --------------------------------------------------------------------
-[tool.pylint]
-
-[tool.pylint.messages_control]
-disable = [
-  # deactivate because double check
-  # https://github.com/PyCQA/pylint/issues/3512
-  "C0103",  # invalid-name - [pep8-naming]
-  "C0113",  # unneeded-not - F713[flake8]
-  "C0114",  # missing-module-docstring - D100,D104[flake8]
-  "C0115",  # missing-class-docstring - D101,D106[flake8]
-  "C0116",  # missing-function-docstring - D102,D103,D105[flake8]
-  "C0301",  # line-too-long - E501[pycodestyle]
-  "C0303",  # trailing-whitespace - W291,W293[falke8]
-  "C0304",  # missing-final-newline - W292[falke8]
-  "C0305",  # trailing-newlines - W291[falke8]
-  "C0321",  # multiple-statements - E701[falke8]
-  "C0411",  # wrong-import-order - I202[flake8]
-  "C0413",  # wrong-import-position - E402[flake8]
-  "E0602",  # undefined-variable - F821[flake8]
-  "R0912",  # too-many-branches - C901[flake8]
-  "W0301",  # unnecessary-semicolon - E703[flake8]
-  "W0311",  # bad-indentation - E111[flake8]
-  "W0611",  # unused-import - F401[flake8]
-  "W0612",  # unused-variable - F841[flake8]
-  "W0702",  # bare-except - E722[pycodestyle]
-  # deactivate because unwanted
-  "W0511",  # fixme
-  "R0903",  # too-few-public-methods
-  # deactivate because of bugs
-  "W1203",  # Use % format in logger funcs | https://github.com/PyCQA/pylint/issues/2354
+# -- RUFF CONFIG ----------------------------------------------------------------------
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+format = "grouped"
+show-fixes = true
+show-source = true
+task-tags = ["TODO", "FIXME", "XXX", "NOTE", "BUG", "HACK", "CHANGE ME"]
+extend-exclude = [
+  "*venv*/",
+  "*.bak.*",
 ]
+src = ["src", "tests"]
+
+unfixable = ["ERA001"]
+
+select = [
+  "A",   # flake8-builtins
+  "AIR", # Airflow
+  "ANN", # flake8-annotations
+  "ARG", # flake8-unused-arguments
+  "ASYNC", # flake8-async
+  "B",   # flake8-bugbear
+  "BLE", # flake8-blind-except
+  "C4",  # flake8-comprehensions
+  "C90", # mccabe
+  # "COM", # flake8-commas # black does that
+  "D",   # pydocstyle
+  "DJ",  # flake8-django
+  "DTZ", # flake8-datetimez
+  "E",   # pycodestyle
+  "EM",  # flake8-errmsg
+  "ERA", # flake8-eradicate
+  "EXE", # flake8-executable
+  "F",   # pyflakes
+  "FA",   # flake8-future-annotations
+  "FBT", # flake8-boolean-trap
+  # "FIX", # flake8-fixme # custom pre-commit hook does with RegEx
+  "FLY", # flynt
+  "G",   # flake8-logging-format
+  "I",   # isort
+  "ICN", # flake8-import-conventions
+  "INP", # flake8-no-pep420
+  "INT", # flake8-gettext
+  "ISC", # flake8-implicit-str-concat
+  "N",   # pep8-naming
+  "NPY", # NumPy-specific rules
+  "PD",  # flake8-vet
+  "PERF",  # Perflint
+  "PGH", # pygrep-hooks
+  "PIE", # flake8-pie
+  "PLC", # Pylint - Convention
+  "PLE", # Pylint - Error
+  "PLR", # Pylint - Refactor
+  "PLW", # Pylint - Warning
+  "PT",  # flake8-pytest-style
+  "PTH", # flake8-use-pathlib
+  "PYI", # flake8-pyi
+  "Q",   # flake8-quotes
+  "RET", # flake8-return
+  "RUF", # Ruff-specific rules
+  "RSE", # flake8-raise
+  "S",   # flake8-bandit
+  "SLF", # flake8-self
+  "SLOT", # flake8-slots
+  "SIM", # flake8-simplify
+  # "T10", # flake8-debugger # pre-commit hook does that
+  "T20", # flake8-print
+  "TCH", # flake8-type-checking
+  # "TD", # flake8-todo
+  "TID", # flake8-tidy-imports
+  "TRY", # tryceratops
+  "UP",  # pyupgrade
+  "W",   # pycodestyle
+  "YTT", # flake8-2020
+]
+
+ignore = [
+  # deactivate because unwanted
+  "ANN101", # type self
+  "ANN102", # type cls
+  "E501",  # line length
+  "PT011", # Use match for specific exceptions in pytest.raises
+]
+
+[tool.ruff.per-file-ignores]
+"**/tests/**" = [
+  "ARG",  # unused arguments
+  "PLR0913",  # Too many arguments to function call
+  "PLR2004",  # Magic value comparison
+  "S101",  # assert used
+  "SLF001",  # Private member accessed
+]
+"**/tests/**/*_test.py" = [
+  "FBT001",  # Boolean positional arg in function definition
+]
+"__init__.py" = [
+  "D104",  # Missing docstring in public package
+  "PLC0414",  # useless-import-alias
+]
+"**/testing/examples/**" = [
+  "ERA001",  # commented out code
+]
+"docs/source/conf.py" = [
+  "INP001",  # implicit namespace
+]
+"__version__.py" = ["ALL"]
+
+[tool.ruff.flake8-annotations]
+suppress-dummy-args = true
+
+[tool.ruff.flake8-bugbear]
+extend-immutable-calls = [
+  "typer.Option",
+]
+
+[tool.ruff.flake8-builtins]
+builtins-ignorelist = [
+  "id",
+]
+
+[tool.ruff.flake8-import-conventions.extend-aliases]
+"typing" = "t"
+
+[tool.ruff.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+
+[tool.ruff.flake8-type-checking]
+runtime-evaluated-base-classes = [
+  "pydantic.BaseModel",
+]
+
+[tool.ruff.isort]
+combine-as-imports = true
+required-imports = [
+  "from __future__ import annotations",
+]
+
+[tool.ruff.mccabe]
+max-complexity = 20
+
+[tool.ruff.pep8-naming]
+classmethod-decorators = [
+  "pydantic.validator",
+]
+staticmethod-decorators = []
+
+[tool.ruff.pycodestyle]
+ignore-overlong-task-comments = true
+max-doc-length = 100
+
+[tool.ruff.pydocstyle]
+convention = "pep257"
+ignore-decorators = [
+  "typing.overload",
+]
+property-decorators = []
+
+[tool.ruff.pylint]
+max-args = 6
 
 
 # -- PYTEST CONFIG --------------------------------------------------------------------
