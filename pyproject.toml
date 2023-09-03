@@ -84,7 +84,7 @@ warn_unreachable = true
 disallow_any_generics = true
 check_untyped_defs = true
 implicit_reexport = false
-python_version = "3.10"  # CHANGE ME
+python_version = "3.11"  # CHANGE ME
 plugins = "pydantic.mypy"
 
 [tool.pydantic-mypy]
