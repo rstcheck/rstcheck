@@ -1,0 +1,14 @@
+graft src
+graft testing
+graft tests
+prune docs
+
+exclude *
+include AUTHORS.rst
+include CHANGELOG.md
+include LICENSE
+include MANIFEST.in
+include pyproject.toml
+include README.rst
+
+global-exclude *~ *.py[cod]

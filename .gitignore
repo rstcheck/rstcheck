@@ -12,8 +12,8 @@ build
 *.nav
 *.out
 *.snm
-poetry.lock
 *.bak.*
 objects.*.txt
 .coverage_cache/
 .flakeheaven_cache/
+__version__.py

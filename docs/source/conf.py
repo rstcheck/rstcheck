@@ -14,7 +14,7 @@ from sphinx.application import Sphinx
 try:
     from importlib.metadata import metadata  # pylint: disable=ungrouped-imports
 except ModuleNotFoundError:  # pragma: py-gte-38
-    from importlib_metadata import metadata  # type: ignore[assignment]
+    from importlib_metadata import metadata  # type: ignore[import,no-redef]
 
 
 needs_sphinx = "3.1"  #: Minimum Sphinx version to build the docs

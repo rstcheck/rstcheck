@@ -2,7 +2,6 @@
 name: Test documentation
 
 env:
-  CI_FORCE_COLORS_POETRY: --ansi
   CI_FORCE_COLORS_SPHINX: --color
 
 on: # yamllint disable-line rule:truthy
@@ -35,7 +34,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.8"
+          python-version: "3.11"
 
       - name: Display Python version
         run: python --version
@@ -43,8 +42,11 @@ jobs:
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
 
-      - name: Install tox
-        run: python -m pip install --upgrade tox
+      - name: Install pipx
+        run: python -m pip install --upgrade pipx
+
+      - name: Install tox via pipx
+        run: pipx install tox
 
       - name: Set up Homebrew
         if: runner.os == 'macOS'
