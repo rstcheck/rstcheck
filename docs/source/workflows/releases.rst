@@ -34,11 +34,11 @@ judgment of the maintainer(s).
 
 #. Build the sdist and wheel::
 
-    $ poetry build
+    $ python -m build
 
 #. Publish package::
 
-   $ poetry publish
+   $ twine upload dist/*
 
 #. Push the commit and tag to github::
 

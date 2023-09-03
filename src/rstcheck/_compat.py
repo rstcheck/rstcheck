@@ -3,7 +3,7 @@
 try:
     from importlib.metadata import version
 except ImportError:  # pragma: py-gte-38
-    from importlib_metadata import version
+    from importlib_metadata import version  # type: ignore[import,no-redef]
 
 
 try:
