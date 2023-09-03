@@ -77,19 +77,35 @@ def version_callback(value: bool) -> None:  # noqa: FBT001
 
 def cli(  # noqa: PLR0913
     files: list[pathlib.Path] = typer.Argument(..., allow_dash=True, hidden=True),  # noqa: B008
-    config: pathlib.Path | None = typer.Option(None, "--config", help=HELP_CONFIG),
-    warn_unknown_settings: bool
-    | None = typer.Option(None, "--warn-unknown-settings", help=HELP_WARN_UNKNOWN_SETTINGS),
-    recursive: bool | None = typer.Option(None, "--recursive", "-r", help=HELP_RECURSIVE),
-    report_level: str | None = typer.Option(None, metavar="LEVEL", help=HELP_REPORT_LEVEL),
+    config: t.Optional[pathlib.Path] = typer.Option(  # noqa: UP007
+        None, "--config", help=HELP_CONFIG
+    ),
+    warn_unknown_settings: t.Optional[bool] = typer.Option(  # noqa: UP007
+        None, "--warn-unknown-settings", help=HELP_WARN_UNKNOWN_SETTINGS
+    ),
+    recursive: t.Optional[bool] = typer.Option(  # noqa: UP007
+        None, "--recursive", "-r", help=HELP_RECURSIVE
+    ),
+    report_level: t.Optional[str] = typer.Option(  # noqa: UP007
+        None, metavar="LEVEL", help=HELP_REPORT_LEVEL
+    ),
     log_level: str = typer.Option("WARNING", metavar="LEVEL", help=HELP_LOG_LEVEL),
-    ignore_directives: str | None = typer.Option(None, help=HELP_IGNORE_DIRECTIVES),
-    ignore_roles: str | None = typer.Option(None, help=HELP_IGNORE_ROLES),
-    ignore_substitutions: str | None = typer.Option(None, help=HELP_IGNORE_SUBSTITUTIONS),
-    ignore_languages: str | None = typer.Option(None, help=HELP_IGNORE_LANGUAGES),
-    ignore_messages: str | None = typer.Option(None, metavar="REGEX", help=HELP_IGNORE_MESSAGES),
-    version: bool  # noqa: ARG001
-    | None = typer.Option(None, "--version", callback=version_callback, is_eager=True),
+    ignore_directives: t.Optional[str] = typer.Option(  # noqa: UP007
+        None, help=HELP_IGNORE_DIRECTIVES
+    ),
+    ignore_roles: t.Optional[str] = typer.Option(None, help=HELP_IGNORE_ROLES),  # noqa: UP007
+    ignore_substitutions: t.Optional[str] = typer.Option(  # noqa: UP007
+        None, help=HELP_IGNORE_SUBSTITUTIONS
+    ),
+    ignore_languages: t.Optional[str] = typer.Option(  # noqa: UP007
+        None, help=HELP_IGNORE_LANGUAGES
+    ),
+    ignore_messages: t.Optional[str] = typer.Option(  # noqa: UP007
+        None, metavar="REGEX", help=HELP_IGNORE_MESSAGES
+    ),
+    version: t.Optional[bool] = typer.Option(  # noqa: ARG001, UP007
+        None, "--version", callback=version_callback, is_eager=True
+    ),
 ) -> int:
     """CLI of rstcheck."""
     setup_logger(log_level)
