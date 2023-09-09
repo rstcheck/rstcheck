@@ -10,8 +10,6 @@ from rstcheck_core import _extras, config as config_mod, runner
 
 from rstcheck import _compat
 
-ValidReportLevels = t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]
-
 HELP_CONFIG = """Config file to load. Can be a INI file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | setup.cfg.
 If 'NONE' is passed no config file is loaded at all.
@@ -76,7 +74,7 @@ def version_callback(value: bool) -> None:  # noqa: FBT001
 
 
 def cli(  # noqa: PLR0913
-    files: list[pathlib.Path] = typer.Argument(..., allow_dash=True, hidden=True),  # noqa: B008
+    files: t.List[pathlib.Path] = typer.Argument(..., allow_dash=True, hidden=True),  # noqa: UP006
     config: t.Optional[pathlib.Path] = typer.Option(  # noqa: UP007
         None, "--config", help=HELP_CONFIG
     ),
@@ -89,6 +87,7 @@ def cli(  # noqa: PLR0913
     report_level: t.Optional[str] = typer.Option(  # noqa: UP007
         None, metavar="LEVEL", help=HELP_REPORT_LEVEL
     ),
+    # TODO:#i# use `t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]` when supported
     log_level: str = typer.Option("WARNING", metavar="LEVEL", help=HELP_LOG_LEVEL),
     ignore_directives: t.Optional[str] = typer.Option(  # noqa: UP007
         None, help=HELP_IGNORE_DIRECTIVES
