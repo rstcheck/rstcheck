@@ -142,9 +142,7 @@ def cli(  # noqa: PLR0913
     except FileNotFoundError as exc:
         if not exc.strerror == "Passed config path not found.":  # pragma: no cover
             raise
-        logger.critical(
-            "### Passed config path was not found: '{path}'", extra={"path": exc.filename}
-        )
+        logger.critical("### Passed config path was not found: '%(path)s'", {"path": exc.filename})
 
     raise typer.Exit(code=exit_code)
 
