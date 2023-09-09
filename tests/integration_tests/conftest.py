@@ -1,4 +1,6 @@
 """Fixtures for integration tests."""
+from __future__ import annotations
+
 import re
 
 import pytest
@@ -6,7 +8,6 @@ import typer
 import typer.testing
 
 from rstcheck import _cli
-
 
 ERROR_CODE_REGEX = re.compile(r"\([A-Z]*?/\d\)")
 

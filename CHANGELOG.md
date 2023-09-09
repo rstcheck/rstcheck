@@ -19,12 +19,19 @@ NOTE: please use them in this order.
 
 [diff v6.1.2...main](https://github.com/rstcheck/rstcheck/compare/v6.1.2...main)
 
+### Bugfixes
+
+- Fix bug where variable in log string was not substituted ([#188](https://github.com/rstcheck/rstcheck/pull/188))
+
 ### Miscellaneous
 
 - Update Sphinx Theme Version and remove outdated Dark Mode Lib ([#176](https://github.com/rstcheck/rstcheck/pull/176))
 - Drop support for Sphinx v2 and v3 ([#176](https://github.com/rstcheck/rstcheck/pull/176))
 - Add tox environments for v6 and v7 ([#176](https://github.com/rstcheck/rstcheck/pull/176))
 - Switch from poetry to setuptools ([#187](https://github.com/rstcheck/rstcheck/pull/187))
+- Change test file naming convention ([#188](https://github.com/rstcheck/rstcheck/pull/188))
+- Change dev tooling ([#188](https://github.com/rstcheck/rstcheck/pull/188))
+- Add python 3.12 to CI ([#188](https://github.com/rstcheck/rstcheck/pull/188))
 
 ## [6.1.2 (2023-03-12)](https://github.com/rstcheck/rstcheck/releases/v6.1.2)
 

@@ -3,7 +3,7 @@ minimum_pre_commit_version: "2.17"
 default_stages: [commit]
 
 ci:
-  skip: [mypy, pylint, flakeheaven]
+  skip: [mypy]
 
 repos:
   # ----------------------------------------------
@@ -40,22 +40,17 @@ repos:
   # Python
   # ----------------------------------------------
 
-  # pyupgrade - upgrade old syntax to new
-  - repo: https://github.com/asottile/pyupgrade
-    rev: b3e813e5d60a472ba815a45d107bbdf106405973 # frozen: v3.10.1
+  # ruff - python linter with fixing ability
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: 47023bed2b253176c10ba0f760c85e952e52e5fd # frozen: v0.0.287
     hooks:
-      - id: pyupgrade
-        args: ["--py37-plus"]
-
-  # isort - sort imports
-  - repo: https://github.com/PyCQA/isort
-    rev: dbf82f2dd09ae41d9355bcd7ab69187a19e6bf2f # frozen: 5.12.0
-    hooks:
-      - id: isort
+      - id: ruff
+        name: ruff (fix)
+        args: ["--fix-only", "--exit-non-zero-on-fix", "--config=pyproject.toml"]
 
   # black - python formatter
   - repo: https://github.com/psf/black
-    rev: 193ee766ca496871f93621d6b58d57a6564ff81b # frozen: 23.7.0
+    rev: b70b2c619671f0c6adc722742181bd2fa6e2a2f4 # frozen: 23.9.0
     hooks:
       - id: black
         args: ["--safe"]
@@ -73,7 +68,7 @@ repos:
 
   # prettier - multi formatter
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: 672abe14d309fc28817d45b6be25ea976a92222a # frozen: v3.0.2
+    rev: fc260393cc4ec09f8fc0a5ba4437f481c8b55dc1 # frozen: v3.0.3
     hooks:
       - id: prettier
 
@@ -143,6 +138,14 @@ repos:
   # Python
   # ----------------------------------------------
 
+  # ruff - python linter with fixing ability
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: 47023bed2b253176c10ba0f760c85e952e52e5fd # frozen: v0.0.287
+    hooks:
+      - id: ruff
+        name: ruff (lint)
+        args: ["--config=pyproject.toml"]
+
   # python specific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: f71fa2c1f9cf5cb705f73dffe4b21f7c61470ba9 # frozen: v4.4.0
@@ -151,7 +154,6 @@ repos:
       - id: fix-encoding-pragma
         args: ["--remove"]
       - id: name-tests-test
-        args: ["--django"]
 
   # several python code regex hooks
   - repo: https://github.com/pre-commit/pygrep-hooks
@@ -162,15 +164,6 @@ repos:
       - id: python-check-mock-methods
       - id: python-no-eval
       - id: python-no-log-warn
-
-  # flakeheaven - wrapper for flake8
-  - repo: https://github.com/flakeheaven/flakeheaven
-    rev: 289c489c9654342dae2ad871527c5951acb2f22d # frozen: 3.3.0
-    hooks:
-      - id: flakeheaven
-        types: [python]
-        additional_dependencies:
-          - "git+https://github.com/cielquan/my-flake8-plugins.git@v1.5.0"
 
   # Lint hooks managed via tox envs b/c they need the pkg installed
   - repo: local
@@ -185,16 +178,6 @@ repos:
         additional_dependencies: [tox]
         types: [python]
         pass_filenames: false
-        require_serial: true
-        # pylint - python linter
-      - id: pylint
-        name: pylint
-        description: run pylint over the installed package via tox
-        entry: tox
-        args: ["-e", "pylint", "--"]
-        language: python
-        additional_dependencies: [tox]
-        types: [python]
         require_serial: true
 
   # ----------------------------------------------
@@ -252,6 +235,6 @@ repos:
   # ----------------------------------------------
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: 5da4258b17dea7bd4601358de200e185699f9997 # frozen: v3.3.3
+    rev: fe9ba6b53fd5ae112ef5a3d2ac883e2d0e5a10db # frozen: v3.4.0
     hooks:
       - id: validate_manifest

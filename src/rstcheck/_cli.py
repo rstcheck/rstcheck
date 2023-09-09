@@ -1,4 +1,6 @@
 """CLI for rstcheck."""
+from __future__ import annotations
+
 import logging
 import pathlib
 import typing as t
@@ -6,10 +8,7 @@ import typing as t
 import typer
 from rstcheck_core import _extras, config as config_mod, runner
 
-from rstcheck import _compat, _compat as _t  # pylint: disable=reimported
-
-
-ValidReportLevels = _t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]
+from rstcheck import _compat
 
 HELP_CONFIG = """Config file to load. Can be a INI file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | setup.cfg.
@@ -54,58 +53,56 @@ def setup_logger(loglevel: str) -> None:
     """Set up logging.
 
     :param loglevel: Level to log at.
-    :raises ValueError: On invalid logging leveles.
+    :raises TypeError: On invalid logging leveles.
     """
     numeric_level = getattr(logging, loglevel.upper(), None)
     if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {loglevel}")
+        msg = f"Invalid log level: {loglevel}"
+        raise TypeError(msg)
 
     logging.basicConfig(level=numeric_level)
 
 
-def version_callback(value: bool) -> None:
+def version_callback(value: bool) -> None:  # noqa: FBT001
     """Print the version and exit."""
     if value:
         version = _compat.version("rstcheck")
         core_version = _compat.version("rstcheck-core")
         typer.echo(f"rstcheck CLI Version: {version}")
         typer.echo(f"rstcheck-core Version: {core_version}")
-        raise typer.Exit()
+        raise typer.Exit
 
 
-def cli(  # pylint: disable=too-many-arguments,too-many-locals
-    files: t.List[pathlib.Path] = typer.Argument(  # noqa: M511,B008
-        ..., allow_dash=True, hidden=True
-    ),
-    config: t.Optional[pathlib.Path] = typer.Option(  # noqa: M511,B008
+def cli(  # noqa: PLR0913
+    files: t.List[pathlib.Path] = typer.Argument(..., allow_dash=True, hidden=True),  # noqa: UP006
+    config: t.Optional[pathlib.Path] = typer.Option(  # noqa: UP007
         None, "--config", help=HELP_CONFIG
     ),
-    warn_unknown_settings: t.Optional[bool] = typer.Option(  # noqa: M511,B008
+    warn_unknown_settings: t.Optional[bool] = typer.Option(  # noqa: UP007
         None, "--warn-unknown-settings", help=HELP_WARN_UNKNOWN_SETTINGS
     ),
-    recursive: t.Optional[bool] = typer.Option(  # noqa: M511,B008
+    recursive: t.Optional[bool] = typer.Option(  # noqa: UP007
         None, "--recursive", "-r", help=HELP_RECURSIVE
     ),
-    report_level: t.Optional[str] = typer.Option(  # noqa: M511,B008
+    report_level: t.Optional[str] = typer.Option(  # noqa: UP007
         None, metavar="LEVEL", help=HELP_REPORT_LEVEL
     ),
-    log_level: str = typer.Option(  # noqa: M511,B008
-        "WARNING", metavar="LEVEL", help=HELP_LOG_LEVEL
-    ),
-    ignore_directives: t.Optional[str] = typer.Option(  # noqa: M511,B008
+    # TODO:#i# use `t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]` when supported
+    log_level: str = typer.Option("WARNING", metavar="LEVEL", help=HELP_LOG_LEVEL),
+    ignore_directives: t.Optional[str] = typer.Option(  # noqa: UP007
         None, help=HELP_IGNORE_DIRECTIVES
     ),
-    ignore_roles: t.Optional[str] = typer.Option(None, help=HELP_IGNORE_ROLES),  # noqa: M511,B008
-    ignore_substitutions: t.Optional[str] = typer.Option(  # noqa: M511,B008
+    ignore_roles: t.Optional[str] = typer.Option(None, help=HELP_IGNORE_ROLES),  # noqa: UP007
+    ignore_substitutions: t.Optional[str] = typer.Option(  # noqa: UP007
         None, help=HELP_IGNORE_SUBSTITUTIONS
     ),
-    ignore_languages: t.Optional[str] = typer.Option(  # noqa: M511,B008
+    ignore_languages: t.Optional[str] = typer.Option(  # noqa: UP007
         None, help=HELP_IGNORE_LANGUAGES
     ),
-    ignore_messages: t.Optional[str] = typer.Option(  # noqa: M511,B008
+    ignore_messages: t.Optional[str] = typer.Option(  # noqa: UP007
         None, metavar="REGEX", help=HELP_IGNORE_MESSAGES
     ),
-    version: t.Optional[bool] = typer.Option(  # pylint: disable=unused-argument # noqa: M511,B008
+    version: t.Optional[bool] = typer.Option(  # noqa: ARG001, UP007
         None, "--version", callback=version_callback, is_eager=True
     ),
 ) -> int:
@@ -115,7 +112,7 @@ def cli(  # pylint: disable=too-many-arguments,too-many-locals
 
     if pathlib.Path("-") in files and len(files) > 1:
         typer.echo("'-' is only allowed without additional files.", err=True)
-        raise typer.Abort()
+        raise typer.Abort
 
     logger.info("Create main configuration from CLI options.")
     rstcheck_config = config_mod.RstcheckConfig(
@@ -144,7 +141,7 @@ def cli(  # pylint: disable=too-many-arguments,too-many-locals
     except FileNotFoundError as exc:
         if not exc.strerror == "Passed config path not found.":  # pragma: no cover
             raise
-        logger.critical(f"### Passed config path was not found: '{exc.filename}'")
+        logger.critical("### Passed config path was not found: '%(path)s'", {"path": exc.filename})
 
     raise typer.Exit(code=exit_code)
 

@@ -26,7 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12-dev"]
     steps:
       - uses: actions/checkout@v3
 
@@ -51,5 +51,16 @@ jobs:
       - name: Install tox via pipx
         run: pipx install tox
 
-      - name: Run tests via tox
-        run: tox -m py${{ matrix.python-version }}
+      - name: Run tests via tox (linux/macos)
+        if: runner.os != 'Windows'
+        run: |
+          major=$(python -c "import sys;print(sys.version_info[0])")
+          minor=$(python -c "import sys;print(sys.version_info[1])")
+          tox -m py${major}.${minor}
+
+      - name: Run tests via tox (windows)
+        if: runner.os == 'Windows'
+        run: |
+          $major = python -c "import sys;print(sys.version_info[0])"
+          $minor = python -c "import sys;print(sys.version_info[1])"
+          tox -m py${major}.${minor}

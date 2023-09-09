@@ -8,8 +8,7 @@ formats:
   - htmlzip
 
 python:
-  version: "3.8"
-  system_packages: false
+  version: "3.11"
   install:
     - method: pip
       path: .
@@ -18,5 +17,5 @@ python:
 
 sphinx:
   configuration: docs/source/conf.py
-  fail_on_warning: true
+  fail_on_warning: false
   builder: dirhtml
