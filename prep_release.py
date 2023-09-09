@@ -35,7 +35,7 @@ def bump_version(current_version: str, release_type: str = "patch") -> str:
         msg = f"Invalid version increase type: {release_type}"
         raise ValueError(msg)
 
-    version_parts = re.match(r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)", current_version)
+    version_parts = re.match(r"v?(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)", current_version)
     if not version_parts:
         msg = f"Unparsable version: {current_version}"
         raise ValueError(msg)
