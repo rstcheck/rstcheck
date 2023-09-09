@@ -207,6 +207,7 @@ suppress-dummy-args = true
 
 [tool.ruff.flake8-bugbear]
 extend-immutable-calls = [
+  "typer.Argument",
   "typer.Option",
 ]
 
