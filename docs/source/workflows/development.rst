@@ -54,7 +54,7 @@ This will run:
 Different environment lists are available and can be selected with ``tox -m <ENVLIST>``:
 
 - test: run full test suite with ``pytest`` and report coverage.
-- py3.7 - py3.10 run full test suite with specific python version and report coverage.
+- py`X`.`Y` run full test suite with specific python version and report coverage.
 - docs: run all documentation tests.
 
 
