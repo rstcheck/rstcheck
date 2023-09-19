@@ -42,7 +42,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 6fcbf19c7cf351a8dc3517a0fed3ebfa05610de2  # frozen: v0.0.290
+    rev: 6fcbf19c7cf351a8dc3517a0fed3ebfa05610de2 # frozen: v0.0.290
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -50,7 +50,7 @@ repos:
 
   # black - python formatter
   - repo: https://github.com/psf/black
-    rev: e87737140f32d3cd7c44ede75f02dcd58e55820e  # frozen: 23.9.1
+    rev: e87737140f32d3cd7c44ede75f02dcd58e55820e # frozen: 23.9.1
     hooks:
       - id: black
         args: ["--safe"]
@@ -140,7 +140,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 6fcbf19c7cf351a8dc3517a0fed3ebfa05610de2  # frozen: v0.0.290
+    rev: 6fcbf19c7cf351a8dc3517a0fed3ebfa05610de2 # frozen: v0.0.290
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -196,7 +196,7 @@ repos:
 
   # rstcheck - rst file checker
   - repo: https://github.com/rstcheck/rstcheck
-    rev: 445861c31d8134562e723d77115721038de2e687  # frozen: v6.2.0
+    rev: 445861c31d8134562e723d77115721038de2e687 # frozen: v6.2.0
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
@@ -209,7 +209,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: ef974bde8375da10f3aa38a1b6ce646a34a23446  # frozen: v0.10.0
+    rev: ef974bde8375da10f3aa38a1b6ce646a34a23446 # frozen: v0.10.0
     hooks:
       - id: markdownlint-cli2
 
