@@ -42,7 +42,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 6fcbf19c7cf351a8dc3517a0fed3ebfa05610de2 # frozen: v0.0.290
+    rev: 146c621c9fbe4727ca57be94779b7abecf5058ec # frozen: v0.0.291
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -140,7 +140,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 6fcbf19c7cf351a8dc3517a0fed3ebfa05610de2 # frozen: v0.0.290
+    rev: 146c621c9fbe4727ca57be94779b7abecf5058ec # frozen: v0.0.291
     hooks:
       - id: ruff
         name: ruff (lint)
