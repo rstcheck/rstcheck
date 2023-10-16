@@ -25,7 +25,7 @@ repos:
 
   # file checking out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: c4a0b883114b00d8d76b479c820ce7950211c99b  # frozen: v4.5.0
+    rev: c4a0b883114b00d8d76b479c820ce7950211c99b # frozen: v4.5.0
     hooks:
       - id: check-case-conflict
       - id: check-shebang-scripts-are-executable
@@ -42,7 +42,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 382100c524aa3fa39218d6262f0cbf02dffae4db  # frozen: v0.1.0
+    rev: 382100c524aa3fa39218d6262f0cbf02dffae4db # frozen: v0.1.0
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -99,7 +99,7 @@ repos:
 
   # code unspecific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: c4a0b883114b00d8d76b479c820ce7950211c99b  # frozen: v4.5.0
+    rev: c4a0b883114b00d8d76b479c820ce7950211c99b # frozen: v4.5.0
     hooks:
       - id: end-of-file-fixer
         stages: [commit]
@@ -129,7 +129,7 @@ repos:
 
   # code unspecific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: c4a0b883114b00d8d76b479c820ce7950211c99b  # frozen: v4.5.0
+    rev: c4a0b883114b00d8d76b479c820ce7950211c99b # frozen: v4.5.0
     hooks:
       - id: check-merge-conflict
       - id: detect-private-key
@@ -140,7 +140,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 382100c524aa3fa39218d6262f0cbf02dffae4db  # frozen: v0.1.0
+    rev: 382100c524aa3fa39218d6262f0cbf02dffae4db # frozen: v0.1.0
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -148,7 +148,7 @@ repos:
 
   # python specific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: c4a0b883114b00d8d76b479c820ce7950211c99b  # frozen: v4.5.0
+    rev: c4a0b883114b00d8d76b479c820ce7950211c99b # frozen: v4.5.0
     hooks:
       - id: debug-statements
       - id: fix-encoding-pragma
@@ -219,7 +219,7 @@ repos:
 
   # JSON specific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: c4a0b883114b00d8d76b479c820ce7950211c99b  # frozen: v4.5.0
+    rev: c4a0b883114b00d8d76b479c820ce7950211c99b # frozen: v4.5.0
     hooks:
       - id: check-toml
       - id: check-yaml
@@ -235,6 +235,6 @@ repos:
   # ----------------------------------------------
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: 61cc55a59cc63c7405dd3cd7c96b169fdb750333  # frozen: v3.5.0
+    rev: 61cc55a59cc63c7405dd3cd7c96b169fdb750333 # frozen: v3.5.0
     hooks:
       - id: validate_manifest
