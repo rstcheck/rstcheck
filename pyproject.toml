@@ -98,7 +98,7 @@ warn_untyped_fields = true
 [tool.ruff]
 target-version = "py311"
 line-length = 100
-format = "grouped"
+output-format = "grouped"
 show-fixes = true
 show-source = true
 task-tags = ["TODO", "FIXME", "XXX", "NOTE", "BUG", "HACK", "CHANGE ME"]
@@ -310,5 +310,4 @@ show_contexts = true
 
 [tool.coverage.coverage_conditional_plugin.rules]
 # use with: # pragma: <KEY>
-py-gte-38 = "sys_version_info >= (3, 8)"
 py-gte-310 = "sys_version_info >= (3, 10)"
