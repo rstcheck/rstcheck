@@ -4,11 +4,10 @@ from __future__ import annotations
 import logging
 import pathlib
 import typing as t
+from importlib.metadata import version
 
 import typer
 from rstcheck_core import _extras, config as config_mod, runner
-
-from rstcheck import _compat
 
 HELP_CONFIG = """Config file to load. Can be a INI file or directory.
 If a directory is passed it will be searched for .rstcheck.cfg | setup.cfg.
@@ -66,10 +65,8 @@ def setup_logger(loglevel: str) -> None:
 def version_callback(value: bool) -> None:  # noqa: FBT001
     """Print the version and exit."""
     if value:
-        version = _compat.version("rstcheck")
-        core_version = _compat.version("rstcheck-core")
-        typer.echo(f"rstcheck CLI Version: {version}")
-        typer.echo(f"rstcheck-core Version: {core_version}")
+        typer.echo(f"rstcheck CLI Version: {version('rstcheck')}")
+        typer.echo(f"rstcheck-core Version: {version('rstcheck-core')}")
         raise typer.Exit
 
 

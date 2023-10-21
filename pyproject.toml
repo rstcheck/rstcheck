@@ -310,5 +310,4 @@ show_contexts = true
 
 [tool.coverage.coverage_conditional_plugin.rules]
 # use with: # pragma: <KEY>
-py-gte-38 = "sys_version_info >= (3, 8)"
 py-gte-310 = "sys_version_info >= (3, 10)"

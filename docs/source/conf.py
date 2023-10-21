@@ -5,6 +5,7 @@ import datetime
 import os
 import re
 import typing as t
+from importlib.metadata import metadata
 from importlib.util import find_spec
 from pathlib import Path
 
@@ -12,11 +13,6 @@ import sphinx_rtd_theme  # type: ignore[import]
 
 if t.TYPE_CHECKING:
     from sphinx.application import Sphinx
-
-try:
-    from importlib.metadata import metadata
-except ModuleNotFoundError:  # pragma: py-gte-38
-    from importlib_metadata import metadata  # type: ignore[import,no-redef]
 
 
 needs_sphinx = "3.1"  #: Minimum Sphinx version to build the docs
