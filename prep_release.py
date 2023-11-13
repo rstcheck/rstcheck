@@ -8,7 +8,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-
 PATCH = ("patch", "bugfix")
 MINOR = ("minor", "feature")
 MAJOR = ("major", "breaking")
