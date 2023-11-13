@@ -42,7 +42,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 3d440bd6c67653f33f1c89ff9d6d450685ef9bfc  # frozen: v0.1.5
+    rev: 3d440bd6c67653f33f1c89ff9d6d450685ef9bfc # frozen: v0.1.5
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -50,7 +50,7 @@ repos:
 
   # black - python formatter
   - repo: https://github.com/psf/black
-    rev: 2a1c67e0b2f81df602ec1f6e7aeb030b9709dc7c  # frozen: 23.11.0
+    rev: 2a1c67e0b2f81df602ec1f6e7aeb030b9709dc7c # frozen: 23.11.0
     hooks:
       - id: black
         args: ["--safe"]
@@ -68,7 +68,7 @@ repos:
 
   # prettier - multi formatter
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: ffb6a759a979008c0e6dff86e39f4745a2d9eac4  # frozen: v3.1.0
+    rev: ffb6a759a979008c0e6dff86e39f4745a2d9eac4 # frozen: v3.1.0
     hooks:
       - id: prettier
 
@@ -140,7 +140,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 3d440bd6c67653f33f1c89ff9d6d450685ef9bfc  # frozen: v0.1.5
+    rev: 3d440bd6c67653f33f1c89ff9d6d450685ef9bfc # frozen: v0.1.5
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -226,7 +226,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: 8713140e99914c0cb6e07364daedfb140847c3c5  # frozen: v1.33.0
+    rev: 8713140e99914c0cb6e07364daedfb140847c3c5 # frozen: v1.33.0
     hooks:
       - id: yamllint
 
