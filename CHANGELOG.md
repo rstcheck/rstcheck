@@ -22,6 +22,7 @@ NOTE: please use them in this order.
 ### Miscellaneous
 
 - Remove unused pre python 3.8 compatibility code ([#195](https://github.com/rstcheck/rstcheck/pull/195))
+- Added `__main__.py` to enable command-line execution via python -m rstcheck
 
 ## [6.2.0 (2023-09-09)](https://github.com/rstcheck/rstcheck/releases/v6.2.0)
 
