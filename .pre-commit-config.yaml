@@ -42,7 +42,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: fbe77be689d01fea5a7b64d3c495d4d1ed646852 # frozen: v0.1.11
+    rev: 1d42195ebc67a509991eaf68c2353e0181003a95  # frozen: v0.1.14
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -140,7 +140,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: fbe77be689d01fea5a7b64d3c495d4d1ed646852 # frozen: v0.1.11
+    rev: 1d42195ebc67a509991eaf68c2353e0181003a95  # frozen: v0.1.14
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -209,7 +209,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: 8524909c7a86f78a6b915ffafea220a6f3979ba1 # frozen: v0.11.0
+    rev: 82c791e94c2e2ab2119437d61c722c8e0c20d6c9  # frozen: v0.12.1
     hooks:
       - id: markdownlint-cli2
 
