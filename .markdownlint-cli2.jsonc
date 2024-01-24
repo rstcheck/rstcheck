@@ -4,32 +4,32 @@
     "MD003": "atx", // heading-style
     "MD004": {
       // ul-style
-      "style": "dash"
+      "style": "dash",
     },
     "MD013": {
       // line-length
-      "line_length": 100
+      "line_length": 100,
     },
     "MD014": false, // commands-show-output
     "MD024": {
       // no-duplicate-heading
-      "siblings_only": true
+      "siblings_only": true,
     },
     "MD035": {
       // hr-style
-      "style": "---"
+      "style": "---",
     },
     "MD048": {
       // code-fence-style
-      "style": "backtick"
+      "style": "backtick",
     },
     "MD049": {
       // emphasis-style
-      "style": "underscore"
+      "style": "underscore",
     },
     "MD050": {
       // strong-style
-      "style": "asterisk"
-    }
-  }
+      "style": "asterisk",
+    },
+  },
 }
