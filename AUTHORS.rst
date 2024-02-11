@@ -31,6 +31,7 @@ Additional contributions by (sorted by name)
 - Qeole <qeole@outlook.com>
 - Sameer Singh <sam7thegreat@gmail.com>
 - Santos Gallegos <santos_g@outlook.com>
+- Steve Piercy <web@stevepiercy.com>
 - Svintsov Dmitry <root@uralbash.ru>
 - Theodore Ni <3806110+tjni@users.noreply.github.com>
 - Timo Röhling <timo@gaussglocke.de>
