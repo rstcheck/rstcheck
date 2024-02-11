@@ -4,7 +4,7 @@ Welcome to rstcheck's documentation!
 .. include:: _badges.rst
 
 
-This a the documentation of ``rstcheck``. A CLI application for checking
+This is the documentation of ``rstcheck``, a CLI application for checking
 the syntax of reStructuredText and code blocks nested within it.
 
 
