@@ -3,6 +3,7 @@
 ``_cli.cli`` is not really good testable with unit tests.
 Therfore tests are in the ``integration_tests`` directory.
 """
+
 from __future__ import annotations
 
 import pytest

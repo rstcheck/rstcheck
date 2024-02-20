@@ -1,4 +1,5 @@
 """Script for preparing the repo for a new release."""
+
 from __future__ import annotations
 
 import argparse
