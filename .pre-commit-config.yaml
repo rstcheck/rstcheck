@@ -42,7 +42,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: cc575a3e5800b42ffbb5182b53d87203b2c4fc26 # frozen: v0.2.2
+    rev: c22645f6b45188216151a407c040a9eec1795ab0  # frozen: v0.3.3
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -50,7 +50,7 @@ repos:
 
   # black - python formatter
   - repo: https://github.com/psf/black
-    rev: 6fdf8a4af28071ed1d079c01122b34c5d587207a # frozen: 24.2.0
+    rev: 552baf822992936134cbd31a38f69c8cfe7c0f05  # frozen: 24.3.0
     hooks:
       - id: black
         args: ["--safe"]
@@ -142,7 +142,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: cc575a3e5800b42ffbb5182b53d87203b2c4fc26 # frozen: v0.2.2
+    rev: c22645f6b45188216151a407c040a9eec1795ab0  # frozen: v0.3.3
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -188,7 +188,7 @@ repos:
 
   # shellscript (via PyPI package)
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: 4de1378e4cd853bfc2b111b05fff35e2dbf809a3 # frozen: v0.9.0.6
+    rev: a23f6b85d0fdd5bb9d564e2579e678033debbdff  # frozen: v0.10.0.1
     hooks:
       - id: shellcheck
 
