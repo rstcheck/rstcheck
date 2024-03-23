@@ -154,7 +154,7 @@ cli.__doc__ = f"""CLI of rstcheck.
 
 Enabled features: {enabled_features}
 
-Pass one ore more rst FILES to check.
+Pass one or more RST FILES to check.
 Can be files or directories if --recursive is passed too.
 Pass "-" if you want to read from stdin.
 """
