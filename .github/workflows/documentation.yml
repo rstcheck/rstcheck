@@ -48,22 +48,10 @@ jobs:
       - name: Install tox via pipx
         run: pipx install tox
 
-      - name: Set up Homebrew
-        if: runner.os == 'macOS'
-        uses: Homebrew/actions/setup-homebrew@master
-
-      - name: Install enchant on macOS
-        if: runner.os == 'macOS'
-        run: |
-          brew update
-          brew install enchant
-
-      - name: Run tests with tox except linkcheck
+      - name: Run tests with tox except linkcheck and spelling
         if: runner.os != 'Linux'
         run: tox -m docs
-        env:
-          TOX_SKIP_ENV: docs-test-linkcheck
 
       - name: Run all tests with tox
         if: runner.os == 'Linux'
-        run: tox -m docs
+        run: tox -m docs-full
