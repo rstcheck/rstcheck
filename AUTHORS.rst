@@ -17,6 +17,7 @@ Additional contributions by (sorted by name)
 - Dmitry <root@uralbash.ru>
 - Doyle Rowland <doyle.rowland@reliaqual.com>
 - Eugene Lorman <eugene.lorman@gmail.com>
+- Fabian Affolter <mail@fabian-affolter.ch>
 - Jochen Sprickerhof <git@jochen.sprickerhof.de>
 - John Vandenberg <jayvdb@gmail.com>
 - Kagami Sascha Rosylight <saschanaz@outlook.com>
