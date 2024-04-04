@@ -22,8 +22,6 @@ dynamic = ["version"]
 
 dependencies = [
   "rstcheck-core >=1.1",
-  "importlib-metadata >=1.6; python_version<='3.8'",
-  "typing-extensions >=3.7.4; python_version<='3.8'",
   "typer[all]  >=0.4.1",
 ]
 
