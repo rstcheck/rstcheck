@@ -42,7 +42,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 1dc9eb131c2ea4816c708e4d85820d2cc8542683  # frozen: v0.5.0
+    rev: 1dc9eb131c2ea4816c708e4d85820d2cc8542683 # frozen: v0.5.0
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -57,7 +57,7 @@ repos:
 
   # blacken-docs - black for python code in docs (rst/md/tex)
   - repo: https://github.com/asottile/blacken-docs
-    rev: 4c97c4a0d921007af6fefae92d8447cfbf63720b  # frozen: 1.18.0
+    rev: 4c97c4a0d921007af6fefae92d8447cfbf63720b # frozen: 1.18.0
     hooks:
       - id: blacken-docs
         exclude: testing|tests
@@ -142,7 +142,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 1dc9eb131c2ea4816c708e4d85820d2cc8542683  # frozen: v0.5.0
+    rev: 1dc9eb131c2ea4816c708e4d85820d2cc8542683 # frozen: v0.5.0
     hooks:
       - id: ruff
         name: ruff (lint)
