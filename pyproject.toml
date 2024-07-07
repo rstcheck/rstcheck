@@ -172,7 +172,6 @@ select = [
   "TCH",   # flake8-type-checking
   "TD",    # flake8-todos
   "TID",   # flake8-tidy-imports
-  "TRIO",  # flake8-trio
   "TRY",   # tryceratops
   "UP",    # pyupgrade
   "W",     # pycodestyle
