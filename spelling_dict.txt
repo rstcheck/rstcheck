@@ -1,3 +1,5 @@
+SkipNode
+ValidationError
 api
 apidoc
 arg
@@ -100,7 +102,6 @@ rtd
 sdist
 setter
 setuptools
-SkipNode
 sourcecode
 sphinxcontrib
 st
@@ -127,7 +128,6 @@ travis
 txt
 typer
 unparsable
-ValidationError
 validator
 venv
 virtualenv
