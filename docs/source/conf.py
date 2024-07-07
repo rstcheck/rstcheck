@@ -70,9 +70,13 @@ rst_epilog = """
 tls_cacerts = os.getenv("SSL_CERT_FILE")
 
 
-#: -- M2R2 -----------------------------------------------------------------------------
-extensions.append("m2r2")
-source_suffix = [".rst", ".md"]
+#: -- MyST -----------------------------------------------------------------------------
+extensions.append("myst_parser")
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".txt": "markdown",
+    ".md": "markdown",
+}
 
 
 #: -- LINKCHECK CONFIG -----------------------------------------------------------------
