@@ -70,9 +70,13 @@ rst_epilog = """
 tls_cacerts = os.getenv("SSL_CERT_FILE")
 
 
-#: -- M2R2 -----------------------------------------------------------------------------
-extensions.append("m2r2")
-source_suffix = [".rst", ".md"]
+#: -- MyST -----------------------------------------------------------------------------
+extensions.append("myst_parser")
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".txt": "markdown",
+    ".md": "markdown",
+}
 
 
 #: -- LINKCHECK CONFIG -----------------------------------------------------------------
@@ -119,7 +123,7 @@ extensions.append("sphinx_click.ext")
 
 
 #: -- SPELLING -------------------------------------------------------------------------
-spelling_word_list_filename = "spelling_dict.txt"
+spelling_word_list_filename = "../../spelling_dict.txt"
 spelling_show_suggestions = True
 
 if find_spec("sphinxcontrib.spelling") is not None and os.environ.get("SPHINX_SPELLING") == "true":

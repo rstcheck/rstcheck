@@ -28,6 +28,7 @@ dotenv
 env
 envs
 envvar
+errorless
 exe
 executable
 executables
@@ -48,6 +49,7 @@ kwarg
 kwargs
 linter
 linters
+loglevel
 makefile
 monkypatch
 monkypatched
@@ -59,9 +61,11 @@ nox
 nox's
 noxfile
 num
+ok
 opensource
 os
 parametrize
+parsable
 pragma
 pre
 py
@@ -79,8 +83,11 @@ rstcheck
 rtd
 sdist
 setter
+setuptools
 st
+stderr
 stdin
+stdout
 subdependency
 submodule
 submodules
@@ -95,6 +102,7 @@ tomli
 tox
 travis
 txt
+typer
 venv
 virtualenv
 whitespace

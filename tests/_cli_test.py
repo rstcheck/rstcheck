@@ -1,7 +1,7 @@
 """Tests for ``_cli`` module.
 
 ``_cli.cli`` is not really good testable with unit tests.
-Therfore tests are in the ``integration_tests`` directory.
+Therefore tests are in the ``integration_tests`` directory.
 """
 
 from __future__ import annotations
@@ -20,5 +20,5 @@ def test_setup_logger_errors_on_invalid_levels(level: str) -> None:
 
 @pytest.mark.parametrize("level", ["debug", "InFO", "WARNING", "ErRor", "critical"])
 def test_setup_logger_valid_levels(level: str) -> None:
-    """Test no execption is raised on valid levels."""
+    """Test no exception is raised on valid levels."""
     _cli.setup_logger(level)  # act

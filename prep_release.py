@@ -50,7 +50,7 @@ def bump_version(current_version: str, release_type: str = "patch") -> str:
         print("Given `RELEASE TYPE` is invalid.")  # noqa: T201
         sys.exit(1)
 
-    return version
+    return f"v{version}"
 
 
 def update_changelog(new_version: str, last_version: str, *, first_release: bool) -> None:
@@ -71,14 +71,14 @@ def update_changelog(new_version: str, last_version: str, *, first_release: bool
 
     if release_line:
         today = datetime.datetime.now(tz=datetime.UTC).date().isoformat()
-        compare = f"{'' if first_release else 'v'}{last_version}...v{new_version}"
+        compare = f"{'' if first_release else ''}{last_version}...v{new_version}"
         changelog_lines[release_line] = (
             "## Unreleased\n"
             "\n"
-            f"[diff v{new_version}...main]"
-            f"({REPO_URL}/compare/v{new_version}...main)\n"
+            f"[diff {new_version}...main]"
+            f"({REPO_URL}/compare/{new_version}...main)\n"
             "\n"
-            f"## [{new_version} ({today})]({REPO_URL}/releases/v{new_version})\n"
+            f"## [{new_version} ({today})]({REPO_URL}/releases/{new_version})\n"
             "\n"
             f"[diff {compare}]({REPO_URL}/compare/{compare})"
         )
@@ -93,20 +93,21 @@ def update_changelog(new_version: str, last_version: str, *, first_release: bool
 
 def commit_and_tag(version: str) -> None:
     """Git commit and tag the new release."""
-    subprocess.run(
-        [  # noqa: S603,S607
+    subprocess.run(  # noqa: S603
+        [  # noqa: S607
             "git",
             "commit",
             "--no-verify",
-            f'--message="release v{version} [skip ci]"',
+            f'--message="release {version} [skip ci]"',
             "--include",
             "pyproject.toml",
             "CHANGELOG.md",
         ],
         check=True,
     )
-    subprocess.run(
-        ["git", "tag", "-am", f"'v{version}'", f"v{version}"], check=True  # noqa: S603,S607
+    subprocess.run(  # noqa: S603
+        ["git", "tag", "-am", f"'{version}'", version],  # noqa: S607
+        check=True,
     )
 
 
@@ -139,15 +140,15 @@ def _main() -> int:
     if args.first_release:
         release_version = "v1.0.0"
         #: Get first commit
-        current_version = subprocess.run(
-            ["git", "rev-list", "--max-parents=0", "HEAD"],  # noqa: S603,S607
+        current_version = subprocess.run(  # noqa: S603
+            ["git", "rev-list", "--max-parents=0", "HEAD"],  # noqa: S607
             check=True,
             capture_output=True,
         ).stdout.decode()[0:7]
     else:
         git_tags = (
-            subprocess.run(
-                ["git", "tag", "--list"],  # noqa: S603,S607
+            subprocess.run(  # noqa: S603
+                ["git", "tag", "--list"],  # noqa: S607
                 check=True,
                 capture_output=True,
                 cwd=Path(__file__).parent,
