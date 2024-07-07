@@ -22,6 +22,8 @@ NOTE: please use them in this order.
 ### Miscellaneous
 
 - Bump min. version of typer and fix dependency group name ([#223](https://github.com/rstcheck/rstcheck/issues/223))
+- Update configs for dev tooling ([#225](https://github.com/rstcheck/rstcheck/pull/225))
+- Bump default python version to 3.12 ([#225](https://github.com/rstcheck/rstcheck/pull/225))
 
 ## [6.2.1 (2024-03-23)](https://github.com/rstcheck/rstcheck/releases/v6.2.1)
 
