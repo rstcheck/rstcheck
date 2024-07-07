@@ -19,6 +19,10 @@ NOTE: please use them in this order.
 
 [diff v6.2.1...main](https://github.com/rstcheck/rstcheck/compare/v6.2.1...main)
 
+### Miscellaneous
+
+- Bump min. version of typer and fix dependency group name ([#223](https://github.com/rstcheck/rstcheck/issues/223))
+
 ## [6.2.1 (2024-03-23)](https://github.com/rstcheck/rstcheck/releases/v6.2.1)
 
 [diff vv6.2.0...v6.2.1](https://github.com/rstcheck/rstcheck/compare/vv6.2.0...v6.2.1)
