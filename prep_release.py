@@ -94,7 +94,7 @@ def update_changelog(new_version: str, last_version: str, *, first_release: bool
 def commit_and_tag(version: str) -> None:
     """Git commit and tag the new release."""
     subprocess.run(
-        [  # noqa: S603,S607
+        [  # noqa: S607
             "git",
             "commit",
             "--no-verify",
@@ -106,7 +106,8 @@ def commit_and_tag(version: str) -> None:
         check=True,
     )
     subprocess.run(
-        ["git", "tag", "-am", f"'v{version}'", f"v{version}"], check=True  # noqa: S603,S607
+        ["git", "tag", "-am", f"'v{version}'", f"v{version}"],
+        check=True,  # noqa: S607
     )
 
 
@@ -140,14 +141,14 @@ def _main() -> int:
         release_version = "v1.0.0"
         #: Get first commit
         current_version = subprocess.run(
-            ["git", "rev-list", "--max-parents=0", "HEAD"],  # noqa: S603,S607
+            ["git", "rev-list", "--max-parents=0", "HEAD"],  # noqa: S607
             check=True,
             capture_output=True,
         ).stdout.decode()[0:7]
     else:
         git_tags = (
             subprocess.run(
-                ["git", "tag", "--list"],  # noqa: S603,S607
+                ["git", "tag", "--list"],  # noqa: S607
                 check=True,
                 capture_output=True,
                 cwd=Path(__file__).parent,

@@ -178,7 +178,7 @@ repos:
 
   # pylint - python linter
   - repo: https://github.com/PyCQA/pylint/
-    rev: 769ffd20bbf321a6cf23f5e7221a0b8221f51482  # frozen: v3.2.2
+    rev: 769ffd20bbf321a6cf23f5e7221a0b8221f51482 # frozen: v3.2.2
     hooks:
       - id: pylint
         name: spell-check (pylint+pyenchant)
@@ -233,7 +233,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: 81e9f98ffd059efe8aa9c1b1a42e5cce61b640c6  # frozen: v1.35.1
+    rev: 81e9f98ffd059efe8aa9c1b1a42e5cce61b640c6 # frozen: v1.35.1
     hooks:
       - id: yamllint
 
