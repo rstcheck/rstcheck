@@ -53,7 +53,7 @@ def setup_logger(loglevel: str) -> None:
     """Set up logging.
 
     :param loglevel: Level to log at.
-    :raises TypeError: On invalid logging leveles.
+    :raises TypeError: On invalid logging levels.
     """
     numeric_level = getattr(logging, loglevel.upper(), None)
     if not isinstance(numeric_level, int):
