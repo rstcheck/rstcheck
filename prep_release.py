@@ -71,14 +71,14 @@ def update_changelog(new_version: str, last_version: str, *, first_release: bool
 
     if release_line:
         today = datetime.datetime.now(tz=datetime.UTC).date().isoformat()
-        compare = f"{'' if first_release else 'v'}{last_version}...v{new_version}"
+        compare = f"{'' if first_release else ''}{last_version}...v{new_version}"
         changelog_lines[release_line] = (
             "## Unreleased\n"
             "\n"
             f"[diff v{new_version}...main]"
             f"({REPO_URL}/compare/v{new_version}...main)\n"
             "\n"
-            f"## [{new_version} ({today})]({REPO_URL}/releases/v{new_version})\n"
+            f"## [{new_version} ({today})]({REPO_URL}/releases/{new_version})\n"
             "\n"
             f"[diff {compare}]({REPO_URL}/compare/{compare})"
         )
