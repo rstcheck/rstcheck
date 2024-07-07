@@ -1,0 +1,4 @@
+[tool.pylint]
+  [tool.pylint.spelling]
+  spelling-dict = "en_US"
+  spelling-private-dict-file = "docs/source/spelling_dict.txt"

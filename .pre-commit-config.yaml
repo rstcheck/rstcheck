@@ -29,6 +29,11 @@ repos:
     hooks:
       - id: check-case-conflict
       - id: check-shebang-scripts-are-executable
+        exclude: '^.*\.rs$'
+        stages: [commit]
+      - id: check-symlinks
+      - id: destroyed-symlinks
+      - id: forbid-new-submodules
 
   # ####################################################################################
   #
@@ -47,19 +52,15 @@ repos:
       - id: ruff
         name: ruff (fix)
         args: ["--fix-only", "--exit-non-zero-on-fix", "--config=pyproject.toml"]
-
-  # black - python formatter
-  - repo: https://github.com/psf/black
-    rev: 3702ba224ecffbcec30af640c149f231d90aebdb # frozen: 24.4.2
-    hooks:
-      - id: black
-        args: ["--safe"]
+      - id: ruff-format
+        name: ruff (format)
 
   # blacken-docs - black for python code in docs (rst/md/tex)
   - repo: https://github.com/asottile/blacken-docs
     rev: 4c97c4a0d921007af6fefae92d8447cfbf63720b # frozen: 1.18.0
     hooks:
       - id: blacken-docs
+        args: ["--line-length=100", "--target-version=py312"]
         exclude: testing|tests
 
   # ----------------------------------------------
@@ -126,7 +127,7 @@ repos:
         name: "Find TODO:|FIXME:|BUG: comments"
         description: "Check for TODO:|FIXME:|BUG: comments in all files"
         language: pygrep
-        entry: '(^|//!?|#|<!--|;|/\*(\*|!)?|\.\.)\s*(TODO:|FIXME:|BUG:)(?!#i#)'
+        entry: '(^|//!?|#|<!--|;|/\*(\*|!)?|\.\.)\s*(TODO:|FIXME:)(?!\s#i#)'
         exclude: TODO
 
   # code unspecific out-of-the-box hooks
@@ -147,6 +148,9 @@ repos:
       - id: ruff
         name: ruff (lint)
         args: ["--config=pyproject.toml"]
+      - id: ruff-format
+        name: ruff (format-check)
+        args: ["--diff"]
 
   # python specific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -156,16 +160,6 @@ repos:
       - id: fix-encoding-pragma
         args: ["--remove"]
       - id: name-tests-test
-
-  # several python code regex hooks
-  - repo: https://github.com/pre-commit/pygrep-hooks
-    rev: 3a6eb0fadf60b3cccfd80bad9dbb6fae7e47b316 # frozen: v1.10.0
-    hooks:
-      - id: python-check-blanket-noqa
-      - id: python-check-blanket-type-ignore
-      - id: python-check-mock-methods
-      - id: python-no-eval
-      - id: python-no-log-warn
 
   # Lint hooks managed via tox envs b/c they need the pkg installed
   - repo: local
@@ -181,6 +175,17 @@ repos:
         types: [python]
         pass_filenames: false
         require_serial: true
+
+  # pylint - python linter
+  - repo: https://github.com/PyCQA/pylint/
+    rev: 769ffd20bbf321a6cf23f5e7221a0b8221f51482  # frozen: v3.2.2
+    hooks:
+      - id: pylint
+        name: spell-check (pylint+pyenchant)
+        description: >
+          spell-check in docstrings/comments in py-source via pyenchant and pylint
+        additional_dependencies: [pyenchant]
+        args: ["--disable=all", "--enable=spelling", "--rcfile=.pylintrc.spelling.toml"]
 
   # ----------------------------------------------
   # Shell script
@@ -228,7 +233,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: 81e9f98ffd059efe8aa9c1b1a42e5cce61b640c6 # frozen: v1.35.1
+    rev: 81e9f98ffd059efe8aa9c1b1a42e5cce61b640c6  # frozen: v1.35.1
     hooks:
       - id: yamllint
 
