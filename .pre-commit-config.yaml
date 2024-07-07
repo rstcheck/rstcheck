@@ -5,7 +5,7 @@ default_language_version:
   python: python3.12
 
 ci:
-  skip: [mypy]
+  skip: [mypy, pylint]
 
 repos:
   # ----------------------------------------------
