@@ -1,7 +1,9 @@
 api
+apidoc
 arg
 args
 attr
+autoapidoc
 bool
 boolean
 bugfixes
@@ -49,7 +51,9 @@ kwarg
 kwargs
 linter
 linters
+lintersm
 loglevel
+macOS
 makefile
 monkypatch
 monkypatched
@@ -61,6 +65,7 @@ nox
 nox's
 noxfile
 num
+numok
 ok
 opensource
 os
@@ -72,6 +77,7 @@ py
 pydantic
 pyproject
 pytest
+pyyaml
 rc
 rd
 reStructuredText
@@ -84,6 +90,7 @@ rtd
 sdist
 setter
 setuptools
+sphinxcontrib
 st
 stderr
 stdin
@@ -103,7 +110,9 @@ tox
 travis
 txt
 typer
+unparsable
 venv
 virtualenv
 whitespace
 xml
+yaml
