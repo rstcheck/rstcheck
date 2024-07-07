@@ -104,7 +104,7 @@ def cli(  # noqa: PLR0913
     version: t.Optional[bool] = typer.Option(  # noqa: ARG001, UP007
         None, "--version", callback=version_callback, is_eager=True, help=HELP_VERSION
     ),
-) -> t.Never:
+) -> None:
     """CLI of rstcheck."""
     setup_logger(log_level)
     logger = logging.getLogger(__name__)
