@@ -92,6 +92,7 @@ submodules
 temp
 testcleanup
 testsetup
+setuptools
 tmp
 toctree
 tokenize
