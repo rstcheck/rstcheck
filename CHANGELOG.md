@@ -19,6 +19,14 @@ NOTE: please use them in this order.
 
 [diff v6.2.3...main](https://github.com/rstcheck/rstcheck/compare/v6.2.3...main)
 
+### Documentation
+
+- Add note on how to disable pretty exception output ([#228](https://github.com/rstcheck/rstcheck/pull/228))
+
+### Miscellaneous
+
+- Add help text to `--version` flag ([#228](https://github.com/rstcheck/rstcheck/pull/228))
+
 ## [v6.2.3 (2024-07-07)](https://github.com/rstcheck/rstcheck/releases/v6.2.3)
 
 [diff v6.2.2...v6.2.3](https://github.com/rstcheck/rstcheck/compare/v6.2.2...v6.2.3)
@@ -27,14 +35,6 @@ NOTE: please use them in this order.
 
 - Fix typer dependency by removing the `[standard]` extra which is only used on typer-slim.
   Typer by default has the extras included.
-
-### Documentation
-
-- Add note on how to disable pretty exception output ([#228](https://github.com/rstcheck/rstcheck/pull/228))
-
-### Miscellaneous
-
-- Add help text to `--version` flag ([#228](https://github.com/rstcheck/rstcheck/pull/228))
 
 ## [v6.2.2 (2024-07-07)](https://github.com/rstcheck/rstcheck/releases/v6.2.2)
 
