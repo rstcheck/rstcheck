@@ -138,9 +138,11 @@ def cli(  # noqa: PLR0913
         exit_code = _runner.print_result()
 
     except FileNotFoundError as exc:
-        if not exc.strerror == "Passed config path not found.":  # pragma: no cover
-            raise
-        logger.critical("Passed config path was not found: '%(path)s'", {"path": exc.filename})
+        if exc.strerror == "Passed config path not found.":  # pragma: no cover
+            logger.critical("Passed config path was not found: '%(path)s'", {"path": exc.filename})
+            raise typer.Exit(code=1) from None
+
+        raise
 
     raise typer.Exit(code=exit_code)
 
