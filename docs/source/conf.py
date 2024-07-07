@@ -119,7 +119,7 @@ extensions.append("sphinx_click.ext")
 
 
 #: -- SPELLING -------------------------------------------------------------------------
-spelling_word_list_filename = "spelling_dict.txt"
+spelling_word_list_filename = "../../spelling_dict.txt"
 spelling_show_suggestions = True
 
 if find_spec("sphinxcontrib.spelling") is not None and os.environ.get("SPHINX_SPELLING") == "true":
