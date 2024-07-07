@@ -87,6 +87,7 @@ setuptools
 st
 stderr
 stdin
+stdout
 subdependency
 submodule
 submodules
