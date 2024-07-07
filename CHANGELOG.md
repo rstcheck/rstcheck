@@ -27,7 +27,7 @@ NOTE: please use them in this order.
 
 ## [6.2.1 (2024-03-23)](https://github.com/rstcheck/rstcheck/releases/v6.2.1)
 
-[diff vv6.2.0...v6.2.1](https://github.com/rstcheck/rstcheck/compare/vv6.2.0...v6.2.1)
+[diff v6.2.0...v6.2.1](https://github.com/rstcheck/rstcheck/compare/v6.2.0...v6.2.1)
 
 ### Miscellaneous
 
