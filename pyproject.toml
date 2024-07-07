@@ -22,7 +22,7 @@ dynamic = ["version"]
 
 dependencies = [
   "rstcheck-core >=1.1",
-  "typer[all]  >=0.4.1",
+  "typer[standard]  >=0.12.0",
 ]
 
 [project.scripts]
