@@ -25,7 +25,7 @@ NOTE: please use them in this order.
 - Update configs for dev tooling ([#225](https://github.com/rstcheck/rstcheck/pull/225))
 - Bump default python version to 3.12 ([#225](https://github.com/rstcheck/rstcheck/pull/225))
 
-## [6.2.1 (2024-03-23)](https://github.com/rstcheck/rstcheck/releases/v6.2.1)
+## [v6.2.1 (2024-03-23)](https://github.com/rstcheck/rstcheck/releases/v6.2.1)
 
 [diff v6.2.0...v6.2.1](https://github.com/rstcheck/rstcheck/compare/v6.2.0...v6.2.1)
 
@@ -35,7 +35,7 @@ NOTE: please use them in this order.
 - Drop support for sphinx v4 ([#207](https://github.com/rstcheck/rstcheck/pull/207))
 - Added `__main__.py` to enable command-line execution via python -m rstcheck ([#206](https://github.com/rstcheck/rstcheck/pull/206))
 
-## [6.2.0 (2023-09-09)](https://github.com/rstcheck/rstcheck/releases/v6.2.0)
+## [v6.2.0 (2023-09-09)](https://github.com/rstcheck/rstcheck/releases/v6.2.0)
 
 [diff v6.1.2...v6.2.0](https://github.com/rstcheck/rstcheck/compare/v6.1.2...v6.2.0)
 
@@ -53,7 +53,7 @@ NOTE: please use them in this order.
 - Change dev tooling ([#188](https://github.com/rstcheck/rstcheck/pull/188))
 - Add python 3.12 to CI ([#188](https://github.com/rstcheck/rstcheck/pull/188))
 
-## [6.1.2 (2023-03-12)](https://github.com/rstcheck/rstcheck/releases/v6.1.2)
+## [v6.1.2 (2023-03-12)](https://github.com/rstcheck/rstcheck/releases/v6.1.2)
 
 [diff v6.1.1...v6.1.2](https://github.com/rstcheck/rstcheck/compare/v6.1.1...v6.1.2)
 
@@ -63,7 +63,7 @@ NOTE: please use them in this order.
 - Set tomli extra dependency to python < 3.11 like rstcheck-core ([#162](https://github.com/rstcheck/rstcheck/issues/162))
 - Drop python 3.7 ([#177](https://github.com/rstcheck/rstcheck/pull/177))
 
-## [6.1.1 (2022-11-12)](https://github.com/rstcheck/rstcheck/releases/v6.1.1)
+## [v6.1.1 (2022-11-12)](https://github.com/rstcheck/rstcheck/releases/v6.1.1)
 
 [diff v6.1.0...v6.1.1](https://github.com/rstcheck/rstcheck/compare/v6.1.0...v6.1.1)
 
@@ -77,7 +77,7 @@ NOTE: please use them in this order.
 - Remove unused dependencies (docutils & its stubs, pydantic) ([#149](https://github.com/rstcheck/rstcheck/pull/149))
 - Add python 3.11 to CI
 
-## [6.1.0 (2022-08-14)](https://github.com/rstcheck/rstcheck/releases/v6.1.0)
+## [v6.1.0 (2022-08-14)](https://github.com/rstcheck/rstcheck/releases/v6.1.0)
 
 [diff v6.0.0.post1...v6.1.0](https://github.com/rstcheck/rstcheck/compare/v6.0.0.post1...v6.1.0)
 
@@ -95,7 +95,7 @@ NOTE: please use them in this order.
 - Update development tooling dependencies
 - Bump lower version constraint on typer from 0.3.2 to 0.4.1 ([#138](https://github.com/rstcheck/rstcheck/issues/138))
 
-## [6.0.0.post1 (2022-06-05)](https://github.com/rstcheck/rstcheck/releases/v6.0.0.post1)
+## [v6.0.0.post1 (2022-06-05)](https://github.com/rstcheck/rstcheck/releases/v6.0.0.post1)
 
 [diff v6.0.0...v6.0.0.post1](https://github.com/rstcheck/rstcheck/compare/v6.0.0...v6.0.0.post1)
 
@@ -104,7 +104,7 @@ NOTE: please use them in this order.
 - Move release date into version headline link
 - Don't include failing test example in sdist ([#128](https://github.com/rstcheck/rstcheck/issues/128))
 
-## [6.0.0 (2022-06-04)](https://github.com/rstcheck/rstcheck/releases/v6.0.0)
+## [v6.0.0 (2022-06-04)](https://github.com/rstcheck/rstcheck/releases/v6.0.0)
 
 [diff v6.0.0rc3...v6.0.0](https://github.com/rstcheck/rstcheck/compare/v6.0.0rc3...v6.0.0)
 

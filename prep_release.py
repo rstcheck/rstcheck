@@ -50,7 +50,7 @@ def bump_version(current_version: str, release_type: str = "patch") -> str:
         print("Given `RELEASE TYPE` is invalid.")  # noqa: T201
         sys.exit(1)
 
-    return version
+    return f"v{version}"
 
 
 def update_changelog(new_version: str, last_version: str, *, first_release: bool) -> None:
@@ -75,8 +75,8 @@ def update_changelog(new_version: str, last_version: str, *, first_release: bool
         changelog_lines[release_line] = (
             "## Unreleased\n"
             "\n"
-            f"[diff v{new_version}...main]"
-            f"({REPO_URL}/compare/v{new_version}...main)\n"
+            f"[diff {new_version}...main]"
+            f"({REPO_URL}/compare/{new_version}...main)\n"
             "\n"
             f"## [{new_version} ({today})]({REPO_URL}/releases/{new_version})\n"
             "\n"
@@ -98,7 +98,7 @@ def commit_and_tag(version: str) -> None:
             "git",
             "commit",
             "--no-verify",
-            f'--message="release v{version} [skip ci]"',
+            f'--message="release {version} [skip ci]"',
             "--include",
             "pyproject.toml",
             "CHANGELOG.md",
@@ -106,7 +106,7 @@ def commit_and_tag(version: str) -> None:
         check=True,
     )
     subprocess.run(  # noqa: S603
-        ["git", "tag", "-am", f"'v{version}'", f"v{version}"],  # noqa: S607
+        ["git", "tag", "-am", f"'{version}'", version],  # noqa: S607
         check=True,
     )
 
