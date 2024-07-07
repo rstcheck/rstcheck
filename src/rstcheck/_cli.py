@@ -47,6 +47,7 @@ Can be set in config file.
 HELP_IGNORE_MESSAGES = """A regular expression to match linting issue messages against to ignore.
 Can be set in config file.
 """
+HELP_VERSION = "Print versions and exit."
 
 
 def setup_logger(loglevel: str) -> None:
@@ -101,9 +102,9 @@ def cli(  # noqa: PLR0913
         None, metavar="REGEX", help=HELP_IGNORE_MESSAGES
     ),
     version: t.Optional[bool] = typer.Option(  # noqa: ARG001, UP007
-        None, "--version", callback=version_callback, is_eager=True
+        None, "--version", callback=version_callback, is_eager=True, help=HELP_VERSION
     ),
-) -> t.Never:
+) -> None:
     """CLI of rstcheck."""
     setup_logger(log_level)
     logger = logging.getLogger(__name__)
@@ -137,9 +138,11 @@ def cli(  # noqa: PLR0913
         exit_code = _runner.print_result()
 
     except FileNotFoundError as exc:
-        if not exc.strerror == "Passed config path not found.":  # pragma: no cover
-            raise
-        logger.critical("Passed config path was not found: '%(path)s'", {"path": exc.filename})
+        if exc.strerror == "Passed config path not found.":  # pragma: no cover
+            logger.critical("Passed config path was not found: '%(path)s'", {"path": exc.filename})
+            raise typer.Exit(code=1) from None
+
+        raise
 
     raise typer.Exit(code=exit_code)
 
