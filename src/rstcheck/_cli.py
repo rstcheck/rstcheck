@@ -47,6 +47,7 @@ Can be set in config file.
 HELP_IGNORE_MESSAGES = """A regular expression to match linting issue messages against to ignore.
 Can be set in config file.
 """
+HELP_VERSION = "Print versions and exit."
 
 
 def setup_logger(loglevel: str) -> None:
@@ -101,7 +102,7 @@ def cli(  # noqa: PLR0913
         None, metavar="REGEX", help=HELP_IGNORE_MESSAGES
     ),
     version: t.Optional[bool] = typer.Option(  # noqa: ARG001, UP007
-        None, "--version", callback=version_callback, is_eager=True
+        None, "--version", callback=version_callback, is_eager=True, help=HELP_VERSION
     ),
 ) -> t.Never:
     """CLI of rstcheck."""
