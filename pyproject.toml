@@ -66,7 +66,7 @@ write_to = "src/rstcheck/__version__.py"
 
 # -- MYPY CONFIG ----------------------------------------------------------------------
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 follow_imports = "silent"
 disallow_any_generics = true
 disallow_subclassing_any = true
