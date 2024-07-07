@@ -85,7 +85,7 @@ def cli(  # noqa: PLR0913
     report_level: t.Optional[str] = typer.Option(  # noqa: UP007
         None, metavar="LEVEL", help=HELP_REPORT_LEVEL
     ),
-    # TODO:#i# use `t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]` when supported
+    # TODO: #i# use `t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]` when supported
     log_level: str = typer.Option("WARNING", metavar="LEVEL", help=HELP_LOG_LEVEL),
     ignore_directives: t.Optional[str] = typer.Option(  # noqa: UP007
         None, help=HELP_IGNORE_DIRECTIVES

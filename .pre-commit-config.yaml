@@ -121,11 +121,11 @@ repos:
 
   - repo: local
     hooks:
-      # Find TODO:|FIXME:|BUG: comments in all files
+      # Find TODO:|FIXME: comments in all files
       # Inline skip: `#i#` directly after the colon after the tag-word
       - id: find-todos
-        name: "Find TODO:|FIXME:|BUG: comments"
-        description: "Check for TODO:|FIXME:|BUG: comments in all files"
+        name: "Find TODO:|FIXME: comments"
+        description: "Check for TODO:|FIXME: comments in all files"
         language: pygrep
         entry: '(^|//!?|#|<!--|;|/\*(\*|!)?|\.\.)\s*(TODO:|FIXME:)(?!\s#i#)'
         exclude: TODO
