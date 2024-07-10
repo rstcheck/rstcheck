@@ -49,7 +49,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 1dc9eb131c2ea4816c708e4d85820d2cc8542683 # frozen: v0.5.0
+    rev: f6793c73d53e659efecf3b3c38d122fb6a2a969f # frozen: v0.5.1
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -145,7 +145,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 1dc9eb131c2ea4816c708e4d85820d2cc8542683 # frozen: v0.5.0
+    rev: f6793c73d53e659efecf3b3c38d122fb6a2a969f # frozen: v0.5.1
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -180,7 +180,7 @@ repos:
 
   # pylint - python linter
   - repo: https://github.com/PyCQA/pylint/
-    rev: 769ffd20bbf321a6cf23f5e7221a0b8221f51482 # frozen: v3.2.2
+    rev: ae730ac7721d2cb206c153f680605b83d66fbc84 # frozen: v3.2.5
     hooks:
       - id: pylint
         name: spell-check (pylint+pyenchant)
@@ -205,7 +205,7 @@ repos:
 
   # rstcheck - rst file checker
   - repo: https://github.com/rstcheck/rstcheck
-    rev: 445861c31d8134562e723d77115721038de2e687 # frozen: v6.2.0
+    rev: f30c4d170a36ea3812bceb5f33004afc213bd797 # frozen: v6.2.4
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
