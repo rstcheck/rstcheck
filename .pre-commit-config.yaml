@@ -49,7 +49,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: f1ebc5730d98440041cc43e4d69829ad598ae1e7  # frozen: v0.6.3
+    rev: f1ebc5730d98440041cc43e4d69829ad598ae1e7 # frozen: v0.6.3
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -145,7 +145,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: f1ebc5730d98440041cc43e4d69829ad598ae1e7  # frozen: v0.6.3
+    rev: f1ebc5730d98440041cc43e4d69829ad598ae1e7 # frozen: v0.6.3
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -180,7 +180,7 @@ repos:
 
   # pylint - python linter
   - repo: https://github.com/PyCQA/pylint/
-    rev: a98215b8c6a6203dd56366bcfe1cd946fb41282a  # frozen: v3.2.7
+    rev: a98215b8c6a6203dd56366bcfe1cd946fb41282a # frozen: v3.2.7
     hooks:
       - id: pylint
         name: spell-check (pylint+pyenchant)
