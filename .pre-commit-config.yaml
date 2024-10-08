@@ -1,6 +1,6 @@
 ---
 minimum_pre_commit_version: "2.17"
-default_stages: [commit]
+default_stages: [Nonepre-commitNone]
 default_language_version:
   python: python3.12
 
@@ -15,7 +15,7 @@ repos:
   - repo: meta
     hooks:
       - id: identity
-        stages: [commit, manual]
+        stages: [Nonepre-commitNone, manual]
       - id: check-hooks-apply
         stages: [manual]
       - id: check-useless-excludes
@@ -27,12 +27,12 @@ repos:
 
   # file checking out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: 2c9f875913ee60ca25ce70243dc24d5b6415598c # frozen: v4.6.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # frozen: v5.0.0
     hooks:
       - id: check-case-conflict
       - id: check-shebang-scripts-are-executable
         exclude: '^.*\.rs$'
-        stages: [commit]
+        stages: [Nonepre-commitNone]
       - id: check-symlinks
       - id: destroyed-symlinks
       - id: forbid-new-submodules
@@ -49,7 +49,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 79f422bd92eb329a21b6f3540010c015f61e484e # frozen: v0.6.5
+    rev: 75b98813cfb7e663870a28c74366a1e99d7bfe79  # frozen: v0.6.9
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -59,7 +59,7 @@ repos:
 
   # blacken-docs - black for python code in docs (rst/md/tex)
   - repo: https://github.com/asottile/blacken-docs
-    rev: 4c97c4a0d921007af6fefae92d8447cfbf63720b # frozen: 1.18.0
+    rev: d4e2940d27621c7f20215459be05703947618b7b  # frozen: 1.19.0
     hooks:
       - id: blacken-docs
         args: ["--line-length=100", "--target-version=py312"]
@@ -104,12 +104,12 @@ repos:
 
   # code unspecific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: 2c9f875913ee60ca25ce70243dc24d5b6415598c # frozen: v4.6.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # frozen: v5.0.0
     hooks:
       - id: end-of-file-fixer
-        stages: [commit]
+        stages: [Nonepre-commitNone]
       - id: trailing-whitespace
-        stages: [commit]
+        stages: [Nonepre-commitNone]
 
   # ####################################################################################
   #
@@ -134,7 +134,7 @@ repos:
 
   # code unspecific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: 2c9f875913ee60ca25ce70243dc24d5b6415598c # frozen: v4.6.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # frozen: v5.0.0
     hooks:
       - id: check-merge-conflict
       - id: detect-private-key
@@ -145,7 +145,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 79f422bd92eb329a21b6f3540010c015f61e484e # frozen: v0.6.5
+    rev: 75b98813cfb7e663870a28c74366a1e99d7bfe79  # frozen: v0.6.9
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -156,7 +156,7 @@ repos:
 
   # python specific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: 2c9f875913ee60ca25ce70243dc24d5b6415598c # frozen: v4.6.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # frozen: v5.0.0
     hooks:
       - id: debug-statements
       - id: fix-encoding-pragma
@@ -180,7 +180,7 @@ repos:
 
   # pylint - python linter
   - repo: https://github.com/PyCQA/pylint/
-    rev: a98215b8c6a6203dd56366bcfe1cd946fb41282a # frozen: v3.2.7
+    rev: 76bce72bc57cc8089e439cc9d22fed5806341ed4  # frozen: v3.3.1
     hooks:
       - id: pylint
         name: spell-check (pylint+pyenchant)
@@ -228,7 +228,7 @@ repos:
 
   # JSON specific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: 2c9f875913ee60ca25ce70243dc24d5b6415598c # frozen: v4.6.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # frozen: v5.0.0
     hooks:
       - id: check-toml
       - id: check-yaml
@@ -244,6 +244,6 @@ repos:
   # ----------------------------------------------
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: d46423ffe14a37a06a0bcb6fe1b8294a27b6c289 # frozen: v3.8.0
+    rev: dbccd57db0e9cf993ea909e929eea97f6e4389ea  # frozen: v4.0.0
     hooks:
       - id: validate_manifest
