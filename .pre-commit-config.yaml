@@ -27,7 +27,7 @@ repos:
 
   # file checking out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # frozen: v5.0.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # frozen: v5.0.0
     hooks:
       - id: check-case-conflict
       - id: check-shebang-scripts-are-executable
@@ -49,7 +49,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 89c421dff2e1026ba12cdb9ebd731f4a83aa8021  # frozen: v0.8.6
+    rev: 89c421dff2e1026ba12cdb9ebd731f4a83aa8021 # frozen: v0.8.6
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -59,7 +59,7 @@ repos:
 
   # blacken-docs - black for python code in docs (rst/md/tex)
   - repo: https://github.com/asottile/blacken-docs
-    rev: 78a9dcbecf4f755f65d1f3dec556bc249d723600  # frozen: 1.19.1
+    rev: 78a9dcbecf4f755f65d1f3dec556bc249d723600 # frozen: 1.19.1
     hooks:
       - id: blacken-docs
         args: ["--line-length=100", "--target-version=py312"]
@@ -104,7 +104,7 @@ repos:
 
   # code unspecific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # frozen: v5.0.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # frozen: v5.0.0
     hooks:
       - id: end-of-file-fixer
         stages: [pre-commit]
@@ -134,7 +134,7 @@ repos:
 
   # code unspecific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # frozen: v5.0.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # frozen: v5.0.0
     hooks:
       - id: check-merge-conflict
       - id: detect-private-key
@@ -145,7 +145,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 89c421dff2e1026ba12cdb9ebd731f4a83aa8021  # frozen: v0.8.6
+    rev: 89c421dff2e1026ba12cdb9ebd731f4a83aa8021 # frozen: v0.8.6
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -156,7 +156,7 @@ repos:
 
   # python specific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # frozen: v5.0.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # frozen: v5.0.0
     hooks:
       - id: debug-statements
       - id: fix-encoding-pragma
@@ -180,7 +180,7 @@ repos:
 
   # pylint - python linter
   - repo: https://github.com/PyCQA/pylint/
-    rev: c28580be76fe1ec55a6cac41833c0bd68070d2f7  # frozen: v3.3.3
+    rev: c28580be76fe1ec55a6cac41833c0bd68070d2f7 # frozen: v3.3.3
     hooks:
       - id: pylint
         name: spell-check (pylint+pyenchant)
@@ -218,7 +218,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: af14a2e768b741b941255b4c6b875339b4acbb73  # frozen: v0.17.1
+    rev: af14a2e768b741b941255b4c6b875339b4acbb73 # frozen: v0.17.1
     hooks:
       - id: markdownlint-cli2
 
@@ -228,7 +228,7 @@ repos:
 
   # JSON specific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # frozen: v5.0.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # frozen: v5.0.0
     hooks:
       - id: check-toml
       - id: check-yaml
@@ -244,6 +244,6 @@ repos:
   # ----------------------------------------------
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: cc4a52241565440ce200666799eef70626457488  # frozen: v4.0.1
+    rev: cc4a52241565440ce200666799eef70626457488 # frozen: v4.0.1
     hooks:
       - id: validate_manifest
