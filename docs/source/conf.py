@@ -10,8 +10,6 @@ from importlib.metadata import metadata
 from importlib.util import find_spec
 from pathlib import Path
 
-import sphinx_rtd_theme  # type: ignore[import-untyped]
-
 if t.TYPE_CHECKING:
     from sphinx.application import Sphinx
 
