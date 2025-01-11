@@ -169,7 +169,7 @@ select = [
   "SLOT",  # flake8-slots
   # "T10",   # flake8-debugger # pre-commit hook does that
   "T20",   # flake8-print
-  "TCH",   # flake8-type-checking
+  "TC",   # flake8-type-checking
   "TD",    # flake8-todos
   "TID",   # flake8-tidy-imports
   "TRY",   # tryceratops
@@ -179,8 +179,6 @@ select = [
 ]
 ignore = [
   # deactivate because unwanted
-  "ANN101",   # type self
-  "ANN102",   # type cls
   "E501",     # line length
   "G00",      # logging uses format strings
   "PT011",    # Use match for specific exceptions in pytest.raises
