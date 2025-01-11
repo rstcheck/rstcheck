@@ -198,7 +198,6 @@ ignore = [
   "Q003",     # avoidable-escaped-quote
   "COM812",   # missing-trailing-comma
   "COM819",   # prohibited-trailing-comma
-  "PT011", # Use match for specific exceptions in pytest.raises
   "ISC001",   # single-line-implicit-string-concatenation
   "ISC002",   # multi-line-implicit-string-concatenation
 ]
