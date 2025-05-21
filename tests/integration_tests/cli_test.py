@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 import pathlib
 import re
 import sys
@@ -123,7 +124,7 @@ class TestInput:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code != 0
-        assert ERROR_CODE_REGEX.search(result.stdout) is not None
+        assert ERROR_CODE_REGEX.search(result.output) is not None
 
     @staticmethod
     def test_all_bad_examples_recurively(
@@ -136,7 +137,7 @@ class TestInput:
         result = cli_runner.invoke(cli_app, [str(test_dir), "--recursive"])
 
         assert result.exit_code != 0
-        assert ERROR_CODE_REGEX.search(result.stdout) is not None
+        assert ERROR_CODE_REGEX.search(result.output) is not None
 
     @staticmethod
     def test_mix_of_good_and_bad_examples(
@@ -150,7 +151,7 @@ class TestInput:
         result = cli_runner.invoke(cli_app, [str(test_file_good), str(test_file_bad)])
 
         assert result.exit_code != 0
-        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 1
+        assert len(ERROR_CODE_REGEX.findall(result.output)) == 1
 
     @staticmethod
     def test_good_example_with_piping(
@@ -178,7 +179,7 @@ class TestInput:
         result = cli_runner.invoke(cli_app, "-", input=test_file_content)
 
         assert result.exit_code != 0
-        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 1
+        assert len(ERROR_CODE_REGEX.findall(result.output)) == 1
 
     @staticmethod
     def test_piping_is_not_allowed_with_additional_files(cli_app: typer.Typer) -> None:
@@ -186,7 +187,13 @@ class TestInput:
 
         Test cli prints error to stderr.
         """
-        cli_runner_divided_output = typer.testing.CliRunner(mix_stderr=False)
+        # This can be dropped to passing no arguments when typer supports
+        # Click 8.2+.
+        params = inspect.signature(typer.testing.CliRunner).parameters
+        kwargs = {}
+        if params.get("mix_stderr"):
+            kwargs["mix_stderr"] = False
+        cli_runner_divided_output = typer.testing.CliRunner(**kwargs)  # type:ignore[arg-type]
 
         result = cli_runner_divided_output.invoke(cli_app, ["-", "foo"])
 
@@ -251,7 +258,7 @@ class TestIgnoreOptions:
         result = cli_runner.invoke(cli_app, [str(test_file), "--ignore-messages", r"(No match\.$)"])
 
         assert result.exit_code != 0
-        assert "Error! Issues detected." in result.stdout
+        assert "Error! Issues detected." in result.output
 
     @staticmethod
     def test_table_substitution_error_fixed_by_ignore(
@@ -285,7 +292,7 @@ class TestWithoutConfigFile:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code != 0
-        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 6
+        assert len(ERROR_CODE_REGEX.findall(result.output)) == 6
 
     @staticmethod
     def test_no_error_with_set_ini_config_file(
@@ -342,7 +349,7 @@ class TestWithConfigFile:
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
         assert result.exit_code != 0
-        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 6
+        assert len(ERROR_CODE_REGEX.findall(result.output)) == 6
 
     @staticmethod
     def test_file_2_is_bad_without_config(
@@ -355,7 +362,7 @@ class TestWithConfigFile:
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
         assert result.exit_code != 0
-        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 2
+        assert len(ERROR_CODE_REGEX.findall(result.output)) == 2
 
     @staticmethod
     @pytest.mark.xfail(
@@ -385,7 +392,7 @@ class TestWithConfigFile:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code != 0
-        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 1
+        assert len(ERROR_CODE_REGEX.findall(result.output)) == 1
 
     @staticmethod
     def test_bad_file_1_with_explicit_config_no_errors(
@@ -411,7 +418,7 @@ class TestWithConfigFile:
         result = cli_runner.invoke(cli_app, [str(test_file), "--config", str(config_file)])
 
         assert result.exit_code != 0
-        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 1
+        assert len(ERROR_CODE_REGEX.findall(result.output)) == 1
 
 
 class TestWarningOnUnknownSettings:
@@ -470,7 +477,7 @@ class TestCustomDirectivesAndRoles:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code != 0
-        assert len(ERROR_CODE_REGEX.findall(result.stdout)) == 4
+        assert len(ERROR_CODE_REGEX.findall(result.output)) == 4
 
     @staticmethod
     def test_custom_directive_and_role_with_ignore(
@@ -556,10 +563,10 @@ class TestInlineIgnoreComments:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code != 0
-        assert "custom-directive" in result.stdout
-        assert "custom-role" in result.stdout
-        assert "python" in result.stdout
-        assert "unmatched-substitution" in result.stdout
+        assert "custom-directive" in result.output
+        assert "custom-role" in result.output
+        assert "python" in result.output
+        assert "unmatched-substitution" in result.output
 
     @staticmethod
     @pytest.mark.xfail(
@@ -597,7 +604,7 @@ class TestInlineFlowControlComments:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code != 0
-        assert len(re.findall(r"unexpected EOF while parsing", result.stdout)) == 1
+        assert len(re.findall(r"unexpected EOF while parsing", result.output)) == 1
 
     @staticmethod
     @pytest.mark.xfail(
@@ -616,7 +623,7 @@ class TestInlineFlowControlComments:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code != 0
-        assert len(re.findall(r"'\(' was never closed", result.stdout)) == 1
+        assert len(re.findall(r"'\(' was never closed", result.output)) == 1
 
     @staticmethod
     @pytest.mark.xfail(
@@ -635,7 +642,7 @@ class TestInlineFlowControlComments:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code != 0
-        assert len(re.findall(r"unexpected EOF while parsing", result.stdout)) == 1
+        assert len(re.findall(r"unexpected EOF while parsing", result.output)) == 1
 
     @staticmethod
     @pytest.mark.xfail(
@@ -654,4 +661,4 @@ class TestInlineFlowControlComments:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code != 0
-        assert len(re.findall(r"'\(' was never closed", result.stdout)) == 1
+        assert len(re.findall(r"'\(' was never closed", result.output)) == 1
