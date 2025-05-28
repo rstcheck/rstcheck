@@ -35,6 +35,26 @@ To install an extra simply add it in brackets like so::
     $ pip install rstcheck[sphinx,toml]
 
 
+Pre-commit Hook with Extras
+---------------------------
+
+To use ``rstcheck`` in a Git pre-commit hook with optional features:
+
+1. Install pre-commit::
+
+     pip install pre-commit
+
+2. Add to ``.pre-commit-config.yaml``::
+
+     - repo: https://github.com/rstcheck/rstcheck
+       rev: v6.2.4
+       hooks:
+         - id: rstcheck
+           additional_dependencies: ['rstcheck[sphinx,toml]']
+
+3. Run ``pre-commit install`` to activate.
+
+
 Installation from source
 ------------------------
 
