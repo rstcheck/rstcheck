@@ -42,6 +42,7 @@ NOTE: please use them in this order.
 ### Documentation
 
 - Add note on how to disable pretty exception output ([#228](https://github.com/rstcheck/rstcheck/pull/228))
+- Added an installation instuction for pre-commit hook with extras
 
 ### Miscellaneous
 
