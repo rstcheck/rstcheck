@@ -19,12 +19,12 @@ NOTE: please use them in this order.
 
 [diff v6.2.4...main](https://github.com/rstcheck/rstcheck/compare/v6.2.4...main)
 
-## [v6.2.4 (2024-07-07)](https://github.com/rstcheck/rstcheck/releases/v6.2.4)
-
 ### Miscellaneous
 
 - Dropped support for python 3.8
 - Added python 3.13 to the testing setup
+
+## [v6.2.4 (2024-07-07)](https://github.com/rstcheck/rstcheck/releases/v6.2.4)
 
 [diff v6.2.3...v6.2.4](https://github.com/rstcheck/rstcheck/compare/v6.2.3...v6.2.4)
 
