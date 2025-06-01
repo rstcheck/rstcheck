@@ -93,6 +93,7 @@ pyyaml
 rc
 rd
 reStructuredText
+readthedocs
 redef
 repo
 riedel
