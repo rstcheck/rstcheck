@@ -29,7 +29,7 @@ dependencies = [
 rstcheck = "rstcheck._cli:main"
 
 [project.optional-dependencies]
-sphinx = ["sphinx >=5.0"]
+sphinx = ["sphinx >=6.0"]
 toml = ["tomli >=2.0; python_version<='3.10'"]
 testing = [
     "pytest >=7.2",
@@ -40,7 +40,7 @@ testing = [
     "pytest-randomly >=3.0",
 ]
 docs = [
-    "sphinx >=5.0",
+    "sphinx >=6.0",
     "myst-parser >=3",
     "sphinx-rtd-theme >=1.2",
     "sphinxcontrib-spelling >=7.3",
