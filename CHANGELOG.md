@@ -19,6 +19,10 @@ NOTE: please use them in this order.
 
 [diff v6.2.4...main](https://github.com/rstcheck/rstcheck/compare/v6.2.4...main)
 
+### Documentation
+
+- Fix readthedocs config by adding missing `build.os` value.
+
 ### Miscellaneous
 
 - Dropped support for python 3.8
