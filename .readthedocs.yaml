@@ -9,6 +9,7 @@ formats:
 
 build:
   os: ubuntu-lts-latest
+  tools: python
 
 python:
   version: "3.11"
