@@ -49,7 +49,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 89c421dff2e1026ba12cdb9ebd731f4a83aa8021 # frozen: v0.8.6
+    rev: 76e47323a83cd9795e4ff9a1de1c0d2eef610f17 # frozen: v0.11.11
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -145,7 +145,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 89c421dff2e1026ba12cdb9ebd731f4a83aa8021 # frozen: v0.8.6
+    rev: 76e47323a83cd9795e4ff9a1de1c0d2eef610f17 # frozen: v0.11.11
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -180,7 +180,7 @@ repos:
 
   # pylint - python linter
   - repo: https://github.com/PyCQA/pylint/
-    rev: c28580be76fe1ec55a6cac41833c0bd68070d2f7 # frozen: v3.3.3
+    rev: f798a4a3508bcbb8ad0773ae14bf32d28dcfdcbe # frozen: v3.3.7
     hooks:
       - id: pylint
         name: spell-check (pylint+pyenchant)
@@ -218,7 +218,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: af14a2e768b741b941255b4c6b875339b4acbb73 # frozen: v0.17.1
+    rev: d7a4f7cf4914d3bffb9b83bdbc45fd2a00c91ff9 # frozen: v0.18.1
     hooks:
       - id: markdownlint-cli2
 
@@ -235,7 +235,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: 81e9f98ffd059efe8aa9c1b1a42e5cce61b640c6 # frozen: v1.35.1
+    rev: 79a6b2b1392eaf49cdd32ac4f14be1a809bbd8f7 # frozen: v1.37.1
     hooks:
       - id: yamllint
 
@@ -244,6 +244,6 @@ repos:
   # ----------------------------------------------
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: cc4a52241565440ce200666799eef70626457488 # frozen: v4.0.1
+    rev: aa48766b888990e7b118d12cf757109d96e65a7e # frozen: v4.2.0
     hooks:
       - id: validate_manifest

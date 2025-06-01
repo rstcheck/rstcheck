@@ -71,7 +71,7 @@ def update_changelog(new_version: str, last_version: str, *, first_release: bool
 
     if release_line:
         today = datetime.datetime.now(tz=datetime.UTC).date().isoformat()
-        compare = f"{'' if first_release else ''}{last_version}...{new_version}"
+        compare = f"{'' if first_release else ''}{last_version}...{new_version}"  # noqa: RUF034
         changelog_lines[release_line] = (
             "## Unreleased\n"
             "\n"
