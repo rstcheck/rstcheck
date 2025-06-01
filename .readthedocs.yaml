@@ -7,6 +7,9 @@ version: 2
 formats:
   - htmlzip
 
+build:
+  os: ubuntu-lts-latest
+
 python:
   version: "3.11"
   install:
