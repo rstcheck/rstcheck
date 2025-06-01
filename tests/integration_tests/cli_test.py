@@ -528,7 +528,7 @@ class TestSphinx:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code != 0
-        assert "Error! Issues detected." in result.stdout
+        assert "Error! Issues detected." in result.output
 
     @staticmethod
     @pytest.mark.xfail(
