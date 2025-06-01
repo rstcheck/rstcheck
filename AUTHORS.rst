@@ -32,6 +32,7 @@ Additional contributions by (sorted by name)
 - Qeole <qeole@outlook.com>
 - Sameer Singh <sam7thegreat@gmail.com>
 - Santos Gallegos <santos_g@outlook.com>
+- Steve Kowalik <steven@wedontsleep.org>
 - Steve Piercy <web@stevepiercy.com>
 - Svintsov Dmitry <root@uralbash.ru>
 - Tempookian <124298725+tempookian@users.noreply.github.com>
