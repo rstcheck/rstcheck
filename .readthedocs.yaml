@@ -9,10 +9,11 @@ formats:
 
 build:
   os: ubuntu-lts-latest
-  tools: python
+  tools:
+    python: "3.12"
 
 python:
-  version: "3.11"
+  version: "3.12"
   install:
     - method: pip
       path: .
