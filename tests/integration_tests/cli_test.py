@@ -258,7 +258,7 @@ class TestIgnoreOptions:
         result = cli_runner.invoke(cli_app, [str(test_file), "--ignore-messages", r"(No match\.$)"])
 
         assert result.exit_code != 0
-        assert "Error! Issues detected." in result.stderr
+        assert "Error! Issues detected." in result.output
 
     @staticmethod
     def test_table_substitution_error_fixed_by_ignore(
@@ -528,7 +528,7 @@ class TestSphinx:
         result = cli_runner.invoke(cli_app, str(test_file))
 
         assert result.exit_code != 0
-        assert "Error! Issues detected." in result.stderr
+        assert "Error! Issues detected." in result.output
 
     @staticmethod
     @pytest.mark.xfail(
