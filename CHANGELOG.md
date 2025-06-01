@@ -22,7 +22,7 @@ NOTE: please use them in this order.
 ### Miscellaneous
 
 - Dropped support for python 3.8
-- Added python 3.13 to the testing setup
+- Added python 3.13 to tox config as preparation for adding the version to the test pool. ([#247](https://github.com/rstcheck/rstcheck/issues/247))
 
 ## [v6.2.4 (2024-07-07)](https://github.com/rstcheck/rstcheck/releases/v6.2.4)
 
