@@ -29,6 +29,7 @@ Additional contributions by (sorted by name)
 - Nicolas Vuillamy <nicolas.vuillamy@gmail.com>
 - NicolasVuillamy <nicolas.vuillamy@gmail.com>
 - Peter Cock <p.j.a.cock@googlemail.com>
+- Philipp Horstenkamp <philipp@horstenkamp.de>
 - Qeole <qeole@outlook.com>
 - Sameer Singh <sam7thegreat@gmail.com>
 - Santos Gallegos <santos_g@outlook.com>
