@@ -56,7 +56,7 @@ To use ``rstcheck`` in a Git pre-commit hook with optional features:
 2. Add to ``.pre-commit-config.yaml``::
 
      - repo: https://github.com/rstcheck/rstcheck
-       rev: v6.2.4
+       rev: main # should be replaced with the current verison
        hooks:
          - id: rstcheck
            additional_dependencies: ['rstcheck[sphinx,toml]']
