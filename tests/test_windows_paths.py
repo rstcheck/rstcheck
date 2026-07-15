@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import os
 from pathlib import Path
+
 
 def test_path_resolve_works_on_windows(tmp_path: Path):
     p = tmp_path / "a" / "b.rst"
