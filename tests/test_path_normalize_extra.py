@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import os
 from pathlib import Path
+
 
 def test_path_join_is_stable():
     p = Path("a") / "b" / "c.rst"
