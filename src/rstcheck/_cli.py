@@ -75,10 +75,10 @@ def version_callback(value: bool) -> None:  # noqa: FBT001
 def cli(  # noqa: PLR0913
     files: t.List[pathlib.Path] = typer.Argument(..., allow_dash=True, hidden=True),  # noqa: UP006
     config: pathlib.Path | None = typer.Option(None, "--config", help=HELP_CONFIG),
-    warn_unknown_settings: bool | None = typer.Option(
+    warn_unknown_settings: bool | None = typer.Option(  # noqa: FBT001
         None, "--warn-unknown-settings", help=HELP_WARN_UNKNOWN_SETTINGS
     ),
-    recursive: bool | None = typer.Option(None, "--recursive", "-r", help=HELP_RECURSIVE),
+    recursive: bool | None = typer.Option(None, "--recursive", "-r", help=HELP_RECURSIVE),  # noqa: FBT001
     report_level: str | None = typer.Option(None, metavar="LEVEL", help=HELP_REPORT_LEVEL),
     # TODO: #i# use `t.Literal["INFO", "WARNING", "ERROR", "SEVERE", "NONE"]` when supported
     log_level: str = typer.Option("WARNING", metavar="LEVEL", help=HELP_LOG_LEVEL),
@@ -87,7 +87,7 @@ def cli(  # noqa: PLR0913
     ignore_substitutions: str | None = typer.Option(None, help=HELP_IGNORE_SUBSTITUTIONS),
     ignore_languages: str | None = typer.Option(None, help=HELP_IGNORE_LANGUAGES),
     ignore_messages: str | None = typer.Option(None, metavar="REGEX", help=HELP_IGNORE_MESSAGES),
-    version: bool | None = typer.Option(  # noqa: ARG001
+    version: bool | None = typer.Option(  # noqa: ARG001, FBT001
         None, "--version", callback=version_callback, is_eager=True, help=HELP_VERSION
     ),
 ) -> None:
