@@ -591,25 +591,6 @@ class TestInlineFlowControlComments:
     @pytest.mark.xfail(
         sys.platform == "win32", reason="Unknown Windows specific wrong result", strict=True
     )
-    @pytest.mark.skipif(sys.version_info[0:2] > (3, 9), reason="Requires python3.9 or lower")
-    def test_bad_example_has_only_one_issue_pre310(
-        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
-    ) -> None:
-        """Test only one issue is detected for two same code-blocks.
-
-        One code-block has skip comment.
-        """
-        test_file = EXAMPLES_DIR / "inline_config" / "with_inline_skip_code_block.rst"
-
-        result = cli_runner.invoke(cli_app, str(test_file))
-
-        assert result.exit_code != 0
-        assert len(re.findall(r"unexpected EOF while parsing", result.output)) == 1
-
-    @staticmethod
-    @pytest.mark.xfail(
-        sys.platform == "win32", reason="Unknown Windows specific wrong result", strict=True
-    )
     @pytest.mark.skipif(sys.version_info < (3, 10), reason="Requires python3.10 or higher")
     def test_bad_example_has_only_one_issue(
         cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
@@ -624,25 +605,6 @@ class TestInlineFlowControlComments:
 
         assert result.exit_code != 0
         assert len(re.findall(r"'\(' was never closed", result.output)) == 1
-
-    @staticmethod
-    @pytest.mark.xfail(
-        sys.platform == "win32", reason="Unknown Windows specific wrong result", strict=True
-    )
-    @pytest.mark.skipif(sys.version_info[0:2] > (3, 9), reason="Requires python3.9 or lower")
-    def test_nested_bad_example_has_only_one_issue_pre310(
-        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
-    ) -> None:
-        """Test only one issue is detected for two same nested code-blocks.
-
-        One code-block has skip comment.
-        """
-        test_file = EXAMPLES_DIR / "inline_config" / "with_nested_inline_skip_code_block.rst"
-
-        result = cli_runner.invoke(cli_app, str(test_file))
-
-        assert result.exit_code != 0
-        assert len(re.findall(r"unexpected EOF while parsing", result.output)) == 1
 
     @staticmethod
     @pytest.mark.xfail(

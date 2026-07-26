@@ -19,6 +19,10 @@ NOTE: please use them in this order.
 
 [diff v6.2.5...main](https://github.com/rstcheck/rstcheck/compare/v6.2.5...main)
 
+### Miscellaneous
+
+- Bump min. python version to 3.10 ([#250](https://github.com/rstcheck/rstcheck/pull/250))
+
 ## [v6.2.5 (2025-06-01)](https://github.com/rstcheck/rstcheck/releases/v6.2.5)
 
 [diff v6.2.4...v6.2.5](https://github.com/rstcheck/rstcheck/compare/v6.2.4...v6.2.5)
