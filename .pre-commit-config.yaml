@@ -159,8 +159,6 @@ repos:
     rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # frozen: v6.0.0
     hooks:
       - id: debug-statements
-      - id: fix-encoding-pragma
-        args: ["--remove"]
       - id: name-tests-test
 
   # Lint hooks managed via tox envs b/c they need the pkg installed
