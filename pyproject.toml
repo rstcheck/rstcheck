@@ -44,7 +44,7 @@ docs = [
     "myst-parser >=3",
     "sphinx-rtd-theme >=1.2",
     "sphinxcontrib-spelling >=7.3",
-    "sphinx-click >=4.0.3",
+    "sphinxcontrib-typer >=0.9.1",
     "sphinx-autobuild >=2021.3.14",
 ]
 type-check = [

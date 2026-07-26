@@ -19,6 +19,10 @@ NOTE: please use them in this order.
 
 [diff v6.2.5...main](https://github.com/rstcheck/rstcheck/compare/v6.2.5...main)
 
+### Documentation
+
+- switch from sphinx-click to sphinx-typer ([#250](https://github.com/rstcheck/rstcheck/pull/250))
+
 ### Miscellaneous
 
 - Bump min. python version to 3.10 ([#250](https://github.com/rstcheck/rstcheck/pull/250))
