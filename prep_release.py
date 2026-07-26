@@ -140,14 +140,14 @@ def _main() -> int:
     if args.first_release:
         release_version = "v1.0.0"
         #: Get first commit
-        current_version = subprocess.run(  # noqa: S603
+        current_version = subprocess.run(
             ["git", "rev-list", "--max-parents=0", "HEAD"],  # noqa: S607
             check=True,
             capture_output=True,
         ).stdout.decode()[0:7]
     else:
         git_tags = (
-            subprocess.run(  # noqa: S603
+            subprocess.run(
                 ["git", "tag", "--list"],  # noqa: S607
                 check=True,
                 capture_output=True,
