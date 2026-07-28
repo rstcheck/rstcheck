@@ -27,6 +27,8 @@ NOTE: please use them in this order.
 
 - Bump min. python version to 3.10 ([#250](https://github.com/rstcheck/rstcheck/pull/250))
 - Added python 3.14 to test suite ([#250](https://github.com/rstcheck/rstcheck/pull/250))
+- Bump min. rstcheck-core version to 1.3.1 ([#254](https://github.com/rstcheck/rstcheck/pull/254))
+- Add `--sphinx-source-dir` flag ([#254](https://github.com/rstcheck/rstcheck/pull/254))
 
 ## [v6.2.5 (2025-06-01)](https://github.com/rstcheck/rstcheck/releases/v6.2.5)
 

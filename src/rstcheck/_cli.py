@@ -47,6 +47,11 @@ Can be set in config file.
 HELP_IGNORE_MESSAGES = """A regular expression to match linting issue messages against to ignore.
 Can be set in config file.
 """
+HELP_SPHINX_SOURCE_DIR = """Path to the sphinx 'source' directory. Only necessary if sphinx is used
+and automatic discovery fails.
+May be relative or absolute.
+Can be set in config file.
+"""
 HELP_VERSION = "Print versions and exit."
 
 
@@ -87,6 +92,7 @@ def cli(  # noqa: PLR0913, PLR0917
     ignore_substitutions: str | None = typer.Option(None, help=HELP_IGNORE_SUBSTITUTIONS),
     ignore_languages: str | None = typer.Option(None, help=HELP_IGNORE_LANGUAGES),
     ignore_messages: str | None = typer.Option(None, metavar="REGEX", help=HELP_IGNORE_MESSAGES),
+    sphinx_source_dir: pathlib.Path | None = typer.Option(None, help=HELP_SPHINX_SOURCE_DIR),
     version: bool | None = typer.Option(  # noqa: ARG001, FBT001
         None, "--version", callback=version_callback, is_eager=True, help=HELP_VERSION
     ),
@@ -99,6 +105,11 @@ def cli(  # noqa: PLR0913, PLR0917
         typer.echo("'-' is only allowed without additional files.", err=True)
         raise typer.Abort
 
+    sphinx_source_dir_absolute = sphinx_source_dir
+    if sphinx_source_dir is not None and not sphinx_source_dir.is_absolute():
+        sphinx_source_dir_absolute = pathlib.Path.cwd() / sphinx_source_dir
+        logger.info(f"Relative sphinx 'source' dir path resolved to: {sphinx_source_dir_absolute}")
+
     logger.info("Create main configuration from CLI options.")
     rstcheck_config = config_mod.RstcheckConfig(
         config_path=config,
@@ -110,6 +121,7 @@ def cli(  # noqa: PLR0913, PLR0917
         ignore_substitutions=ignore_substitutions,
         ignore_languages=ignore_languages,
         ignore_messages=ignore_messages,
+        sphinx_source_dir=sphinx_source_dir_absolute,
     )
 
     exit_code = 1
