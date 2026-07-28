@@ -72,7 +72,7 @@ def version_callback(value: bool) -> None:  # noqa: FBT001
         raise typer.Exit
 
 
-def cli(  # noqa: PLR0913
+def cli(  # noqa: PLR0913, PLR0917
     files: t.List[pathlib.Path] = typer.Argument(..., allow_dash=True, hidden=True),  # noqa: UP006
     config: pathlib.Path | None = typer.Option(None, "--config", help=HELP_CONFIG),
     warn_unknown_settings: bool | None = typer.Option(  # noqa: FBT001
