@@ -49,7 +49,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 39d9ac5938dadb73df0564a45f163e25ff9fa6e2  # frozen: v0.16.1
+    rev: 39d9ac5938dadb73df0564a45f163e25ff9fa6e2 # frozen: v0.16.1
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -145,7 +145,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 39d9ac5938dadb73df0564a45f163e25ff9fa6e2  # frozen: v0.16.1
+    rev: 39d9ac5938dadb73df0564a45f163e25ff9fa6e2 # frozen: v0.16.1
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -203,7 +203,7 @@ repos:
 
   # rstcheck - rst file checker
   - repo: https://github.com/rstcheck/rstcheck
-    rev: 27a8027d6c6df787891a01b76e8298bac493fb58  # frozen: v6.3.0
+    rev: 27a8027d6c6df787891a01b76e8298bac493fb58 # frozen: v6.3.0
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
