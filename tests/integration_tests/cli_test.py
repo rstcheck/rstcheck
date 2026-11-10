@@ -624,3 +624,20 @@ class TestInlineFlowControlComments:
 
         assert result.exit_code != 0
         assert len(re.findall(r"'\(' was never closed", result.output)) == 1
+
+
+class TestInvalidLogLevel:
+    """Test invalid --log-level exits cleanly."""
+
+    @staticmethod
+    def test_invalid_log_level_exits_with_usage_error(
+        cli_app: typer.Typer, cli_runner: typer.testing.CliRunner
+    ) -> None:
+        """Test invalid log level is a clean error, not a traceback."""
+        test_file = EXAMPLES_DIR / "good" / "rst.rst"
+
+        result = cli_runner.invoke(cli_app, [str(test_file), "--log-level", "BOGUS"])
+
+        assert result.exit_code == 2
+        assert "Invalid log level: BOGUS" in result.output
+        assert "Traceback" not in result.output

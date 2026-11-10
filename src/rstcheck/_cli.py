@@ -98,7 +98,11 @@ def cli(  # noqa: PLR0913, PLR0917
     ),
 ) -> None:
     """CLI of rstcheck."""
-    setup_logger(log_level)
+    try:
+        setup_logger(log_level)
+    except TypeError as exc:
+        typer.echo(f"Error: {exc}", err=True)
+        raise typer.Exit(code=2) from None
     logger = logging.getLogger(__name__)
 
     if pathlib.Path("-") in files and len(files) > 1:
