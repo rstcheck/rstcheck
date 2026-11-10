@@ -31,6 +31,7 @@ Additional contributions by (sorted by name)
 - Peter Cock <p.j.a.cock@googlemail.com>
 - Philipp Horstenkamp <philipp@horstenkamp.de>
 - Qeole <qeole@outlook.com>
+- Qrytics <qrytics@users.noreply.github.com>
 - Sameer Singh <sam7thegreat@gmail.com>
 - Santos Gallegos <santos_g@outlook.com>
 - Steve Kowalik <steven@wedontsleep.org>
