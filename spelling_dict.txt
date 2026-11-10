@@ -125,6 +125,7 @@ toml
 tomli
 tomllib
 tox
+traceback
 travis
 txt
 typer
