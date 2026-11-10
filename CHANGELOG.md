@@ -19,6 +19,10 @@ NOTE: please use them in this order.
 
 [diff v6.3.0...main](https://github.com/rstcheck/rstcheck/compare/v6.3.0...main)
 
+### Bugfixes
+
+- gracefully exit on invalid log level ([#256](https://github.com/rstcheck/rstcheck/pull/256))
+
 ## [v6.3.0 (2026-07-28)](https://github.com/rstcheck/rstcheck/releases/v6.3.0)
 
 [diff v6.2.5...v6.3.0](https://github.com/rstcheck/rstcheck/compare/v6.2.5...v6.3.0)
