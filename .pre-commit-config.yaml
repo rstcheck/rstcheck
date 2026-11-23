@@ -49,7 +49,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 9026c9127e153371d7a78dfcb0c45ae2046a3d10  # frozen: v0.17.6
+    rev: 9026c9127e153371d7a78dfcb0c45ae2046a3d10 # frozen: v0.17.6
     hooks:
       - id: ruff
         name: ruff (fix)
@@ -145,7 +145,7 @@ repos:
 
   # ruff - python linter with fixing ability
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 9026c9127e153371d7a78dfcb0c45ae2046a3d10  # frozen: v0.17.6
+    rev: 9026c9127e153371d7a78dfcb0c45ae2046a3d10 # frozen: v0.17.6
     hooks:
       - id: ruff
         name: ruff (lint)
@@ -178,7 +178,7 @@ repos:
 
   # pylint - python linter
   - repo: https://github.com/PyCQA/pylint/
-    rev: ba1eab0aab630d2ea89835c2d7c662fa6f3a4adb  # frozen: v4.1.4
+    rev: ba1eab0aab630d2ea89835c2d7c662fa6f3a4adb # frozen: v4.1.4
     hooks:
       - id: pylint
         name: spell-check (pylint+pyenchant)
@@ -193,7 +193,7 @@ repos:
 
   # shellscript (via PyPI package)
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: a6564f5d57444e123433a5c9af733e3975c77229  # frozen: v0.11.0.1-1
+    rev: a6564f5d57444e123433a5c9af733e3975c77229 # frozen: v0.11.0.1-1
     hooks:
       - id: shellcheck
 
@@ -203,7 +203,7 @@ repos:
 
   # rstcheck - rst file checker
   - repo: https://github.com/rstcheck/rstcheck
-    rev: f10757576d6cfd0ac638cf0f0049c8b988ac553e  # frozen: v6.3.1
+    rev: f10757576d6cfd0ac638cf0f0049c8b988ac553e # frozen: v6.3.1
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
@@ -216,7 +216,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: d4df4cec471ce155946474590d7b95920f623ccb  # frozen: v0.24.2
+    rev: d4df4cec471ce155946474590d7b95920f623ccb # frozen: v0.24.2
     hooks:
       - id: markdownlint-cli2
 
@@ -242,6 +242,6 @@ repos:
   # ----------------------------------------------
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: 65bb884a567e8be6adc51e8bfbcf26f708eb35a2  # frozen: v4.7.0
+    rev: 65bb884a567e8be6adc51e8bfbcf26f708eb35a2 # frozen: v4.7.0
     hooks:
       - id: validate_manifest
